@@ -1,0 +1,583 @@
+{
+  "schema_version": "new-v11-guide-v1",
+  "id": "arcane",
+  "class_ko": "마법사",
+  "class_en": "MAGE",
+  "spec_ko": "비전",
+  "spec_en": "ARCANE",
+  "patch": "12.1.5",
+  "season": "Midnight Season 2",
+  "as_of": "2026-11-10",
+  "publication": {
+    "status": "draft_review_required",
+    "automatic_publish_allowed": false,
+    "source_translations_copied": false
+  },
+  "heroes": [
+    {
+      "id": "sunfury",
+      "name_ko": "성난태양",
+      "name_en": "Sunfury"
+    },
+    {
+      "id": "spellslinger",
+      "name_ko": "주문술사",
+      "name_en": "Spellslinger"
+    }
+  ],
+  "default_hero": "sunfury",
+  "sources": [
+    {
+      "url": "https://www.wowhead.com/ko/guide/classes/mage/arcane/rotation-cooldowns-pve-dps",
+      "role": "rotation, cooldown timing, Korean names",
+      "checked_on": "2026-11-10"
+    },
+    {
+      "url": "https://www.icy-veins.com/wow/arcane-mage-pve-dps-rotation-cooldowns-abilities",
+      "role": "independent rotation and Season 2 set context",
+      "checked_on": "2026-11-10"
+    },
+    {
+      "url": "https://www.method.gg/guides/arcane-mage/playstyle-and-rotation",
+      "role": "independent hero opener and rotation cross-check",
+      "checked_on": "2026-11-10"
+    },
+    {
+      "url": "https://worldofwarcraft.blizzard.com/ko-kr/game/classes/mage",
+      "role": "class identity, Korean specialization",
+      "checked_on": "2026-11-10"
+    }
+  ],
+  "introduction": "신규 8번째 전문화 초안. 성난태양과 주문술사의 조건을 구분해 읽도록 만들었다. 게임 내에서 확인하지 않은 조건은 검토 대상으로 유지한다.",
+  "scope": "단일 대상 / 광역 / 오프너 / 비전 충전물·비전 연사·번뜩임 / 시즌 2 세트 효과",
+  "preparation": [
+    "전투 시작 전에 신비한 지능과 생존용 보호 효과를 확인한다.",
+    "영웅 특성과 12.1 시즌 2 세트 4개 효과 보유 여부를 확인한다.",
+    "오색 화살, 비전 쇄도, 비전의 여파 재사용 대기시간과 주요 장신구를 확인한다.",
+    "광역 구간에서는 적의 집결과 지속 시간을 고려해 쿨다운을 조율한다."
+  ],
+  "principles": [
+    {
+      "heading": "비전 충전물",
+      "body": "비전 작렬·비전 보주 등으로 충전물을 확보한다. 비전 탄막은 가능하면 4개를 지닌 상태에서 사용하되, 비전 연사 중첩과 별도 강화 효과가 우선일 때는 예외를 판단한다."
+    },
+    {
+      "heading": "비전 연사와 탄막",
+      "body": "비전 연사 중첩을 모아 비전 탄막의 강화를 노린다. 성난태양과 주문술사는 소모 임계점이 다르므로 영웅 특성별 표를 섞지 않는다."
+    },
+    {
+      "heading": "번뜩임과 신비한 화살",
+      "body": "번뜩임이 있는 신비한 화살은 비전 연사 생성과 연결된다. 중첩 임계점에 도달하면 탄막으로 전환할 수 있다."
+    },
+    {
+      "heading": "오색 화살과 시즌 세트",
+      "body": "오색 화살의 사용 가능 여부와 시즌 2 4세트의 축적된 힘 중첩을 함께 확인한다. 상황에 따라 즉시 사용과 중첩 대기의 가치가 달라진다."
+    },
+    {
+      "heading": "주요 쿨다운",
+      "body": "비전 쇄도와 비전의 여파를 피해 집중 구간에 맞춘다. 쿨다운을 오래 보관해 사용 횟수를 줄이지 않으면서 필요한 대상에게 집중한다."
+    }
+  ],
+  "opener": [
+    {
+      "step": "01",
+      "action": "비전 쇄도",
+      "condition": "기본 전투 시작 시 쿨다운을 개시한다.",
+      "note": "전투 시작 타이밍과 파티 버프를 확인한다."
+    },
+    {
+      "step": "02",
+      "action": "신비한 화살",
+      "condition": "번뜩임 효과로 시전 가능할 때 사용한다.",
+      "note": "비전 연사와 이어지는 탄막을 준비한다."
+    },
+    {
+      "step": "03",
+      "action": "비전 탄막",
+      "condition": "충전물 상태를 보고 사용한다.",
+      "note": "직후 비전의 여파를 적용할 타이밍을 준비한다."
+    },
+    {
+      "step": "04",
+      "action": "비전의 여파",
+      "condition": "앞선 비전 탄막 투사체가 이동하는 동안 시전하는 연계를 고려한다.",
+      "note": "투사체 비행 시간·지연에 따라 실전 타이밍 검토가 필요하다."
+    }
+  ],
+  "rotation_groups": [
+    {
+      "id": "arcane:rotation:sunfury-st",
+      "hero": "sunfury",
+      "mode": "single",
+      "target_label": "단일 대상",
+      "rows": [
+        {
+          "id": "arcane:rotation:sunfury-st:row-1",
+          "order": 1,
+          "spell": "신비한 화살",
+          "condition": "번뜩임이 있고 비전 연사 12중첩 미만일 때.",
+          "comment": "최대 중첩을 기다리느라 번뜩임을 낭비하지 않도록 한다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:sunfury-st:row-2",
+          "order": 2,
+          "spell": "비전 탄막",
+          "condition": "비전의 영혼이 활성화된 동안.",
+          "comment": "이 강화 구간은 평상시 탄막 임계점보다 먼저 판단한다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:sunfury-st:row-3",
+          "order": 3,
+          "spell": "오색 화살",
+          "condition": "사용 가능하며 시즌 2 4세트가 있다면 축적된 힘 8중첩을 우선 목표로 고려한다.",
+          "comment": "강화가 충분하지 않더라도 사용 가능 상태와 전투 시간을 확인한다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:sunfury-st:row-4",
+          "order": 4,
+          "spell": "비전 탄막",
+          "condition": "번뜩임이 있고 비전 연사가 12중첩 이상일 때.",
+          "comment": "신비한 화살과의 전환 조건이다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:sunfury-st:row-5",
+          "order": 5,
+          "spell": "비전 탄막",
+          "condition": "비전 연사가 25중첩에 도달했을 때.",
+          "comment": "가능하면 비전 충전물 4개 상태를 맞춘다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:sunfury-st:row-6",
+          "order": 6,
+          "spell": "비전 보주",
+          "condition": "비전 충전물이 없고 보주 사용이 가능할 때.",
+          "comment": "충전물을 복구한 뒤 다음 우선순위를 평가한다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:sunfury-st:row-7",
+          "order": 7,
+          "spell": "비전 작렬",
+          "condition": "위의 주요 조건이 충족되지 않았을 때.",
+          "comment": "기본 충전물 확보 기술로 사용한다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:sunfury-st:row-8",
+          "order": 8,
+          "spell": "비전 탄막",
+          "condition": "마나가 모자라 기본 반복을 유지할 수 없을 때.",
+          "comment": "예외적 자원 회복 흐름으로 판단한다.",
+          "review": "needs_manual_gameplay_review"
+        }
+      ]
+    },
+    {
+      "id": "arcane:rotation:sunfury-aoe",
+      "hero": "sunfury",
+      "mode": "aoe",
+      "target_label": "광역 · 다수 대상",
+      "rows": [
+        {
+          "id": "arcane:rotation:sunfury-aoe:row-1",
+          "order": 1,
+          "spell": "신비한 화살",
+          "condition": "번뜩임이 있고 비전 연사가 12중첩 미만일 때.",
+          "comment": "광역에서도 발동 효과를 고려한다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:sunfury-aoe:row-2",
+          "order": 2,
+          "spell": "비전 탄막",
+          "condition": "비전의 영혼 활성 중.",
+          "comment": "일반 중첩 소모 조건보다 우선한다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:sunfury-aoe:row-3",
+          "order": 3,
+          "spell": "오색 화살",
+          "condition": "사용 가능하며 축적된 힘 중첩을 확보했다면.",
+          "comment": "세트 4개 효과를 고려하되 사용 시점을 무기한 미루지는 않는다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:sunfury-aoe:row-4",
+          "order": 4,
+          "spell": "비전 탄막",
+          "condition": "번뜩임 보유 및 비전 연사 12중첩 이상, 또는 비전 연사 25중첩.",
+          "comment": "연사 소비와 번뜩임 운용을 함께 확인한다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:sunfury-aoe:row-5",
+          "order": 5,
+          "spell": "비전 탄막",
+          "condition": "적 5명 이상이고, 비전 연사 12중첩 이상이며 비전 보주 또는 비전 파동 사용 가능.",
+          "comment": "다수 대상에서 빠른 재충전 경로가 있을 때의 추가 분기다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:sunfury-aoe:row-6",
+          "order": 6,
+          "spell": "비전 보주",
+          "condition": "비전 충전물이 부족하며 보주 사용 가능.",
+          "comment": "다음 탄막을 위한 충전물 복구.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:sunfury-aoe:row-7",
+          "order": 7,
+          "spell": "비전 파동",
+          "condition": "해당 특성을 선택했고 충전물 3개 미만 또는 적 5명 이상.",
+          "comment": "현재 추천 기본 빌드에 포함되지 않을 수 있으므로 특성 선택 여부를 먼저 확인한다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:sunfury-aoe:row-8",
+          "order": 8,
+          "spell": "비전 작렬",
+          "condition": "다른 조건에 해당하지 않는 동안.",
+          "comment": "광역에서 비전 파동이 없으면 기본 반복 기술을 유지한다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:sunfury-aoe:row-9",
+          "order": 9,
+          "spell": "비전 탄막",
+          "condition": "마나가 바닥나 후속 시전이 어려울 때.",
+          "comment": "자원 부족 시 예외적으로 사용한다.",
+          "review": "needs_manual_gameplay_review"
+        }
+      ]
+    },
+    {
+      "id": "arcane:rotation:spellslinger-st",
+      "hero": "spellslinger",
+      "mode": "single",
+      "target_label": "단일 대상",
+      "rows": [
+        {
+          "id": "arcane:rotation:spellslinger-st:row-1",
+          "order": 1,
+          "spell": "오색 화살",
+          "condition": "비전 연사 13중첩 초과이면서 축적된 힘 6중첩 이상, 번뜩임이 없거나 4세트가 없는 경우.",
+          "comment": "오색 화살은 대상 조건과 세트 효과에 따른 분기를 구별한다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:spellslinger-st:row-2",
+          "order": 2,
+          "spell": "비전 탄막",
+          "condition": "비전 연사가 20중첩일 때.",
+          "comment": "중첩을 과하게 보유하지 않도록 한다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:spellslinger-st:row-3",
+          "order": 3,
+          "spell": "신비한 화살",
+          "condition": "번뜩임이 있고 비전 연사가 15중첩 미만일 때.",
+          "comment": "연사 중첩을 더 쌓을 수 있다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:spellslinger-st:row-4",
+          "order": 4,
+          "spell": "오색 화살",
+          "condition": "사용 가능하고 위의 긴급 조건이 없을 때.",
+          "comment": "발동을 방치하지 않도록 한다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:spellslinger-st:row-5",
+          "order": 5,
+          "spell": "비전 보주",
+          "condition": "비전 충전물이 없을 때.",
+          "comment": "충전물 회복 목적.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:spellslinger-st:row-6",
+          "order": 6,
+          "spell": "비전 파동",
+          "condition": "비전 충전물이 없고 해당 특성을 선택한 경우.",
+          "comment": "실제 특성 트리에 없으면 건너뛴다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:spellslinger-st:row-7",
+          "order": 7,
+          "spell": "비전 작렬",
+          "condition": "우선 조건이 없을 때.",
+          "comment": "마나·충전물을 고려한 기본 시전.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:spellslinger-st:row-8",
+          "order": 8,
+          "spell": "비전 탄막",
+          "condition": "마나가 부족할 때.",
+          "comment": "자원 부족 예외.",
+          "review": "needs_manual_gameplay_review"
+        }
+      ]
+    },
+    {
+      "id": "arcane:rotation:spellslinger-aoe",
+      "hero": "spellslinger",
+      "mode": "aoe",
+      "target_label": "광역 · 2명 이상",
+      "rows": [
+        {
+          "id": "arcane:rotation:spellslinger-aoe:row-1",
+          "order": 1,
+          "spell": "오색 화살",
+          "condition": "적 2명 이상이고 사용 가능할 때.",
+          "comment": "단일보다 먼저 발동을 소비할 수 있는 광역 분기다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:spellslinger-aoe:row-2",
+          "order": 2,
+          "spell": "비전 보주",
+          "condition": "적 2명 이상이고 보주 숙련을 선택했으며 보주 사용이 충전 횟수 초과를 막을 때.",
+          "comment": "특성·충전 횟수 조건을 확인한다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:spellslinger-aoe:row-3",
+          "order": 3,
+          "spell": "비전 탄막",
+          "condition": "비전 연사 20중첩일 때.",
+          "comment": "가능하면 4충전 상태에 맞춘다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:spellslinger-aoe:row-4",
+          "order": 4,
+          "spell": "신비한 화살",
+          "condition": "번뜩임이 있고 비전 연사 15중첩 미만일 때.",
+          "comment": "다음 연사·탄막 회전 준비.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:spellslinger-aoe:row-5",
+          "order": 5,
+          "spell": "오색 화살",
+          "condition": "발동이 남아 있을 때.",
+          "comment": "앞선 긴급 사용 조건 외에도 발동을 놓치지 않는다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:spellslinger-aoe:row-6",
+          "order": 6,
+          "spell": "비전 보주",
+          "condition": "충전물이 없거나 적 2명 이상에서 보주 사용이 가능할 때.",
+          "comment": "여러 대상에 피해를 주며 충전물을 확보한다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:spellslinger-aoe:row-7",
+          "order": 7,
+          "spell": "비전 파동",
+          "condition": "비전 충전물이 없고 해당 특성을 선택한 경우.",
+          "comment": "마법사 비전용 특성 여부를 확인한다.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:spellslinger-aoe:row-8",
+          "order": 8,
+          "spell": "비전 작렬",
+          "condition": "선행 조건이 없을 때.",
+          "comment": "기본 시전 흐름.",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane:rotation:spellslinger-aoe:row-9",
+          "order": 9,
+          "spell": "비전 탄막",
+          "condition": "마나가 바닥났을 때.",
+          "comment": "자원 부족 예외.",
+          "review": "needs_manual_gameplay_review"
+        }
+      ]
+    }
+  ],
+  "advanced_guidance": [
+    {
+      "hero": "both",
+      "topic": "4충전 탄막을 기본 기준으로",
+      "text": "비전 탄막은 현재 충전물의 수에 영향을 받는다. 비전의 영혼이나 다른 긴급 강화 조건이 없다면 4개를 맞추는 것을 먼저 고려한다.",
+      "id": "arcane:advanced:tip-1",
+      "review": "needs_manual_gameplay_review"
+    },
+    {
+      "hero": "both",
+      "topic": "비전 연사 중첩과 번뜩임을 함께 보기",
+      "text": "발동 효과만 보는 대신 연사 중첩을 함께 확인한다. 번뜩임이 남았더라도 이미 탄막을 강화할 중첩이라면 영웅 특성별 탄막 조건이 우선할 수 있다.",
+      "id": "arcane:advanced:tip-2",
+      "review": "needs_manual_gameplay_review"
+    },
+    {
+      "hero": "sunfury",
+      "topic": "비전의 영혼 짧은 강화 창",
+      "text": "성난태양은 비전 쇄도의 종료 이후 비전의 영혼을 활용한다. 이 짧은 구간에서는 비전 탄막을 먼저 살펴보고 일반 중첩 표와 혼동하지 않는다.",
+      "id": "arcane:advanced:tip-3",
+      "review": "needs_manual_gameplay_review"
+    },
+    {
+      "hero": "both",
+      "topic": "오색 화살 발동을 묵히지 않기",
+      "text": "오색 화살 발동은 계속 누적해 저장하는 자원이 아니다. 시즌 2 4세트 강화 효과를 고려하되 발동을 지나치게 보유해 다음 기회를 버리지 않도록 한다.",
+      "id": "arcane:advanced:tip-4",
+      "review": "needs_manual_gameplay_review"
+    },
+    {
+      "hero": "both",
+      "topic": "축적된 힘과 4세트",
+      "text": "4세트 보유 여부에 따라 오색 화살의 대기 조건이 달라진다. 세트가 없는 경우에는 중첩 보너스를 전제로 딜사이클을 해석하지 않는다.",
+      "id": "arcane:advanced:tip-5",
+      "review": "needs_manual_gameplay_review"
+    },
+    {
+      "hero": "spellslinger",
+      "topic": "주문술사의 20중첩 관리",
+      "text": "주문술사는 비전 연사가 20중첩에 도달했을 때 탄막 소비 판단이 중요하다. 성난태양의 25중첩 기준을 그대로 옮겨 적용하지 않는다.",
+      "id": "arcane:advanced:tip-6",
+      "review": "needs_manual_gameplay_review"
+    },
+    {
+      "hero": "both",
+      "topic": "비전의 여파와 투사체",
+      "text": "오프너의 탄막 이후 비전의 여파는 투사체 비행 타이밍을 고려하는 연결이다. 실제 지연과 거리 때문에 일률적인 매크로 실행으로 고정하지 않는다.",
+      "id": "arcane:advanced:tip-7",
+      "review": "needs_manual_gameplay_review"
+    },
+    {
+      "hero": "both",
+      "topic": "광역의 적 수에 따른 분기",
+      "text": "주문술사는 2명 이상일 때, 성난태양은 5명 이상일 때 추가 조건이 나타날 수 있다. 단일과 광역 표를 전투 도중 조건에 따라 전환한다.",
+      "id": "arcane:advanced:tip-8",
+      "review": "needs_manual_gameplay_review"
+    },
+    {
+      "hero": "both",
+      "topic": "쿨다운과 자원 소모",
+      "text": "비전 쇄도는 단순 피해기뿐 아니라 이후 자원 회복과 강화 구간을 형성한다. 전투 끝까지 사용 횟수를 고려하면서 특별한 목표 피해 구간에는 조율한다.",
+      "id": "arcane:advanced:tip-9",
+      "review": "needs_manual_gameplay_review"
+    },
+    {
+      "hero": "both",
+      "topic": "공략 및 장비 조건 검토",
+      "text": "본 초안은 2026-11-10 확인된 12.1.5 공략을 참고해 작성했다. 특성·세트 효과·핫픽스 차이로 조건이 바뀔 수 있으므로 현재 캐릭터 설정과 원문을 대조한다.",
+      "id": "arcane:advanced:tip-10",
+      "review": "needs_manual_gameplay_review"
+    }
+  ],
+  "spells": [
+    {
+      "key": "arcane-surge",
+      "ko": "비전 쇄도",
+      "en": "Arcane Surge",
+      "id": 365362,
+      "icon": "ability_mage_arcanesurge",
+      "review": "name_icon_sourced"
+    },
+    {
+      "key": "arcane-missiles",
+      "ko": "신비한 화살",
+      "en": "Arcane Missiles",
+      "id": 7268,
+      "icon": "spell_nature_starfall",
+      "review": "name_icon_sourced"
+    },
+    {
+      "key": "arcane-barrage",
+      "ko": "비전 탄막",
+      "en": "Arcane Barrage",
+      "id": 44425,
+      "icon": "ability_mage_arcanebarrage",
+      "review": "name_icon_sourced"
+    },
+    {
+      "key": "arcane-blast",
+      "ko": "비전 작렬",
+      "en": "Arcane Blast",
+      "id": 30451,
+      "icon": "spell_arcane_blast",
+      "review": "name_icon_sourced"
+    },
+    {
+      "key": "arcane-orb",
+      "ko": "비전 보주",
+      "en": "Arcane Orb",
+      "id": 153626,
+      "icon": "spell_mage_arcaneorb",
+      "review": "name_icon_sourced"
+    },
+    {
+      "key": "prismatic-bolt",
+      "ko": "오색 화살",
+      "en": "Prismatic Bolt",
+      "id": null,
+      "icon": null,
+      "review": "needs_current_spell_id_icon"
+    },
+    {
+      "key": "arcane-pulse",
+      "ko": "비전 파동",
+      "en": "Arcane Pulse",
+      "id": null,
+      "icon": null,
+      "review": "needs_current_spell_id_icon"
+    },
+    {
+      "key": "touch-of-the-magi",
+      "ko": "비전의 여파",
+      "en": "Touch of the Magi",
+      "id": null,
+      "icon": null,
+      "review": "needs_current_spell_id_icon"
+    },
+    {
+      "key": "clearcasting",
+      "ko": "번뜩임",
+      "en": "Clearcasting",
+      "id": null,
+      "icon": null,
+      "review": "needs_current_spell_id_icon"
+    },
+    {
+      "key": "arcane-salvo",
+      "ko": "비전 연사",
+      "en": "Arcane Salvo",
+      "id": null,
+      "icon": null,
+      "review": "needs_current_spell_id_icon"
+    },
+    {
+      "key": "arcane-soul",
+      "ko": "비전의 영혼",
+      "en": "Arcane Soul",
+      "id": null,
+      "icon": null,
+      "review": "needs_current_spell_id_icon"
+    },
+    {
+      "key": "cumulative-power",
+      "ko": "축적된 힘",
+      "en": "Cumulative Power",
+      "id": null,
+      "icon": null,
+      "review": "needs_current_spell_id_icon"
+    }
+  ]
+}
