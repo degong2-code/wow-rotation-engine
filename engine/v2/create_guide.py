@@ -24,6 +24,10 @@ from bs4 import BeautifulSoup
 
 from .build import ROOT
 from .html_spans import SpanParser, find_class
+from .fidelity import audit_create_fragment
+from .annotations import validate_notes, render_note, render_legend
+from .rule_source_audit import audit_rule_sources
+from .mechanics import validate as validate_mechanics, render_flows, render_comparisons, rich
 
 BASELINE_SHA = "5d70279c4dd073eccef1f3b13565a8f555cd81c9f0a5b7eda7e3485e410742be"
 OLD_IDS = ("fire", "frost", "dk", "hunter", "bm", "rogue", "assassination")
@@ -76,10 +80,38 @@ def validate_draft(doc: dict) -> dict:
         if not src.get("checked_on") or not src.get("role"):
             raise ValueError("Incomplete guide source provenance")
 
+    editorial = doc.get("editorial")
+    if not isinstance(editorial, dict) or editorial.get("version") != "v11-editorial-v1":
+        raise ValueError("V11 CREATE editorial contract is required")
+    overview = editorial.get("overview", {})
+    if not overview.get("lead") or len(overview.get("decision_order", [])) < 3 or not overview.get("caution"):
+        raise ValueError("Missing V11 decision-first overview explanations")
+    mandatory = {"pre", "basics", "opener", "rotation", "advanced", "glossary"}
+    chapters = editorial.get("chapters", {})
+    if not mandatory.issubset(chapters) or any(
+        not chapters[name].get("lead") or not chapters[name].get("caution")
+        for name in mandatory
+    ):
+        raise ValueError("Each V11 CREATE chapter requires context and exception")
+    if len(editorial.get("cooldowns", [])) < 2 or len(editorial.get("practice", [])) < 2:
+        raise ValueError("Missing cooldown explanations or decision examples")
+    for item in editorial["cooldowns"]:
+        if not all(item.get(key) for key in ("title", "principle", "decision", "exception")):
+            raise ValueError("Incomplete cooldown explanation")
+        if item.get("review") != "needs_manual_gameplay_review":
+            raise ValueError("Cannot approve unreviewed cooldown")
+    for item in editorial["practice"]:
+        if not all(item.get(key) for key in ("question", "reasoning", "caution")):
+            raise ValueError("Incomplete decision exercise")
+    if editorial.get("review_policy", {}).get("publication_blocked") is not True:
+        raise ValueError("Review gate cannot be bypassed")
+
     spells = {}
     for spell in doc["spells"]:
         if not re.fullmatch("[a-z0-9-]+", spell["key"]):
             raise ValueError("Invalid spell key")
+        if not spell.get("hint") or len(spell["hint"]) < 15:
+            raise ValueError("CREATE spell tooltips require meaningful explanations")
         if spell["ko"] in spells:
             raise ValueError("Duplicate Arcane spell")
         if spell["icon"] is not None and not ICON_RE.fullmatch(spell["icon"]):
@@ -99,6 +131,8 @@ def validate_draft(doc: dict) -> dict:
         pairs.append((group["hero"], group["mode"]))
         if group["hero"] not in HERO_IDS or group["mode"] not in ("single", "aoe"):
             raise ValueError("Invalid Arcane rotation scenario")
+        if not group.get("intro") or not group.get("caution"):
+            raise ValueError("CREATE rotation tables require explanatory context")
         if not group["rows"]:
             raise ValueError("Empty Arcane rotation group")
         for index, row in enumerate(group["rows"], 1):
@@ -127,6 +161,8 @@ def validate_draft(doc: dict) -> dict:
             raise ValueError("Unreviewed tip cannot be approved")
         if not tip["text"] or not tip["topic"]:
             raise ValueError("Missing advanced tip body")
+    validate_mechanics(editorial["mechanics"], doc)
+    validate_notes(doc)
     return {
         "spells": spells,
         "row_count": len(row_ids),
@@ -151,8 +187,7 @@ def _spell(spell: dict) -> str:
     return (
         '<span class="spell tip-trigger" data-spell="' + key + '" role="button" '
         'tabindex="0" aria-label="' + label + '" data-hint-title="' + title
-        + '" data-hint-body="세부 사용 조건은 비전 우선순위 표를 참고하세요. '
-        '현재 신규 공략 초안이며 게임 내 검증이 필요합니다.">'
+        + '" data-hint-body="' + _e(spell["hint"]) + '">'
         + icon + '<span>' + ko + '</span></span>'
     )
 
@@ -166,44 +201,70 @@ def _hero_switch(default: str) -> str:
     return '<div class="hero-switch" role="group" aria-label="비전 영웅 특성 선택"><span>영웅 특성</span>' + buttons + '</div>'
 
 
-def _priority(group: dict, spells: dict) -> str:
+def _aside(title: str, body: str, *, caution: bool = False) -> str:
+    modifier = "warn" if caution else "plain"
+    return (
+        '<aside class="aside ' + modifier + '"><strong>' + _e(title)
+        + '</strong><div>' + _e(body) + '</div></aside>'
+    )
+
+
+def _priority(group: dict, spells: dict, number: str, note_for=None) -> str:
     rows = []
     for row in group["rows"]:
         rows.append(
             '<tr data-rule-id="' + _e(row["id"]) + '"><td>' + str(row["order"])
             + '</td><td>' + _spell(spells[row["spell"]])
-            + '</td><td><strong>' + _e(row["condition"])
-            + '</strong><div class="muted">' + _e(row["comment"])
+            + '</td><td><b>' + _e(row["condition"])
+            + '</b> ' + (note_for("rule", row["id"]) if note_for else "") + '<div class="muted">' + _e(row["comment"])
             + '</div></td></tr>'
         )
     return (
-        '<h3>' + _e(group["target_label"]) + '</h3>'
+        '<h3>' + _e(number + " " + group["target_label"]) + '</h3>'
+        '<p>' + _e(group["intro"]) + '</p>'
         '<div class="table-scroll"><table class="priority"><thead><tr>'
-        '<th>순위</th><th>기술</th><th>조건·예외</th></tr></thead><tbody>'
+        '<th>순위</th><th>기술 / 역할</th><th>조건 및 행동</th></tr></thead><tbody>'
         + "".join(rows) + '</tbody></table></div>'
+        '<p class="tiny-rule">' + _e(group["caution"]) + '</p>'
     )
 
 
-def _section(section_id: str, heading: str, body: str, *, overview: bool = False) -> str:
-    tag = "overview" if overview else "chapter"
-    return (
-        '<section id="arcane-' + section_id + '" class="' + tag + '">'
-        '<div class="chapter-heading"><h2>' + _e(heading) + '</h2></div>'
-        + body + '</section>'
-    )
+def _section(section_id: str, heading: str, body: str, *, number: int = 0,
+             kicker: str = "", overview: bool = False) -> str:
+    section = "overview" if overview else "chapter"
+    if overview:
+        title = ('<div class="quick-head"><h2>' + _e(heading)
+                 + '</h2><span>QUICK REFERENCE · ARCANE</span></div>')
+    else:
+        title = (
+            '<div class="chapter-heading"><span class="chapter-no">'
+            + f'{number:02d}' + '</span><div><h2>' + _e(heading)
+            + '</h2><p class="kicker">' + _e(kicker) + '</p></div></div>'
+        )
+    return ('<section class="' + section + '" id="arcane-' + section_id
+            + '">' + title + body + '</section>')
+
 
 
 def render_arcane(doc: dict) -> dict:
     meta = validate_draft(doc)
     spellmap = meta["spells"]
+    spells_by_key = {spell["key"]: spell for spell in doc["spells"]}
+    def link(t): return rich(t, spells_by_key, _spell)
+    notes = validate_notes(doc)
+    def note_for(kind, identifier):
+        note = notes.get((kind, identifier))
+        return render_note(note) if note is not None else ""
     hero_labels = {"sunfury": "성난태양", "spellslinger": "주문술사"}
     switch = _hero_switch(doc["default_hero"])
+    editorial = doc["editorial"]
+    chapters = editorial["chapters"]
     intro = (
         '<div class="intro"><span class="eyebrow">MAGE / ARCANE / SUNFURY · SPELLSLINGER</span>'
         '<h1>비전 마법사 딜사이클 교본</h1>'
         '<p>' + _e(doc["introduction"]) + '</p>'
         '<p class="scope">' + _e(doc["season"] + " · " + doc["patch"] + " · " + doc["scope"]) + '</p>'
-        '<p class="route">읽는 순서: 요약 → 전투 전 준비 → 원리 → 오프너 → 우선순위 → 고급 운용 → 기술명·출처</p>'
+        '<p class="route">읽는 순서: 요약 → 준비 → 원리 → 오프너 → 우선순위 → 쿨다운 → 고급 운용 → 판단 연습 → 기술명·출처</p>'
         '</div>'
     )
     overview_variants = []
@@ -211,9 +272,11 @@ def render_arcane(doc: dict) -> dict:
         groups = [g for g in doc["rotation_groups"] if g["hero"] == hero]
         items = [
             '<tr><td>' + _e(g["target_label"]) + '</td><td>'
-            + _e(" / ".join(r["spell"] for r in g["rows"][:4]))
-            + '</td></tr>'
-            for g in groups
+            + _spell(spellmap[g["rows"][0]["spell"]]) + " — "
+            + _e(g["rows"][0]["condition"])
+            + ' ' + note_for("rule", g["rows"][0]["id"])
+            + '<div class="muted">' + _e(g["rows"][0]["comment"]) + '</div>'
+            + '</td></tr>' for g in groups
         ]
         overview_variants.append(
             '<div class="variant" data-hero="' + hero + '"><h3>'
@@ -223,26 +286,63 @@ def render_arcane(doc: dict) -> dict:
             + "".join(items) + '</tbody></table></div></div>'
         )
 
-    pre = '<ul class="principles">' + "".join(
-        '<li>' + _e(s) + '</li>' for s in doc["preparation"]
-    ) + '</ul>'
-    principles = "".join(
-        '<h3>' + _e(item["heading"]) + '</h3><p>' + _e(item["body"]) + '</p>'
-        for item in doc["principles"]
+    overview = (
+        '<p>' + _e(editorial["overview"]["lead"]) + '</p>' + switch + render_legend()
+        + "".join(overview_variants)
+        + '<h3>읽는 순서</h3><ol class="principles">'
+        + "".join('<li>' + _e(value) + '</li>' for value in editorial["overview"]["decision_order"])
+        + '</ol>' + _aside('영웅 특성 구분', editorial["overview"]["caution"])
     )
-    opener = '<ol class="principles">' + "".join(
-        '<li><strong>' + _e(step["action"]) + '</strong> — '
-        + _e(step["condition"]) + ' <span class="muted">' + _e(step["note"])
-        + '</span></li>'
-        for step in doc["opener"]
-    ) + '</ol>'
-    rotations = "".join(
-        '<div class="variant" data-hero="' + hero + '"><h3>' + hero_labels[hero]
-        + ' · 시전 우선순위</h3>' + "".join(
-            _priority(group, spellmap)
-            for group in doc["rotation_groups"] if group["hero"] == hero
-        ) + '</div>'
-        for hero in HERO_IDS
+    pre = (
+        '<p>' + link(chapters["pre"]["lead"]) + '</p>'
+        + '<ul class="simple-list">' + "".join(
+            '<li>' + _e(value) + '</li>' for value in doc["preparation"]
+        ) + '</ul>' + _aside('사전 준비 예외', chapters["pre"]["caution"])
+    )
+    principles = (
+        '<p>' + _e(chapters["basics"]["lead"]) + '</p>'
+        + "".join(
+            '<h3>' + _e(item["heading"]) + '</h3><p>' + _e(item["body"]) + '</p>'
+            for item in doc["principles"]
+        )
+        + render_flows(editorial["mechanics"], "basics", spells_by_key, _spell, note_for)
+        + render_comparisons(editorial["mechanics"], spells_by_key, _spell, note_for)
+        + _aside('조건을 읽을 때', chapters["basics"]["caution"])
+    )
+    opener = (
+        '<p>' + _e(chapters["opener"]["lead"]) + '</p>'
+        + '<h3>기본 시전 연결 예시</h3><ol class="steps compact">' + "".join(
+            '<li>' + _spell(spellmap[step["action"]]) + ' — '
+            + _e(step["condition"]) + ' <span class="muted">'
+            + _e(step["note"]) + '</span></li>' for step in doc["opener"]
+        ) + '</ol>'
+        + render_flows(editorial["mechanics"], "opener", spells_by_key, _spell, note_for)
+        + _aside('오프너를 고정 시퀀스로 사용하지 마세요', chapters["opener"]["caution"], caution=True)
+    )
+    rotations = (
+        '<p class="rule">' + _e(chapters["rotation"]["lead"]) + '</p>'
+        + "".join(
+            '<div class="variant" data-hero="' + hero + '"><h3>'
+            + hero_labels[hero] + ' · 시전 우선순위</h3>'
+            + "".join(
+                _priority(group, spellmap, f"5.{index}", note_for)
+                for index, group in enumerate(
+                    (g for g in doc["rotation_groups"] if g["hero"] == hero), 1
+                )
+            ) + '</div>' for hero in HERO_IDS
+        )
+        + _aside('기본 원칙과 예외', chapters["rotation"]["caution"])
+    )
+    cooldowns = (
+        '<p>핵심 쿨다운은 단순히 사용 가능 여부가 아니라 강화 구간, 대상 유지 시간, '
+        '다음 사용 기회를 고려합니다. 아래 설명은 검토 중인 판단 기준입니다.</p>'
+        + "".join(
+            '<h3>' + _spell(spells_by_key[item["spell_key"]]) + ' · ' + _e(item["title"]) + '</h3>'
+            + '<p>' + _e(item["principle"]) + '</p>'
+            + '<p><b>사용 판단:</b> ' + link(item["decision"]) + '</p>'
+            + '<p><b>예외 및 주의:</b> ' + _e(item["exception"]) + '</p>'
+            for item in editorial["cooldowns"]
+        )
     )
 
     shared = []
@@ -250,49 +350,74 @@ def render_arcane(doc: dict) -> dict:
     for tip in doc["advanced_guidance"]:
         item = (
             '<div class="advanced-item" data-tip-id="' + _e(tip["id"]) + '">'
-            '<h3>' + _e(tip["topic"]) + '</h3><p>' + _e(tip["text"])
+            '<h3>' + _e(tip["topic"]) + '</h3><p>' + link(tip["text"])
             + '</p></div>'
         )
         if tip["hero"] == "both":
             shared.append(item)
         else:
             only[tip["hero"]].append(item)
-    advanced = "".join(shared) + "".join(
-        '<div class="variant" data-hero="' + hero + '">'
-        '<h3>' + hero_labels[hero] + ' 전용 판단</h3>'
-        + "".join(only[hero]) + '</div>'
-        for hero in HERO_IDS
+    advanced = (
+        '<p>' + link(chapters["advanced"]["lead"]) + '</p>'
+        + "".join(shared) + "".join(
+            '<div class="variant" data-hero="' + hero + '">'
+            '<h3>' + hero_labels[hero] + ' 전용 판단</h3>'
+            + "".join(only[hero]) + '</div>'
+            for hero in HERO_IDS
+        )
+        + _aside('검토 범위', chapters["advanced"]["caution"], caution=True)
     )
-    glossary = '<div class="glossary">' + "".join(
-        '<div class="glossary-row">' + _spell(spell)
-        + '<span class="en">' + _e(spell["en"]) + '</span>'
-        + '<span class="spell-id">#' + str(spell["id"] or "미확인") + '</span>'
-        + '</div>' for spell in doc["spells"]
-    ) + '</div>'
-    citations = '<h3>공략 근거 및 재검토 링크</h3><ul>' + "".join(
+    practice = (
+        '<p>조건을 암기하는 대신 어떤 판단 요소를 먼저 확인하는지 연습합니다. '
+        '아래의 사례는 설명을 위한 가상 상황이지 확정 시전 지시는 아닙니다.</p>'
+        + "".join(
+            '<h3>' + _e(item["question"]) + '</h3>'
+            + '<p>' + link(item["reasoning"]) + '</p>'
+            + '<p class="tiny-rule">' + _e(item["caution"]) + '</p>'
+            for item in editorial["practice"]
+        )
+    )
+    glossary = (
+        '<p>' + _e(chapters["glossary"]["lead"]) + '</p>'
+        + '<div class="glossary-list">' + "".join(
+            '<div class="glossary-row"><div>' + _spell(spell)
+            + '</div><div class="en">' + _e(spell["en"])
+            + '<span class="spell-id"> · spell ID '
+            + str(spell["id"] or "미확인") + '</span>'
+            + '<p>' + _e(spell["hint"]) + '</p></div></div>'
+            for spell in doc["spells"]
+        ) + '</div>'
+        + _aside('기술 식별 검증', chapters["glossary"]["caution"])
+    )
+    citations = '<h3>공략 근거 및 재검토 링크</h3><ul class="simple-list">' + "".join(
         '<li><a href="' + _e(src["url"]) + '" target="_blank" rel="noopener noreferrer">'
         + _e(urlsplit(src["url"]).hostname or "reference")
         + '</a> · ' + _e(src["role"]) + '</li>' for src in doc["sources"]
     ) + '</ul>'
-    notice = (
-        '<p class="note">검토 전 초안 · 이 전문화의 개별 조건과 주문 식별은 '
-        '게임 내 재검토가 필요합니다. 기존 7개 전문화는 변경되지 않습니다.</p>'
+    notice = _aside(
+        '검토 전 초안',
+        '현재 비전의 34개 우선순위 행과 10개 고급 팁은 게임플레이 검토 중입니다. '
+        '최종 승인 전에는 세부 수치를 확정 가이드로 취급하지 마세요.',
+        caution=True,
     )
     sections = [
-        ("overview", "한눈에 보는 딜사이클", switch + notice + "".join(overview_variants)),
-        ("pre", "전투 전 준비", pre),
-        ("basics", "핵심 원리", principles),
-        ("opener", "오프너와 쿨다운", opener),
-        ("rotation", "단일·광역 시전 우선순위", rotations),
-        ("advanced", "고급 운용과 예외", advanced),
-        ("glossary", "기술명·출처", glossary + citations),
+        ("overview", "한눈에 보는 딜사이클", "QUICK REFERENCE", notice + overview),
+        ("pre", "전투 전 준비", "BUILD · SET BONUS · COOLDOWNS", pre),
+        ("basics", "핵심 원리", "ARCANE CHARGES · SALVO · CLEARCASTING", principles),
+        ("opener", "오프너", "OPENER · COOLDOWN ENTRY", opener),
+        ("rotation", "단일·광역 시전 우선순위", "SINGLE TARGET · AOE · HERO TALENTS", rotations),
+        ("cooldowns", "주요 쿨다운과 연계", "ARCANE SURGE · TOUCH OF THE MAGI", cooldowns),
+        ("advanced", "고급 운용과 예외", "BUFF WINDOWS · RESOURCE MANAGEMENT", advanced),
+        ("practice", "상황별 판단 연습", "DECISION PRACTICE · EXCEPTIONS", practice),
+        ("glossary", "기술명·출처", "SPELL GLOSSARY · SOURCES & SCOPE", glossary + citations),
     ]
     guide = (
         '<div class="manual-view" data-guide="arcane" data-hero="'
         + _e(doc["default_hero"]) + '" id="guide-arcane">'
         + intro
-        + "".join(_section(key, title, body, overview=(key == "overview"))
-                  for key, title, body in sections)
+        + "".join(_section(key, title, body, number=i, kicker=kicker,
+                           overview=(key == "overview"))
+                  for i, (key, title, kicker, body) in enumerate(sections))
         + '</div>'
     )
     toc = (
@@ -300,7 +425,7 @@ def render_arcane(doc: dict) -> dict:
         + "".join(
             f'<a data-target="arcane-{key}" href="#arcane-{key}">'
             f'{i:02d} {_e(title)}</a>'
-            for i, (key, title, _) in enumerate(sections)
+            for i, (key, title, _, _) in enumerate(sections)
         ) + '</div>'
     )
     buttons = (
@@ -311,11 +436,15 @@ def render_arcane(doc: dict) -> dict:
             for hero in HERO_IDS
         )
     )
+    audit = audit_create_fragment(guide, doc)
+    if audit["status"] != "PASS":
+        raise ValueError("V11 CREATE fidelity FAIL: " + "; ".join(audit["failures"]))
     return {
         "html": guide, "toc": toc, "buttons": buttons,
         "sections": len(sections),
         "rows": meta["row_count"],
         "tips": meta["tip_count"],
+        "fidelity": audit,
     }
 
 
@@ -431,12 +560,15 @@ def create_arcane(source: bytes, draft: dict) -> tuple[bytes, dict]:
         "arcane_sections": view["sections"],
         "arcane_priority_rows": view["rows"],
         "arcane_advanced_tips": view["tips"],
+        "fidelity_components_reused": len(view["fidelity"]["reused_v11_components"]),
+        "item_evidence_coverage": view["fidelity"]["evidence_coverage"],
+        "gameplay_accuracy_verified": False,
     }
     return text.encode("utf-8"), report
 
 
 def create_private_preview(source_path: Path, draft_path: Path,
-                           output_path: Path) -> dict:
+                           output_path: Path, *, evidence_path: Path | None = None) -> dict:
     target = Path(output_path).resolve()
     root = ROOT.resolve()
     if target == root or target.is_relative_to(root):
@@ -446,7 +578,15 @@ def create_private_preview(source_path: Path, draft_path: Path,
     if target.exists():
         raise FileExistsError("Refusing to overwrite existing Arcane preview")
     draft = json.loads(Path(draft_path).read_text(encoding="utf-8"))
+    evidence_file = (
+        Path(evidence_path) if evidence_path is not None
+        else ROOT / "content" / "new_guides" / "arcane_rule_source_audit.json"
+    )
+    source_audit = audit_rule_sources(
+        draft, json.loads(evidence_file.read_text(encoding="utf-8"))
+    )
     full, report = create_arcane(Path(source_path).read_bytes(), draft)
+    report["source_audit"] = source_audit
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_bytes(full)
     return report
@@ -457,8 +597,14 @@ def main() -> int:
     parser.add_argument("source", type=Path)
     parser.add_argument("--draft", type=Path, default=ROOT / "content" / "new_guides" / "arcane.json")
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--evidence", type=Path,
+        default=ROOT / "content" / "new_guides" / "arcane_rule_source_audit.json",
+    )
     args = parser.parse_args()
-    report = create_private_preview(args.source, args.draft, args.output)
+    report = create_private_preview(
+        args.source, args.draft, args.output, evidence_path=args.evidence
+    )
     print(json.dumps(report, ensure_ascii=False, indent=2))
     return 0
 

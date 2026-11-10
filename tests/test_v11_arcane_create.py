@@ -181,7 +181,7 @@ class ArcaneCreateTests(unittest.TestCase):
     def test_created_arcane_contains_no_unreviewed_spell_id_for_unknown_spells(self):
         generated, _ = self.create()
         self.assertIn("오색 화살", generated.decode("utf-8"))
-        self.assertIn("#미확인", generated.decode("utf-8"))
+        self.assertIn("spell ID 미확인", generated.decode("utf-8"))
         self.assertNotIn('automatic_publish_allowed="true"', generated.decode("utf-8"))
 
 

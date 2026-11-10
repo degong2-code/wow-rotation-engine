@@ -1,0 +1,465 @@
+{
+  "schema_version": "v11-rule-source-audit-v1",
+  "guide_id": "arcane",
+  "patch": "12.1.5",
+  "audit_date": "2026-11-11",
+  "policy": {
+    "source_section_pointer_is_not_exact_quote_evidence": true,
+    "source_alignment_is_not_gameplay_approval": true,
+    "original_guide_text_embedded": false,
+    "full_condition_verification_requires_manual_review": true,
+    "publication_allowed": false
+  },
+  "source_catalog": {
+    "wowhead": {
+      "url": "https://www.wowhead.com/guide/classes/mage/arcane/rotation-cooldowns-pve-dps",
+      "updated": "2026-10-16",
+      "patch": "12.1.5",
+      "sections": {
+        "easy": "Easy Mode Priority Rotation",
+        "sunfury": "Sunfury Priority",
+        "spellslinger": "Spellslinger Priority",
+        "opener": "Best Arcane Mage Opener",
+        "mechanics": "Arcane Mage Rotation"
+      }
+    },
+    "icyveins": {
+      "url": "https://www.icy-veins.com/wow/arcane-mage-pve-dps-rotation-cooldowns-abilities",
+      "updated": "2026-10-12",
+      "patch": "12.1.5",
+      "sections": {
+        "st": "Single Target Rotation",
+        "aoe": "AoE Rotation",
+        "tier": "Midnight Season 2 Tier Set",
+        "cooldown": "Opener & Cooldown Usage",
+        "mana": "Mana Management and Arcane Charges"
+      }
+    },
+    "method": {
+      "url": "https://www.method.gg/guides/arcane-mage/playstyle-and-rotation",
+      "updated": "2026-10-16",
+      "patch": "12.1.5",
+      "sections": {
+        "sunfury_st": "Sunfury Single Target Priority",
+        "sunfury_aoe": "Sunfury AoE Priority",
+        "spellslinger_st": "Spellslinger Single Target Priority",
+        "spellslinger_aoe": "Spellslinger AoE Priority"
+      }
+    }
+  },
+  "records": {
+    "arcane:rotation:sunfury-st:row-1": {
+      "source_section_refs": [
+        "wowhead:sunfury",
+        "method:sunfury_st"
+      ],
+      "source_alignment": "aligned",
+      "review_focus": "번뜩임·연사 12 미만",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:sunfury-st:row-2": {
+      "source_section_refs": [
+        "wowhead:sunfury",
+        "method:sunfury_st"
+      ],
+      "source_alignment": "aligned",
+      "review_focus": "비전의 영혼 강화 구간",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:sunfury-st:row-3": {
+      "source_section_refs": [
+        "wowhead:sunfury",
+        "method:sunfury_st",
+        "icyveins:tier"
+      ],
+      "source_alignment": "needs_refinement",
+      "review_focus": "4세트·축적된 힘 8중첩 및 강화 구간 우선순위 재확인",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:sunfury-st:row-4": {
+      "source_section_refs": [
+        "wowhead:sunfury",
+        "method:sunfury_st"
+      ],
+      "source_alignment": "aligned",
+      "review_focus": "번뜩임과 연사 12 이상",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:sunfury-st:row-5": {
+      "source_section_refs": [
+        "wowhead:sunfury",
+        "method:sunfury_st"
+      ],
+      "source_alignment": "aligned",
+      "review_focus": "성난태양의 연사 25 기준과 4충전 원칙",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:sunfury-st:row-6": {
+      "source_section_refs": [
+        "wowhead:easy",
+        "wowhead:sunfury"
+      ],
+      "source_alignment": "source_variation",
+      "review_focus": "쉬운 모드의 충전물 0개와 상세 표의 3개 미만이 다름",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:sunfury-st:row-7": {
+      "source_section_refs": [
+        "wowhead:sunfury",
+        "method:sunfury_st"
+      ],
+      "source_alignment": "aligned",
+      "review_focus": "다른 우선순위가 없을 때 기본 비전 작렬",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:sunfury-st:row-8": {
+      "source_section_refs": [
+        "wowhead:sunfury",
+        "icyveins:st",
+        "icyveins:mana"
+      ],
+      "source_alignment": "fallback_only",
+      "review_focus": "마나 부족 시 탄막은 비상 조건으로만 취급",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:sunfury-aoe:row-1": {
+      "source_section_refs": [
+        "wowhead:sunfury",
+        "method:sunfury_aoe"
+      ],
+      "source_alignment": "aligned",
+      "review_focus": "광역에서도 번뜩임과 연사 12 미만",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:sunfury-aoe:row-2": {
+      "source_section_refs": [
+        "wowhead:sunfury",
+        "method:sunfury_aoe"
+      ],
+      "source_alignment": "aligned",
+      "review_focus": "비전의 영혼 활성 조건",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:sunfury-aoe:row-3": {
+      "source_section_refs": [
+        "wowhead:sunfury",
+        "method:sunfury_aoe",
+        "icyveins:tier"
+      ],
+      "source_alignment": "needs_refinement",
+      "review_focus": "광역 표의 축적된 힘 임계치가 명확하지 않음",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:sunfury-aoe:row-4": {
+      "source_section_refs": [
+        "wowhead:sunfury",
+        "method:sunfury_aoe"
+      ],
+      "source_alignment": "aligned",
+      "review_focus": "번뜩임 12 이상 또는 연사 25 소모",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:sunfury-aoe:row-5": {
+      "source_section_refs": [
+        "wowhead:sunfury"
+      ],
+      "source_alignment": "aligned",
+      "review_focus": "다수 적에서 보주·파동과 연계된 12중첩 예외",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:sunfury-aoe:row-6": {
+      "source_section_refs": [
+        "wowhead:sunfury",
+        "icyveins:aoe"
+      ],
+      "source_alignment": "needs_refinement",
+      "review_focus": "광역 보주 사용의 충전물 임계치가 불명확함",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:sunfury-aoe:row-7": {
+      "source_section_refs": [
+        "wowhead:sunfury",
+        "icyveins:aoe"
+      ],
+      "source_alignment": "conditional_talent",
+      "review_focus": "비전 파동은 특성 선택 시에만 검토, 기본 빌드와 구분",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:sunfury-aoe:row-8": {
+      "source_section_refs": [
+        "wowhead:sunfury",
+        "method:sunfury_aoe"
+      ],
+      "source_alignment": "aligned",
+      "review_focus": "다른 상위 조건이 없는 광역 기본 필러 기술",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:sunfury-aoe:row-9": {
+      "source_section_refs": [
+        "wowhead:sunfury",
+        "icyveins:mana"
+      ],
+      "source_alignment": "fallback_only",
+      "review_focus": "마나가 소진된 드문 상황의 탄막",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:spellslinger-st:row-1": {
+      "source_section_refs": [
+        "wowhead:spellslinger",
+        "method:spellslinger_st",
+        "icyveins:st"
+      ],
+      "source_alignment": "source_variation",
+      "review_focus": "Wowhead의 13초과 조건과 Method의 더 간략한 초기 발동 기준 차이",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:spellslinger-st:row-2": {
+      "source_section_refs": [
+        "wowhead:spellslinger",
+        "method:spellslinger_st"
+      ],
+      "source_alignment": "needs_refinement",
+      "review_focus": "연사 20 조건은 일치, Method의 쇄도 직후 예외는 초안에 없음",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:spellslinger-st:row-3": {
+      "source_section_refs": [
+        "wowhead:spellslinger",
+        "method:spellslinger_st"
+      ],
+      "source_alignment": "aligned",
+      "review_focus": "번뜩임·연사 15 미만",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:spellslinger-st:row-4": {
+      "source_section_refs": [
+        "wowhead:spellslinger",
+        "method:spellslinger_st"
+      ],
+      "source_alignment": "aligned",
+      "review_focus": "오색 화살의 후순위 발동 소비",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:spellslinger-st:row-5": {
+      "source_section_refs": [
+        "wowhead:spellslinger",
+        "method:spellslinger_st"
+      ],
+      "source_alignment": "aligned",
+      "review_focus": "충전물 0개에서 비전 보주 복구",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:spellslinger-st:row-6": {
+      "source_section_refs": [
+        "wowhead:spellslinger",
+        "method:spellslinger_st"
+      ],
+      "source_alignment": "conditional_talent",
+      "review_focus": "비전 파동이 선택돼 있고 충전물이 없을 때",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:spellslinger-st:row-7": {
+      "source_section_refs": [
+        "wowhead:spellslinger",
+        "method:spellslinger_st"
+      ],
+      "source_alignment": "aligned",
+      "review_focus": "후순위 기본 비전 작렬",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:spellslinger-st:row-8": {
+      "source_section_refs": [
+        "wowhead:spellslinger",
+        "icyveins:st",
+        "icyveins:mana"
+      ],
+      "source_alignment": "fallback_only",
+      "review_focus": "마나 부족의 이론적 최하위 탄막",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:spellslinger-aoe:row-1": {
+      "source_section_refs": [
+        "wowhead:spellslinger",
+        "method:spellslinger_aoe"
+      ],
+      "source_alignment": "source_variation",
+      "review_focus": "Wowhead의 2명 이상 즉시 오색 화살과 Method의 발동 조건 차이",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:spellslinger-aoe:row-2": {
+      "source_section_refs": [
+        "wowhead:spellslinger",
+        "method:spellslinger_aoe"
+      ],
+      "source_alignment": "source_variation",
+      "review_focus": "보주 숙련 충전 초과 방지 vs Method의 보주 사용 빈도 우선",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:spellslinger-aoe:row-3": {
+      "source_section_refs": [
+        "wowhead:spellslinger",
+        "method:spellslinger_aoe"
+      ],
+      "source_alignment": "needs_refinement",
+      "review_focus": "연사 20 기준은 일치하나 쇄도 직후 예외가 별도로 언급됨",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:spellslinger-aoe:row-4": {
+      "source_section_refs": [
+        "wowhead:spellslinger",
+        "method:spellslinger_aoe"
+      ],
+      "source_alignment": "needs_refinement",
+      "review_focus": "Method는 신비한 화살 별도 중첩 예외를 추가 설명",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:spellslinger-aoe:row-5": {
+      "source_section_refs": [
+        "wowhead:spellslinger",
+        "method:spellslinger_aoe"
+      ],
+      "source_alignment": "aligned",
+      "review_focus": "발동 가능 오색 화살의 후순위 사용",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:spellslinger-aoe:row-6": {
+      "source_section_refs": [
+        "wowhead:spellslinger",
+        "method:spellslinger_aoe",
+        "icyveins:aoe"
+      ],
+      "source_alignment": "source_variation",
+      "review_focus": "Wowhead의 2명 이상 보주 사용과 Method의 쿨다운 강조 차이",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:spellslinger-aoe:row-7": {
+      "source_section_refs": [
+        "wowhead:spellslinger",
+        "method:spellslinger_aoe"
+      ],
+      "source_alignment": "conditional_talent",
+      "review_focus": "비전 파동 사용 조건은 특성 전제로 해석",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:spellslinger-aoe:row-8": {
+      "source_section_refs": [
+        "wowhead:spellslinger",
+        "method:spellslinger_aoe"
+      ],
+      "source_alignment": "aligned",
+      "review_focus": "남은 선택지가 없을 때 기본 비전 작렬",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    },
+    "arcane:rotation:spellslinger-aoe:row-9": {
+      "source_section_refs": [
+        "wowhead:spellslinger",
+        "icyveins:st",
+        "icyveins:mana"
+      ],
+      "source_alignment": "fallback_only",
+      "review_focus": "마나 부족 시 최하위 선택, 실제 발생 빈도는 별도 검토",
+      "source_section_mapped": true,
+      "full_condition_verified": false,
+      "gameplay_approved": false
+    }
+  },
+  "cross_source_issues": [
+    {
+      "key": "orb-threshold",
+      "impact": "sunfury-st",
+      "summary": "Easy mode and detailed priority differ for Arcane Orb; determine intended build before adjusting the threshold."
+    },
+    {
+      "key": "spellslinger-prismatic",
+      "impact": "spellslinger-st",
+      "summary": "First Prismatic Bolt trigger has more detailed stack gates in one guide than another."
+    },
+    {
+      "key": "spellslinger-orb-aoe",
+      "impact": "spellslinger-aoe",
+      "summary": "Orb timing differs with Orb Mastery and multi-target situation across guides."
+    },
+    {
+      "key": "mana-relevance",
+      "impact": "all",
+      "summary": "Mana shortfall remains a listed fallback, but guides emphasize its practical importance differently."
+    },
+    {
+      "key": "opener-after-surge",
+      "impact": "spellslinger",
+      "summary": "A secondary source describes a special Barrage after Arcane Surge not explicitly represented in the new guide."
+    }
+  ],
+  "scope_gaps": [
+    "Selected talent/loadout configuration for each of four tables has not been verified against an export string.",
+    "Exact 34 row condition proof snippets and source snapshot hashes are not stored; only source-section pointers.",
+    "Mana fallback relevance and Arcane Pulse availability depend on talents and context.",
+    "Spell IDs and game-client descriptions are not audited for all twelve listed spell keys."
+  ]
+}
