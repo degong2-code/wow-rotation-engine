@@ -267,8 +267,8 @@
           "id": "arcane:rotation:spellslinger-st:row-1",
           "order": 1,
           "spell": "오색 화살",
-          "condition": "비전 연사 13중첩 초과이면서 축적된 힘 6중첩 이상, 번뜩임이 없거나 4세트가 없는 경우.",
-          "comment": "오색 화살은 대상 조건과 세트 효과에 따른 분기를 구별한다.",
+          "condition": "오색 화살 발동이 있고 비전 연사가 13중첩 초과이며, (축적된 힘 6중첩 이상 또는 번뜩임 없음 또는 4세트 미보유) 중 하나를 충족할 때.",
+          "comment": "괄호 안 세 조건은 OR이며, 모두 비전 연사 14중첩 이상이라는 공통 조건 안에서 판단한다. 발동이 없으면 건너뛴다.",
           "review": "needs_manual_gameplay_review"
         },
         {
@@ -527,9 +527,9 @@
       "key": "prismatic-bolt",
       "ko": "오색 화살",
       "en": "Prismatic Bolt",
-      "id": null,
+      "id": 1295924,
       "icon": null,
-      "review": "needs_current_spell_id_icon"
+      "review": "ko_spell_cast_id_verified_icon_pending"
     },
     {
       "key": "arcane-pulse",
@@ -575,9 +575,36 @@
       "key": "cumulative-power",
       "ko": "축적된 힘",
       "en": "Cumulative Power",
-      "id": null,
+      "id": 1296930,
       "icon": null,
-      "review": "needs_current_spell_id_icon"
+      "review": "ko_tier4_buff_id_verified_icon_pending"
     }
-  ]
+  ],
+  "source_verification": {
+    "review_state": "partial_spell_identity_and_logic_verified",
+    "reference_date": "2026-11-10",
+    "verified": [
+      {
+        "claim": "Prismatic Bolt cast spell ID and Korean localization",
+        "spell_id": 1295924,
+        "source": "https://www.wowhead.com/ko/spell=1295924/%EC%98%A4%EC%83%89-%ED%99%94%EC%82%B4"
+      },
+      {
+        "claim": "Cumulative Power mage season set effect",
+        "spell_id": 1296930,
+        "source": "https://www.wowhead.com/ko/spell=1296930/%EC%B6%95%EC%A0%81%EB%90%9C-%ED%9E%98"
+      },
+      {
+        "claim": "Spellslinger ST first Prismatic Bolt OR/AND grouping",
+        "source": "https://www.wowhead.com/guide/classes/mage/arcane/rotation-cooldowns-pve-dps"
+      }
+    ],
+    "pending": [
+      "full spell icon audit",
+      "remaining spell identity/ID",
+      "all row-by-row combat validity",
+      "live-client verification",
+      "8-spec private output generator E2E"
+    ]
+  }
 }
