@@ -2,8 +2,13 @@
 from copy import deepcopy
 import hashlib
 import json
+from pathlib import Path
+from tempfile import TemporaryDirectory
 import unittest
+from unittest.mock import patch
 
+from engine.v2.private_changes import make_patch
+from engine.v2.patch_v11 import apply_patch
 from engine.v2.ai_proposals import (
     apply_approval, canonical_sha, prepare_request, review_report,
     suggest_via_openai, validate_proposal, _replacement_in_text_node,
@@ -200,6 +205,67 @@ class AIProposalTests(unittest.TestCase):
         self.assertEqual(json.loads(sent["body"]["input"]), self.req)
         with self.assertRaisesRegex(ValueError, "Explicit API key"):
             suggest_via_openai(self.req, "example-model-v1", "")
+
+
+    def test_approved_ai_text_flows_into_exact_original_v11_span_only(self):
+        """Proposed -> reviewed -> approved -> private diff -> V11 patch, synthetic."""
+        original_icon = ICON.replace(
+            'src="https://example.org/icon.png" onerror="this.hidden=true"',
+            'onerror="this.hidden=true" src="https://example.org/icon.png"',
+        )
+        first_condition = "<b>기존 조건</b>" + original_icon + " 참고"
+        html = (
+            '<!doctype html><html><head><style>.keep{color:red}</style></head><body>'
+            '<div class="manual-view" data-guide="rogue">'
+            '<section id="rogue-rotation"><table class="priority"><thead>'
+            '<tr><th>순위</th><th>기술</th><th>조건</th></tr></thead>'
+            '<tbody><tr><td>1</td><td>합성 기술</td><td>' + first_condition
+            + '</td></tr><tr><td>2</td><td>합성 기술 2</td>'
+            '<td>다른 규칙 그대로</td></tr></tbody></table></section>'
+            '<section id="rogue-advanced">'
+            '<p class="sample">기존 팁 설명입니다.</p></section></div>'
+            '<script>const ui = "original";</script></body></html>'
+        )
+        original = fixture()
+        original["baseline_v11_sha256"] = hashlib.sha256(
+            html.encode("utf-8")
+        ).hexdigest()
+        original["rotation_groups"][0]["rules"][0]["condition_html"] = first_condition
+        req = prepare_request(original, SOURCE, [RULE_ID])
+        proposal = suggestion(req)
+        report = review_report(req, proposal, original)
+        approval = {
+            "schema_version": "v11-ai-approval-v1",
+            "proposal_sha256": report["proposal_sha256"],
+            "approved_ids": [RULE_ID],
+        }
+        candidate = apply_approval(req, proposal, approval, original)
+        patch_doc = make_patch(original, candidate)
+        self.assertEqual(len(patch_doc["updates"]), 1)
+        provenance = {"guides": [{
+            "guide_id": "rogue",
+            "rotation_groups": [{"rules": [{
+                "id": RULE_ID,
+                "source_fragment_sha256": "b" * 64,
+            }]}],
+            "advanced_guidance": [{
+                "id": TIP_ID,
+                "source_fragment_sha256": "c" * 64,
+            }],
+        }]}
+        with TemporaryDirectory() as tmp:
+            src = Path(tmp) / "trusted-private-v11.html"
+            src.write_text(html, encoding="utf-8")
+            with patch("engine.v2.patch_v11.extract_details",
+                       return_value=provenance):
+                generated = apply_patch(src, patch_doc).decode("utf-8")
+        self.assertEqual(
+            generated, html.replace("<b>기존 조건</b>", "<b>변경 조건</b>", 1)
+        )
+        self.assertIn(original_icon, generated)
+        self.assertIn("<style>.keep{color:red}</style>", generated)
+        self.assertIn('<script>const ui = "original";</script>', generated)
+        self.assertIn("다른 규칙 그대로", generated)
 
 
 if __name__ == "__main__":
