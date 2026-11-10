@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "source": "local-wow_rotation_engine_v2",
+  "source_paths": {
+    "engine/__init__.py": {
+      "sha256": "65f49c8e6c71e26a3373c4474cf12e4e6a715358f6553d81a14b7971a40c0477",
+      "size_bytes": 57
+    },
+    "engine/build.py": {
+      "sha256": "3ad13f75f2eef03d96f0b98a6344989d766393fff25d941e024a7db7f47d8f69",
+      "size_bytes": 6641
+    },
+    "engine/contracts.py": {
+      "sha256": "c15dcd587acb89b25aa750773cedaee2f6cb66974f79dd3c1a767342d771f6a6",
+      "size_bytes": 5143
+    },
+    "engine/diff_rules.py": {
+      "sha256": "27d986a429610fc918dd86e3a6dc32456d6abf16d67e87fcdda69d8b4139873d",
+      "size_bytes": 3186
+    },
+    "engine/evaluate_rules.py": {
+      "sha256": "1b51cfdbd93b7d63fb2624261e4f4afd974cc645dc021a4313ec98d665a73fba",
+      "size_bytes": 796
+    },
+    "engine/export_index.py": {
+      "sha256": "e04250b40964d692073bfb61284a354587257898c58f79530ae74fcbeb4a8cb2",
+      "size_bytes": 1869
+    },
+    "engine/html_spans.py": {
+      "sha256": "d9df7d820cc080aabfdf6c2600a1d6101e951f3d8f801b0fc8e8dfaa85589cc5",
+      "size_bytes": 2679
+    },
+    "engine/import_rules.py": {
+      "sha256": "082de88ebd09b63d9841ebb352bc1e743c285f89fa221467413c35b9f4b932ce",
+      "size_bytes": 430
+    },
+    "engine/import_v11.py": {
+      "sha256": "7e98c2e5cf30003b8777d57d40ca24027d92e435c8e48dee7f26e76dbe422448",
+      "size_bytes": 6770
+    },
+    "engine/rules.py": {
+      "sha256": "140d10d9ab67081d3ae54a53895a9823b1ba39ba38d6a1de20c48da6a28f841c",
+      "size_bytes": 11638
+    },
+    "engine/validate_rules.py": {
+      "sha256": "3ae2ac4cf43e1862f3263ee582383f9ba68c61af5323b436a0d61f1f8e9c7db3",
+      "size_bytes": 6402
+    },
+    "schemas/rotation-rules.schema.json": {
+      "sha256": "01b7ad6084a94451309bb6d15879dd0685abb32e48631afb8e2322473f028526",
+      "size_bytes": 5454
+    },
+    "templates/shell.html": {
+      "sha256": "d34c642f5e0afc84949b3f4745ee3f50836e1aae351e0af37b257d9fc118b0f2",
+      "size_bytes": 39712
+    },
+    "requirements.txt": {
+      "sha256": "0ec28f3d08a12a7138d70b3cfd6f538e8c0bb8801abecd05997017539c98d821",
+      "size_bytes": 45
+    }
+  },
+  "content_excluded": [
+    "content/guides/*.json",
+    "content/rules/*.json",
+    "content/spell_index_from_v11.json",
+    "reference/v11.html",
+    "reference/v11_source.md"
+  ],
+  "v11_baseline_sha256": "5d70279c4dd073eccef1f3b13565a8f555cd81c9f0a5b7eda7e3485e410742be",
+  "v11_baseline_size_bytes": 898297,
+  "v2_original_rule_stats": {
+    "guide_count": 7,
+    "priority_table_count": 23,
+    "priority_row_count": 177,
+    "advanced_item_count": 79,
+    "spell_id_matched_count": 164,
+    "spell_id_unresolved_count": 13,
+    "publication_status": "blocked_pending_review"
+  },
+  "note": "Source code, HTML shell without actual guide body and JSON Schema only. Original guide content and rule candidate data intentionally not published."
+}
