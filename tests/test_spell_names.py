@@ -32,6 +32,7 @@ class NameEvidenceTests(unittest.TestCase):
         result=audit()
         self.assertFalse(result["publish_ready"])
         self.assertEqual(result["counts"]["distinct_spell_ids"],176)
+        self.assertEqual(result["counts"]["inherited_name_records"],178)
         self.assertEqual(result["counts"]["not_checked"],176)
         self.assertEqual(result["counts"]["official_names_auto_approved"],0)
 
