@@ -157,7 +157,10 @@ def main(argv: list[str] | None = None) -> int:
     try:
         store = LocalAuthStore()
         if args.command == "status":
-            print("Saved ChatGPT registrations:", len(store.registered_client_ids()))
+            accounts = store.registered_client_ids()
+            print("Saved ChatGPT registrations:", len(accounts))
+            for client in accounts:
+                print("-", client)
             print("No model request, inference, or login was performed.")
             return 0
         print("Opening system browser for user-approved ChatGPT authorization.")
