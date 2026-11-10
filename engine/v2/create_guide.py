@@ -25,6 +25,7 @@ from bs4 import BeautifulSoup
 from .build import ROOT
 from .html_spans import SpanParser, find_class
 from .fidelity import audit_create_fragment
+from .mechanics import validate as validate_mechanics, render_flows, render_comparisons, rich
 
 BASELINE_SHA = "5d70279c4dd073eccef1f3b13565a8f555cd81c9f0a5b7eda7e3485e410742be"
 OLD_IDS = ("fire", "frost", "dk", "hunter", "bm", "rogue", "assassination")
@@ -158,6 +159,7 @@ def validate_draft(doc: dict) -> dict:
             raise ValueError("Unreviewed tip cannot be approved")
         if not tip["text"] or not tip["topic"]:
             raise ValueError("Missing advanced tip body")
+    validate_mechanics(editorial["mechanics"], doc)
     return {
         "spells": spells,
         "row_count": len(row_ids),
@@ -244,6 +246,8 @@ def _section(section_id: str, heading: str, body: str, *, number: int = 0,
 def render_arcane(doc: dict) -> dict:
     meta = validate_draft(doc)
     spellmap = meta["spells"]
+    spells_by_key = {spell["key"]: spell for spell in doc["spells"]}
+    def link(t): return rich(t, spells_by_key, _spell)
     hero_labels = {"sunfury": "성난태양", "spellslinger": "주문술사"}
     switch = _hero_switch(doc["default_hero"])
     editorial = doc["editorial"]
@@ -261,7 +265,7 @@ def render_arcane(doc: dict) -> dict:
         groups = [g for g in doc["rotation_groups"] if g["hero"] == hero]
         items = [
             '<tr><td>' + _e(g["target_label"]) + '</td><td>'
-            + "<strong>" + _e(g["rows"][0]["spell"]) + "</strong> — "
+            + _spell(spellmap[g["rows"][0]["spell"]]) + " — "
             + _e(g["rows"][0]["condition"])
             + '<div class="muted">' + _e(g["rows"][0]["comment"]) + '</div>'
             + '</td></tr>' for g in groups
@@ -282,7 +286,7 @@ def render_arcane(doc: dict) -> dict:
         + '</ol>' + _aside('영웅 특성 구분', editorial["overview"]["caution"])
     )
     pre = (
-        '<p>' + _e(chapters["pre"]["lead"]) + '</p>'
+        '<p>' + link(chapters["pre"]["lead"]) + '</p>'
         + '<ul class="simple-list">' + "".join(
             '<li>' + _e(value) + '</li>' for value in doc["preparation"]
         ) + '</ul>' + _aside('사전 준비 예외', chapters["pre"]["caution"])
@@ -293,15 +297,18 @@ def render_arcane(doc: dict) -> dict:
             '<h3>' + _e(item["heading"]) + '</h3><p>' + _e(item["body"]) + '</p>'
             for item in doc["principles"]
         )
+        + render_flows(editorial["mechanics"], "basics", spells_by_key, _spell)
+        + render_comparisons(editorial["mechanics"], spells_by_key, _spell)
         + _aside('조건을 읽을 때', chapters["basics"]["caution"])
     )
     opener = (
         '<p>' + _e(chapters["opener"]["lead"]) + '</p>'
         + '<h3>기본 시전 연결 예시</h3><ol class="steps compact">' + "".join(
-            '<li><b>' + _e(step["action"]) + '</b> — '
+            '<li>' + _spell(spellmap[step["action"]]) + ' — '
             + _e(step["condition"]) + ' <span class="muted">'
             + _e(step["note"]) + '</span></li>' for step in doc["opener"]
         ) + '</ol>'
+        + render_flows(editorial["mechanics"], "opener", spells_by_key, _spell)
         + _aside('오프너를 고정 시퀀스로 사용하지 마세요', chapters["opener"]["caution"], caution=True)
     )
     rotations = (
@@ -322,9 +329,9 @@ def render_arcane(doc: dict) -> dict:
         '<p>핵심 쿨다운은 단순히 사용 가능 여부가 아니라 강화 구간, 대상 유지 시간, '
         '다음 사용 기회를 고려합니다. 아래 설명은 검토 중인 판단 기준입니다.</p>'
         + "".join(
-            '<h3>' + _e(item["title"]) + '</h3>'
+            '<h3>' + _spell(spells_by_key[item["spell_key"]]) + ' · ' + _e(item["title"]) + '</h3>'
             + '<p>' + _e(item["principle"]) + '</p>'
-            + '<p><b>사용 판단:</b> ' + _e(item["decision"]) + '</p>'
+            + '<p><b>사용 판단:</b> ' + link(item["decision"]) + '</p>'
             + '<p><b>예외 및 주의:</b> ' + _e(item["exception"]) + '</p>'
             for item in editorial["cooldowns"]
         )
@@ -335,7 +342,7 @@ def render_arcane(doc: dict) -> dict:
     for tip in doc["advanced_guidance"]:
         item = (
             '<div class="advanced-item" data-tip-id="' + _e(tip["id"]) + '">'
-            '<h3>' + _e(tip["topic"]) + '</h3><p>' + _e(tip["text"])
+            '<h3>' + _e(tip["topic"]) + '</h3><p>' + link(tip["text"])
             + '</p></div>'
         )
         if tip["hero"] == "both":
@@ -343,7 +350,7 @@ def render_arcane(doc: dict) -> dict:
         else:
             only[tip["hero"]].append(item)
     advanced = (
-        '<p>' + _e(chapters["advanced"]["lead"]) + '</p>'
+        '<p>' + link(chapters["advanced"]["lead"]) + '</p>'
         + "".join(shared) + "".join(
             '<div class="variant" data-hero="' + hero + '">'
             '<h3>' + hero_labels[hero] + ' 전용 판단</h3>'
@@ -357,7 +364,7 @@ def render_arcane(doc: dict) -> dict:
         '아래의 사례는 설명을 위한 가상 상황이지 확정 시전 지시는 아닙니다.</p>'
         + "".join(
             '<h3>' + _e(item["question"]) + '</h3>'
-            + '<p>' + _e(item["reasoning"]) + '</p>'
+            + '<p>' + link(item["reasoning"]) + '</p>'
             + '<p class="tiny-rule">' + _e(item["caution"]) + '</p>'
             for item in editorial["practice"]
         )
