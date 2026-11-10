@@ -24,7 +24,7 @@ def bootstrap(source_path:Path, source_md:Path|None=None, *, destination_root:Pa
     source = source_path.read_text(encoding='utf8')
     spans = SpanParser(source).spans
     guides = find_class(spans,'div','manual-view')
-    assert len(guides)==7, f'Expected 7 V11 guides, got {len(guides)}'
+    assert len(guides) in (7, 8), f'Expected 7 original or 8 extended V11 guides, got {len(guides)}'
     soup = BeautifulSoup(source,'html.parser')
     nav_titles={}
     nav_map={}
@@ -33,6 +33,7 @@ def bootstrap(source_path:Path, source_md:Path|None=None, *, destination_root:Pa
         nav_map[guide]=[(a.get('data-target'),a.get_text(' ',strip=True)) for a in tocn.select('a[data-target]')]
     class_map = {
         'fire': ('마법사','MAGE','화염','FIRE',[('sunfury','성난태양')]),
+        'arcane': ('마법사','MAGE','비전','ARCANE',[('sunfury','성난태양'),('spellslinger','주문술사')]),
         'frost': ('마법사','MAGE','냉기','FROST',[('spellslinger','주문술사'),('frostfire','서리불꽃')]),
         'dk': ('죽음의 기사','DEATH KNIGHT','냉기','FROST',[('deathbringer','죽음의 인도자')]),
         'hunter': ('사냥꾼','HUNTER','사격','MARKSMANSHIP',[('sentinel','파수꾼')]),
