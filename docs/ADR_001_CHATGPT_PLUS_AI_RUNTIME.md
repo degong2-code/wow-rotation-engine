@@ -71,6 +71,10 @@ AI 제공자는 `AIProvider`(모델 목록, `AIJob` 입력, `AIProposal` 출력)
 
 기존 `ai_proposals.py`의 `--send-api` / `OPENAI_API_KEY` 경로는 이전 시험용으로 남아 있다. **새 무료 정책의 기본 실행 경로와 연결하지 않는다.** 별도의 API 키 유료 호출을 묵시적으로 활성화하거나 비공개 자료를 자동 송신하면 안 된다.
 
+## GitHub만으로 실행한다는 추가 사용자 요구 (2026-11-11)
+
+[ADR-002 — GitHub 전용 Plus 이용 가능성 재판정](ADR_002_GITHUB_ONLY_PLUS_FEASIBILITY.md)에서 **GitHub Actions에 Plus OAuth/인증 캐시를 지속 보관하는 설계는 현재 배제**했다. 새로운 사용자 요구는 **로컬 PC 미사용·GitHub와 모바일 브라우저만으로 사용 가능**이다. 공식 Codex CLI의 원격 Device Code 인증 + GitHub Codespaces를 잠정 실측 후보로 선정했다. 이 경로는 본 문서의 SIWC 직접 Responses API 연동과 **인증·제품 범위가 다르며**, 개인 계정 로그인·단일 추론을 성공시킨 적은 없다. **실측 PASS 전에는 범용 엔진 개발을 우선하지 않는다.**
+
 ## 4.1. 후속 구현 — 공식 OAuth 로컬 연결 (2026-11-11)
 
 - [ChatGPT Plus 로컬 로그인 사용 및 보안 범위](CHATGPT_PLUS_LOCAL_LOGIN.md)
