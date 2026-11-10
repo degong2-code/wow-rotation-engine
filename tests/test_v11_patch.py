@@ -136,7 +136,7 @@ class PrivateV11PatchTests(unittest.TestCase):
     def test_inherited_v11_image_handler_and_spell_icon_are_preserved(self):
         icon = (
             '<span data-spell="synthetic-spell">'
-            '<img src="https://example.org/icon.jpg" onerror="this.hidden=true"/></span>'
+            '<img onerror="this.hidden=true" src="https://example.org/icon.jpg"/></span>'
         )
         old_html = SOURCE.replace(
             "<b>합성 조건</b> 테스트 설명", f"<b>합성 조건</b>{icon} 테스트 설명"
