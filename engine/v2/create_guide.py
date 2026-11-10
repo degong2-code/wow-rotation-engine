@@ -325,7 +325,7 @@ def render_arcane(doc: dict) -> dict:
             '<h3>' + _e(item["title"]) + '</h3>'
             + '<p>' + _e(item["principle"]) + '</p>'
             + '<p><b>사용 판단:</b> ' + _e(item["decision"]) + '</p>'
-            + _aside('예외 및 주의', item["exception"])
+            + '<p><b>예외 및 주의:</b> ' + _e(item["exception"]) + '</p>'
             for item in editorial["cooldowns"]
         )
     )
@@ -358,7 +358,7 @@ def render_arcane(doc: dict) -> dict:
         + "".join(
             '<h3>' + _e(item["question"]) + '</h3>'
             + '<p>' + _e(item["reasoning"]) + '</p>'
-            + _aside('조건의 한계', item["caution"])
+            + '<p class="tiny-rule">' + _e(item["caution"]) + '</p>'
             for item in editorial["practice"]
         )
     )
