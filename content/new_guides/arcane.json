@@ -205,8 +205,8 @@
           "id": "arcane:rotation:sunfury-aoe:row-3",
           "order": 3,
           "spell": "오색 화살",
-          "condition": "사용 가능하며 축적된 힘 중첩을 확보했다면.",
-          "comment": "세트 4개 효과를 고려하되 사용 시점을 무기한 미루지는 않는다.",
+          "condition": "오색 화살을 사용할 수 있고, 시즌 2 4세트 보유 시 가능하면 축적된 힘 8중첩을 맞춘 상태에서. 4세트 미보유 시에는 해당 중첩 조건 없이 판단한다.",
+          "comment": "성난태양의 오색 화살은 강화 중첩을 우선 고려하되 발동을 오래 보관해 다음 기회를 잃지 않도록 한다. 비전의 영혼 등 상위 우선순위가 충족되는지 먼저 확인한다.",
           "review": "needs_manual_gameplay_review"
         },
         {
@@ -961,6 +961,46 @@
           "title": "영웅별 중첩 기준 혼동 주의",
           "body": "주의: 성난태양 25중첩과 주문술사 20중첩은 서로 다른 조건입니다. 비전의 영혼 강화 중에는 별도 예외도 있으므로 같은 탄막 기준을 모든 빌드에 적용하지 마세요.",
           "detail_anchor": "arcane-rotation",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "sunfury-orb-different-threshold",
+          "target_type": "rule",
+          "target_id": "arcane:rotation:sunfury-st:row-6",
+          "marker": "!",
+          "title": "비전 보주 조건은 공략 유형에 따라 다름",
+          "body": "주의: 한 공략의 간편 우선순위는 충전물 0개, 상세 우선순위는 3개 미만을 제시합니다. 현재 표는 간편 기준을 따르는 초안이며 실제 채택 빌드를 검토해야 합니다.",
+          "detail_anchor": "arcane-rotation",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "sunfury-aoe-tier-stacks",
+          "target_type": "rule",
+          "target_id": "arcane:rotation:sunfury-aoe:row-3",
+          "marker": "?",
+          "title": "성난태양 오색 화살과 4세트",
+          "body": "시즌 2 4세트를 장착했다면 가능하면 축적된 힘 8중첩을 노립니다. 세트 미보유일 때는 중첩 조건을 전제로 삼지 않으며, 다른 우선순위와 발동 보존 여부를 함께 확인합니다.",
+          "detail_anchor": "arcane-cooldowns",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "spellslinger-orb-sources",
+          "target_type": "rule",
+          "target_id": "arcane:rotation:spellslinger-aoe:row-2",
+          "marker": "!",
+          "title": "광역 비전 보주 사용 빈도 차이",
+          "body": "주의: 보주 숙련과 충전 횟수 초과 방지를 강조하는 공략과 광역에서 적극적인 보주 사용을 강조하는 공략이 있습니다. 어떤 특성 빌드인지 확인하기 전에는 하나의 시전 규칙으로 확정하지 마세요.",
+          "detail_anchor": "arcane-rotation",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane-mana-rare-fallback",
+          "target_type": "rule",
+          "target_id": "arcane:rotation:spellslinger-st:row-8",
+          "marker": "?",
+          "title": "마나 부족 탄막은 최하위 예외",
+          "body": "이번 시즌에는 마나 부족 자체가 일반 운용의 주된 판단 축이 아니라는 설명도 있습니다. 이 조건은 다른 시전이 불가능한 드문 상황의 최후 순위로 이해하고 실제 발생 빈도를 검토하세요.",
+          "detail_anchor": "arcane-basics",
           "review": "needs_manual_gameplay_review"
         }
       ]
