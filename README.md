@@ -14,6 +14,19 @@ python -m engine.manual_site --output dist/manual/index.html
 
 **현재 범위는 빠른 참조판입니다.** 원본 V11의 상세 발동 조건과 Advanced Tips 본문은 아직 데이터에 포함되지 않으므로, 이 HTML만 보고 게임 내 스킬 사용 여부를 결정해서는 안 됩니다. 사용 방법과 데이터 업데이트 방법은 [간략 교본 설명](docs/MANUAL_PREVIEW.md)을 보세요.
 
+## ChatGPT Plus 로컬 로그인 시범 (추가 개발, PR #18)
+
+[WSL2 / Linux 로컬 로그인 가이드](docs/CHATGPT_PLUS_LOCAL_LOGIN.md)에 공식 **Sign in with ChatGPT OAuth/PKCE + 서명된 ID Token 검증 + loopback 콜백 + 소유자 전용 계정 저장** 절차를 기록했습니다.
+
+```bash
+python -m pip install -r requirements-v2.txt
+python -m engine.v2.chatgpt_signin status
+# 사용자가 자기 PC에서 명시적으로 동의할 때만 실행
+python -m engine.v2.chatgpt_signin login
+```
+
+`login`만으로 AI 추론은 실행하지 않습니다. `--list-models --confirm-credits-off`는 사용자가 앱 크레딧 사용 OFF를 직접 확인한 경우에만 별도 실행합니다. **개인 계정의 실로그인·모델 목록·AI 사용량은 아직 시험하지 않았습니다.** 로컬 저장소는 WSL/Linux 0700/0600 권한 시범이며, 자동 refresh와 Windows 전용 보안 키체인은 미구현입니다.
+
 ## ChatGPT Plus 구독 기반 AI 연결 (개발 중)
 
 2026-11-11 논의와 실행 정책을 [ADR-001: ChatGPT Plus AI Runtime](docs/ADR_001_CHATGPT_PLUS_AI_RUNTIME.md)에 기록했습니다.
