@@ -88,3 +88,13 @@ python -m engine.source_snapshots diff --previous dist/synthetic-source-before.j
 ```
 
 위 입력은 **완전 합성 문장**입니다. 원문 텍스트를 공개 Artifact에 보관하지 않고 해시만 비교합니다. 결과는 변경 관측 항목의 검토 후보이며 자동 번역·자동 게시와 무관합니다. 상세: [Source Evidence Snapshot](docs/SOURCE_SNAPSHOTS.md).
+
+
+## 공식 주문명 404·불일치 검토
+
+```bash
+python -m engine.spell_triage --output dist/spell-review-queue.json
+python -m engine.client_spell_probe --output dist/WoWRotationSpellProbe
+```
+
+2026-11-10 공식 API 조회에서 발견된 25개 404와 1개 명칭 불일치를 **실제 우선순위 177행에 미치는 영향**으로 분류합니다. P0는 혹한의 쐐기(4개 행), P1은 기술명 불일치 1개, P2는 기타 사전 전용 404 24개입니다. [검토·클라이언트 교차확인 가이드](docs/SPELL_TRIAGE.md).

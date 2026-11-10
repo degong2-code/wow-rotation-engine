@@ -115,6 +115,38 @@ jobs:
           assert "SYNTHETIC DATA ONLY" not in json.dumps(after)
           assert "SYNTHETIC DATA ONLY" not in json.dumps(diff)
           PY
+      - name: Generate fail-closed official spell review queue
+        run: python -m engine.spell_triage --output dist/spell-review-queue.json
+      - name: Verify 404 priority and name mismatch audit counts
+        run: |
+          python - <<'PY'
+          import json
+          p="dist/spell-review-queue.json"
+          q=json.load(open(p, encoding="utf-8"))
+          s=q["summary"]
+          assert s["unique_spell_ids"] == 176 and s["raw_name_records"] == 178
+          assert s["api_name_matches"] == 150 and s["api_name_mismatches"] == 1
+          assert s["api_404"] == 25 and s["review_queue_ids"] == 26
+          assert s["priority_rotation_spell_ids"] == 1
+          assert s["affected_priority_rows"] == 4
+          assert s["glossary_only_review_ids"] == 25
+          assert not q["automatic_publish_allowed"]
+          assert all(not x["automatic_name_correction_allowed"]
+                     for x in q["records"])
+          PY
+      - name: Ensure unresolved official lookup does not pass gate
+        run: |
+          if python -m engine.spell_triage --output dist/spell-review-queue.json --require-resolved; then
+            echo "ERROR: Unverified Blizzard spell IDs passed readiness gate"
+            exit 1
+          fi
+      - name: Generate optional koKR client lookup addon
+        run: python -m engine.client_spell_probe --output dist/WoWRotationSpellProbe
+      - name: Verify deterministic addon generation
+        run: |
+          cp dist/WoWRotationSpellProbe/SpellProbe.lua /tmp/WoWRotationSpellProbe-original.lua
+          python -m engine.client_spell_probe --output dist/WoWRotationSpellProbe
+          cmp /tmp/WoWRotationSpellProbe-original.lua dist/WoWRotationSpellProbe/SpellProbe.lua
       - name: Upload validated artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -127,4 +159,11 @@ jobs:
             dist/spell-name-audit.json
             dist/condition-worklist.json
             dist/synthetic-source-diff.json
+            dist/spell-review-queue.json
+          retention-days: 7
+      - name: Upload optional WoW client probe addon
+        uses: actions/upload-artifact@v4
+        with:
+          name: wow-ko-kr-client-spell-probe
+          path: dist/WoWRotationSpellProbe/
           retention-days: 7
