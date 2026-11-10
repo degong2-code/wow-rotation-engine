@@ -1,0 +1,50 @@
+name: Collect Blizzard ko_KR spell names (manual; evidence only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_ids:
+        description: "Spell IDs to query, max 176. API may return 404 for unsupported spells."
+        required: true
+        default: '176'
+
+permissions:
+  contents: read
+
+jobs:
+  collect-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install validator dependencies
+        run: python -m pip install -r requirements-v2.txt
+      - name: Validate input and presence of credentials
+        shell: bash
+        env:
+          BLIZZARD_CLIENT_ID: ${{ secrets.BLIZZARD_CLIENT_ID }}
+          BLIZZARD_CLIENT_SECRET: ${{ secrets.BLIZZARD_CLIENT_SECRET }}
+          MAX_IDS: ${{ inputs.max_ids }}
+        run: |
+          test -n "$BLIZZARD_CLIENT_ID" && test -n "$BLIZZARD_CLIENT_SECRET" || { echo "Missing Blizzard GitHub Secrets"; exit 1; }
+          [[ "$MAX_IDS" =~ ^[0-9]+$ ]] && (( MAX_IDS >= 1 && MAX_IDS <= 176 )) || { echo "max_ids must be 1..176"; exit 1; }
+      - name: Query official Korean spell data (no automatic approval)
+        env:
+          BLIZZARD_CLIENT_ID: ${{ secrets.BLIZZARD_CLIENT_ID }}
+          BLIZZARD_CLIENT_SECRET: ${{ secrets.BLIZZARD_CLIENT_SECRET }}
+          MAX_IDS: ${{ inputs.max_ids }}
+        run: |
+          python -m engine.spell_names fetch --max-ids "$MAX_IDS" \
+            --output dist/spell-name-snapshot.json \
+            --report dist/spell-name-audit.json
+      - name: Upload comparison evidence only
+        uses: actions/upload-artifact@v4
+        with:
+          name: ko-kr-spell-name-evidence
+          path: |
+            dist/spell-name-snapshot.json
+            dist/spell-name-audit.json
+          retention-days: 7
