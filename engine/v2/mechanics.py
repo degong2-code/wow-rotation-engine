@@ -109,7 +109,7 @@ def validate(mechanics: dict, draft: dict) -> dict:
     }
 
 
-def render_flows(mechanics: dict, section: str, spells: dict, render_spell) -> str:
+def render_flows(mechanics: dict, section: str, spells: dict, render_spell, note_for=None) -> str:
     output = []
     for index, item in enumerate((f for f in mechanics['flows'] if f['section'] == section), 1):
         seq = []
@@ -119,7 +119,7 @@ def render_flows(mechanics: dict, section: str, spells: dict, render_spell) -> s
             seq.append(item_html)
         output.append(
             '<div class="mechanic-flow" data-mechanic-id="' + escape(item['id'], quote=True) + '">'
-            '<h3>' + escape(item['title'], quote=True) + '</h3>'
+            '<h3>' + escape(item['title'], quote=True) + (' ' + note_for('mechanic', item['id']) if note_for else '') + '</h3>'
             '<p class="rule">' + escape(item['context'], quote=True) + '</p>'
             '<p class="sequence">' + ' <b>→</b> '.join(seq) + '</p>'
             '<ol class="steps compact">' + ''.join(
@@ -135,7 +135,7 @@ def render_flows(mechanics: dict, section: str, spells: dict, render_spell) -> s
     return ''.join(output)
 
 
-def render_comparisons(mechanics: dict, spells: dict, render_spell) -> str:
+def render_comparisons(mechanics: dict, spells: dict, render_spell, note_for=None) -> str:
     parts = []
     for item in mechanics['comparisons']:
         rows = ''.join(
@@ -147,7 +147,7 @@ def render_comparisons(mechanics: dict, spells: dict, render_spell) -> str:
         )
         parts.append(
             '<div class="mechanic-comparison" data-mechanic-id="' + escape(item['id'], quote=True) + '">'
-            '<h3>' + escape(item['title'], quote=True) + '</h3>'
+            '<h3>' + escape(item['title'], quote=True) + (' ' + note_for('mechanic', item['id']) if note_for else '') + '</h3>'
             '<p>' + escape(item['context'], quote=True) + '</p>'
             '<div class="table-scroll"><table class="comparison"><thead><tr>'
             '<th>상황</th><th>판단 조건</th><th>행동 후보</th><th>이유</th>'
