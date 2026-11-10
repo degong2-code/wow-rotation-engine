@@ -133,5 +133,48 @@ class PrivateV11PatchTests(unittest.TestCase):
                 write_private_patch(source, Path(tmp) / "patch.json", source)
 
 
+    def test_inherited_v11_image_handler_and_spell_icon_are_preserved(self):
+        icon = (
+            '<span data-spell="synthetic-spell">'
+            '<img src="https://example.org/icon.jpg" onerror="this.hidden=true"></span>'
+        )
+        old_html = SOURCE.replace(
+            "<b>합성 조건</b> 테스트 설명", f"<b>합성 조건</b>{icon} 테스트 설명"
+        )
+        new_content = f"<b>수정 조건</b>{icon} 테스트 설명"
+        with TemporaryDirectory() as tmp:
+            file = Path(tmp) / "v11.html"
+            file.write_text(old_html, encoding="utf-8")
+            document = {
+                "schema_version": "v11-private-patch-v1",
+                "baseline_v11_sha256": hashlib.sha256(
+                    old_html.encode("utf-8")
+                ).hexdigest(),
+                "updates": [proposal("rule", RULE, RULE_HASH, new_content)],
+            }
+            with patch("engine.v2.patch_v11.extract_details",
+                       return_value=baseline_details()):
+                actual = apply_patch(file, document).decode("utf-8")
+                self.assertEqual(
+                    actual,
+                    old_html.replace(
+                        f"<b>합성 조건</b>{icon} 테스트 설명", new_content,
+                    ),
+                )
+                missing_icon = dict(document, updates=[
+                    proposal("rule", RULE, RULE_HASH, "<b>수정 조건</b> 테스트 설명")
+                ])
+                with self.assertRaisesRegex(ValueError, "spell icons"):
+                    apply_patch(file, missing_icon)
+                altered_event = dict(document, updates=[
+                    proposal(
+                        "rule", RULE, RULE_HASH,
+                        new_content.replace("this.hidden=true", "alert(1)")
+                    )
+                ])
+                with self.assertRaisesRegex(ValueError, "event handler"):
+                    apply_patch(file, altered_event)
+
+
 if __name__ == "__main__":
     unittest.main()
