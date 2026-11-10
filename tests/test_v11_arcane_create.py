@@ -127,6 +127,10 @@ class ArcaneCreateTests(unittest.TestCase):
 
     def test_spellslinger_bolt_logic_is_grouped_and_spell_ids_have_evidence(self):
         groups = {group["id"]: group for group in self.draft["rotation_groups"]}
+        barrage = groups["arcane:rotation:spellslinger-st"]["rows"][1]
+        self.assertEqual(barrage["spell"], "비전 탄막")
+        self.assertIn("비전 충전물 4개", barrage["comment"])
+        self.assertIn("오프너에서는 예외", barrage["comment"])
         opening = groups["arcane:rotation:spellslinger-st"]["rows"][0]
         self.assertEqual(opening["spell"], "오색 화살")
         self.assertIn("비전 연사가 13중첩 초과이며, (", opening["condition"])
