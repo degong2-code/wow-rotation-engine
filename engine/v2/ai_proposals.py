@@ -326,7 +326,11 @@ def apply_approval(prepared: dict, proposal: dict, approval: dict,
         approval["proposal_sha256"] != canonical_sha(proposal)):
         raise ValueError("Explicit approval file is missing or does not match proposal")
     approved_ids = approval["approved_ids"]
-    if not isinstance(approved_ids, list) or len(approved_ids) != len(set(approved_ids)):
+    if (
+        not isinstance(approved_ids, list)
+        or any(not isinstance(item, str) for item in approved_ids)
+        or len(approved_ids) != len(set(approved_ids))
+    ):
         raise ValueError("Invalid approval IDs")
     allowed_ids = {r["id"] for r in valid}
     if any(not isinstance(i, str) or i not in allowed_ids for i in approved_ids):
@@ -402,10 +406,14 @@ def main() -> int:
             approval = load_private(args.approval)
             result = apply_approval(prepared, proposed, approval, detail)
     _write_private(args.output, result)
+    count = (
+        len(make_patch(detail, result)["updates"])
+        if args.command == "approve" else len(result.get("updates", []))
+    )
     print(json.dumps({
         "status": "PASS", "command": args.command,
         "output_private_only": True,
-        "updates": len(result.get("updates", [])),
+        "updates": count,
         "auto_published": False,
     }, ensure_ascii=False))
     return 0
