@@ -40,7 +40,8 @@ class V11MechanicsTests(unittest.TestCase):
                 len(page.select("#arcane-" + section + " .spell.tip-trigger")),
                 0, section
             )
-        self.assertEqual(len(page.select("#arcane-basics table.comparison tbody tr")), 3)
+        self.assertEqual(len(page.select("#arcane-basics table.comparison")[0].select("tbody tr")), 3)
+        self.assertEqual(len(page.select("#arcane-basics table.comparison")[1].select("tbody tr")), 4)
 
     def test_no_icon_or_tooltip_is_guessed_for_unverified_spell(self):
         page = BeautifulSoup(render_arcane(self.draft)["html"], "html.parser")
