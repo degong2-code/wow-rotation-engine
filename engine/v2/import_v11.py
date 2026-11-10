@@ -46,7 +46,7 @@ def bootstrap(source_path:Path, source_md:Path|None=None, *, destination_root:Pa
     for guide in guides:
         gid=guide.attrs['data-guide']
         _,_,_,_,heroes=class_map[gid]
-        sections=[x for x in spans if x.tag=='section' and x.start>guide.inner_start and x.end<guide.inner_end]
+        sections=[x for x in spans if x.tag=='section' and x.start>=guide.inner_start and x.end<=guide.inner_end]
         sections.sort(key=lambda x:x.start)
         assert sections, f'No sections for {gid}'
         soupguide=soup.select_one(f'#guide-{gid}')
