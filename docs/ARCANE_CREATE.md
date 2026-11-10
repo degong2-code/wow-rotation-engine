@@ -1,0 +1,115 @@
+# 신규 전문화 CREATE 시험 — 비전 마법사 (Arcane)
+
+## 목표 및 범위
+
+- 사용자 지정 신규 전문화: **마법사 비전**, `Midnight Season 2 / patch 12.1.5`
+- 기존 7개 전문화의 **V11 화면과 설명 HTML을 바이트 단위로 보존**하면서 8번째 교본 추가
+- **영웅 특성 2개:** 성난태양(Sunfury), 주문술사(Spellslinger)
+- **딜사이클 표 4개:** 성난태양 단일·광역 + 주문술사 단일·광역
+- **신규 초안:** 우선순위 **34행**, 고급 운용 **10개**, HTML 장 **7개**, 기술명 색인 **12개**
+- V11 원본과 장문 번역문은 공개 GitHub에 올리지 않음. 본 신규 비전 JSON의 설명은 독자적으로 작성한 한글 초안이며 `draft_review_required` 상태를 유지한다.
+
+## 참고한 자료 (2026-11-10 확인)
+
+- [Wowhead Arcane Mage rotation 12.1.5](https://www.wowhead.com/ko/guide/classes/mage/arcane/rotation-cooldowns-pve-dps)
+- [Icy Veins Arcane Mage rotation 12.1.5](https://www.icy-veins.com/wow/arcane-mage-pve-dps-rotation-cooldowns-abilities)
+- [Method Arcane Mage rotation](https://www.method.gg/guides/arcane-mage/playstyle-and-rotation)
+- [Blizzard Korean Mage](https://worldofwarcraft.blizzard.com/ko-kr/game/classes/mage)
+
+동일한 영웅 특성/기술이라도 특성 선택, 티어 세트, 대상 수, 핫픽스에 따라 분기가 달라진다. 외부 공략의 문장/우선순위 표를 통째로 복제하지 않으며, 독자 해설과 출처 링크만 수록한다. 조건의 현재 게임 적합성은 추가 검토 전까지 `needs_manual_gameplay_review`로 둔다.
+
+## 구현
+
+- `content/new_guides/arcane.json`: 구조화된 신규 전문화 초안. 기존 `content/public/` V11 7전문화 파일과 구분. 자동 게시 차단.
+- `engine/v2/create_guide.py`: 사용자 제공 **원본 V11 SHA-256 `5d70279c...`**을 확인한 뒤 메뉴·목차·신규 문서·영웅 전환에 필요한 최소 스크립트/CSS만 추가. 기존 7개 `manual-view` 요소 HTML이 변경되면 오류로 중단.
+- `engine/v2/import_v11.py`: 마지막 장이 래퍼 끝에 맞닿아도 추출하며, 7개 원본 또는 8개 확장 HTML을 재생성할 수 있도록 확장. **7개 원본 parity는 유지**.
+- `tests/test_v11_arcane_create.py`: 합성 V11과 실제 비전 초안 JSON으로 신규 8개 전문화 추출·재생성·원본 7개 바이트 보존·두 영웅과 4개 상황·메뉴/목차 누락 방어 검증.
+
+## 비공개 HTML 미리보기 생성
+
+원본 V11을 이미 가지고 있는 환경에서 아래 명령을 실행한다. 실제 사용자가 보는 스타일은 V11 CSS/JS를 그대로 재사용한다.
+
+```bash
+python -m engine.v2.create_guide /private/wow_rotation_manual_engine_v2.html \
+  --draft content/new_guides/arcane.json \
+  --output /private/wow_rotation_manual_with_arcane_preview.html
+```
+
+- 원본 898,297바이트 V11 파일은 읽기만 함.
+- 출력 파일은 GitHub 저장소 **외부**에만 생성하도록 제한.
+- 원본 SHA 불일치, 7개 기존 전문화 HTML 변조, 링크·ID 충돌, 영웅 특성 누락, 아이콘 경로 부정확, 잘못된 JS 등록 앵커가 있으면 생성 중단.
+- 검증된 아이콘 파일명만 표시하고, 불확실한 신규 주문 아이콘은 동종 스타일의 중립 표시로 대체. 신규 주문 ID는 추가 확인이 필요한 항목에서 `미확인`으로 유지.
+- 인용·저작권 및 수동 게임플레이 리뷰가 끝나기 전까지 자동 공개 Pages 배포 금지.
+
+## 실행 결과 구분
+
+**GitHub 오프라인 테스트:** 합성 7전문화 원본에 신규 비전 자료를 붙인 후 V2 importer/builder로 완전히 재조립, 원본 7개 전문화의 HTML 바이트 동일성 PASS. 이는 실제 private V11 원본이 CI에 업로드됐다는 의미가 아니다.
+
+**로컬 V11 UI 시험:** 실제 사용자 V11 원본의 JS에 신규 비전 전환 코드 11곳을 정확히 반영한 뒤 `node --check` PASS. Chromium 헤드리스에서 원본 V11 화면 + **합성 비전 시험 콘텐츠**를 이용해 비전 선택, 두 영웅 전환, 기존 냉기 교본 복귀 PASS. 실제 `content/new_guides/arcane.json` 전체를 공식 generator로 미리보기 생성하여 브라우저 검증한 것은 아니므로 그 추가 검증은 남아 있다. 별도 스크린샷/캡처 생성하지 않음.
+
+## 실제 V11 원본을 이용한 별도 로컬 미리보기 시험 (2026-11-10)
+
+사용자 개인 V11 원본 `898,297 bytes / SHA-256 5d70279c...`을 읽고, PR #15의 영웅 메뉴·스크립트 확장 앵커 **11곳과 동일한 문자열 치환 규칙**을 사용하는 **독립 로컬 렌더러**로 신규 비전 콘텐츠를 합성했다.
+
+- 8개 전문화 · 전체 HTML **934,240 bytes**, SHA-256 `f1e891f5f49d8131ba283e73647247a5b42d1d0f292b83d41d5a96f304cc1f25`
+- 기존 7개 `manual-view` 전체 HTML 마크업 **바이트 단위 동일** (0건 변경)
+- 비전 우선순위 **4표/34행**, Advanced Tips **10개**, 비전 장 **7개** 생성
+- 로컬 V2 importer의 8개 전문화 확장판에서 **8개/67장** 추출 → V2 builder 재생성 HTML의 SHA와 바이트 값이 원본 8개 HTML과 **동일**, `build.validate` 오류 **0건**
+- `node --check`가 V11 내 JavaScript 2개 모두 PASS
+- 로컬 Chromium (Playwright `set_content`, file:// 보안 정책 회피)에서 **비전 메뉴 → 성난태양 → 주문술사 전환 → 기존 냉기 복귀 → 모바일 너비 선택** PASS, JavaScript page errors **0건**
+- 스크린샷/캡처 첨부하지 않음
+
+**검증 범위 구분:** 이 시험은 GitHub의 `create_guide.py` 파일 자체를 그대로 로컬에서 실행한 **정식 CLI 통합 시험은 아니다**. PR #15 본 코드는 GitHub 합성 테스트 160개 PASS로 별도 검증되어 있고, 실제 V11 기반 독립 미리보기/브라우저 동작은 위와 같이 확인한 상태다. 실제 비전 콘텐츠의 모든 항목이 게임 내 정확하다는 증거도 아니다.
+
+### 12.1.5 근거 재대조
+
+- **오색 화살**은 독립된 시전 주문 ID `1295924`로 한국어 Wowhead에서 확인; 직업 정점 특성 ID `1295923`, 비전 피해 효과 ID `1295939`와 **구분**했다. 주문 아이콘은 미확인 상태라 확정하지 않았다.
+- 시즌 2 4세트 **축적된 힘**의 주문/강화 효과 ID `1296930`을 확인했다.
+- **주문술사 단일** 첫 오색 화살 조건의 AND/OR 괄호를 명확히 수정했다. 비전 연사 **13중첩 초과**이고, 괄호 안 **6중첩 축적된 힘·번뜩임 없음·4세트 미보유 중 하나**라는 뜻이다. 오색 화살 발동도 필요하다.
+- 비전 연사, 비전의 영혼 등 다중 주문 ID가 있을 수 있는 버프/발동, 미확인 아이콘·특성 배치 및 나머지 우선순위 행은 여전히 **수동 검토 대기**이다.
+
+근거 URL:
+- https://www.wowhead.com/ko/spell=1295924/
+- https://www.wowhead.com/ko/spell=1296930/
+- https://www.wowhead.com/guide/classes/mage/arcane/rotation-cooldowns-pve-dps
+- https://www.method.gg/guides/arcane-mage/playstyle-and-rotation
+- https://www.icy-veins.com/wow/arcane-mage-pve-dps-rotation-cooldowns-abilities
+
+## 정식 GitHub CLI의 실제 V11 엔드투엔드 검증 — PASS (2026-11-10)
+
+기존에 남겨둔 독립 렌더러 검증과 **구분되는 새로운 증거**다. 개인 V11 원본과 GitHub 작업 브랜치의 `create_guide.py`·`arcane.json`을 동일한 로컬 격리 환경에서 직접 실행했다. 코드 및 데이터의 Git Blob SHA를 확인했다.
+
+| 검증 대상 | Git Blob SHA |
+|---|---|
+| `engine/v2/create_guide.py` | `6168f2b836f6185a64f1e1b60eeebff0055e4a44` |
+| `content/new_guides/arcane.json` | `09d330cff7fcc82d9b90d61f1f2834eec157fb56` |
+| `engine/v2/import_v11.py` | `df3680ec0631051bec890cfc4cffdfbe04155c6f` |
+
+실제 로컬 실행:
+
+```bash
+python -m engine.v2.create_guide /private/wow_rotation_manual_engine_v2.html \
+  --draft content/new_guides/arcane.json \
+  --output /private/wow_rotation_v11_arcane_verified.html
+```
+
+실행 결과:
+
+- 기존 사용자 원본: **898,297 bytes**, SHA-256 `5d70279c4dd073eccef1f3b13565a8f555cd81c9f0a5b7eda7e3485e410742be`
+- 정식 생성 결과: **945,167 bytes**, SHA-256 `fc9e9f3f39b8ca3d01d0d064260e375402ea0d2ff0b0468da1ac6f306076c63f`
+- 전체 전문화 **8개**, 기존 7개 전문화의 `manual-view` HTML **바이트 단위 동일**, 비전 장 **7개**, 규칙 **34행**, Advanced Tips **10개**
+- **정식 GitHub V2 importer + builder** 실행: 전체 **8개 교본·67개 장**, 출력 결과와 **바이트 단위 동일**. V2 `validate()` 오류 **0**.
+- **정식 생성 HTML에 대한 Chromium headless** 확인: 데스크톱 1365px와 모바일 390px에서 비전 메뉴 선택 → 주문술사 전환 → 해당 표 표시 및 성난태양 표 숨김 → 냉기 마법사 복귀 PASS. JavaScript page errors **0건**.
+- 스크린샷·캡처를 생성하거나 첨부하지 않았고, 비공개 V11 원본과 완성 HTML은 GitHub·CI Artifact·Pages에 올리지 않았다.
+- 2026-11-10 공략 대조에서, 주문술사 단일 대상 **비전 연사 20중첩 탄막** 설명에 **가능하면 비전 충전물 4개에서 시전**하는 원칙과 **오프너 예외**를 추가. `condition`과 전체 우선순위는 임의로 바꾸지 않음.
+
+정식 생성기/실제 원본/정확한 신규 초안 JSON을 결합하는 과거 미완료 검증은 이제 **완료**로 변경한다. 단, 이는 **구조·렌더링·전환 UI**에 관한 검증이지, 모든 딜사이클 규칙의 게임 내 정확성 승인이나 외부 문서 재게시 권리 검증이 아니다.
+
+## 다음 단계
+
+1. **완료:** 정식 GitHub 생성기와 최신 비전 JSON으로 사용자 V11 원본을 직접 빌드, V2 바이트 동등성 및 데스크톱·모바일 전환 확인. 위 정식 통합 결과 재사용.
+2. 새로운 비전 초안의 마법사 전용 주문 ID/아이콘·세트 및 영웅 특성 조건과 시즌 2 원문을 수동 대조. 모호한 곳은 가정값으로 배포하지 않음.
+3. 신규 등록 JSON을 기존 AI 변경 후보·승인·부분 갱신 경로와 연결(현재 `detail_bridge`는 구 V11 7개 공개 인덱스를 기준으로 동작).
+4. 사용자 승인된 경우에만 병합·Pages 공개 단계 진행.
+
+**이 기능은 PR #14 V11 보존형 엔진 브랜치를 기반으로 한 별도 후속 PR이다.** PR #14를 건너뛰어 `main`에 독립 병합하면 필요한 모듈이 누락될 수 있다.
