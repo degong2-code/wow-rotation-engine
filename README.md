@@ -46,3 +46,15 @@ python -m engine.public_data build --output dist/public-index.html
 ```
 
 `dist/public-index.html`은 7개 전문화를 전환하며 순위·주문 ID·Advanced Tips 분류를 볼 수 있는 **데이터 검토 화면**입니다. 유효한 실전 공략으로 사용해서는 안 됩니다. 세부 범위는 [공개 데이터 정책](docs/PUBLIC_DATA.md)을 확인하세요.
+
+## Issue #5: 동적 검토 UI · 게시 안전 게이트
+
+```bash
+python -m engine.review_ui --output dist/review/index.html
+python -m engine.review_audit --output dist/review-audit.json
+```
+
+- `dist/review/index.html`: 7개 전문화 및 영웅 특성별 규칙을 보는 **비실전 검토용 HTML**. JSON 등록 목록에서 메뉴 자동 생성.
+- `dist/review-audit.json`: 177개 조건 미해석, 178개 한국어 이름 레코드 미검증 등의 게시 차단 사유 출력.
+- 원문 전체·상세 Advanced Tips는 아직 실전 가이드로 게시하지 않음.
+- 상세 범위: [docs/REVIEW_UI.md](docs/REVIEW_UI.md).
