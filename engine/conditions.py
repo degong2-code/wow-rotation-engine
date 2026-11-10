@@ -8,7 +8,7 @@ FIELDS = {"hero", "target_count", "combo_points", "combo_point_cap", "phase", "c
 def _value(name: str, context: dict):
     if name in FIELDS:
         return context.get(name, MISSING)
-    for prefix, key in (("buff:", "buffs"), ("talent:", "talents"), ("ready:", "ready")):
+    for prefix, key in (("buff:", "buffs"), ("talent:", "talents"), ("ready:", "ready"), ("debuff:", "debuffs")):
         if name.startswith(prefix):
             return context.get(key, {}).get(name[len(prefix):], MISSING)
     raise ValueError(f"Unsupported condition field: {name}")

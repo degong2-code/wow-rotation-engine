@@ -1,0 +1,58 @@
+{
+  "schema_version": "condition-candidates-v1",
+  "baseline": "V11",
+  "data_scope": "unapproved_partial_condition_candidates",
+  "notice": "Only for testing structural review. Never automatically select gameplay abilities.",
+  "proposals": [
+    {
+      "rule_id": "frost:frost-rotation:table-1:row-6",
+      "guide_id": "frost",
+      "spell_id": 30455,
+      "source_fragment_sha256": "948738da0b235ae5ab4d97ac821617e1a41e9b5adcc767784d8eaa07d24dfe64",
+      "completeness": "partial",
+      "source_review": "pending_external_verification",
+      "review": "pending",
+      "automatic_publish_allowed": false,
+      "interpretation_note": "V11에 기술된 대상 빙결 6중첩은 얼음창 사용 조건 일부의 초안일 뿐이며, 상위 우선순위·서리의 손가락 등 모든 조건의 충분조건이 아닙니다.",
+      "when": {
+        "all": [
+          {
+            "field": "hero",
+            "op": "eq",
+            "value": "spellslinger"
+          },
+          {
+            "field": "debuff:freezing",
+            "op": "gte",
+            "value": 6
+          }
+        ]
+      }
+    },
+    {
+      "rule_id": "frost:frost-rotation:table-3:row-8",
+      "guide_id": "frost",
+      "spell_id": 30455,
+      "source_fragment_sha256": "75c3c88725417faed674e49d1b231bfdb6bae14fb7a1562eada15aa1e6f30d1f",
+      "completeness": "partial",
+      "source_review": "pending_external_verification",
+      "review": "pending",
+      "automatic_publish_allowed": false,
+      "interpretation_note": "V11에 기술된 대상 빙결 12중첩은 얼음창 사용 조건 일부의 초안일 뿐이며, 상위 우선순위·서리의 손가락 등 모든 조건의 충분조건이 아닙니다.",
+      "when": {
+        "all": [
+          {
+            "field": "hero",
+            "op": "eq",
+            "value": "frostfire"
+          },
+          {
+            "field": "debuff:freezing",
+            "op": "gte",
+            "value": 12
+          }
+        ]
+      }
+    }
+  ]
+}
