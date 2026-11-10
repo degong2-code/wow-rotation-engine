@@ -39,6 +39,7 @@ python -m unittest discover -s tests -p 'test_*.py' -v
 | #15 | 비전 신규 등록 파일럿 | Draft / 미병합 |
 | #16 | V11 표현·메커니즘·근거 위치 감사 | Draft / 미병합 |
 | **#17** | **ChatGPT Plus AI Provider / 정책 ADR / 기존 UPDATE 검토 계층 연결** | **Draft / 미병합** |
+| **#18** | **로컬 ChatGPT OAuth/PKCE·ID 토큰 서명 검증·loopback·WSL 소유자 전용 저장** | **Draft / 실계정 미연동** |
 
 **이번 논의의 결정 및 구현 정본:** [ADR-001 — ChatGPT Plus AI Runtime](ADR_001_CHATGPT_PLUS_AI_RUNTIME.md). Plus를 유지하며 추가 AI 비용을 발생시키지 않는 로컬 연동을 우선한다. Sol/Luna는 고정하지 않고 계정 모델 목록과 실제 품질을 비교한다. GPT-6 High 일반 채팅을 무제한 외부 API로 취급하지 않는다.
 
