@@ -40,12 +40,28 @@ class PlanSession:
     # Never log or serialize the access token.
     access_token: str = field(repr=False)
     scopes: frozenset[str] = field(default_factory=frozenset)
+    # Set only after the separate trusted OAuth verifier checked the signed
+    # ID token, audience, nonce, and actual granted scopes.
+    oauth_verified: bool = False
     # This is the user's confirmation, not a server-side credit-state proof.
     credits_disabled_confirmed: bool = False
 
     def check(self):
         if not isinstance(self.access_token, str) or not self.access_token.strip():
             raise PlanRequestError("not_connected", "Complete official ChatGPT sign-in first")
+        # A normal billing API key might be accepted by the same Responses
+        # endpoint and incur charges. Reject that family even when a buggy
+        # caller claims it came from OAuth.
+        if self.access_token.strip().startswith("sk-"):
+            raise PlanRequestError(
+                "billing_api_key_forbidden",
+                "Ordinary paid API keys are forbidden in ChatGPT plan mode",
+            )
+        if self.oauth_verified is not True:
+            raise PlanRequestError(
+                "oauth_not_verified",
+                "An authorized ChatGPT OAuth session is required",
+            )
         if REQUIRED_SCOPE not in self.scopes:
             raise PlanRequestError("permission_missing", "ChatGPT plan usage was not authorized")
         if self.credits_disabled_confirmed is not True:
