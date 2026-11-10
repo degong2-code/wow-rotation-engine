@@ -162,7 +162,7 @@ def audit(base: Path = BASE, snapshot: dict | None = None) -> dict:
     observed = _validate_snapshot(snapshot, set(labels)) if snapshot is not None else {}
     counts = {
         "distinct_spell_ids": len(labels),
-        "inherited_name_records": sum(map(len, labels.values())),
+        "inherited_name_records": len(json.loads((base / "spells.json").read_text(encoding="utf-8"))["spells"]),
         "observations_found_matching": 0,
         "observations_found_mismatching": 0,
         "observations_not_found": 0,
