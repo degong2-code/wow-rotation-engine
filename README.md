@@ -14,6 +14,18 @@ python -m engine.manual_site --output dist/manual/index.html
 
 **현재 범위는 빠른 참조판입니다.** 원본 V11의 상세 발동 조건과 Advanced Tips 본문은 아직 데이터에 포함되지 않으므로, 이 HTML만 보고 게임 내 스킬 사용 여부를 결정해서는 안 됩니다. 사용 방법과 데이터 업데이트 방법은 [간략 교본 설명](docs/MANUAL_PREVIEW.md)을 보세요.
 
+## ChatGPT Plus 구독 기반 AI 연결 (개발 중)
+
+2026-11-11 논의와 실행 정책을 [ADR-001: ChatGPT Plus AI Runtime](docs/ADR_001_CHATGPT_PLUS_AI_RUNTIME.md)에 기록했습니다.
+
+- Plus 유지, **추가 AI 결제 0원** 목표. 로컬 오픈소스 앱의 Sign in with ChatGPT 구독 연동을 우선 시험하며, 모델은 연결된 계정의 목록을 조회합니다.
+- `engine/v2/ai_runtime.py`: 모델 독립적 `AIJob` → `AIProposal` 계약.
+- `engine/v2/chatgpt_plan.py`: 이미 인증된 정식 OAuth 세션에 한정한 모델 조회·스트리밍 AI 제안 어댑터. `store=false`, `stream=true`; 사용량 초과 시 **중단, 유료 API 자동 전환 없음**.
+- `engine/v2/ai_update_bridge.py`: AI의 **검토 대기** 결과를 기존 V11 UPDATE의 출처·텍스트·승인 검증에 연결. 기존 교본 자동 수정/배포 없음.
+- 테스트는 네트워크·실제 구독 사용량을 소모하지 않는 **합성 테스트**입니다. 사용자의 실제 로그인·사용 가능 모델·한도·분석 품질은 검증되지 않았습니다.
+- **안전 주의:** ChatGPT Settings → Usage에서 앱 크레딧 사용 허용을 끄고 사용량 제한을 설정해야 합니다. 클라이언트의 확인 플래그는 서버 측 결제 차단 증명과 다릅니다.
+- 구버전 `ai_proposals.py`의 별도 API 키 전송 경로는 새 무료 연동 경로에 연결하지 않습니다.
+
 ## 시작
 
 Python 3.11+ 표준 라이브러리만 사용합니다.
