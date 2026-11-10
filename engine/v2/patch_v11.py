@@ -10,6 +10,7 @@ Run with a private V11 source, private patch JSON, and private output path:
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 import hashlib
 import json
 from pathlib import Path
@@ -29,17 +30,44 @@ DANGEROUS_TAGS = {"script", "style", "iframe", "object", "embed", "form", "base"
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 
-def _safe_fragment(markup: str) -> None:
-    """Prevent executable markup from being imported into the public-facing HTML."""
+def _safe_fragment(markup: str, *, inherited_html: str = "") -> None:
+    """Preserve trusted V11 icon handlers; reject any new executable markup.
+
+    Existing V11 spell icons use IMG onerror handlers. A patch that retains the
+    same handler must not fail; new or modified event handlers are still denied.
+    Spell/icon identities must remain unchanged for text-only detail edits.
+    """
     if not isinstance(markup, str) or not markup.strip():
         raise ValueError("new_inner_html must be a non-empty HTML fragment")
     parsed = BeautifulSoup(markup, "html.parser")
+    previous = BeautifulSoup(inherited_html, "html.parser")
+
+    def events(dom):
+        return Counter(
+            (tag.name, key.lower(), str(value))
+            for tag in dom.find_all(True)
+            for key, value in tag.attrs.items()
+            if key.lower().startswith("on")
+        )
+
+    allowed_events = events(previous)
+    for event, count in events(parsed).items():
+        if count > allowed_events[event]:
+            raise ValueError("New or modified event handler attributes are forbidden")
+
+    def icon_identity(dom):
+        return (
+            Counter(tag.get("data-spell") for tag in dom.select("[data-spell]")),
+            Counter(tag.get("src") for tag in dom.select("img[src]")),
+        )
+
+    if icon_identity(parsed) != icon_identity(previous):
+        raise ValueError("Original V11 spell icons must be preserved by text edits")
+
     for tag in parsed.find_all(True):
         if tag.name in DANGEROUS_TAGS:
             raise ValueError(f"Disallowed HTML tag in proposed edit: {tag.name}")
         for key, value in tag.attrs.items():
-            if key.lower().startswith("on"):
-                raise ValueError("Event handler attributes are not accepted")
             if key.lower() in ("src", "href", "xlink:href", "formaction"):
                 for item in value if isinstance(value, list) else [value]:
                     raw = str(item).strip().lower()
@@ -146,8 +174,8 @@ def apply_patch(source_path: Path, patch: dict, public_base: Path = BASE) -> byt
         ) or update["expected_source_sha256"] != expected[2]:
             raise ValueError(f"V11 source evidence mismatch: {logical_id}")
         replacement = update["new_inner_html"]
-        _safe_fragment(replacement)
         tag = _target_element(guides[expected[1]], update)
+        _safe_fragment(replacement, inherited_html=tag.decode_contents())
         if tag.sourceline is None or tag.sourcepos is None:
             raise ValueError(f"Missing original HTML source position: {logical_id}")
         start = offsets[tag.sourceline - 1] + tag.sourcepos
