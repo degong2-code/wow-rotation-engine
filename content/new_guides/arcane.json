@@ -422,14 +422,14 @@
     {
       "hero": "both",
       "topic": "4충전 탄막을 기본 기준으로",
-      "text": "비전 탄막은 현재 충전물의 수에 영향을 받는다. 비전의 영혼이나 다른 긴급 강화 조건이 없다면 4개를 맞추는 것을 먼저 고려한다.",
+      "text": "비전 탄막은 현재 충전물의 수에 영향을 받는다. 비전의 영혼이나 다른 긴급 강화 조건이 없다면 4개를 맞추는 것을 먼저 고려한다. 관련 기술은 [[spell:arcane-barrage]]입니다.",
       "id": "arcane:advanced:tip-1",
       "review": "needs_manual_gameplay_review"
     },
     {
       "hero": "both",
       "topic": "비전 연사 중첩과 번뜩임을 함께 보기",
-      "text": "발동 효과만 보는 대신 연사 중첩을 함께 확인한다. 번뜩임이 남았더라도 이미 탄막을 강화할 중첩이라면 영웅 특성별 탄막 조건이 우선할 수 있다.",
+      "text": "발동 효과만 보는 대신 연사 중첩을 함께 확인한다. 번뜩임이 남았더라도 이미 탄막을 강화할 중첩이라면 영웅 특성별 탄막 조건이 우선할 수 있다. [[spell:clearcasting]]과 [[spell:arcane-missiles]]의 관계를 함께 확인합니다.",
       "id": "arcane:advanced:tip-2",
       "review": "needs_manual_gameplay_review"
     },
@@ -641,7 +641,7 @@
     },
     "chapters": {
       "pre": {
-        "lead": "오프너를 외우기 전에 현재 특성·4세트·재사용 대기시간을 확인해야 합니다. 표는 그 조건이 갖추어졌을 때의 판단을 안내합니다.",
+        "lead": "오프너를 외우기 전에 현재 특성·4세트·재사용 대기시간을 확인해야 합니다. 표는 그 조건이 갖추어졌을 때의 판단을 안내합니다. [[spell:arcane-surge]]와 [[spell:touch-of-the-magi]]의 준비 상태도 확인합니다.",
         "caution": "장비나 특성 선택이 예시와 다르면 해당 기술이 없거나 발동 방식이 달라질 수 있습니다."
       },
       "basics": {
@@ -657,7 +657,7 @@
         "caution": "비전 충전물 4개를 기본값으로 삼되, 비전의 영혼 중 강화·오프너 연계·마나 부족 등 명시된 예외 조건을 우선 평가합니다."
       },
       "advanced": {
-        "lead": "숙련 단계에서는 특정 기술 자체보다 발동 낭비, 충전물 회복, 쿨다운 정렬과 예외 처리가 중요합니다. 아래 항목은 앞 장의 표를 보충합니다.",
+        "lead": "숙련 단계에서는 특정 기술 자체보다 발동 낭비, 충전물 회복, 쿨다운 정렬과 예외 처리가 중요합니다. 아래 항목은 앞 장의 표를 보충합니다. [[spell:arcane-barrage]]와 [[spell:prismatic-bolt]]의 강화 기회를 구분하는 것이 핵심입니다.",
         "caution": "메커니즘과 숫자 조건은 현재 전문화 초안의 해석입니다. 검증되지 않은 우선순위는 확정 공략처럼 취급하지 않습니다."
       },
       "glossary": {
@@ -669,34 +669,37 @@
       {
         "title": "비전 쇄도",
         "principle": "전투 시작과 중요한 피해 집중 구간에 연결하는 핵심 쿨다운입니다. 단순히 사용 가능하다는 이유만으로 항상 장시간 보관하면 전투 전체 사용 횟수가 줄 수 있습니다.",
-        "decision": "대상에게 공격할 시간이 남아 있는지, 주요 장신구·파티 강화와 시점을 맞출 수 있는지 판단합니다.",
+        "decision": "대상에게 공격할 시간이 남아 있는지, 주요 장신구·파티 강화와 시점을 맞출 수 있는지 판단합니다. [[spell:arcane-surge]]를 다음 피해 집중 구간에 어떻게 배치할지도 검토합니다.",
         "exception": "특정 목표 대상이 곧 등장할 때는 그 구간에 맞출 수 있지만, 장시간 미사용의 이득은 별도 검토해야 합니다.",
-        "review": "needs_manual_gameplay_review"
+        "review": "needs_manual_gameplay_review",
+        "spell_key": "arcane-surge"
       },
       {
         "title": "비전의 여파",
         "principle": "비전 탄막과 연계하는 구간에서는 투사체가 이동하는 시간도 고려할 요소입니다. 순서를 외우는 것보다 실제로 효과가 적용되는 타이밍을 이해하는 것이 중요합니다.",
-        "decision": "탄막 시전 직후 여파를 연결한다는 오프너 예시를 참고하되 대상 거리와 시전 지연을 점검합니다.",
+        "decision": "탄막 시전 직후 여파를 연결한다는 오프너 예시를 참고하되 대상 거리와 시전 지연을 점검합니다. [[spell:arcane-barrage]]와 [[spell:touch-of-the-magi]]의 시간 관계를 점검합니다.",
         "exception": "매크로로 고정하기보다 전투 상황과 시전 가능 여부를 확인합니다.",
-        "review": "needs_manual_gameplay_review"
+        "review": "needs_manual_gameplay_review",
+        "spell_key": "touch-of-the-magi"
       },
       {
         "title": "오색 화살과 시즌 2 세트",
         "principle": "오색 화살의 발동을 소모할 때 4세트가 있다면 축적된 힘도 판단 요소가 됩니다. 세트 효과가 없으면 중첩 기준을 그대로 요구하지 않습니다.",
         "decision": "해당 표의 오색 화살 조건에서 발동, 비전 연사, 축적된 힘, 번뜩임 보유 여부를 차례로 비교합니다.",
         "exception": "발동을 지나치게 오래 보유해 다음 기회를 놓치는 것은 피합니다. 대상 사망 직전에는 조건을 실전 상황에 맞춰 판단합니다.",
-        "review": "needs_manual_gameplay_review"
+        "review": "needs_manual_gameplay_review",
+        "spell_key": "prismatic-bolt"
       }
     ],
     "practice": [
       {
         "question": "주문술사에서 비전 연사가 20중첩인데 비전 충전물이 3개라면?",
-        "reasoning": "우선순위 표에는 20중첩 탄막 조건이 있지만, 4충전이 가능하면 맞추라는 보충 설명과 오프너 예외도 있습니다. 현재 비전 충전물, 비전 보주 사용 가능 여부, 전투 시점을 함께 확인합니다.",
+        "reasoning": "우선순위 표에는 20중첩 탄막 조건이 있지만, 4충전이 가능하면 맞추라는 보충 설명과 오프너 예외도 있습니다. 현재 비전 충전물, 비전 보주 사용 가능 여부, 전투 시점을 함께 확인합니다. [[spell:arcane-orb]]로 충전물을 보충할 수 있는지도 살핍니다.",
         "caution": "이 사례는 판단 연습용이며 단일한 정답 시전을 명령하지 않습니다."
       },
       {
         "question": "성난태양에서 비전의 영혼이 활성화된 경우에는?",
-        "reasoning": "평상시 비전 연사 중첩만 보고 판단하지 말고 해당 영웅 특성의 우선순위 표에서 비전의 영혼 중 탄막 조건을 먼저 확인합니다.",
+        "reasoning": "평상시 비전 연사 중첩만 보고 판단하지 말고 해당 영웅 특성의 우선순위 표에서 비전의 영혼 중 탄막 조건을 먼저 확인합니다. [[spell:arcane-soul]] 활성 여부가 첫 판단 지점입니다.",
         "caution": "번뜩임 등 표 상단의 다른 조건이 동시에 충족되면 실제 우선순위의 순서를 다시 읽습니다."
       },
       {
@@ -709,6 +712,153 @@
       "must_not_invent": "설명이 부족해도 게임 메커니즘을 추측해서 추가하지 않는다.",
       "item_evidence_state": "pending_full_row_by_row_source_mapping",
       "publication_blocked": true
+    },
+    "mechanics": {
+      "schema_version": "v11-mechanics-v1",
+      "flows": [
+        {
+          "id": "charges-to-barrage",
+          "section": "basics",
+          "title": "2.1 충전물 준비와 비전 탄막 소모",
+          "context": "일반적인 탄막 판단에서는 강화 효과만큼 현재 비전 충전물도 확인해야 합니다. 아래는 고정 콤보가 아닌 확인 절차입니다.",
+          "steps": [
+            {
+              "kind": "spell",
+              "key": "arcane-blast",
+              "meaning": "다른 긴급 조건이 없다면 충전물 확보에 활용합니다."
+            },
+            {
+              "kind": "state",
+              "label": "비전 충전물 4개 확인",
+              "meaning": "가능하면 네 개를 갖춘 상태에서 탄막을 준비합니다."
+            },
+            {
+              "kind": "state",
+              "label": "영웅별 비전 연사·강화 상태 확인",
+              "meaning": "성난태양과 주문술사의 우선순위 표는 서로 다른 탄막 조건을 사용합니다."
+            },
+            {
+              "kind": "spell",
+              "key": "arcane-barrage",
+              "meaning": "해당 영웅 특성의 조건을 충족하면 소모 후보가 됩니다."
+            }
+          ],
+          "why": "비전 탄막은 충전물과 비전 연사·기타 강화 조건을 함께 해석해야 합니다. 충전물을 채우는 일과 탄막을 누르는 일을 분리하면 조건 누락을 줄일 수 있습니다.",
+          "exception": "비전의 영혼, 오프너의 연계, 마나 부족 등은 일반적인 4충전 준비보다 먼저 판단하는 예외가 있을 수 있습니다.",
+          "related_rule_ids": [
+            "arcane:rotation:sunfury-st:row-5",
+            "arcane:rotation:sunfury-st:row-6",
+            "arcane:rotation:spellslinger-st:row-2"
+          ],
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "clearcasting-salvo-window",
+          "section": "basics",
+          "title": "2.2 번뜩임과 비전 연사 중첩의 연결",
+          "context": "번뜩임이 있으면 신비한 화살을 언제 사용할지 판단하고, 그 뒤의 비전 연사 중첩으로 탄막 전환 시점을 평가합니다.",
+          "steps": [
+            {
+              "kind": "state",
+              "label": "번뜩임 발동 확인",
+              "meaning": "신비한 화살을 사용할 조건인지 확인합니다."
+            },
+            {
+              "kind": "spell",
+              "key": "arcane-missiles",
+              "meaning": "선택한 영웅 특성의 중첩 기준에 맞으면 사용합니다."
+            },
+            {
+              "kind": "state",
+              "label": "비전 연사 중첩 재확인",
+              "meaning": "성난태양 12·25, 주문술사 15·20 기준처럼 표마다 다른 분기를 확인합니다."
+            },
+            {
+              "kind": "spell",
+              "key": "arcane-barrage",
+              "meaning": "탄막의 소모 조건에 도달했으면 비전 충전물도 고려해 사용합니다."
+            }
+          ],
+          "why": "같은 번뜩임 발동이라도 현재 비전 연사 중첩과 영웅 특성에 따라 신비한 화살과 탄막의 우선순위가 달라질 수 있습니다.",
+          "exception": "비전의 영혼 활성이나 오색 화살 발동 조건이 동시에 충족된 경우 해당 표의 위쪽 규칙부터 다시 확인합니다.",
+          "related_rule_ids": [
+            "arcane:rotation:sunfury-st:row-1",
+            "arcane:rotation:sunfury-st:row-4",
+            "arcane:rotation:spellslinger-st:row-3"
+          ],
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "burst-barrage-touch",
+          "section": "opener",
+          "title": "3.1 비전 쇄도 진입부터 비전의 여파까지",
+          "context": "전투 시작 구간의 관련 기술을 순서로 연결해 해석합니다. 각 단계의 실제 시전 여부는 발동·충전물 상태를 전제로 합니다.",
+          "steps": [
+            {
+              "kind": "spell",
+              "key": "arcane-surge",
+              "meaning": "주요 피해 집중 구간의 시작을 준비합니다."
+            },
+            {
+              "kind": "spell",
+              "key": "arcane-missiles",
+              "meaning": "번뜩임으로 사용 가능한 경우에만 해당하는 조건부 단계입니다."
+            },
+            {
+              "kind": "spell",
+              "key": "arcane-barrage",
+              "meaning": "비전 충전물과 탄막 조건을 평가해 연결합니다."
+            },
+            {
+              "kind": "spell",
+              "key": "touch-of-the-magi",
+              "meaning": "탄막 투사체 이동과 거리를 고려하는 연계를 검토합니다."
+            }
+          ],
+          "why": "어느 기술이 먼저 발동하고 어떤 조건이 다음 기술을 열어 주는지를 구분하면 오프너를 기계적으로 외우는 실수를 줄일 수 있습니다.",
+          "exception": "첫 기술부터 모든 주문을 무조건 연결하는 고정 명령이 아닙니다. 번뜩임이 없을 때 신비한 화살 단계를 강제하지 않고, 투사체·전투 거리 조건을 확인합니다.",
+          "related_rule_ids": [
+            "arcane:rotation:sunfury-st:row-2",
+            "arcane:rotation:spellslinger-st:row-2"
+          ],
+          "review": "needs_manual_gameplay_review"
+        }
+      ],
+      "comparisons": [
+        {
+          "id": "hero-barrage-thresholds",
+          "title": "2.3 영웅 특성별 탄막 판단 차이",
+          "context": "아래 표는 네 개 우선순위 표 중 탄막과 관련된 특정 규칙을 나란히 보여줍니다. 표 전체를 대신하지는 않습니다.",
+          "rows": [
+            {
+              "scenario": "성난태양 · 강화 구간",
+              "condition": "비전의 영혼이 활성화되어 있는가?",
+              "action_key": "arcane-barrage",
+              "reason": "일반적인 중첩 소모 규칙보다 위에 있는 별도 탄막 판단입니다."
+            },
+            {
+              "scenario": "성난태양 · 일반 구간",
+              "condition": "비전 연사 25중첩이며 가능한 4충전 상태인가?",
+              "action_key": "arcane-barrage",
+              "reason": "중첩 소비 조건을 평가하되 현재 충전물과 다른 발동 조건을 함께 봅니다."
+            },
+            {
+              "scenario": "주문술사 · 일반 구간",
+              "condition": "비전 연사 20중첩이며 가능한 4충전 상태인가?",
+              "action_key": "arcane-barrage",
+              "reason": "성난태양의 25중첩과 다른 기준을 사용합니다."
+            }
+          ],
+          "why": "성난태양의 25와 주문술사의 20을 혼동하지 않는 것이 중요하며, 비전의 영혼 중에는 별도의 탄막 조건이 있습니다.",
+          "exception": "다른 상위 우선순위 조건이 충족되면 그 조건부터 처리합니다. 4충전 원칙에도 오프너 등 예외가 있을 수 있습니다.",
+          "related_rule_ids": [
+            "arcane:rotation:sunfury-st:row-2",
+            "arcane:rotation:sunfury-st:row-5",
+            "arcane:rotation:spellslinger-st:row-2"
+          ],
+          "review": "needs_manual_gameplay_review"
+        }
+      ]
     }
   }
 }
