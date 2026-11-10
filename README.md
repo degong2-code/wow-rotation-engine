@@ -4,6 +4,16 @@ WoW Midnight 딜사이클 교본을 **검증 가능한 규칙 데이터 → HTML
 
 > **현재 상태: GitHub CI + 실제 V2 코드 + V11 파생 규칙 데이터(PUBLIC)**. 7개 전문화의 구조화된 규칙 **메타데이터**를 이관했습니다. 와우헤드 원문 전체·대량 번역문과 기존 V11 HTML 전체는 게시하지 않았으며, 생성 뷰어는 실전 딜사이클 가이드가 아닙니다.
 
+## 지금 사용하는 결과물
+
+```bash
+python -m engine.manual_site --output dist/manual/index.html
+```
+
+생성되는 `index.html`은 **단일 파일**입니다. GitHub Actions 성공 실행의 `wow-rotation-quick-reference-html` Artifact에서 내려받아 브라우저로 열 수 있습니다. 7개 전문화·영웅 특성 전환, 상황별 우선순위, 기술명/ID 검색, 대상 수 필터, 출처 링크가 들어 있습니다.
+
+**현재 범위는 빠른 참조판입니다.** 원본 V11의 상세 발동 조건과 Advanced Tips 본문은 아직 데이터에 포함되지 않으므로, 이 HTML만 보고 게임 내 스킬 사용 여부를 결정해서는 안 됩니다. 사용 방법과 데이터 업데이트 방법은 [간략 교본 설명](docs/MANUAL_PREVIEW.md)을 보세요.
+
 ## 시작
 
 Python 3.11+ 표준 라이브러리만 사용합니다.

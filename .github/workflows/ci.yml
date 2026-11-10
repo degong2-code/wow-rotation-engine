@@ -46,6 +46,13 @@ jobs:
           cmp /tmp/rotation-public-first.html dist/public-index.html
       - name: Build dynamic review-only UI
         run: python -m engine.review_ui --output dist/review/index.html
+      - name: Build standalone quick-reference manual
+        run: python -m engine.manual_site --output dist/manual/index.html
+      - name: Verify standalone manual deterministic
+        run: |
+          cp dist/manual/index.html /tmp/wow-manual-first.html
+          python -m engine.manual_site --output dist/manual/index.html
+          cmp /tmp/wow-manual-first.html dist/manual/index.html
       - name: Generate fail-closed source/locale readiness report
         run: python -m engine.review_audit --output dist/review-audit.json
       - name: Confirm dynamic review HTML deterministic
@@ -140,13 +147,6 @@ jobs:
             echo "ERROR: Unverified Blizzard spell IDs passed readiness gate"
             exit 1
           fi
-      - name: Generate optional koKR client lookup addon
-        run: python -m engine.client_spell_probe --output dist/WoWRotationSpellProbe
-      - name: Verify deterministic addon generation
-        run: |
-          cp dist/WoWRotationSpellProbe/SpellProbe.lua /tmp/WoWRotationSpellProbe-original.lua
-          python -m engine.client_spell_probe --output dist/WoWRotationSpellProbe
-          cmp /tmp/WoWRotationSpellProbe-original.lua dist/WoWRotationSpellProbe/SpellProbe.lua
       - name: Upload validated artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -155,15 +155,16 @@ jobs:
             dist/index.html
             dist/public-index.html
             dist/review/index.html
+            dist/manual/index.html
             dist/review-audit.json
             dist/spell-name-audit.json
             dist/condition-worklist.json
             dist/synthetic-source-diff.json
             dist/spell-review-queue.json
           retention-days: 7
-      - name: Upload optional WoW client probe addon
+      - name: Upload reader-friendly HTML (single file)
         uses: actions/upload-artifact@v4
         with:
-          name: wow-ko-kr-client-spell-probe
-          path: dist/WoWRotationSpellProbe/
-          retention-days: 7
+          name: wow-rotation-quick-reference-html
+          path: dist/manual/index.html
+          retention-days: 14
