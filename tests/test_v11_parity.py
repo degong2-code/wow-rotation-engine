@@ -5,6 +5,7 @@ from tempfile import TemporaryDirectory
 import unittest
 
 from engine.v2.parity import verify_v11
+from engine.v2.patch_v11 import rebuild_v2
 
 
 HEROES = (
@@ -82,6 +83,18 @@ class V11ParityTests(unittest.TestCase):
                     expected_size_bytes=len(payload) + 1,
                 )
 
+
+    def test_v2_builder_retains_original_ui_after_one_synthetic_detail_edit(self):
+        original = synthetic_v11()
+        updated = original.replace(
+            "<p>실제 WoW 공략이 아닌 시험 자료.</p>",
+            "<p>수정된 합성 장 설명입니다.</p>",
+            1,
+        )
+        self.assertNotEqual(original, updated)
+        self.assertEqual(rebuild_v2(updated.encode("utf-8")), updated.encode("utf-8"))
+        self.assertIn("<title>합성 V11 시험</title>", updated)
+        self.assertEqual(updated.count('class="manual-view"'), 7)
 
 if __name__ == "__main__":
     unittest.main()
