@@ -55,14 +55,16 @@
 | 지표 | 이전 비전 CREATE | 개정 시범 |
 |---|---:|---:|
 | 장 수 | 7 | 9 |
-| 교본 텍스트 | 약 4,900자 | 약 9,700자 |
+| 교본 텍스트 | 약 4,900자 | 약 9,685자 |
 | 장 번호·공통 헤더 | 단순화 | V11 구조 사용 |
 | 오프너 단계 구성 | 일반 목록 | `steps compact` |
 | 기술 설명 | 동일한 기본 안내 위주 | 기술별 힌트 12개 |
 | 쿨다운·판단 연습 | 독립 장 없음 | 2개 장 추가 |
 | V11 공통/확장 구성 요소 | 일부 | **14종 재사용** |
 
-로컬 `create_arcane` → 새 HTML **957,217 bytes**, SHA-256 `51272c71e036c4e390d51d783546078a0f97b1ca635beca78464ef49f1e2fbbf`. 기존 7개 `manual-view` byte-identical. 전체 8개 전문화 / 69개 장의 V2 importer→builder byte-identical, `validate` 오류 0. Chromium 데스크톱(1365px)·모바일(390px): 비전 영웅 선택/주문술사 전환/냉기 복귀 PASS, JS 오류 0. **비공개 생성본을 GitHub/CI/Pages에 올리지 않음.** 이 결과는 동일한 편집 구조의 로컬 구현 검증이며 GitHub SHA가 다른 파일의 최종 실데이터 재실행과 구분한다. GitHub 코드 자체는 합성 CI로 확인한다.
+과도한 주의 박스 반복을 피하기 위해 쿨다운·판단 연습의 일부 보충 내용을 일반 문단으로 옮겼다. 비전의 `aside`는 **8개**로 유지해 기존 일곱 교본의 시각적 밀도에 가까워지도록 했다.
+
+로컬 `create_arcane` → 새 HTML **956,914 bytes**, SHA-256 `a2de8480909dbd5dcdbbb4e36c8199a34e632a6089b2c79e5a7f7877d6435422`. 기존 7개 `manual-view` byte-identical. 전체 8개 전문화 / 69개 장의 V2 importer→builder byte-identical, `validate` 오류 0. Chromium 데스크톱(1365px)·모바일(390px): 비전 영웅 선택/주문술사 전환/냉기 복귀 PASS, JS 오류 0. **비공개 생성본을 GitHub/CI/Pages에 올리지 않음.** 이 결과는 동일한 편집 구조의 로컬 구현 검증이며 GitHub SHA가 다른 파일의 최종 실데이터 재실행과 구분한다. GitHub 코드 자체는 합성 CI로 확인한다.
 
 ## 남은 품질 게이트
 
