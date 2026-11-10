@@ -125,6 +125,21 @@ class ArcaneCreateTests(unittest.TestCase):
             self.assertEqual(len(guides), 8)
             self.assertEqual(validate(registry, guides, html), [])
 
+    def test_spellslinger_bolt_logic_is_grouped_and_spell_ids_have_evidence(self):
+        groups = {group["id"]: group for group in self.draft["rotation_groups"]}
+        opening = groups["arcane:rotation:spellslinger-st"]["rows"][0]
+        self.assertEqual(opening["spell"], "오색 화살")
+        self.assertIn("비전 연사가 13중첩 초과이며, (", opening["condition"])
+        self.assertIn("축적된 힘 6중첩 이상 또는 번뜩임 없음 또는 4세트 미보유", opening["condition"])
+        spells = {spell["key"]: spell for spell in self.draft["spells"]}
+        self.assertEqual(spells["prismatic-bolt"]["id"], 1295924)
+        self.assertEqual(spells["cumulative-power"]["id"], 1296930)
+        self.assertIsNone(spells["prismatic-bolt"]["icon"])
+        self.assertFalse(self.draft["publication"]["automatic_publish_allowed"])
+        evidence = self.draft["source_verification"]["verified"]
+        self.assertTrue(any(i.get("spell_id") == 1295924 for i in evidence))
+        self.assertTrue(any(i.get("spell_id") == 1296930 for i in evidence))
+
     def test_rejects_unreviewed_publication(self):
         draft = deepcopy(self.draft)
         draft["publication"]["automatic_publish_allowed"] = True
