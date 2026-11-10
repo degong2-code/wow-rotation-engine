@@ -53,6 +53,15 @@ jobs:
           cp dist/manual/index.html /tmp/wow-manual-first.html
           python -m engine.manual_site --output dist/manual/index.html
           cmp /tmp/wow-manual-first.html dist/manual/index.html
+      - name: Check manual browser JavaScript syntax
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          page=Path("dist/manual/index.html").read_text(encoding="utf-8")
+          script=page.split("<script>",1)[1].split("</script>",1)[0]
+          Path("/tmp/wow-manual-app.js").write_text(script, encoding="utf-8")
+          PY
+          node --check /tmp/wow-manual-app.js
       - name: Generate fail-closed source/locale readiness report
         run: python -m engine.review_audit --output dist/review-audit.json
       - name: Confirm dynamic review HTML deterministic
