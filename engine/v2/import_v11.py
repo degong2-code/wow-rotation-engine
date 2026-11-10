@@ -16,7 +16,11 @@ def dump(path:Path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
 
-def bootstrap(source_path:Path, source_md:Path|None=None):
+def bootstrap(source_path:Path, source_md:Path|None=None, *, destination_root:Path|None=None):
+    """Import trusted V11 content into a chosen workspace (default: legacy ROOT)."""
+    workspace = Path(destination_root) if destination_root is not None else ROOT
+    (workspace/'templates').mkdir(parents=True, exist_ok=True)
+    (workspace/'reference').mkdir(parents=True, exist_ok=True)
     source = source_path.read_text(encoding='utf8')
     spans = SpanParser(source).spans
     guides = find_class(spans,'div','manual-view')
@@ -99,14 +103,14 @@ def bootstrap(source_path:Path, source_md:Path|None=None):
             'glossary_index':rows,
             'original_guide_sha256':digest(guide.full(source)),
         }
-        dump(ROOT/'content'/'guides'/f'{gid}.json',datum)
+        dump(workspace/'content'/'guides'/f'{gid}.json',datum)
         out.append({'id':gid,'file':f'guides/{gid}.json','class_ko':class_map[gid][0],
                     'spec_ko':class_map[gid][2],'hero_options':datum['hero_options']})
     marker='<!-- ENGINE_GUIDES_INSERT -->'
     assert marker not in source
     template=source[:guides[0].start]+marker+source[guides[-1].end:]
-    (ROOT/'templates'/'shell.html').write_text(template,encoding='utf8')
-    dump(ROOT/'content'/'registry.json',{
+    (workspace/'templates'/'shell.html').write_text(template,encoding='utf8')
+    dump(workspace/'content'/'registry.json',{
         'schema_version':1,'engine_version':'1.0.0',
         'title':'WoW 딜사이클 데이터 엔진',
         'baseline':'V11',
@@ -115,14 +119,14 @@ def bootstrap(source_path:Path, source_md:Path|None=None):
         'guides':out,
     })
     conflicts={k: v for k,v in all_skills.items() if len({x['name_ko'] for x in v})>1}
-    dump(ROOT/'content'/'spell_index_from_v11.json',{
+    dump(workspace/'content'/'spell_index_from_v11.json',{
         'note':'Imported from V11 display text, NOT independently validated against official WoW Korean localization.',
         'spell_ids':all_skills,'name_conflicts':conflicts,
     })
-    (ROOT/'reference'/'v11.html').write_text(source,encoding='utf8')
+    (workspace/'reference'/'v11.html').write_text(source,encoding='utf8')
     if source_md:
-        (ROOT/'reference'/'v11_source.md').write_bytes(source_md.read_bytes())
-    print('Imported',len(guides),'guides',sum(len(json.loads((ROOT/'content'/'guides'/f'{g["id"]}.json').read_text(encoding='utf8'))['sections']) for g in out),'sections')
+        (workspace/'reference'/'v11_source.md').write_bytes(source_md.read_bytes())
+    print('Imported',len(guides),'guides',sum(len(json.loads((workspace/'content'/'guides'/f'{g["id"]}.json').read_text(encoding='utf8'))['sections']) for g in out),'sections')
     print('Content spell IDs',len(all_skills),'conflicting localized names',len(conflicts))
 
 if __name__=='__main__':
