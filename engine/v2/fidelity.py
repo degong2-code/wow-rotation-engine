@@ -111,6 +111,25 @@ def audit_create_fragment(fragment_html: str, draft: dict) -> dict:
     if len(chapter_ids) != len(set(chapter_ids)):
         failures.append("duplicate chapter ID")
 
+    # Existing V11 tooltip runtime must recognize every semantic note.
+    declared = {note["id"]: note for note in draft["editorial"]["annotations"]["notes"]}
+    rendered = guide.select("button.note-marker.tip-trigger")
+    rendered_ids = {node.get("data-note") for node in rendered}
+    if rendered_ids != set(declared):
+        failures.append("V11 note markers missing or changed")
+    if not guide.select_one("#arcane-overview .note-key.important"):
+        failures.append("V11 ?/! note legend missing")
+    anchor_ids = {node.get("id") for node in guide.select("[id]")}
+    for node in rendered:
+        label = node.get_text(" ", strip=True)
+        if label not in ("?", "!") or (label == "!") != ("critical" in node.get("class", [])):
+            failures.append("V11 note severity styling mismatch")
+        anchor = node.get("data-hint-href", "")
+        if not anchor.startswith("#arcane-") or anchor[1:] not in anchor_ids:
+            failures.append("V11 note link points outside guide")
+        if not node.get("data-hint-body") or not node.get("aria-label"):
+            failures.append("V11 note missing tooltip/accessibility text")
+
     # Never synthesize facts to satisfy an arbitrary content-length quota.
     total_rows = sum(len(group["rows"]) for group in draft["rotation_groups"])
     evidenced = sum(
@@ -138,6 +157,7 @@ def audit_create_fragment(fragment_html: str, draft: dict) -> dict:
             ),
             "external_evidence_verified": False,
         },
+        "note_markers": {"unique": len(rendered_ids), "rendered": len(rendered)},
         "editorial_review_required": True,
         "gameplay_accuracy_verified": False,
     }
