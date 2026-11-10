@@ -22,7 +22,7 @@ class V11MechanicsTests(unittest.TestCase):
     def test_v11_flows_are_linked_to_existing_rules_not_claimed_verified(self):
         result = validate(self.mechanics, self.draft)
         self.assertEqual(result["flows"], 3)
-        self.assertEqual(result["comparisons"], 1)
+        self.assertEqual(result["comparisons"], 2)
         self.assertEqual(result["linked_rule_count"], 7)
         self.assertFalse(result["external_evidence_verified"])
 
@@ -30,7 +30,7 @@ class V11MechanicsTests(unittest.TestCase):
         page = BeautifulSoup(render_arcane(self.draft)["html"], "html.parser")
         self.assertEqual(len(page.select("#arcane-basics p.sequence")), 2)
         self.assertEqual(len(page.select("#arcane-opener p.sequence")), 1)
-        self.assertEqual(len(page.select("#arcane-basics table.comparison")), 1)
+        self.assertEqual(len(page.select("#arcane-basics table.comparison")), 2)
         self.assertEqual(len(page.select(".mechanic-flow ol.steps")), 3)
         self.assertEqual(len(page.select("#arcane-rotation tbody tr")), 34)
         self.assertEqual(len(page.select("#arcane-advanced [data-tip-id]")), 10)
