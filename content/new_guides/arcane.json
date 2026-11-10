@@ -857,6 +857,111 @@
             "arcane:rotation:spellslinger-st:row-2"
           ],
           "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "clearcasting-hero-comparison",
+          "title": "2.4 번뜩임과 비전 연사 기준 비교",
+          "context": "번뜩임 발동만으로 다음 시전을 고정할 수 없습니다. 다른 상위 우선순위 조건이 없다는 전제에서 각 영웅의 예시 행을 비교합니다.",
+          "rows": [
+            {
+              "scenario": "성난태양 · 번뜩임 보유",
+              "condition": "비전 연사 12중첩 미만",
+              "action_key": "arcane-missiles",
+              "reason": "번뜩임의 신비한 화살 사용을 검토하는 구간입니다."
+            },
+            {
+              "scenario": "성난태양 · 번뜩임 보유",
+              "condition": "비전 연사 12중첩 이상",
+              "action_key": "arcane-barrage",
+              "reason": "일반적인 탄막 전환 후보지만 비전의 영혼 및 오색 화살 조건을 먼저 확인합니다."
+            },
+            {
+              "scenario": "주문술사 · 번뜩임 보유",
+              "condition": "비전 연사 15중첩 미만",
+              "action_key": "arcane-missiles",
+              "reason": "신비한 화살을 사용해 다음 강화 조건을 준비합니다."
+            },
+            {
+              "scenario": "주문술사 · 연사 고중첩",
+              "condition": "비전 연사 20중첩",
+              "action_key": "arcane-barrage",
+              "reason": "주문술사 탄막 소비 조건입니다. 가능하면 비전 충전물도 맞춥니다."
+            }
+          ],
+          "why": "각 영웅은 신비한 화살과 탄막의 연사 기준이 다릅니다. 중첩 수치 자체만 외우기보다 현재 발동 효과와 상위 우선순위를 함께 확인하세요.",
+          "exception": "이 표는 선택된 주요 규칙을 비교한 학습용 표이며 전체 34행 우선순위를 대체하지 않습니다. 발동·세트·오프너 예외가 동시에 있으면 우선순위 표를 따릅니다.",
+          "related_rule_ids": [
+            "arcane:rotation:sunfury-st:row-1",
+            "arcane:rotation:sunfury-st:row-4",
+            "arcane:rotation:spellslinger-st:row-3",
+            "arcane:rotation:spellslinger-st:row-2"
+          ],
+          "review": "needs_manual_gameplay_review"
+        }
+      ]
+    },
+    "annotations": {
+      "schema_version": "v11-notes-v1",
+      "notes": [
+        {
+          "id": "arcane-soul-window",
+          "target_type": "rule",
+          "target_id": "arcane:rotation:sunfury-st:row-2",
+          "marker": "?",
+          "title": "비전의 영혼 중 탄막 판단",
+          "body": "성난태양의 비전의 영혼 활성 구간에는 평상시 비전 연사 25중첩 기준과 별개로 탄막을 검토합니다. 실제 우선순위는 표 위쪽 조건부터 확인하세요.",
+          "detail_anchor": "arcane-basics",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane-salvo-charges",
+          "target_type": "rule",
+          "target_id": "arcane:rotation:spellslinger-st:row-2",
+          "marker": "?",
+          "title": "20중첩 탄막과 4충전",
+          "body": "주문술사는 비전 연사 20중첩을 탄막 판단에 사용합니다. 가능하면 비전 충전물 4개를 확보하되 오프너와 상위 우선순위 조건은 예외로 검토합니다.",
+          "detail_anchor": "arcane-basics",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane-tier4-fork",
+          "target_type": "rule",
+          "target_id": "arcane:rotation:spellslinger-st:row-1",
+          "marker": "!",
+          "title": "4세트 유무와 오색 화살 조건",
+          "body": "주의: 축적된 힘 6중첩 기준과 번뜩임 없음, 4세트 미보유는 괄호 안 OR 조건입니다. 4세트가 없는데 세트 중첩을 필수로 요구하지 않도록 검토하세요.",
+          "detail_anchor": "arcane-cooldowns",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane-talent-conditional",
+          "target_type": "rule",
+          "target_id": "arcane:rotation:sunfury-aoe:row-7",
+          "marker": "!",
+          "title": "비전 파동 특성 선택 확인",
+          "body": "주의: 비전 파동을 선택하지 않았다면 해당 우선순위 행은 적용할 수 없습니다. 현재 캐릭터의 특성 선택을 먼저 확인하세요.",
+          "detail_anchor": "arcane-pre",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane-clearcasting-context",
+          "target_type": "mechanic",
+          "target_id": "clearcasting-salvo-window",
+          "marker": "?",
+          "title": "번뜩임 이후 무엇을 확인하나",
+          "body": "신비한 화살을 사용한 뒤에는 비전 연사 중첩과 영웅 특성별 탄막 조건을 다시 확인합니다. 이 흐름도는 항상 고정 시전하는 콤보가 아니라 판단 순서입니다.",
+          "detail_anchor": "arcane-rotation",
+          "review": "needs_manual_gameplay_review"
+        },
+        {
+          "id": "arcane-hero-threshold-caution",
+          "target_type": "mechanic",
+          "target_id": "hero-barrage-thresholds",
+          "marker": "!",
+          "title": "영웅별 중첩 기준 혼동 주의",
+          "body": "주의: 성난태양 25중첩과 주문술사 20중첩은 서로 다른 조건입니다. 비전의 영혼 강화 중에는 별도 예외도 있으므로 같은 탄막 기준을 모든 빌드에 적용하지 마세요.",
+          "detail_anchor": "arcane-rotation",
+          "review": "needs_manual_gameplay_review"
         }
       ]
     }
