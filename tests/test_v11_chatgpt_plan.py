@@ -65,6 +65,7 @@ class PlanAdapterTests(unittest.TestCase):
         self.session = PlanSession(
             access_token=TEST_TOKEN,
             scopes=frozenset({REQUIRED_SCOPE}),
+            oauth_verified=True,
             credits_disabled_confirmed=True,
         )
         self.fake = FakeHTTP()
@@ -105,6 +106,22 @@ class PlanAdapterTests(unittest.TestCase):
         self.assertEqual(body["model"], "test-model-careful")
         self.assertNotIn(TEST_TOKEN, json.dumps(body))
         self.assertEqual(request.get_header("Authorization"), "Bearer " + TEST_TOKEN)
+
+    def test_unverified_oauth_session_cannot_send_request(self):
+        unverified = replace(self.session, oauth_verified=False)
+        fake = FakeHTTP()
+        with self.assertRaises(PlanRequestError) as info:
+            ChatGPTPlanProvider(unverified, urlopen=fake).list_models()
+        self.assertEqual(info.exception.code, "oauth_not_verified")
+        self.assertEqual(fake.calls, [])
+
+    def test_standard_billing_api_key_is_never_accepted_as_plan_oauth(self):
+        fake = FakeHTTP()
+        session = replace(self.session, access_token="sk-proj-SYNTHETIC")
+        with self.assertRaises(PlanRequestError) as info:
+            ChatGPTPlanProvider(session, urlopen=fake).list_models()
+        self.assertEqual(info.exception.code, "billing_api_key_forbidden")
+        self.assertEqual(fake.calls, [])
 
     def test_no_consent_no_request(self):
         missing = replace(self.session, scopes=frozenset())
