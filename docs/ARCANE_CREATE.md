@@ -47,9 +47,37 @@ python -m engine.v2.create_guide /private/wow_rotation_manual_engine_v2.html \
 
 **로컬 V11 UI 시험:** 실제 사용자 V11 원본의 JS에 신규 비전 전환 코드 11곳을 정확히 반영한 뒤 `node --check` PASS. Chromium 헤드리스에서 원본 V11 화면 + **합성 비전 시험 콘텐츠**를 이용해 비전 선택, 두 영웅 전환, 기존 냉기 교본 복귀 PASS. 실제 `content/new_guides/arcane.json` 전체를 공식 generator로 미리보기 생성하여 브라우저 검증한 것은 아니므로 그 추가 검증은 남아 있다. 별도 스크린샷/캡처 생성하지 않음.
 
+## 실제 V11 원본을 이용한 별도 로컬 미리보기 시험 (2026-11-10)
+
+사용자 개인 V11 원본 `898,297 bytes / SHA-256 5d70279c...`을 읽고, PR #15의 영웅 메뉴·스크립트 확장 앵커 **11곳과 동일한 문자열 치환 규칙**을 사용하는 **독립 로컬 렌더러**로 신규 비전 콘텐츠를 합성했다.
+
+- 8개 전문화 · 전체 HTML **934,240 bytes**, SHA-256 `f1e891f5f49d8131ba283e73647247a5b42d1d0f292b83d41d5a96f304cc1f25`
+- 기존 7개 `manual-view` 전체 HTML 마크업 **바이트 단위 동일** (0건 변경)
+- 비전 우선순위 **4표/34행**, Advanced Tips **10개**, 비전 장 **7개** 생성
+- 로컬 V2 importer의 8개 전문화 확장판에서 **8개/67장** 추출 → V2 builder 재생성 HTML의 SHA와 바이트 값이 원본 8개 HTML과 **동일**, `build.validate` 오류 **0건**
+- `node --check`가 V11 내 JavaScript 2개 모두 PASS
+- 로컬 Chromium (Playwright `set_content`, file:// 보안 정책 회피)에서 **비전 메뉴 → 성난태양 → 주문술사 전환 → 기존 냉기 복귀 → 모바일 너비 선택** PASS, JavaScript page errors **0건**
+- 스크린샷/캡처 첨부하지 않음
+
+**검증 범위 구분:** 이 시험은 GitHub의 `create_guide.py` 파일 자체를 그대로 로컬에서 실행한 **정식 CLI 통합 시험은 아니다**. PR #15 본 코드는 GitHub 합성 테스트 160개 PASS로 별도 검증되어 있고, 실제 V11 기반 독립 미리보기/브라우저 동작은 위와 같이 확인한 상태다. 실제 비전 콘텐츠의 모든 항목이 게임 내 정확하다는 증거도 아니다.
+
+### 12.1.5 근거 재대조
+
+- **오색 화살**은 독립된 시전 주문 ID `1295924`로 한국어 Wowhead에서 확인; 직업 정점 특성 ID `1295923`, 비전 피해 효과 ID `1295939`와 **구분**했다. 주문 아이콘은 미확인 상태라 확정하지 않았다.
+- 시즌 2 4세트 **축적된 힘**의 주문/강화 효과 ID `1296930`을 확인했다.
+- **주문술사 단일** 첫 오색 화살 조건의 AND/OR 괄호를 명확히 수정했다. 비전 연사 **13중첩 초과**이고, 괄호 안 **6중첩 축적된 힘·번뜩임 없음·4세트 미보유 중 하나**라는 뜻이다. 오색 화살 발동도 필요하다.
+- 비전 연사, 비전의 영혼 등 다중 주문 ID가 있을 수 있는 버프/발동, 미확인 아이콘·특성 배치 및 나머지 우선순위 행은 여전히 **수동 검토 대기**이다.
+
+근거 URL:
+- https://www.wowhead.com/ko/spell=1295924/
+- https://www.wowhead.com/ko/spell=1296930/
+- https://www.wowhead.com/guide/classes/mage/arcane/rotation-cooldowns-pve-dps
+- https://www.method.gg/guides/arcane-mage/playstyle-and-rotation
+- https://www.icy-veins.com/wow/arcane-mage-pve-dps-rotation-cooldowns-abilities
+
 ## 다음 단계
 
-1. 사용자 제공 V11에 실제 `create_guide.py`를 직접 실행하여 **8전문화 HTML 전체 통합 생성** 확인.
+1. 현재 검증된 별도 로컬 HTML 생성/브라우저 경로 외에, GitHub의 **정식 `create_guide.py`**를 사용자 제공 V11에서 직접 호출하여 결과 HTML과 동일한 구조/동작을 재확인.
 2. 새로운 비전 초안의 마법사 전용 주문 ID/아이콘·세트 및 영웅 특성 조건과 시즌 2 원문을 수동 대조. 모호한 곳은 가정값으로 배포하지 않음.
 3. 신규 등록 JSON을 기존 AI 변경 후보·승인·부분 갱신 경로와 연결(현재 `detail_bridge`는 구 V11 7개 공개 인덱스를 기준으로 동작).
 4. 사용자 승인된 경우에만 병합·Pages 공개 단계 진행.
