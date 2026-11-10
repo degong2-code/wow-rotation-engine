@@ -1,0 +1,47 @@
+name: Deploy review-only UI to GitHub Pages (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: review-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy-review:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install data validator dependencies
+        run: python -m pip install -r requirements-v2.txt
+      - name: Verify tests and public rule data
+        run: |
+          python -m unittest discover -s tests -p 'test_*.py' -v
+          python -m engine.public_data validate
+      - name: Generate review viewer only
+        run: |
+          python -m engine.review_ui --output dist/pages/index.html
+          python -m engine.review_audit --output dist/pages/audit.json
+      - name: Confirm this is not a gameplay guide
+        run: |
+          grep -q '실전용 공략이 아닙니다' dist/pages/index.html
+          grep -q '"publish_ready": false' dist/pages/audit.json
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/pages
+      - name: Deploy review-only UI
+        id: deployment
+        uses: actions/deploy-pages@v4
