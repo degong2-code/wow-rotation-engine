@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.example.invalid/wow-rotation/rotation-rules.schema.json",
+  "title": "WoW rotation rules, import review layer v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "guide_id", "class_ko", "spec_ko", "baseline_document", "baseline_html_sha256", "hero_options", "rotation_groups", "advanced_guidance", "publication"],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "guide_id": {"type": "string", "minLength": 1},
+    "class_ko": {"type": "string"},
+    "spec_ko": {"type": "string"},
+    "baseline_document": {"const": "V11"},
+    "baseline_html_sha256": {"$ref": "#/$defs/hash"},
+    "hero_options": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+    "rotation_groups": {"type": "array", "items": {"$ref": "#/$defs/group"}},
+    "advanced_guidance": {"type": "array", "items": {"$ref": "#/$defs/advice"}},
+    "publication": {"type": "object", "additionalProperties": false, "required": ["status", "reason"], "properties": {
+      "status": {"enum": ["blocked_pending_review", "approved_for_render"]},
+      "reason": {"type":"string"}
+    }}
+  },
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "evidence": {"type": "object", "additionalProperties": false, "required": ["kind", "guide_id", "chapter_id", "chapter_sha256", "locator", "evidence_sha256", "evidence_ko", "original_wowhead_passage_verified"], "properties": {
+      "kind": {"const": "trusted_v11_html"}, "guide_id": {"type": "string"}, "chapter_id": {"type": "string"},
+      "chapter_sha256": {"$ref": "#/$defs/hash"}, "locator": {"type": "string", "minLength": 1},
+      "evidence_sha256": {"$ref": "#/$defs/hash"}, "evidence_ko": {"type": "string", "minLength": 1},
+      "original_wowhead_passage_verified": {"type": "boolean"}
+    }},
+    "review": {"type": "object", "additionalProperties": false, "required": ["state", "reason"], "properties": {
+      "state": {"enum":["pending","source_confirmed","rejected"]}, "reason": {"type":"string"}
+    }},
+    "scenario": {"type": "object", "additionalProperties": false, "required": ["hero","target_min","target_max","mode","phase","heading_ko","interpretation"], "properties": {
+      "hero": {"type":"string"}, "target_min": {"type":["integer","null"], "minimum":1}, "target_max": {"type":["integer","null"], "minimum":1},
+      "mode": {"enum":["single_target","aoe","unspecified","both"]},
+      "phase": {"enum":["unspecified","combustion_active","combustion_inactive","shadow_dance_active","shadow_dance_inactive","cooldown_condition"]},
+      "heading_ko": {"type":"string"}, "interpretation": {"const":"inferred_from_heading_not_game_verified"}
+    }},
+    "action": {"type": "object", "additionalProperties": false, "required": ["raw_ko","spell_id","spell_name_ko","match_state"], "properties": {
+      "raw_ko":{"type":"string","minLength":1}, "spell_id":{"type":["integer","null"],"minimum":1},
+      "spell_name_ko":{"type":["string","null"]}, "match_state": {"enum":["v11_glossary_prefix_unverified","unresolved_or_composite","ambiguous_same_name_multiple_ids"]}
+    }},
+    "predicate": {"type":"object", "additionalProperties":false, "required":["field","operator","value","matched_text","verification"], "properties": {
+      "field":{"enum":["combo_points"]}, "operator":{"enum":["gte"]}, "value":{"type":"integer","minimum":0},
+      "matched_text":{"type":"string"}, "verification":{"const":"syntax_only"}
+    }},
+    "condition": {"type":"object", "additionalProperties": false, "required":["raw_ko","predicates","formalization"], "properties": {
+      "raw_ko":{"type":"string"}, "predicates":{"type":"array","items":{"$ref":"#/$defs/predicate"}},
+      "formalization":{"const":"partial_syntax_only_not_executable"}
+    }},
+    "rule": {"type":"object", "additionalProperties":false,"required":["id","order","priority_label","priority_number","kind","action","condition","evidence","review"],"properties": {
+      "id":{"type":"string"}, "order":{"type":"integer","minimum":1}, "priority_label":{"type":"string"},
+      "priority_number":{"type":["integer","null"]}, "kind":{"enum":["ability","preparation_or_other"]},
+      "action":{"$ref":"#/$defs/action"}, "condition":{"$ref":"#/$defs/condition"},
+      "evidence":{"$ref":"#/$defs/evidence"}, "review":{"$ref":"#/$defs/review"}
+    }},
+    "group": {"type":"object", "additionalProperties":false,"required":["id","source_chapter","column_headers","scenario","source_heading","evidence","rules"],"properties": {
+      "id":{"type":"string"}, "source_chapter":{"type":"string"},
+      "column_headers":{"type":"array", "minItems":3,"items":{"type":"string"}},
+      "scenario":{"$ref":"#/$defs/scenario"}, "source_heading":{"type":"string"},
+      "evidence":{"$ref":"#/$defs/evidence"}, "rules":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/rule"}}
+    }},
+    "advice": {"type":"object", "additionalProperties":false,"required":["id","title_ko","kind","text_ko","semantic_status","evidence","review"], "properties": {
+      "id":{"type":"string"}, "title_ko":{"type":"string"},
+      "kind":{"enum":["tip","warning","comparison_row"]},
+      "text_ko":{"type":"string","minLength":1},
+      "semantic_status":{"const":"unstructured_tip_requires_review"},
+      "evidence":{"$ref":"#/$defs/evidence"}, "review":{"$ref":"#/$defs/review"}
+    }}
+  }
+}
