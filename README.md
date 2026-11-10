@@ -58,3 +58,13 @@ python -m engine.review_audit --output dist/review-audit.json
 - `dist/review-audit.json`: 177개 조건 미해석, 178개 한국어 이름 레코드 미검증 등의 게시 차단 사유 출력.
 - 원문 전체·상세 Advanced Tips는 아직 실전 가이드로 게시하지 않음.
 - 상세 범위: [docs/REVIEW_UI.md](docs/REVIEW_UI.md).
+
+
+## 한국어 주문명 검증: Issue #5 후속
+
+```bash
+python -m engine.spell_names audit --output dist/spell-name-audit.json
+```
+
+이는 176개 주문 ID의 검증 대기 현황을 검사합니다. **Blizzard API는 일반 CI에서 호출하지 않습니다.**
+자격증명을 GitHub Secrets에 등록한 경우에만 수동 Actions `Collect Blizzard ko_KR spell names`로 증거를 수집할 수 있습니다. 관측 결과는 기존 명칭을 자동 변경하거나 승인하지 않습니다. 상세: [한국어 주문명 검증](docs/SPELL_NAMES.md).

@@ -59,6 +59,18 @@ jobs:
             echo "ERROR: Unverified rules passed readiness gate"
             exit 1
           fi
+      - name: Audit inherited Korean spell names (no network, no approval)
+        run: python -m engine.spell_names audit --output dist/spell-name-audit.json
+      - name: Ensure name audit cannot auto-approve or publish
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open("dist/spell-name-audit.json", encoding="utf-8"))
+          assert d["publish_ready"] is False
+          assert d["counts"]["distinct_spell_ids"] == 176
+          assert d["counts"]["not_checked"] == 176
+          assert d["counts"]["official_names_auto_approved"] == 0
+          PY
       - name: Upload validated artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -68,4 +80,5 @@ jobs:
             dist/public-index.html
             dist/review/index.html
             dist/review-audit.json
+            dist/spell-name-audit.json
           retention-days: 7
