@@ -25,7 +25,7 @@ LOGIN_WAIT_SECONDS = 240
 def listen_for_callback(pending, server: HTTPServer, browser_opener, login_url: str,
                         *, monotonic=time.monotonic) -> object:
     """One state-bound login result; never echo query, code, or token in UI."""
-    state = {"result": None}
+    state = {"result": None, "error": None}
     expected_host = f"127.0.0.1:{server.server_port}"
 
     class Handler(BaseHTTPRequestHandler):
@@ -45,7 +45,10 @@ def listen_for_callback(pending, server: HTTPServer, browser_opener, login_url: 
                 return
             try:
                 result = callback_result(pending, self.path)
-            except OAuthError:
+            except OAuthError as exc:
+                # A valid-state decline is terminal; malformed callbacks are not.
+                if exc.code == "consent_declined":
+                    state["error"] = exc.code
                 # Don't reveal state, OAuth codes or account info in browser.
                 self.send_error(400, "Invalid or declined authorization")
                 return
@@ -70,8 +73,10 @@ def listen_for_callback(pending, server: HTTPServer, browser_opener, login_url: 
             raise OAuthError("system_browser_open_failed")
         deadline = monotonic() + LOGIN_WAIT_SECONDS
         server.timeout = 1
-        while state["result"] is None and monotonic() < deadline:
+        while state["result"] is None and state["error"] is None and monotonic() < deadline:
             server.handle_request()
+        if state["error"] is not None:
+            raise OAuthError(state["error"])
         if state["result"] is None:
             raise OAuthError("callback_timeout_or_declined")
         return state["result"]
