@@ -26,6 +26,7 @@ from .build import ROOT
 from .html_spans import SpanParser, find_class
 from .fidelity import audit_create_fragment
 from .annotations import validate_notes, render_note, render_legend
+from .rule_source_audit import audit_rule_sources
 from .mechanics import validate as validate_mechanics, render_flows, render_comparisons, rich
 
 BASELINE_SHA = "5d70279c4dd073eccef1f3b13565a8f555cd81c9f0a5b7eda7e3485e410742be"
@@ -567,7 +568,7 @@ def create_arcane(source: bytes, draft: dict) -> tuple[bytes, dict]:
 
 
 def create_private_preview(source_path: Path, draft_path: Path,
-                           output_path: Path) -> dict:
+                           output_path: Path, *, evidence_path: Path | None = None) -> dict:
     target = Path(output_path).resolve()
     root = ROOT.resolve()
     if target == root or target.is_relative_to(root):
@@ -577,7 +578,15 @@ def create_private_preview(source_path: Path, draft_path: Path,
     if target.exists():
         raise FileExistsError("Refusing to overwrite existing Arcane preview")
     draft = json.loads(Path(draft_path).read_text(encoding="utf-8"))
+    evidence_file = (
+        Path(evidence_path) if evidence_path is not None
+        else ROOT / "content" / "new_guides" / "arcane_rule_source_audit.json"
+    )
+    source_audit = audit_rule_sources(
+        draft, json.loads(evidence_file.read_text(encoding="utf-8"))
+    )
     full, report = create_arcane(Path(source_path).read_bytes(), draft)
+    report["source_audit"] = source_audit
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_bytes(full)
     return report
@@ -588,8 +597,14 @@ def main() -> int:
     parser.add_argument("source", type=Path)
     parser.add_argument("--draft", type=Path, default=ROOT / "content" / "new_guides" / "arcane.json")
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--evidence", type=Path,
+        default=ROOT / "content" / "new_guides" / "arcane_rule_source_audit.json",
+    )
     args = parser.parse_args()
-    report = create_private_preview(args.source, args.draft, args.output)
+    report = create_private_preview(
+        args.source, args.draft, args.output, evidence_path=args.evidence
+    )
     print(json.dumps(report, ensure_ascii=False, indent=2))
     return 0
 
