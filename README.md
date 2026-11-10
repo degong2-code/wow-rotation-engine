@@ -1,10 +1,28 @@
 # WoW Rotation Engine
 
-WoW Midnight 딜사이클 교본을 **검증 가능한 규칙 데이터 → HTML**로 만드는 프로젝트입니다.
+WoW 딜사이클 교본의 **V11 품질을 보존하면서 ChatGPT 채팅에서 전문화 이름만으로 CREATE/UPDATE**하는 프로젝트입니다. HTML 보존·검증용 V2 엔진은 재사용하되, 별도 AI API 앱 구축을 필수 경로로 삼지 않습니다.
 
 > **현재 상태: GitHub CI + 실제 V2 코드 + V11 파생 규칙 데이터(PUBLIC)**. 7개 전문화의 구조화된 규칙 **메타데이터**를 이관했습니다. 와우헤드 원문 전체·대량 번역문과 기존 V11 HTML 전체는 게시하지 않았으며, 생성 뷰어는 실전 딜사이클 가이드가 아닙니다.
 
-## 지금 사용하는 결과물
+## 기본 사용자 경로 — ChatGPT 중심 제작 (2026-11-11 방향 전환)
+
+**사용자 입력:** `비전 마법사`, `화염 마법사 업데이트`, `잠행 도적 고급 운용 보강`처럼 **전문화 이름만** 채팅에 입력.
+
+**ChatGPT가 수행:** 실제 비공개 V11 정본 복구 및 SHA 검증 → GitHub 제작 규칙·공략 출처 URL 확인 → 최신 패치/영웅 특성별 심층 분석·설명 집필 → 기존 V11 디자인·기술 연결·`?`/`!` 재사용 → 비대상 전문화 바이트 동일 검증 → 단일 HTML 파일 전달.
+
+**개발 방향:** 원래 직접 편집한 7개 V11 교본의 설명 깊이와 품질을 기준으로 한다. 신규 비전 초안이 짧거나 단순화된 부분을 보완하기 위해 사용자가 AI 로그인, JSON, Codespaces, Actions, API 키, 외부 관리 UI를 오가게 만들지 않는다. AI 인증 실험 PR #17~#19는 기록으로 보존하되 **기본 사용 경로에서 제외**했다.
+
+**운영 정본:**
+- [ADR-003 — ChatGPT 중심 제작 결정](docs/ADR_003_CHAT_FIRST_EDITORIAL.md)
+- [CHAT_FIRST_PLAYBOOK — CREATE/UPDATE 작업 순서](docs/CHAT_FIRST_PLAYBOOK.md)
+- [SOURCE_ACQUISITION — 공략 자료 수집·검증 방법](docs/SOURCE_ACQUISITION.md)
+- [CHAT_FIRST_PROJECT_INSTRUCTIONS — 프로젝트 설정용 짧은 지침](docs/CHAT_FIRST_PROJECT_INSTRUCTIONS.md)
+
+**한 문구 요청을 완전히 검증했다는 뜻은 아니다.** ChatGPT가 현재 채팅에서 GitHub·웹·개인 V11 원본을 실제로 읽을 수 있어야 하며, 채팅 요청에 따라 파일을 생성한다. AI의 백그라운드 무인 실행이나 게임플레이 검증의 자동 완료를 보장하지 않는다. 공개 GitHub에는 원본 V11과 실제 완성 교본 HTML을 업로드하지 않는다.
+
+## 기존 빠른 참조 데모
+
+
 
 ```bash
 python -m engine.manual_site --output dist/manual/index.html
