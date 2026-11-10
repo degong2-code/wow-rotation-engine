@@ -16,7 +16,6 @@ class DynamicReviewUITests(unittest.TestCase):
         html=render()
         self.assertEqual(html,render())
         self.assertEqual(html.count('class="guide-panel"'),7)
-        self.assertEqual(html.count('class="rotation-group"'),23 if False else 0)
         self.assertIn('data-select-guide="fire"',html)
         self.assertIn('data-select-guide="assassination"',html)
         self.assertIn('data-select-hero="deathstalker"',html)
@@ -29,6 +28,31 @@ class DynamicReviewUITests(unittest.TestCase):
         self.assertEqual(html.count('원본 근거 식별자'),177)
         self.assertIn('대상 수 미지정',html)
         self.assertIn('조건 미해석 · 검토 대기',html)
+
+    def test_adding_spec_json_creates_navigation_without_renderer_changes(self):
+        with TemporaryDirectory() as tmp:
+            copied=Path(tmp)/"public"
+            copytree(BASE,copied)
+            manifest_path=copied/"manifest.json"
+            manifest=json.loads(manifest_path.read_text(encoding="utf-8"))
+            added=deepcopy(json.loads((copied/"rules"/"fire.json").read_text(encoding="utf-8")))
+            added["guide_id"]="sample"
+            added["spec_ko"]="추가 시험용 전문화"
+            (copied/"rules"/"sample.json").write_text(json.dumps(added,ensure_ascii=False),encoding="utf-8")
+            summary=deepcopy(next(x for x in manifest["guides"] if x["id"]=="fire"))
+            summary.update({"id":"sample","spec_ko":"추가 시험용 전문화","file":"rules/sample.json"})
+            manifest["guides"].append(summary)
+            manifest["counts"]["specs"]+=1
+            manifest["counts"]["tables"]+=summary["rotation_group_count"]
+            manifest["counts"]["rows"]+=summary["priority_row_count"]
+            manifest["counts"]["advanced_tips"]+=summary["advanced_item_count"]
+            manifest["counts"]["unresolved_spell_ids"]+=sum(
+                r["action"]["spell_id"] is None for g in added["rotation_groups"] for r in g["rules"])
+            manifest_path.write_text(json.dumps(manifest,ensure_ascii=False),encoding="utf-8")
+            page=render(copied)
+            self.assertEqual(page.count('class="guide-panel"'),8)
+            self.assertIn('data-select-guide="sample"',page)
+            self.assertIn("추가 시험용 전문화",page)
 
     def test_names_are_escaped(self):
         with TemporaryDirectory() as tmp:
