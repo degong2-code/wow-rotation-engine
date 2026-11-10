@@ -68,3 +68,13 @@ python -m engine.spell_names audit --output dist/spell-name-audit.json
 
 이는 176개 주문 ID의 검증 대기 현황을 검사합니다. **Blizzard API는 일반 CI에서 호출하지 않습니다.**
 자격증명을 GitHub Secrets에 등록한 경우에만 수동 Actions `Collect Blizzard ko_KR spell names`로 증거를 수집할 수 있습니다. 관측 결과는 기존 명칭을 자동 변경하거나 승인하지 않습니다. 상세: [한국어 주문명 검증](docs/SPELL_NAMES.md).
+
+## 딜사이클 조건식 검토 워크리스트
+
+```bash
+python -m engine.condition_worklist --output dist/condition-worklist.json
+```
+
+177개 우선순위 전체의 검토 상태를 출력합니다. 일부 **구문적으로 분석 가능한 조건은 실제 기술 사용 충분조건이 아닙니다.** 현재 냉기 마법사 빙결 중첩 조건 2개는 출처 외부 대조를 기다리는 **부분 후보**로만 수록했고, 나머지 175개 행은 미정규화 상태입니다. AI·코드 모두 미검증 규칙을 자동 승인하지 않습니다.
+
+세부 설계: [Condition Worklist](docs/CONDITION_WORKLIST.md).

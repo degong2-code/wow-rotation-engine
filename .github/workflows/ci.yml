@@ -71,6 +71,27 @@ jobs:
           assert d["counts"]["not_checked"] == 176
           assert d["counts"]["official_names_auto_approved"] == 0
           PY
+      - name: Validate and export all 177 condition review states
+        run: python -m engine.condition_worklist --output dist/condition-worklist.json
+      - name: Assert no partial condition auto-publishes
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("dist/condition-worklist.json",encoding="utf-8"))
+          assert r["summary"]["total_rows"] == 177
+          assert r["summary"]["partial_candidate_pending"] == 2
+          assert r["summary"]["not_formalized"] == 175
+          assert r["summary"]["approved_full_conditions"] == 0
+          assert r["summary"]["publish_ready"] is False
+          assert all(not x["can_execute_rotation"] and
+                     not x["automatic_publish_allowed"] for x in r["entries"])
+          PY
+      - name: Verify unapproved condition gate refuses readiness
+        run: |
+          if python -m engine.condition_worklist --require-ready --output dist/condition-worklist.json; then
+            echo "ERROR: Partial condition proposals bypassed review gate"
+            exit 1
+          fi
       - name: Upload validated artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -81,4 +102,5 @@ jobs:
             dist/review/index.html
             dist/review-audit.json
             dist/spell-name-audit.json
+            dist/condition-worklist.json
           retention-days: 7
