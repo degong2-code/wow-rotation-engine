@@ -44,6 +44,21 @@ jobs:
           cp dist/public-index.html /tmp/rotation-public-first.html
           python -m engine.public_data build --output dist/public-index.html
           cmp /tmp/rotation-public-first.html dist/public-index.html
+      - name: Build dynamic review-only UI
+        run: python -m engine.review_ui --output dist/review/index.html
+      - name: Generate fail-closed source/locale readiness report
+        run: python -m engine.review_audit --output dist/review-audit.json
+      - name: Confirm dynamic review HTML deterministic
+        run: |
+          cp dist/review/index.html /tmp/wow-review-first.html
+          python -m engine.review_ui --output dist/review/index.html
+          cmp /tmp/wow-review-first.html dist/review/index.html
+      - name: Assert unverified content cannot pass publication gate
+        run: |
+          if python -m engine.review_audit --require-publish-ready --output dist/review-audit.json; then
+            echo "ERROR: Unverified rules passed readiness gate"
+            exit 1
+          fi
       - name: Upload validated artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -51,4 +66,6 @@ jobs:
           path: |
             dist/index.html
             dist/public-index.html
+            dist/review/index.html
+            dist/review-audit.json
           retention-days: 7
