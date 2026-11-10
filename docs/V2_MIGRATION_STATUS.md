@@ -45,4 +45,10 @@ python -m unittest discover -s tests -p 'test_*.py' -v
 
 **엔진 구분:** `engine/v2/ai_runtime.py`는 제공자 독립 작업 계약, `chatgpt_plan.py`는 검증된 OAuth 세션 후 Responses 요청, `ai_update_bridge.py`는 기존 원문 증거·승인 게이트로 연결한다. CI는 합성 요청만 사용하며 로그인·실사용량을 소모하지 않는다. 개인 Plus 사용자 OAuth 동의/실제 모델 조회/한도 실측, 범용 CREATE 전환은 다음 단계다.
 
+## 2026-11-11 — 실행 환경 사용 가능성 검증이 최우선
+
+- **PR #19**: [ADR-002: GitHub-only + Plus 인증 적합성](ADR_002_GITHUB_ONLY_PLUS_FEASIBILITY.md); GitHub Actions의 Plus 토큰 지속 저장은 보류하고, 모바일 브라우저 + GitHub Codespaces + Codex CLI Device Code 경로를 **계정 실측 전 후보**로 지정.
+- 기존 PR #18은 로컬 PC OAuth에 적합하나 GitHub Actions·Codespaces의 127.0.0.1 브라우저 콜백 문제를 해결한 것이 아님.
+- **현재 범용 CREATE 개발 진행보다 Plus AI 호출의 실제 가능 여부 확인이 선행 조건.** 실계정 인증·AI 호출·사용량 차감은 수행하지 않았다.
+
 **변경 금지 정책:** 기존 V11 7개 본문·개인 원본, 비공개 상세 공략 데이터, 계정 토큰/키 비공개. 생성된 공략 검증·사용자 승인 없이 자동 게시 금지. 모든 PR은 명시적 승인 전 `main` 병합/Pages 게시 금지.

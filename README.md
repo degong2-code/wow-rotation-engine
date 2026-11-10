@@ -14,6 +14,14 @@ python -m engine.manual_site --output dist/manual/index.html
 
 **현재 범위는 빠른 참조판입니다.** 원본 V11의 상세 발동 조건과 Advanced Tips 본문은 아직 데이터에 포함되지 않으므로, 이 HTML만 보고 게임 내 스킬 사용 여부를 결정해서는 안 됩니다. 사용 방법과 데이터 업데이트 방법은 [간략 교본 설명](docs/MANUAL_PREVIEW.md)을 보세요.
 
+## GitHub만으로 ChatGPT Plus AI 실행 가능한가? (2026-11-11 판정)
+
+**GitHub Actions 단독으로 Plus 구독 OAuth를 자동화하는 경로는 현재 채택하지 않습니다.** 공식 SIWC 토큰의 원격 지속 저장 조건 및 공개 저장소의 Codex CI 인증 권고를 만족한다는 근거가 없습니다.
+
+**로컬 PC 없이 유력한 시험 경로:** 모바일 브라우저 → **GitHub Codespaces** → `codex login --device-auth`(OpenAI 공식 Codex CLI의 headless 로그인) → 승인된 계정의 최소 AI 요청. 이는 **우리 앱의 SIWC 직접 API 연동이 아니라 Codex CLI 기반 대안**이며, 사용자 계정 실호출 전에는 성공을 확정하지 않습니다. 기존 범용 엔진 개발은 이 사용 가능성 검증을 우선하기 위해 잠시 보류합니다.
+
+근거·실행 단계·계정 저장 주의: [ADR-002 — GitHub-only Plus feasibility](docs/ADR_002_GITHUB_ONLY_PLUS_FEASIBILITY.md)
+
 ## ChatGPT Plus 로컬 로그인 시범 (추가 개발, PR #18)
 
 [WSL2 / Linux 로컬 로그인 가이드](docs/CHATGPT_PLUS_LOCAL_LOGIN.md)에 공식 **Sign in with ChatGPT OAuth/PKCE + 서명된 ID Token 검증 + loopback 콜백 + 소유자 전용 계정 저장** 절차를 기록했습니다.
