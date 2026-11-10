@@ -8,17 +8,17 @@ WoW Midnight 딜사이클 교본을 **검증 가능한 규칙 데이터 → HTML
 
 Python 3.11+ 표준 라이브러리만 사용합니다.
 
-\`\`\`bash
+```bash
 python -m unittest discover -s tests -v
 python -m engine validate --input examples/synthetic.json
 python -m engine build --input examples/synthetic.json --output dist/index.html --allow-demo
 python -m engine diff --before examples/synthetic.json --after examples/synthetic.json
-\`\`\`
+```
 
-- GitHub Actions: \`.github/workflows/ci.yml\` — 테스트, JSON 검증, 데모 HTML 빌드, Artifact.
-- \`engine/\`: 안전한 조건 평가(unknown 지원), 최소 스키마 검사, 결정론적 HTML 렌더링, 변경 위험도 비교.
-- \`examples/\`: 실제 게임을 주장하지 않는 합성 데이터.
-- \`docs/MIGRATION.md\`: 로컬 V2 엔진을 공개 코드와 저작권 검토 대상 데이터로 분리해 순차 이관하는 계획.
+- GitHub Actions: `.github/workflows/ci.yml` — 테스트, JSON 검증, 데모 HTML 빌드, Artifact.
+- `engine/`: 안전한 조건 평가(unknown 지원), 최소 스키마 검사, 결정론적 HTML 렌더링, 변경 위험도 비교.
+- `examples/`: 실제 게임을 주장하지 않는 합성 데이터.
+- `docs/MIGRATION.md`: 로컬 V2 엔진을 공개 코드와 저작권 검토 대상 데이터로 분리해 순차 이관하는 계획.
 
 ## 운영 원칙
 
