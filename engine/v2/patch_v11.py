@@ -13,6 +13,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+from tempfile import TemporaryDirectory
 import re
 
 from bs4 import BeautifulSoup, Tag
@@ -166,6 +167,31 @@ def apply_patch(source_path: Path, patch: dict, public_base: Path = BASE) -> byt
     return html.encode("utf-8")
 
 
+def rebuild_v2(source_bytes: bytes) -> bytes:
+    """Use the original V2 importer and builder to emit the updated V11 HTML.
+
+    All full guide JSON and chapter HTML are temporary private intermediate
+    files. A changed element is never allowed to silently alter the outer UI.
+    """
+    from .build import read_json, render, validate
+    from .import_v11 import bootstrap
+
+    with TemporaryDirectory(prefix="wow-v11-update-") as temporary:
+        workspace = Path(temporary)
+        private_source = workspace / "private-input.html"
+        private_source.write_bytes(source_bytes)
+        bootstrap(private_source, destination_root=workspace)
+        registry = read_json(workspace / "content" / "registry.json")
+        page, guides = render(registry, root=workspace)
+        errors = validate(registry, guides, page)
+        if errors:
+            raise ValueError("V2 HTML validation failed: " + "; ".join(errors))
+        rebuilt = page.encode("utf-8")
+        if rebuilt != source_bytes:
+            raise ValueError("V2 HTML reconstruction changed non-target bytes")
+    return rebuilt
+
+
 def write_private_patch(source_path: Path, patch_path: Path, output_path: Path,
                         *, public_base: Path = BASE) -> dict:
     out = Path(output_path).resolve()
@@ -176,7 +202,7 @@ def write_private_patch(source_path: Path, patch_path: Path, output_path: Path,
     if out == Path(source_path).resolve():
         raise ValueError("Refusing to overwrite the original V11 source HTML")
     patch = json.loads(Path(patch_path).read_text(encoding="utf-8"))
-    result = apply_patch(source_path, patch, public_base)
+    result = rebuild_v2(apply_patch(source_path, patch, public_base))
     out.parent.mkdir(parents=True, exist_ok=True)
     if out.exists():
         raise FileExistsError(f"Refusing to overwrite output: {out}")
