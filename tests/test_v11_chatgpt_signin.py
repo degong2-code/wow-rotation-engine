@@ -25,6 +25,7 @@ class LoopbackSmokeTests(unittest.TestCase):
         with HTTPServer(("127.0.0.1", 0), BaseHTTPRequestHandler) as server:
             pending, auth_url = begin_login(server.server_port, fresh_host_id())
             callbacks = []
+            threads = []
             def browser(url):
                 params = parse.parse_qs(parse.urlsplit(url).query)
                 callback_url = (
@@ -38,11 +39,15 @@ class LoopbackSmokeTests(unittest.TestCase):
                 def send():
                     with urlrequest.urlopen(callback_url, timeout=5) as resp:
                         callbacks.append(resp.read())
-                threading.Thread(target=send, daemon=True).start()
+                thread = threading.Thread(target=send, daemon=True)
+                thread.start()
+                threads.append(thread)
                 return True
             result = listen_for_callback(pending, server, browser, auth_url)
             self.assertEqual(result.client_id, ISSUED)
             self.assertEqual(result.code, "SYNTHETIC_CALLBACK_SECRET")
+            for thread in threads:
+                thread.join(timeout=5)
             self.assertEqual(len(callbacks), 1)
             self.assertNotIn(b"SYNTHETIC_CALLBACK_SECRET", callbacks[0])
 
@@ -74,7 +79,7 @@ class LoopbackSmokeTests(unittest.TestCase):
     @unittest.skipUnless(os.name == "posix", "Unix local credential pilot")
     def test_user_initiated_local_flow_stops_at_sign_in_without_inference(self):
         from engine.v2.chatgpt_oauth import VerifiedConnection
-        from .test_v11_chatgpt_oauth import signed_fixture
+        from test_v11_chatgpt_oauth import signed_fixture
         with TemporaryDirectory() as directory:
             store = LocalAuthStore(Path(directory) / "credentials")
             signed_keys = {}
