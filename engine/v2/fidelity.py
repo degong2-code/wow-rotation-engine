@@ -14,6 +14,7 @@ V11_COMPONENTS = (
     "quick-head", "chapter-heading", "chapter-no", "overview-table",
     "steps", "aside", "glossary-list", "glossary-row", "priority",
     "table-scroll", "spell", "tip-trigger", "variant", "hero-switch",
+    "sequence", "comparison",
 )
 REQUIRED_CREATE = V11_COMPONENTS
 
@@ -78,6 +79,16 @@ def audit_create_fragment(fragment_html: str, draft: dict) -> dict:
         failures.append("chapter header/number missing")
     if len(guide.select("section.overview")) != 1:
         failures.append("must have one V11 overview section")
+    # A complete V11-style guide needs actionable mechanics, not merely text length.
+    expected_flows = len(draft["editorial"]["mechanics"]["flows"])
+    expected_comparisons = len(draft["editorial"]["mechanics"]["comparisons"])
+    if len(guide.select(".mechanic-flow .sequence")) != expected_flows:
+        failures.append("actionable mechanics flow count mismatch")
+    if len(guide.select(".mechanic-comparison table.comparison")) != expected_comparisons:
+        failures.append("hero/condition comparison count mismatch")
+    for name in ("overview", "pre", "basics", "opener", "cooldowns", "advanced", "practice"):
+        if not guide.select_one("#arcane-" + name + " .spell"):
+            failures.append("missing contextual spell links: " + name)
     if not guide.select_one("#arcane-opener ol.steps"):
         failures.append("V11 steps component missing in opener")
     if not guide.select_one("#arcane-rotation p.rule"):
@@ -117,6 +128,15 @@ def audit_create_fragment(fragment_html: str, draft: dict) -> dict:
         "evidence_coverage": {
             "rows_with_item_evidence": evidenced,
             "total_rows": total_rows,
+        },
+        "actionable_mechanisms": {
+            "flows": expected_flows,
+            "comparisons": expected_comparisons,
+            "contextual_spell_links": sum(
+                len(guide.select("#arcane-" + name + " .spell"))
+                for name in ("overview", "pre", "basics", "opener", "cooldowns", "advanced", "practice")
+            ),
+            "external_evidence_verified": False,
         },
         "editorial_review_required": True,
         "gameplay_accuracy_verified": False,
