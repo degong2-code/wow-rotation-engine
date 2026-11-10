@@ -149,13 +149,13 @@ def render(base: Path = BASE) -> str:
             s = group["scenario"]
             hero = safe_id(s["hero"])
             mode = s.get("mode", "")
-            if mode not in {"single_target", "aoe"}:
+            if mode not in {"single_target", "aoe", "both"}:
                 raise ValueError("Unsupported scenario mode: " + str(mode))
             low, high = s.get("target_min"), s.get("target_max")
             low_attr = "" if low is None else str(int(low))
             high_attr = "" if high is None else str(int(high))
             phase = PHASE_NAMES.get(s.get("phase"), s.get("phase", "구간 미지정"))
-            label = f'{MODE_NAMES.get(mode,mode)} · {target_label(s)} · {phase}'
+            label = f'{MODE_NAMES.get(mode, "단일·광역 공통" if mode == "both" else mode)} · {target_label(s)} · {phase}'
             parts.append(f'<article class="scenario" data-hero="{hero}" data-mode="{mode}" '
                          f'data-low="{low_attr}" data-high="{high_attr}" '
                          + ('' if hero == heroes[0] else 'hidden ') + '>')
@@ -214,10 +214,10 @@ def render(base: Path = BASE) -> str:
         'let visibleRows=0;let visibleGroups=0;',
         'active.querySelectorAll(".scenario").forEach(card=>{',
         'const isHero=card.dataset.hero===hero;',
-        'const isMode=mode.value==="all"||card.dataset.mode===mode.value;',
+        'const isMode=mode.value==="all"||card.dataset.mode===mode.value||card.dataset.mode==="both";',
         'const min=card.dataset.low===""?null:Number(card.dataset.low);',
         'const max=card.dataset.high===""?null:Number(card.dataset.high);',
-        'const targetsMatch=count===null||(min!==null&&count>=min&&(max===null||count<=max));',
+        'const targetsMatch=count===null||card.dataset.mode==="both"&&min===null||(min!==null&&count>=min&&(max===null||count<=max));',
         'let rows=0;',
         'card.querySelectorAll(".priority-row").forEach(row=>{',
         'const match=!text||row.dataset.search.toLocaleLowerCase().includes(text);',
