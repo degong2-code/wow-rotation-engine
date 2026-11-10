@@ -58,6 +58,9 @@ AI 제공자는 `AIProvider`(모델 목록, `AIJob` 입력, `AIProposal` 출력)
 - `engine/v2/ai_runtime.py`: `AIJob`, `AIProposal`, `ModelOption`, `AIProvider` 공통 인터페이스. `auto_applied=false`, `auto_published=false`, `gameplay_verified=false`을 데이터 계약으로 강제.
 - `engine/v2/chatgpt_plan.py`: **이미 정식 OAuth로 인증한 세션을 받아** 계정 모델 조회와 스트리밍 Responses 호출. 크레딧 사용 차단 확인, 스코프 누락, 사용량 초과, 부적합 모델, 중단·부분 응답을 실패 처리. `/v1/responses` 외 요청·자동 유료 경로·재시도 없음.
 - `tests/test_v11_chatgpt_plan.py`: 실제 AI 계정이나 네트워크를 사용하지 않는 합성 수송 실험. 모델 선택, 구독 권한, 크레딧 보호, 종료 이벤트, JSON 검증, 사용량 한도, 승인 분리 테스트.
+- `engine/v2/ai_update_bridge.py`: 공통 제공자의 미승인 JSON을 기존 `prepare_request` / `review_report`에 연결. 사용자가 선택한 ID와 공략 발췌만 전송하며 AI가 개인 V11 HTML을 자동으로 건드릴 수 없음.
+- `tests/test_v11_ai_update_bridge.py`: 제공자 결과가 미리보기/검토 단계에 머물고, 잘못된 인용·ID를 기존 UPDATE 검증기가 거부함을 합성 검사.
+- `PlanSession`은 **외부의 신뢰 가능한 OAuth 검증기가 서명·발급자·audience·nonce·scope를 검증한 경우에만** `oauth_verified=true`를 받아 호출한다. 일반 `sk-` 결제 API 키는 거부. 현재 검증기와 사용자 로그인 UI는 구현되지 않았으므로 임의 입력으로 이 플래그를 올려 실제 토큰을 사용하는 것은 지원하지 않는다.
 
 **아직 구현하지 않았거나 통과를 주장하지 않는 것:**
 - 실제 사용자 ChatGPT 로그인/PKCE/ID Token 검증/토큰 갱신/보안 저장소 UI. 이는 사용자의 로그인 동의를 받아 별도 구현·검증해야 한다.
