@@ -276,7 +276,7 @@
           "order": 2,
           "spell": "비전 탄막",
           "condition": "비전 연사가 20중첩일 때.",
-          "comment": "중첩을 과하게 보유하지 않도록 한다.",
+          "comment": "연사 중첩을 과하게 보유하지 않도록 한다. 다만 가능하면 비전 충전물 4개에서 탄막을 사용하며, 오프너에서는 예외가 가능하다.",
           "review": "needs_manual_gameplay_review"
         },
         {
