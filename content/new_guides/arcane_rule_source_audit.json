@@ -221,7 +221,7 @@
         "method:sunfury_aoe"
       ],
       "source_alignment": "aligned",
-      "review_focus": "기본 광역 필러 기술",
+      "review_focus": "다른 상위 조건이 없는 광역 기본 필러 기술",
       "source_section_mapped": true,
       "full_condition_verified": false,
       "gameplay_approved": false
