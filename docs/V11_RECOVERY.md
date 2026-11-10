@@ -78,16 +78,79 @@ GitHub Actions의 PASS는 **합성 오프라인 단위 테스트**에 대한 증
 
 `new_inner_html`은 **해당 조건 셀/Advanced Tip의 내부**만 의미하며, 전체 `<td>` 또는 `<p>` 태그를 포함하지 않는다. 원본 CSS·JS·아이콘·외곽 DOM은 변경하지 않는다. 원본 V11이 이미 사용하던 이미지 오류 핸들러의 **동일한 보존**은 허용하지만, 신규 이벤트 코드·스크립트·실행 URL 및 기존 아이콘 삭제는 차단한다. 패치·출력 HTML은 GitHub 작업 트리 바깥의 비공개 경로에만 저장한다.
 
+## AI 부분 업데이트 — 명시적 실행 및 검토 게이트
+
+`engine/v2/ai_proposals.py`는 사용자 제공 최신 공략의 **작은 발췌문**과 **기존 ID 1~8개**만 모델에 전달하는 선택적 모듈이다. 원문 수집·웹 스크래핑·자동 순위 변경·자동 게시 기능이 아니다.
+
+```bash
+# 사용자 소유 자료의 변경 근거를 로컬 텍스트 파일에 저장한 후
+# 원본 교본 전체 대신 잠행 도적의 특정 ID 하나만 분석 대상으로 준비
+python -m engine.v2.ai_proposals prepare \
+  --detail /private/v11-details/rogue.json \
+  --source /private/new-guide-excerpt.txt \
+  --id rogue:rogue-rotation:table-1:row-1 \
+  --output /private/ai-request.json
+
+# 명시적으로 승인하여 API 전송할 때만 실행. 키는 환경변수로 입력.
+# --model에는 본인 API 계정에서 실제 사용 가능한 모델 ID를 지정한다.
+python -m engine.v2.ai_proposals suggest \
+  --request /private/ai-request.json --send-api --model YOUR_MODEL_ID \
+  --output /private/ai-proposal.json
+
+# 근거 인용·대상 ID·기존 문구를 검증하고 승인되지 않은 리뷰 보고서 생성
+python -m engine.v2.ai_proposals review \
+  --detail /private/v11-details/rogue.json \
+  --request /private/ai-request.json \
+  --proposal /private/ai-proposal.json \
+  --output /private/ai-review.json
+
+# /private/ai-review.json을 직접 확인하고 아래 형식의 별도 승인 파일을 작성.
+# 승인 파일이 없으면 어떤 후보도 수정된 교본 JSON으로 변환할 수 없음.
+python -m engine.v2.ai_proposals approve \
+  --detail /private/v11-details/rogue.json \
+  --request /private/ai-request.json \
+  --proposal /private/ai-proposal.json \
+  --approval /private/ai-approval.json \
+  --output /private/proposed/rogue.json
+
+# 이후 기존 최소 패치 엔진 사용
+python -m engine.v2.private_changes /private/v11-details/rogue.json \
+  /private/proposed/rogue.json --output /private/rogue.patch.json
+python -m engine.v2.patch_v11 /private/path/v11.html \
+  /private/rogue.patch.json --output /private/updated.html
+```
+
+승인 파일 계약: 검토 보고서의 `proposal_sha256`을 그대로 지정하며, `approved_ids`에는 실제 반영할 항목만 작성한다.
+
+```json
+{
+  "schema_version": "v11-ai-approval-v1",
+  "proposal_sha256": "<검토 보고서의 proposal_sha256>",
+  "approved_ids": ["rogue:rogue-rotation:table-1:row-1"]
+}
+```
+
+승인 파일의 해시가 후보 JSON과 일치하지 않거나, 근거 인용이 입력 발췌문에 존재하지 않거나, 이전 문구가 기존 HTML 텍스트 노드 하나에 **정확히 한 번** 나타나지 않으면 반영을 중단한다. AI는 HTML을 직접 생성하지 않고 일반 텍스트 치환만 제안한다. 검토하지 않은 AI 출력은 **교본에 반영되지 않는다**.
+
+### 데이터 경계
+
+- 모든 요청·후보·검토 보고서·승인·수정 JSON 경로는 공개 저장소 외부여야 한다.
+- 외부 전송은 `suggest --send-api`에서만 발생한다. `OPENAI_API_KEY`를 환경변수로 공급해야 하며 코드는 키를 기록·출력하지 않는다.
+- API 요청은 `store: false`, `tool_choice: none`, 구조화 JSON 출력 설정을 사용한다. 다른 클라우드 서비스로의 전송 및 자료의 재사용 가능성은 사용자가 제공 자료의 권리를 확인해야 한다.
+- 기존 V11 전체 HTML, 7개 전문화 전체 JSON을 **AI 모델에 통째로 전달하지 않는다**. 선택한 기존 설명 텍스트 및 최대 12,000자의 사용자 제공 발췌문만 입력한다.
+- **AI가 틀릴 가능성은 남아 있다.** 인용 존재 여부는 사실 관계·게임 메커니즘의 진위를 증명하지 못하므로 사용자 검토가 필수다.
+- 현재 API는 **코드 연결 및 합성 테스트만 완료**, 사용자 API 키로 실제 모델 응답을 수신하는 실서비스 호출은 수행하지 않았다.
+
 ## 아직 구현되지 않은 연결
 
-- 실제 공략 변경의 AI 의미 비교 → 수정 후보 상세 JSON 생성·검토 단계 (현재는 사람이 비공개 후보 JSON을 제공)
+- 실제 API 모델을 통한 새 공략 변경 해석의 실데이터 시범 실행·검토 (현재 API 요청·후보·근거 검증·명시적 승인 구조는 구현됨)
 - 업데이트 결과의 원본 대비 사용자 UI 실제 브라우저 확인 및 이력 관리
 - 원본 전체 및 장문 번역문을 포함한 **공개** Pages 배포 (권리 확인 후 별도 결정)
 
 ## 다음 구현 순서
 
 1. 실데이터 추출·부분 변경 실험의 로컬 검증용 어댑터를 **정식 `detail_bridge.py` 공개 메타데이터 대조 경로**로 교체하고 1개 수정 시나리오 재검증
-2. AI가 실제 원문 변경에서 필요한 상세 JSON 항목만 수정 제안하도록 연결; 사람 검토 후 `private_changes.py`로 최소 패치 생성
+2. 사용자 제공 새 공략 발췌문으로 AI 후보 제안·사람 검토를 실행하고 원문 대비 의미 왜곡을 평가
 3. 원본 대비 변경 요소만 diff 및 실제 브라우저 확인
 4. 출판 권리를 검토한 배포 콘텐츠만 Pages에 게시
 
