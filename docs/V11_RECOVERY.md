@@ -40,6 +40,19 @@ python -m engine.v2.patch_v11 /private/path/v11.html /private/rogue.patch.json -
 
 **원본의 실제 구조를 별도 읽기 전용 로컬 조사로 대조한 결과** 7개 전문화 / 23개 표 / 177개 행 / 79개 팁의 출처 ID와 SHA-256 조합 지문이 공개 JSON과 전문화별로 일치했다. 이는 출처 대응·복원 가능성의 증거이며 현재 live 게임의 우선순위 적합성 증명은 아니다.
 
+## 실제 사용자 V11 로컬 통합 검증 (2026-11-10)
+
+GitHub의 작업 브랜치 코드와 **Git Blob SHA-1이 일치하는 파일**을 격리 로컬 환경에 구성한 뒤, 개인 Library에서 복구한 **실제 V11 898,297바이트 원본**으로 실행했다. 검증 목적의 복사본 외에 공개 저장소/Actions에는 원본을 전송하지 않았다.
+
+- `engine.v2.parity` 직접 실행: **7개 전문화, 60개 HTML 섹션, 176개 고유 주문 ID** 추출 후 V2로 재생성. 원본과 재생성 결과가 **바이트 단위 동일**, SHA-256 둘 다 `5d70279c4dd073eccef1f3b13565a8f555cd81c9f0a5b7eda7e3485e410742be`. **PASS**.
+- 별도 읽기 전용 구조 대조: 복원한 비공개 7개 상세 JSON과 원본의 **23개 표 / 177개 행 / 79개 Tip**에 대해 ID, 근거 SHA-256, 실제 텍스트·마크업을 대조. **불일치 0건**.
+- `engine.v2.patch_v11` 직접 실행: 잠행 도적 조건 1개에 **합성 HTML 주석 38바이트만** 추가, V2 재생성 **PASS**. 주석 제거 시 원본과 전체 바이트 동일.
+- `engine.v2.private_changes` → `engine.v2.patch_v11` 연결 실행: 잠행 도적 Advanced Tip 1개의 **합성 주석 32바이트**만 후보 JSON에 추가 → 수정 1개 ID만 패치 생성 → V2 HTML 재생성 **PASS**. 주석 제거 시 원본과 전체 바이트 동일.
+- 후자의 두 패치 시험에서 출처·본문 판정 입력은 앞서 전체 대조한 **비공개 상세 JSON을 읽는 로컬 검증용 어댑터**를 사용했다. 실제 `detail_bridge.py`의 공개 JSON 로더까지 결합한 무수정 통합 호출과 동일하다고 주장하지 않는다.
+- 모든 합성 패치/수정 HTML은 실험 종료 후 삭제. 실제 V11 사용자 설명, 아이콘, 게임 공략 의미를 변경하지 않았다.
+
+GitHub Actions의 PASS는 **합성 오프라인 단위 테스트**에 대한 증거이며, 위 실제 V11 로컬 증거와 별도로 기록한다.
+
 ## 비공개 후보 JSON → 최소 패치 계약
 
 `private_changes.py`는 기존 비공개 상세 JSON과 **검토된 수정 후보 JSON**을 비교한다. 동일한 `guide_id`, 동일한 V11 baseline, 동일한 `rule_id`/`tip_id`, 동일한 출처 지문이 필수다. 콘텐츠는 `condition_html` + 일치하는 `condition_text_ko` 또는 Advanced Tip `html` + `text_ko`에서만 변경할 수 있다.
@@ -73,7 +86,7 @@ python -m engine.v2.patch_v11 /private/path/v11.html /private/rogue.patch.json -
 
 ## 다음 구현 순서
 
-1. 현재 `patch_v11.py`를 개인 V11 원본에 **실제로 적용·실행**해 임시 변경 1건 및 V2 재생성 결과 검증 (GitHub CI는 합성 테스트만 수행)
+1. 실데이터 추출·부분 변경 실험의 로컬 검증용 어댑터를 **정식 `detail_bridge.py` 공개 메타데이터 대조 경로**로 교체하고 1개 수정 시나리오 재검증
 2. AI가 실제 원문 변경에서 필요한 상세 JSON 항목만 수정 제안하도록 연결; 사람 검토 후 `private_changes.py`로 최소 패치 생성
 3. 원본 대비 변경 요소만 diff 및 실제 브라우저 확인
 4. 출판 권리를 검토한 배포 콘텐츠만 Pages에 게시
