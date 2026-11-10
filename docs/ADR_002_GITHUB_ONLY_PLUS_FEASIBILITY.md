@@ -34,13 +34,21 @@
 1. 공개 프로젝트 GitHub 페이지 → Code → Codespaces → Create codespace on `work/github-only-plus-feasibility-20261111` (개인 GitHub 계정의 포함 무료 시간·지출 차단 여부 먼저 확인).
 2. GitHub Codespace의 **Terminal**에서 Node/npm 및 Codex CLI 설치: `npm install -g @openai/codex`. 실제 설치 가능 여부는 Codespace에서 확인해야 한다. API 키를 생성하거나 `OPENAI_API_KEY`를 설정하지 않는다.
 3. ChatGPT 앱의 **Settings → Security**에서 Device Code 로그인 허용(해당 UI가 나타나는 경우). 이후 Codespace 터미널에서 `codex login --device-auth` 실행. 터미널이 제시하는 공식 URL을 **사용자가 직접 모바일 브라우저**에서 열어 일회용 코드를 입력한다. 비밀번호, 인증 코드, `auth.json`, access/refresh token을 채팅·GitHub Issue/PR·Actions Secret에 공유하지 않는다.
-4. Codespace에서 `codex login status` 실행. 출력의 **ChatGPT-managed 로그인 방식**을 확인한다. 상세 토큰 파일은 열거나 전송하지 않는다.
-5. 다음 **단일 최소 요청**으로 AI 실행 여부 검증(명시적으로 사용자 원할 때만):
+4. GitHub Codespace에서 먼저 `bash scripts/probe_codespaces_plus.sh --preflight`를 실행해 **외부 모델 요청 없이** 설치·접속 상태를 확인할 수 있다. 로그인이 완료됐다면 이어서 `codex login status` 실행. 출력의 **ChatGPT-managed 로그인 방식**을 확인한다. 상세 토큰 파일은 열거나 전송하지 않는다.
+5. 다음 **단일 최소 요청**으로 AI 실행 여부 검증(명시적으로 사용자 원할 때만): `bash scripts/probe_codespaces_plus.sh --probe --confirm-plus-usage`는 사용자가 동의 옵션을 넣을 때만 **읽기 전용** Codex 모델 요청을 한 번 실행하고 JSON Schema 검증 후 임시 파일을 삭제한다. 유료 API 키가 환경 변수에 있거나 ChatGPT 인증을 확인하지 못하면 모델 호출 전 차단한다.
+
+   직접 실행 예시:
    `codex exec --ephemeral --sandbox read-only "Reply with exactly: ROTATION_AI_OK"`
    성공 판정: 실제 추론이 종료되고 정확한 응답 수신, 별도 API 키/결제 없이 ChatGPT 구독 사용량 경로로 인증됨.
 6. 비용·모델 판단: ChatGPT 설정의 Usage 및 GitHub Codespaces 사용량을 확인한다. Sol/Luna 등 정확한 지원 모델·접근 권한은 계정에서 실제 확인하기 전 확정하지 않는다.
 
 *위 단계는 사용자가 직접 수행할 검증 절차이지, ChatGPT가 이미 사용자 계정을 로그인하거나 Codex 요청을 실행했다는 의미가 아니다.*
+
+## GitHub에서 자동 검증한 범위
+
+- `scripts/probe_codespaces_plus.sh`: **기본 --preflight에서는 API/AI 호출 없음**, `--probe --confirm-plus-usage`일 때만 합성 문장·read-only·ephemeral·JSON Schema로 최소 1회 요청.
+- `tests/test_github_only_plus_probe.py`: 실제 Codex와 연결하지 않는 모의 CLI 테스트. Codespaces 아닌 환경, 유료 키 변수, 명시적 사용자 승인 없음, ChatGPT 외 인증, JSON 불일치에서 차단됨을 확인.
+- 이 테스트가 PASS여도 **사용자 계정의 실제 Codex Device Code 로그인 성공이나 Plus AI 사용 가능성을 증명하지 않는다.**
 
 ## 보안 및 수용 기준
 
