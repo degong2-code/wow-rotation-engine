@@ -1,0 +1,913 @@
+{
+  "schema_version": "public-v1",
+  "guide_id": "fire",
+  "class_ko": "마법사",
+  "spec_ko": "화염",
+  "hero_options": [
+    "sunfury"
+  ],
+  "source_url": "https://www.wowhead.com/guide/classes/mage/fire/rotation-cooldowns-pve-dps",
+  "source_note": "Derived analytical rule metadata from user-edited V11; original article text and full translations excluded.",
+  "baseline_v11_sha256": "5d70279c4dd073eccef1f3b13565a8f555cd81c9f0a5b7eda7e3485e410742be",
+  "rotation_groups": [
+    {
+      "id": "fire:rotation:table-1",
+      "scenario": {
+        "hero": "sunfury",
+        "target_min": 1,
+        "target_max": 1,
+        "mode": "single_target",
+        "phase": "combustion_active"
+      },
+      "source_section": "rotation",
+      "rules": [
+        {
+          "id": "fire:rotation:table-1:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": 153561,
+            "name_ko": "유성",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cooldown_alignment"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[1] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "6a690e6196b76a33c66d811dde955a4a47948eddc87a544a219700dcedde821e",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-1:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": 11366,
+            "name_ko": "불덩이 작렬",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[1] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "8936c39a56037dad38debb969df9c214bcb1757a7a4c713b904332fe5b394c22",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-1:row-3",
+          "order": 3,
+          "priority": 3,
+          "action": {
+            "spell_id": 11366,
+            "name_ko": "불덩이 작렬",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cast_timing"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[1] tbody tr:nth-child(3)",
+            "v11_fragment_sha256": "afde8c22c2f90b46331dbe4d4f6e17060c96dd800622a428141c2cb580721b2e",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-1:row-4",
+          "order": 4,
+          "priority": 4,
+          "action": {
+            "spell_id": 108853,
+            "name_ko": "화염 작렬",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[1] tbody tr:nth-child(4)",
+            "v11_fragment_sha256": "73e1546da3db06c689eed37667ebd99521ab7b6654486227ce54020f9c89a53c",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-1:row-5",
+          "order": 5,
+          "priority": 5,
+          "action": {
+            "spell_id": 11366,
+            "name_ko": "불덩이 작렬",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[1] tbody tr:nth-child(5)",
+            "v11_fragment_sha256": "d686c4e45699230b56d6586d0b3d8779b5b21fa1ab3b290cacc778c9b68c174d",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-1:row-6",
+          "order": 6,
+          "priority": 6,
+          "action": {
+            "spell_id": 2948,
+            "name_ko": "불태우기",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[1] tbody tr:nth-child(6)",
+            "v11_fragment_sha256": "0e3b95779749af1a50d261a755081991d4de7f42507be1fde0f3b66f0162740d",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    },
+    {
+      "id": "fire:rotation:table-2",
+      "scenario": {
+        "hero": "sunfury",
+        "target_min": 1,
+        "target_max": 1,
+        "mode": "single_target",
+        "phase": "combustion_inactive"
+      },
+      "source_section": "rotation",
+      "rules": [
+        {
+          "id": "fire:rotation:table-2:row-1",
+          "order": 1,
+          "priority": null,
+          "action": {
+            "spell_id": 190319,
+            "name_ko": "발화",
+            "kind": "preparation_or_other"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cooldown_alignment"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[2] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "15f8af15ae35ce72fe68b79b9e625a96c4ba20d74518468cbd3013992690e2c9",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-2:row-2",
+          "order": 2,
+          "priority": 1,
+          "action": {
+            "spell_id": 11366,
+            "name_ko": "불덩이 작렬",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[2] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "407569750d3bfa0d69434c254d8f2091287b11a6a0663f3e43183c85712d9d58",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-2:row-3",
+          "order": 3,
+          "priority": 2,
+          "action": {
+            "spell_id": 11366,
+            "name_ko": "불덩이 작렬",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[2] tbody tr:nth-child(3)",
+            "v11_fragment_sha256": "1ec9ee2a1d8f14f9f782d5b9070c13adcb9d451c83d009476114cd5c235f8180",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-2:row-4",
+          "order": 4,
+          "priority": 3,
+          "action": {
+            "spell_id": 153561,
+            "name_ko": "유성",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cooldown_alignment"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[2] tbody tr:nth-child(4)",
+            "v11_fragment_sha256": "3a64ddfda9038d861d1b3449d7f3e35d27e1c9c101a747154745758a952d20c9",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-2:row-5",
+          "order": 5,
+          "priority": 4,
+          "action": {
+            "spell_id": 108853,
+            "name_ko": "화염 작렬",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cast_timing"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[2] tbody tr:nth-child(5)",
+            "v11_fragment_sha256": "9b44450cb4c4ec87f215985cc6ea313ae523fc0231699832e96f560e0c8501b5",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-2:row-6",
+          "order": 6,
+          "priority": 5,
+          "action": {
+            "spell_id": 2948,
+            "name_ko": "불태우기",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[2] tbody tr:nth-child(6)",
+            "v11_fragment_sha256": "67cb7832d31fc119da702fff8b3aa725c5692fb102fab8ab7738c754139eb6dc",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-2:row-7",
+          "order": 7,
+          "priority": 6,
+          "action": {
+            "spell_id": 2948,
+            "name_ko": "불태우기",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[2] tbody tr:nth-child(7)",
+            "v11_fragment_sha256": "3c2a15363788c2d68af66a838c3b4d7363f1c0647d115aa3e475a0ff30e6b4ea",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-2:row-8",
+          "order": 8,
+          "priority": 7,
+          "action": {
+            "spell_id": 133,
+            "name_ko": "화염구",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cast_timing"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[2] tbody tr:nth-child(8)",
+            "v11_fragment_sha256": "160de0dc97586c0b1900e44156b4c2f330d8efeeb03b450d7d3f6a60a502ad44",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    },
+    {
+      "id": "fire:rotation:table-3",
+      "scenario": {
+        "hero": "sunfury",
+        "target_min": 3,
+        "target_max": null,
+        "mode": "aoe",
+        "phase": "combustion_active"
+      },
+      "source_section": "rotation",
+      "rules": [
+        {
+          "id": "fire:rotation:table-3:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": 153561,
+            "name_ko": "유성",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cooldown_alignment"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[3] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "005fbb3144447d342812900c8ef4e4a67041c7b9ad016dd59f5cfe9a8d9b85ef",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-3:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": 2120,
+            "name_ko": "불기둥",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[3] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "1788ceb48321c3af8ee63626c4df0307bf89f74b5cdc1db9afbce0f42d249c15",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-3:row-3",
+          "order": 3,
+          "priority": 3,
+          "action": {
+            "spell_id": 2120,
+            "name_ko": "불기둥",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cast_timing"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[3] tbody tr:nth-child(3)",
+            "v11_fragment_sha256": "f0a71043e37bacb93c9e8369caa0c8ff679b77deb5ecf4e08e05723859eaec0e",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-3:row-4",
+          "order": 4,
+          "priority": 4,
+          "action": {
+            "spell_id": 2120,
+            "name_ko": "불기둥",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "aoe_targeting"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[3] tbody tr:nth-child(4)",
+            "v11_fragment_sha256": "4e92235e25cf99ff39894d9dcfe43b9c0fe99df9f2ba3f8efcf38e615dde5745",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-3:row-5",
+          "order": 5,
+          "priority": 5,
+          "action": {
+            "spell_id": 108853,
+            "name_ko": "화염 작렬",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cast_timing"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[3] tbody tr:nth-child(5)",
+            "v11_fragment_sha256": "252609ac92144c0cdfbf31ace0a54e764a6cd35b71cace36161b6b77983f71d0",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-3:row-6",
+          "order": 6,
+          "priority": 6,
+          "action": {
+            "spell_id": 2948,
+            "name_ko": "불태우기",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[3] tbody tr:nth-child(6)",
+            "v11_fragment_sha256": "86f89db4f50fca0669f8061dfe62686a284d34596f07cd78a3d776ad182bf751",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    },
+    {
+      "id": "fire:rotation:table-4",
+      "scenario": {
+        "hero": "sunfury",
+        "target_min": 3,
+        "target_max": null,
+        "mode": "aoe",
+        "phase": "combustion_inactive"
+      },
+      "source_section": "rotation",
+      "rules": [
+        {
+          "id": "fire:rotation:table-4:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": 2120,
+            "name_ko": "불기둥",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[4] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "fa9285597f7978b6103b9de1408302ed6b1af4cb7509e1c5981b852609c0bdc7",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-4:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": 2120,
+            "name_ko": "불기둥",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[4] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "4c54dc38c2a64340643aac854aadd94a3a98af0acc2bd32dfb1da73e3ae32a81",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-4:row-3",
+          "order": 3,
+          "priority": 3,
+          "action": {
+            "spell_id": 108853,
+            "name_ko": "화염 작렬",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cast_timing"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[4] tbody tr:nth-child(3)",
+            "v11_fragment_sha256": "ae15da6342ab416bd39aef9ee5d531f04d058a105e772382ad0e1f5cdefabbbb",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-4:row-4",
+          "order": 4,
+          "priority": 4,
+          "action": {
+            "spell_id": 2120,
+            "name_ko": "불기둥",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[4] tbody tr:nth-child(4)",
+            "v11_fragment_sha256": "5713ddb8acb7c3a01381e77edeecf69fb6450383e987a08a44e2a7f56ef4370e",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-4:row-5",
+          "order": 5,
+          "priority": 5,
+          "action": {
+            "spell_id": 2948,
+            "name_ko": "불태우기",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[4] tbody tr:nth-child(5)",
+            "v11_fragment_sha256": "98aa71df3183b9e5681a25e7887cbb534bbcf0942af1025fe4fb8a5b24a2bca8",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-4:row-6",
+          "order": 6,
+          "priority": 6,
+          "action": {
+            "spell_id": 2948,
+            "name_ko": "불태우기",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[4] tbody tr:nth-child(6)",
+            "v11_fragment_sha256": "655935a97954a1ed26f362f37c52b9c21935c768fec562a8452f149f0b126c41",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "fire:rotation:table-4:row-7",
+          "order": 7,
+          "priority": 7,
+          "action": {
+            "spell_id": 133,
+            "name_ko": "화염구",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cast_timing"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rotation table.priority[4] tbody tr:nth-child(7)",
+            "v11_fragment_sha256": "160de0dc97586c0b1900e44156b4c2f330d8efeeb03b450d7d3f6a60a502ad44",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    }
+  ],
+  "advanced_guidance_index": [
+    {
+      "id": "fire:advanced:tip-1",
+      "topic": "공통 숙련 원칙",
+      "semantic_tags": [
+        "cast_timing",
+        "movement"
+      ],
+      "provenance": {
+        "locator": "section#advanced advanced-item[1]",
+        "v11_fragment_sha256": "b68666b03985195b5d76fa94d035d0445426edeeff8b0e5e5b83f8a137a67833",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "fire:advanced:tip-2",
+      "topic": "공통 숙련 원칙",
+      "semantic_tags": [],
+      "provenance": {
+        "locator": "section#advanced advanced-item[2]",
+        "v11_fragment_sha256": "195e51555937ed6cdfa7ac84622f45c3d73438b2dcd3432a9e5aa69bbc39aa41",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "fire:advanced:tip-3",
+      "topic": "공통 숙련 원칙",
+      "semantic_tags": [
+        "proc_overcap"
+      ],
+      "provenance": {
+        "locator": "section#advanced advanced-item[3]",
+        "v11_fragment_sha256": "88fcdda0367fdb62b3257e39069bd6bf48161e9c17d92af224ae5bd22f1c522d",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "fire:advanced:tip-4",
+      "topic": "공통 숙련 원칙",
+      "semantic_tags": [
+        "cast_timing"
+      ],
+      "provenance": {
+        "locator": "section#advanced advanced-item[4]",
+        "v11_fragment_sha256": "817dc8824bbffb4c035c2263dba19412bad113dccd8c905e36fbfba6c1108156",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "fire:advanced:tip-5",
+      "topic": "공통 숙련 원칙",
+      "semantic_tags": [
+        "cast_timing",
+        "buff_management",
+        "movement"
+      ],
+      "provenance": {
+        "locator": "section#advanced advanced-item[5]",
+        "v11_fragment_sha256": "9228fb3fc00215d7d6d59395467a9f62147717341824e0186c6fda163c301bc8",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "fire:advanced:tip-6",
+      "topic": "광역 화염 파열 · 불기둥 버그",
+      "semantic_tags": [
+        "aoe_targeting",
+        "cast_timing"
+      ],
+      "provenance": {
+        "locator": "section#advanced advanced-item[6]",
+        "v11_fragment_sha256": "4f2447ef589a2b6573ede1a984c124ba87fd69db25f96b925d0596d138f7d640",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "fire:advanced:tip-7",
+      "topic": "광역 화염 파열 · 불기둥 버그",
+      "semantic_tags": [
+        "aoe_targeting",
+        "cast_timing",
+        "buff_management"
+      ],
+      "provenance": {
+        "locator": "section#advanced advanced-item[7]",
+        "v11_fragment_sha256": "72078326116225f48e2c3aed8b002e51601004f083512f8cf11fad6d89e22a0b",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "fire:advanced:tip-8",
+      "topic": "광역 화염 파열 · 불기둥 버그",
+      "semantic_tags": [
+        "aoe_targeting",
+        "cast_timing"
+      ],
+      "provenance": {
+        "locator": "section#advanced advanced-item[8]",
+        "v11_fragment_sha256": "4ac30627f88bfdb21b76fde6afaa956adbed5216414f5ed427e48d12a6deb8e9",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "fire:advanced:tip-9",
+      "topic": "광역 화염 파열 · 불기둥 버그",
+      "semantic_tags": [
+        "aoe_targeting",
+        "cast_timing"
+      ],
+      "provenance": {
+        "locator": "section#advanced advanced-item[9]",
+        "v11_fragment_sha256": "1297ba40f970fbe969599e4514b672d43bdecabc3cae1b555413517832a6f306",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "fire:advanced:tip-10",
+      "topic": "광역 화염 파열 · 불기둥 버그",
+      "semantic_tags": [
+        "aoe_targeting"
+      ],
+      "provenance": {
+        "locator": "section#advanced advanced-item[10]",
+        "v11_fragment_sha256": "08dce2b5df0e21c39712eb601e052cd00ad8342eedfc37ff683c4bbd1ec85cea",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "fire:advanced:tip-11",
+      "topic": "12.1 티어 세트 전용 운용",
+      "semantic_tags": [
+        "cast_timing"
+      ],
+      "provenance": {
+        "locator": "section#advanced advanced-item[11]",
+        "v11_fragment_sha256": "e4fbfad74fef45a3eb1db9ba17d3cbdc568e95eb14c972856ff5510a5a893eab",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "fire:advanced:tip-12",
+      "topic": "12.1 티어 세트 전용 운용",
+      "semantic_tags": [
+        "cooldown_alignment"
+      ],
+      "provenance": {
+        "locator": "section#advanced advanced-item[12]",
+        "v11_fragment_sha256": "d846dbfcf5ebd78073fafdde82fd03572bd7888a25c9adfb7217dfba3c3d49dc",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "fire:advanced:tip-13",
+      "topic": "12.1 티어 세트 전용 운용",
+      "semantic_tags": [
+        "cooldown_alignment",
+        "cast_timing"
+      ],
+      "provenance": {
+        "locator": "section#advanced advanced-item[13]",
+        "v11_fragment_sha256": "dc63f8339b0fc8f86e6f1b84c784918d35843d07f25a87c50c67aada0c48a56d",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "fire:advanced:tip-14",
+      "topic": "12.1 티어 세트 전용 운용",
+      "semantic_tags": [
+        "cooldown_alignment",
+        "cast_timing"
+      ],
+      "provenance": {
+        "locator": "section#advanced advanced-item[14]",
+        "v11_fragment_sha256": "d128e2dce9365fd5f2a319b454ee2080612f8d327870c441320f768dcc940c6c",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "fire:advanced:tip-15",
+      "topic": "발화 전체 구간과 지연 판단 · 원문 대조 보완",
+      "semantic_tags": [
+        "cooldown_alignment"
+      ],
+      "provenance": {
+        "locator": "section#advanced advanced-item[15]",
+        "v11_fragment_sha256": "06e91effd4bb9acdabf920c8ba8a9e13b4aad501a071df5009b3e859f939bd97",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "fire:advanced:tip-16",
+      "topic": "발화 전체 구간과 지연 판단 · 원문 대조 보완",
+      "semantic_tags": [
+        "cooldown_alignment",
+        "aoe_targeting",
+        "defensive_usage"
+      ],
+      "provenance": {
+        "locator": "section#advanced advanced-item[16]",
+        "v11_fragment_sha256": "cc28c1e6d99dac35afcb72ee86ec5f13f94686f2dac820ce9cd8c71b1cb0d1da",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "fire:advanced:tip-17",
+      "topic": "발화 전체 구간과 지연 판단 · 원문 대조 보완",
+      "semantic_tags": [
+        "cooldown_alignment",
+        "aoe_targeting",
+        "buff_management"
+      ],
+      "provenance": {
+        "locator": "section#advanced advanced-item[17]",
+        "v11_fragment_sha256": "d5b075c3576f90cda548b861090677d7144fa193ba3798358767c4c0c20cd452",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    }
+  ],
+  "publication": {
+    "status": "review_required",
+    "automatic_publish_allowed": false
+  }
+}

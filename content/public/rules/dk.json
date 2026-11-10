@@ -1,0 +1,716 @@
+{
+  "schema_version": "public-v1",
+  "guide_id": "dk",
+  "class_ko": "죽음의 기사",
+  "spec_ko": "냉기",
+  "hero_options": [
+    "deathbringer"
+  ],
+  "source_url": "https://www.wowhead.com/guide/classes/death-knight/frost/rotation-cooldowns-pve-dps",
+  "source_note": "Derived analytical rule metadata from user-edited V11; original article text and full translations excluded.",
+  "baseline_v11_sha256": "5d70279c4dd073eccef1f3b13565a8f555cd81c9f0a5b7eda7e3485e410742be",
+  "rotation_groups": [
+    {
+      "id": "dk:dk-rotation:table-1",
+      "scenario": {
+        "hero": "deathbringer",
+        "target_min": 1,
+        "target_max": 2,
+        "mode": "single_target",
+        "phase": "unspecified"
+      },
+      "source_section": "dk-rotation",
+      "rules": [
+        {
+          "id": "dk:dk-rotation:table-1:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": 47568,
+            "name_ko": "룬 무기 강화",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[1] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "5eb8f3a64a2ff6deb9d5cfc3c9c4d9f9dd66a762ccd945710c7707f6e4b25255",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-1:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": 439843,
+            "name_ko": "사신의 징표",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[1] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "b7492a09fa3bbe5b5c74b82123787aebd365948d86fc13fd4027d820547ffbb6",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-1:row-3",
+          "order": 3,
+          "priority": 3,
+          "action": {
+            "spell_id": 51271,
+            "name_ko": "얼음 기둥",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[1] tbody tr:nth-child(3)",
+            "v11_fragment_sha256": "ea35fcf10a27cddec3ba9cad7f14107c98c8a32d01311a5c8e94cc59dbc56189",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-1:row-4",
+          "order": 4,
+          "priority": 4,
+          "action": {
+            "spell_id": 1249658,
+            "name_ko": "신드라고사의 숨결",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[1] tbody tr:nth-child(4)",
+            "v11_fragment_sha256": "561ad28612292d3703b6baa8387eb5e6561cbe1c22d8aa58543de7d51c233ad1",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-1:row-5",
+          "order": 5,
+          "priority": 5,
+          "action": {
+            "spell_id": 279302,
+            "name_ko": "서리고룡의 격노",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cooldown_alignment"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[1] tbody tr:nth-child(5)",
+            "v11_fragment_sha256": "011c82cbaccc1792f9d73fabeed8da6cf933bb28a038fc7d8a78617a406d610a",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-1:row-6",
+          "order": 6,
+          "priority": 6,
+          "action": {
+            "spell_id": 49020,
+            "name_ko": "절멸",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "proc_overcap"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[1] tbody tr:nth-child(6)",
+            "v11_fragment_sha256": "69af008517aca739be547ba801b460cd0a93d07063193273097ad367948d4b2d",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-1:row-7",
+          "order": 7,
+          "priority": 7,
+          "action": {
+            "spell_id": 49184,
+            "name_ko": "울부짖는 한파",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[1] tbody tr:nth-child(7)",
+            "v11_fragment_sha256": "f56f74e6012ef51fbf0bbf4580984b5e29ef76b6da018ba196623761a36651ca",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-1:row-8",
+          "order": 8,
+          "priority": 8,
+          "action": {
+            "spell_id": 49143,
+            "name_ko": "냉기의 일격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "resource_pooling"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[1] tbody tr:nth-child(8)",
+            "v11_fragment_sha256": "a2ac0167c707e0ea8b502a778e62cc0ad53e8cc6c68b11f01cc10eb7911afa86",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-1:row-9",
+          "order": 9,
+          "priority": 9,
+          "action": {
+            "spell_id": 49020,
+            "name_ko": "절멸",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[1] tbody tr:nth-child(9)",
+            "v11_fragment_sha256": "cc3c6d5371e83c7837f0472ede76f0816dd2d335440251ac6b28d576c8a348f6",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-1:row-10",
+          "order": 10,
+          "priority": 10,
+          "action": {
+            "spell_id": 47568,
+            "name_ko": "룬 무기 강화",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[1] tbody tr:nth-child(10)",
+            "v11_fragment_sha256": "1f2c3c8a1c81fe2ee9e0a9fe165c8a70669fcd043142167dfb3e67095820b0f3",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-1:row-11",
+          "order": 11,
+          "priority": 11,
+          "action": {
+            "spell_id": 49143,
+            "name_ko": "냉기의 일격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "resource_pooling"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[1] tbody tr:nth-child(11)",
+            "v11_fragment_sha256": "af4555f6ce798f92e7606204cabd01ebc4c5abb236c444c472028ff1864837e2",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-1:row-12",
+          "order": 12,
+          "priority": 12,
+          "action": {
+            "spell_id": 49020,
+            "name_ko": "절멸",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[1] tbody tr:nth-child(12)",
+            "v11_fragment_sha256": "34db748ac39eaa0b4cfec62bb51aeb737dc1ac69260e048c652e9da972974fbc",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-1:row-13",
+          "order": 13,
+          "priority": 13,
+          "action": {
+            "spell_id": 49184,
+            "name_ko": "울부짖는 한파",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[1] tbody tr:nth-child(13)",
+            "v11_fragment_sha256": "868d2203b7487dc5e99f83d0b2898f968795d9da837e06f09a0dae9cb855483d",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    },
+    {
+      "id": "dk:dk-rotation:table-2",
+      "scenario": {
+        "hero": "deathbringer",
+        "target_min": 3,
+        "target_max": null,
+        "mode": "aoe",
+        "phase": "unspecified"
+      },
+      "source_section": "dk-rotation",
+      "rules": [
+        {
+          "id": "dk:dk-rotation:table-2:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": 47568,
+            "name_ko": "룬 무기 강화",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[2] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "5eb8f3a64a2ff6deb9d5cfc3c9c4d9f9dd66a762ccd945710c7707f6e4b25255",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-2:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": 439843,
+            "name_ko": "사신의 징표",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[2] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "b7492a09fa3bbe5b5c74b82123787aebd365948d86fc13fd4027d820547ffbb6",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-2:row-3",
+          "order": 3,
+          "priority": 3,
+          "action": {
+            "spell_id": 51271,
+            "name_ko": "얼음 기둥",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[2] tbody tr:nth-child(3)",
+            "v11_fragment_sha256": "ea35fcf10a27cddec3ba9cad7f14107c98c8a32d01311a5c8e94cc59dbc56189",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-2:row-4",
+          "order": 4,
+          "priority": 4,
+          "action": {
+            "spell_id": 1249658,
+            "name_ko": "신드라고사의 숨결",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[2] tbody tr:nth-child(4)",
+            "v11_fragment_sha256": "561ad28612292d3703b6baa8387eb5e6561cbe1c22d8aa58543de7d51c233ad1",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-2:row-5",
+          "order": 5,
+          "priority": 5,
+          "action": {
+            "spell_id": 279302,
+            "name_ko": "서리고룡의 격노",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cooldown_alignment"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[2] tbody tr:nth-child(5)",
+            "v11_fragment_sha256": "011c82cbaccc1792f9d73fabeed8da6cf933bb28a038fc7d8a78617a406d610a",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-2:row-6",
+          "order": 6,
+          "priority": 6,
+          "action": {
+            "spell_id": 207230,
+            "name_ko": "서리낫",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "proc_overcap"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[2] tbody tr:nth-child(6)",
+            "v11_fragment_sha256": "fc00485cd152792405b772c465dcdf4f4cd8bf97789929d8d273a57e16a5098b",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-2:row-7",
+          "order": 7,
+          "priority": 7,
+          "action": {
+            "spell_id": 49184,
+            "name_ko": "울부짖는 한파",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[2] tbody tr:nth-child(7)",
+            "v11_fragment_sha256": "f7b2264d204a3bf9f8e5e7131d2b4966884df692490207797182e85780c12d39",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-2:row-8",
+          "order": 8,
+          "priority": 8,
+          "action": {
+            "spell_id": 194913,
+            "name_ko": "빙하 진군",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "resource_pooling"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[2] tbody tr:nth-child(8)",
+            "v11_fragment_sha256": "dcdb1b120ab83e50586badce9b0ca270caa2badd7f960e12a8585b9a29d33d2c",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-2:row-9",
+          "order": 9,
+          "priority": 9,
+          "action": {
+            "spell_id": 207230,
+            "name_ko": "서리낫",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[2] tbody tr:nth-child(9)",
+            "v11_fragment_sha256": "0632d7671a61aa729097feebc5ca65d859ccc74625fa72a3915597acaa865e6f",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-2:row-10",
+          "order": 10,
+          "priority": 10,
+          "action": {
+            "spell_id": 47568,
+            "name_ko": "룬 무기 강화",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[2] tbody tr:nth-child(10)",
+            "v11_fragment_sha256": "1f2c3c8a1c81fe2ee9e0a9fe165c8a70669fcd043142167dfb3e67095820b0f3",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-2:row-11",
+          "order": 11,
+          "priority": 11,
+          "action": {
+            "spell_id": 194913,
+            "name_ko": "빙하 진군",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "resource_pooling"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[2] tbody tr:nth-child(11)",
+            "v11_fragment_sha256": "38ebb49b09e6261e1e4adf132bf29f80a1b0fe6f6a91ea16f5f31ac0f0f5d8e5",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-2:row-12",
+          "order": 12,
+          "priority": 12,
+          "action": {
+            "spell_id": 207230,
+            "name_ko": "서리낫",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[2] tbody tr:nth-child(12)",
+            "v11_fragment_sha256": "96f2466448f22e6eb15e8153bbdc45dc6115ee07d000215ec8e03f8b3100f402",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "dk:dk-rotation:table-2:row-13",
+          "order": 13,
+          "priority": 13,
+          "action": {
+            "spell_id": 49184,
+            "name_ko": "울부짖는 한파",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#dk-rotation table.priority[2] tbody tr:nth-child(13)",
+            "v11_fragment_sha256": "868d2203b7487dc5e99f83d0b2898f968795d9da837e06f09a0dae9cb855483d",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    }
+  ],
+  "advanced_guidance_index": [
+    {
+      "id": "dk:dk-advanced:tip-1",
+      "topic": "도살기 2중첩을 기다리지 않기",
+      "semantic_tags": [
+        "proc_overcap"
+      ],
+      "provenance": {
+        "locator": "section#dk-advanced advanced-item[1]",
+        "v11_fragment_sha256": "9699e596e6bb5a45ee7e52eae996156ab7a44872fc03ead30bb653191e3ce8fb",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "dk:dk-advanced:tip-2",
+      "topic": "도살기 2중첩을 기다리지 않기",
+      "semantic_tags": [
+        "proc_overcap"
+      ],
+      "provenance": {
+        "locator": "section#dk-advanced advanced-item[2]",
+        "v11_fragment_sha256": "7a50267aa10551faab7ede17c814fa0f1b93a4701ea57e8620c427c240d75415",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "dk:dk-advanced:tip-3",
+      "topic": "예외 사항 모음",
+      "semantic_tags": [],
+      "provenance": {
+        "locator": "section#dk-advanced advanced-item[3]",
+        "v11_fragment_sha256": "d7ac072dd0c26f217cc165b4cce0e273a1c26fa9c9527199f829b366d5eed67d",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "dk:dk-advanced:tip-4",
+      "topic": "예외 사항 모음",
+      "semantic_tags": [
+        "proc_overcap"
+      ],
+      "provenance": {
+        "locator": "section#dk-advanced advanced-item[4]",
+        "v11_fragment_sha256": "14b649da092364c4f31d84563f89468d25aa68cd720c0b518ac79485a5805ede",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "dk:dk-advanced:tip-5",
+      "topic": "예외 사항 모음",
+      "semantic_tags": [],
+      "provenance": {
+        "locator": "section#dk-advanced advanced-item[5]",
+        "v11_fragment_sha256": "23efa689d1019cf498d76c36b21be90642bc769062ff6109f8c3ba5c40f22df5",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "dk:dk-advanced:tip-6",
+      "topic": "예외 사항 모음",
+      "semantic_tags": [
+        "cooldown_alignment"
+      ],
+      "provenance": {
+        "locator": "section#dk-advanced advanced-item[6]",
+        "v11_fragment_sha256": "69b861d8ce5338ab3c345d30f38605d27e1b6aa11d9396db7e92c7e6cabc4a2d",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "dk:dk-advanced:tip-7",
+      "topic": "예외 사항 모음",
+      "semantic_tags": [
+        "resource_pooling"
+      ],
+      "provenance": {
+        "locator": "section#dk-advanced advanced-item[7]",
+        "v11_fragment_sha256": "f94a77b9594fc86a56605ae4cde0407d181ff9872e2e476b6299a86d4cc5737b",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "dk:dk-advanced:tip-8",
+      "topic": "냉기파멸 범위·발동 우선순위 검증",
+      "semantic_tags": [
+        "aoe_targeting"
+      ],
+      "provenance": {
+        "locator": "section#dk-advanced advanced-item[8]",
+        "v11_fragment_sha256": "2ae5a59426b5ba534ed92b3e02ea6cd12f4be420546ee05ae91c8ef22e6d331f",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    }
+  ],
+  "publication": {
+    "status": "review_required",
+    "automatic_publish_allowed": false
+  }
+}

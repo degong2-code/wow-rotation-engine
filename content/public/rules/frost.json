@@ -1,0 +1,1142 @@
+{
+  "schema_version": "public-v1",
+  "guide_id": "frost",
+  "class_ko": "마법사",
+  "spec_ko": "냉기",
+  "hero_options": [
+    "spellslinger",
+    "frostfire"
+  ],
+  "source_url": "https://www.wowhead.com/guide/classes/mage/frost/rotation-cooldowns-pve-dps",
+  "source_note": "Derived analytical rule metadata from user-edited V11; original article text and full translations excluded.",
+  "baseline_v11_sha256": "5d70279c4dd073eccef1f3b13565a8f555cd81c9f0a5b7eda7e3485e410742be",
+  "rotation_groups": [
+    {
+      "id": "frost:frost-rotation:table-1",
+      "scenario": {
+        "hero": "spellslinger",
+        "target_min": 1,
+        "target_max": 2,
+        "mode": "single_target",
+        "phase": "unspecified"
+      },
+      "source_section": "frost-rotation",
+      "rules": [
+        {
+          "id": "frost:frost-rotation:table-1:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": 44614,
+            "name_ko": "진눈깨비",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[1] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "49c940fbfed89cba17066c8810af78287a7c84f061e1f2596fe6b9fe0c144172",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-1:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": 30455,
+            "name_ko": "얼음창",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[1] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "732d5121193b78c98e1e0fda3584e2334f74b9ebb945ebe67167b76b1cfe5cfd",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-1:row-3",
+          "order": 3,
+          "priority": 3,
+          "action": {
+            "spell_id": 84714,
+            "name_ko": "얼어붙은 구슬",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[1] tbody tr:nth-child(3)",
+            "v11_fragment_sha256": "ef934f66814c1d1a08fcc52a3383e7bd1e90b6a719edca4b2e958b399ccc0832",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-1:row-4",
+          "order": 4,
+          "priority": 4,
+          "action": {
+            "spell_id": 199786,
+            "name_ko": "혹한의 쐐기",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[1] tbody tr:nth-child(4)",
+            "v11_fragment_sha256": "b2ec62f7c7eb985b8014038b591ea66f7b9377390aa48927068cb152096b1120",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-1:row-5",
+          "order": 5,
+          "priority": 5,
+          "action": {
+            "spell_id": 30455,
+            "name_ko": "얼음창",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[1] tbody tr:nth-child(5)",
+            "v11_fragment_sha256": "c8b7b3ea553b9ce5a4ecdf5654872165a256ff702064e08b8955734499f2f06e",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-1:row-6",
+          "order": 6,
+          "priority": 6,
+          "action": {
+            "spell_id": 30455,
+            "name_ko": "얼음창",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[1] tbody tr:nth-child(6)",
+            "v11_fragment_sha256": "948738da0b235ae5ab4d97ac821617e1a41e9b5adcc767784d8eaa07d24dfe64",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-1:row-7",
+          "order": 7,
+          "priority": 7,
+          "action": {
+            "spell_id": 205021,
+            "name_ko": "서리 광선",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[1] tbody tr:nth-child(7)",
+            "v11_fragment_sha256": "a5e8af3722759d84841ce9be79727d7c2488a62fe32f249798ecd405396ca48b",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-1:row-8",
+          "order": 8,
+          "priority": 8,
+          "action": {
+            "spell_id": 44614,
+            "name_ko": "진눈깨비",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[1] tbody tr:nth-child(8)",
+            "v11_fragment_sha256": "25004f47a0b53bf7d94ce33c7039eaf8dc259a89182fcd84eac7b4689da6120c",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-1:row-9",
+          "order": 9,
+          "priority": 9,
+          "action": {
+            "spell_id": 116,
+            "name_ko": "얼음 화살",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cast_timing"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[1] tbody tr:nth-child(9)",
+            "v11_fragment_sha256": "d8c9aa1b602ed7a8a1a130977312cdfc813d35c4aaea17f64b51bc4981b01d42",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    },
+    {
+      "id": "frost:frost-rotation:table-2",
+      "scenario": {
+        "hero": "spellslinger",
+        "target_min": 3,
+        "target_max": null,
+        "mode": "aoe",
+        "phase": "unspecified"
+      },
+      "source_section": "frost-rotation",
+      "rules": [
+        {
+          "id": "frost:frost-rotation:table-2:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": 44614,
+            "name_ko": "진눈깨비",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[2] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "49c940fbfed89cba17066c8810af78287a7c84f061e1f2596fe6b9fe0c144172",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-2:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": 30455,
+            "name_ko": "얼음창",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[2] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "732d5121193b78c98e1e0fda3584e2334f74b9ebb945ebe67167b76b1cfe5cfd",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-2:row-3",
+          "order": 3,
+          "priority": 3,
+          "action": {
+            "spell_id": 84714,
+            "name_ko": "얼어붙은 구슬",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[2] tbody tr:nth-child(3)",
+            "v11_fragment_sha256": "ef934f66814c1d1a08fcc52a3383e7bd1e90b6a719edca4b2e958b399ccc0832",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-2:row-4",
+          "order": 4,
+          "priority": 4,
+          "action": {
+            "spell_id": 199786,
+            "name_ko": "혹한의 쐐기",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[2] tbody tr:nth-child(4)",
+            "v11_fragment_sha256": "b2ec62f7c7eb985b8014038b591ea66f7b9377390aa48927068cb152096b1120",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-2:row-5",
+          "order": 5,
+          "priority": 5,
+          "action": {
+            "spell_id": 190356,
+            "name_ko": "눈보라",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[2] tbody tr:nth-child(5)",
+            "v11_fragment_sha256": "d389920eac8063e2d88a21126d1d31ed28936fc2ce2d06bd9576bdfcc03afbbd",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-2:row-6",
+          "order": 6,
+          "priority": 6,
+          "action": {
+            "spell_id": 30455,
+            "name_ko": "얼음창",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[2] tbody tr:nth-child(6)",
+            "v11_fragment_sha256": "2f08158c9a81f370d90b2260dc34f92e2c5966bfd9815c75de4633bcbc86f8a2",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-2:row-7",
+          "order": 7,
+          "priority": 7,
+          "action": {
+            "spell_id": 30455,
+            "name_ko": "얼음창",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[2] tbody tr:nth-child(7)",
+            "v11_fragment_sha256": "df52a7e4fdaea6c45fed203951b44097d9e7949ac512e4c3cf8fd4d1b792048d",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-2:row-8",
+          "order": 8,
+          "priority": 8,
+          "action": {
+            "spell_id": 205021,
+            "name_ko": "서리 광선",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[2] tbody tr:nth-child(8)",
+            "v11_fragment_sha256": "90c3af84b8f3cbcdcb83583158a0ac04bd09c8539680aba6400cf90755c03966",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-2:row-9",
+          "order": 9,
+          "priority": 9,
+          "action": {
+            "spell_id": 44614,
+            "name_ko": "진눈깨비",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[2] tbody tr:nth-child(9)",
+            "v11_fragment_sha256": "d9891109d9bb659fca94a217e19cae602b7626022f51c1190ead517d158126ef",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-2:row-10",
+          "order": 10,
+          "priority": 10,
+          "action": {
+            "spell_id": 190356,
+            "name_ko": "눈보라",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[2] tbody tr:nth-child(10)",
+            "v11_fragment_sha256": "c43af73932c7252aa19af5912fd59c621386a0bb98ac97755c61f0c8f222b015",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-2:row-11",
+          "order": 11,
+          "priority": 11,
+          "action": {
+            "spell_id": 116,
+            "name_ko": "얼음 화살",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cast_timing"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[2] tbody tr:nth-child(11)",
+            "v11_fragment_sha256": "5faa882c83568b095c7a181d9f1fa7182e8d4da4e6b86ebb521152cc00464460",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    },
+    {
+      "id": "frost:frost-rotation:table-3",
+      "scenario": {
+        "hero": "frostfire",
+        "target_min": 1,
+        "target_max": 2,
+        "mode": "single_target",
+        "phase": "unspecified"
+      },
+      "source_section": "frost-rotation",
+      "rules": [
+        {
+          "id": "frost:frost-rotation:table-3:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": 199786,
+            "name_ko": "혹한의 쐐기",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[3] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "e7ec6da6d709f1c73a620cce9a1762299dc55da4bf942283b5ea1f78611bb15f",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-3:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": 1247777,
+            "name_ko": "혜성 폭풍",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cast_timing"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[3] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "b2a5e28dfad041701daaf9c80bf203ee4eb0ed74318df52dce8df66e16d15ce3",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-3:row-3",
+          "order": 3,
+          "priority": 3,
+          "action": {
+            "spell_id": 44614,
+            "name_ko": "진눈깨비",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[3] tbody tr:nth-child(3)",
+            "v11_fragment_sha256": "15dddf8a016e4daa57112a996da24ae07a1eb5a116265486fa390c22c1d38e2f",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-3:row-4",
+          "order": 4,
+          "priority": 4,
+          "action": {
+            "spell_id": 30455,
+            "name_ko": "얼음창",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[3] tbody tr:nth-child(4)",
+            "v11_fragment_sha256": "e691ef26c1b4f1cb5fe8f8be8e0bd6d624bc7faeb133a66421022c4111c8483b",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-3:row-5",
+          "order": 5,
+          "priority": 5,
+          "action": {
+            "spell_id": 205021,
+            "name_ko": "서리 광선",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[3] tbody tr:nth-child(5)",
+            "v11_fragment_sha256": "647b423d22477bb3299696614a2a5a02f147a41675024a019ab4cb71fb58f820",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-3:row-6",
+          "order": 6,
+          "priority": 6,
+          "action": {
+            "spell_id": 84714,
+            "name_ko": "얼어붙은 구슬",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[3] tbody tr:nth-child(6)",
+            "v11_fragment_sha256": "de968dcdee75daa81bc6cc4300672e9aa24d4b7cef17830e645e206da5a2a324",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-3:row-7",
+          "order": 7,
+          "priority": 7,
+          "action": {
+            "spell_id": 30455,
+            "name_ko": "얼음창",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[3] tbody tr:nth-child(7)",
+            "v11_fragment_sha256": "4ea49c1317c9ab6791d7e3e37a20465d75cda1f323bdc534ce3aebe1a38ab73e",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-3:row-8",
+          "order": 8,
+          "priority": 8,
+          "action": {
+            "spell_id": 30455,
+            "name_ko": "얼음창",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "proc_overcap"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[3] tbody tr:nth-child(8)",
+            "v11_fragment_sha256": "75c3c88725417faed674e49d1b231bfdb6bae14fb7a1562eada15aa1e6f30d1f",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-3:row-9",
+          "order": 9,
+          "priority": 9,
+          "action": {
+            "spell_id": 44614,
+            "name_ko": "진눈깨비",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[3] tbody tr:nth-child(9)",
+            "v11_fragment_sha256": "d9891109d9bb659fca94a217e19cae602b7626022f51c1190ead517d158126ef",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-3:row-10",
+          "order": 10,
+          "priority": 10,
+          "action": {
+            "spell_id": 431044,
+            "name_ko": "얼음불꽃 화살",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cast_timing"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[3] tbody tr:nth-child(10)",
+            "v11_fragment_sha256": "d43ca52a3d29d3c18569797b2fe6ca6ad885ecd8e72ebfa1852bc417006b75a4",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    },
+    {
+      "id": "frost:frost-rotation:table-4",
+      "scenario": {
+        "hero": "frostfire",
+        "target_min": 3,
+        "target_max": null,
+        "mode": "aoe",
+        "phase": "unspecified"
+      },
+      "source_section": "frost-rotation",
+      "rules": [
+        {
+          "id": "frost:frost-rotation:table-4:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": 199786,
+            "name_ko": "혹한의 쐐기",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[4] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "e7ec6da6d709f1c73a620cce9a1762299dc55da4bf942283b5ea1f78611bb15f",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-4:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": 1247777,
+            "name_ko": "혜성 폭풍",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cast_timing"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[4] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "a66de6ebe91f2038b78e3b76b57c9ca7d6e030ee2b0da6b022ef6384dfb84157",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-4:row-3",
+          "order": 3,
+          "priority": 3,
+          "action": {
+            "spell_id": 44614,
+            "name_ko": "진눈깨비",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[4] tbody tr:nth-child(3)",
+            "v11_fragment_sha256": "15dddf8a016e4daa57112a996da24ae07a1eb5a116265486fa390c22c1d38e2f",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-4:row-4",
+          "order": 4,
+          "priority": 4,
+          "action": {
+            "spell_id": 30455,
+            "name_ko": "얼음창",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[4] tbody tr:nth-child(4)",
+            "v11_fragment_sha256": "e691ef26c1b4f1cb5fe8f8be8e0bd6d624bc7faeb133a66421022c4111c8483b",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-4:row-5",
+          "order": 5,
+          "priority": 5,
+          "action": {
+            "spell_id": 205021,
+            "name_ko": "서리 광선",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[4] tbody tr:nth-child(5)",
+            "v11_fragment_sha256": "647b423d22477bb3299696614a2a5a02f147a41675024a019ab4cb71fb58f820",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-4:row-6",
+          "order": 6,
+          "priority": 6,
+          "action": {
+            "spell_id": 84714,
+            "name_ko": "얼어붙은 구슬",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[4] tbody tr:nth-child(6)",
+            "v11_fragment_sha256": "de968dcdee75daa81bc6cc4300672e9aa24d4b7cef17830e645e206da5a2a324",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-4:row-7",
+          "order": 7,
+          "priority": 7,
+          "action": {
+            "spell_id": 190356,
+            "name_ko": "눈보라",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[4] tbody tr:nth-child(7)",
+            "v11_fragment_sha256": "7e1ec301fd15553ab9b524cc6545f21c8e31b4ba57ae04c95579e58563d8797b",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-4:row-8",
+          "order": 8,
+          "priority": 8,
+          "action": {
+            "spell_id": 190356,
+            "name_ko": "눈보라",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[4] tbody tr:nth-child(8)",
+            "v11_fragment_sha256": "cfdb9516051fba17dee7bca21afa7f8c7edd2d7fa3bc940300ed776bcadee4e7",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-4:row-9",
+          "order": 9,
+          "priority": 9,
+          "action": {
+            "spell_id": 30455,
+            "name_ko": "얼음창",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[4] tbody tr:nth-child(9)",
+            "v11_fragment_sha256": "f8c564a066f7da12c57061155e459f8f37957f03f07ea96baa81a063bbfd476e",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-4:row-10",
+          "order": 10,
+          "priority": 10,
+          "action": {
+            "spell_id": 30455,
+            "name_ko": "얼음창",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "proc_overcap"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[4] tbody tr:nth-child(10)",
+            "v11_fragment_sha256": "55b2ac398f66046a433d528f80327c62e96335f015a0fe0fbd551d806c290b1c",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-4:row-11",
+          "order": 11,
+          "priority": 11,
+          "action": {
+            "spell_id": 44614,
+            "name_ko": "진눈깨비",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[4] tbody tr:nth-child(11)",
+            "v11_fragment_sha256": "320b8293fd8cb6c1cd4247d7b279f75daf109b54f50efa30dab064843ecff9c1",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "frost:frost-rotation:table-4:row-12",
+          "order": 12,
+          "priority": 12,
+          "action": {
+            "spell_id": 431044,
+            "name_ko": "얼음불꽃 화살",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cast_timing"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#frost-rotation table.priority[4] tbody tr:nth-child(12)",
+            "v11_fragment_sha256": "43a7a513c2ceab1652b9c1d055ffe903c1c93d826d795ddc26dfb8c78711fc49",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    }
+  ],
+  "advanced_guidance_index": [
+    {
+      "id": "frost:frost-advanced:tip-1",
+      "topic": "주요 발동 효과와 자원 관리",
+      "semantic_tags": [
+        "proc_overcap",
+        "resource_pooling"
+      ],
+      "provenance": {
+        "locator": "section#frost-advanced advanced-item[1]",
+        "v11_fragment_sha256": "a5a6bbfa89fdd33444062387064c8bf9f090e179a0f9c0f6b486188a49eb4ec1",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "frost:frost-advanced:tip-2",
+      "topic": "서리 광선: 2회 충전과 전투 구간 조절",
+      "semantic_tags": [],
+      "provenance": {
+        "locator": "section#frost-advanced advanced-item[2]",
+        "v11_fragment_sha256": "bdc9a8820dd664d1d789febaf6d0ce0254511959fdbaf22255eff15298e475f3",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "frost:frost-advanced:tip-3",
+      "topic": "서리 광선: 2회 충전과 전투 구간 조절",
+      "semantic_tags": [
+        "cast_timing",
+        "movement"
+      ],
+      "provenance": {
+        "locator": "section#frost-advanced advanced-item[3]",
+        "v11_fragment_sha256": "90b95b26f03d0c964faba5c0eed089b280bc69e1c52b4858393952a702f35a90",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "frost:frost-advanced:tip-4",
+      "topic": "서리불꽃: 혹한의 쐐기와 혜성 폭풍",
+      "semantic_tags": [
+        "aoe_targeting",
+        "cast_timing"
+      ],
+      "provenance": {
+        "locator": "section#frost-advanced advanced-item[4]",
+        "v11_fragment_sha256": "c6b40e4933eba7b62772141bfacc5438da7ba413410483b08b1bd5ddb844cbf1",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "frost:frost-advanced:tip-5",
+      "topic": "눈보라의 우선순위 차이",
+      "semantic_tags": [],
+      "provenance": {
+        "locator": "section#frost-advanced advanced-item[5]",
+        "v11_fragment_sha256": "8dfcfdc9a88772651ca8b8a138c4db844bc3f7c940d008d19b4363744ec40bb9",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "frost:frost-advanced:tip-6",
+      "topic": "기본 주문 표기 보정",
+      "semantic_tags": [
+        "aoe_targeting"
+      ],
+      "provenance": {
+        "locator": "section#frost-advanced advanced-item[6]",
+        "v11_fragment_sha256": "ebb3daab07ad5c5e84e09cbf7232cdbe938c8bd42a0418a92961c21bcf4e60eb",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "frost:frost-advanced:tip-7",
+      "topic": "방어기 충전: 두 특성의 역할 구분",
+      "semantic_tags": [
+        "cooldown_alignment",
+        "defensive_usage"
+      ],
+      "provenance": {
+        "locator": "section#frost-advanced advanced-item[7]",
+        "v11_fragment_sha256": "7bc310220ac7ea442897267b7b97fa0ede7cb84204b4adcd736e9b2f1d7f0c9c",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "frost:frost-advanced:tip-8",
+      "topic": "방어기 충전: 두 특성의 역할 구분",
+      "semantic_tags": [
+        "defensive_usage"
+      ],
+      "provenance": {
+        "locator": "section#frost-advanced advanced-item[8]",
+        "v11_fragment_sha256": "394d04b5bcd74274efbf1c942e6de937eb8e7ee80b8ab4f7d72d1fa052a51954",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "frost:frost-advanced:tip-9",
+      "topic": "서리 광선·혜성 폭풍의 실제 최적화 · 원문 대조 보완",
+      "semantic_tags": [
+        "cast_timing",
+        "movement"
+      ],
+      "provenance": {
+        "locator": "section#frost-advanced advanced-item[9]",
+        "v11_fragment_sha256": "30697f493213a1bc0f9b00bdd174e196d17187f25e14c5ddf8f04ac8ae6a0721",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "frost:frost-advanced:tip-10",
+      "topic": "서리 광선·혜성 폭풍의 실제 최적화 · 원문 대조 보완",
+      "semantic_tags": [
+        "buff_management"
+      ],
+      "provenance": {
+        "locator": "section#frost-advanced advanced-item[10]",
+        "v11_fragment_sha256": "e76e431f7dcedd11412fe8354b3941594cb8187439fb12cc1b124cdb0e7a6a19",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "frost:frost-advanced:tip-11",
+      "topic": "서리 광선·혜성 폭풍의 실제 최적화 · 원문 대조 보완",
+      "semantic_tags": [
+        "proc_overcap",
+        "aoe_targeting",
+        "cast_timing"
+      ],
+      "provenance": {
+        "locator": "section#frost-advanced advanced-item[11]",
+        "v11_fragment_sha256": "658127315745daf059f888c4c92c6a774c787a298e207a5e23054d3480e37ea6",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "frost:frost-advanced:tip-12",
+      "topic": "서리 광선·혜성 폭풍의 실제 최적화 · 원문 대조 보완",
+      "semantic_tags": [
+        "cooldown_alignment"
+      ],
+      "provenance": {
+        "locator": "section#frost-advanced advanced-item[12]",
+        "v11_fragment_sha256": "5294366646554043c8c609fa66178eacfa2948425fbf2a569714de70b5049c47",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    }
+  ],
+  "publication": {
+    "status": "review_required",
+    "automatic_publish_allowed": false
+  }
+}

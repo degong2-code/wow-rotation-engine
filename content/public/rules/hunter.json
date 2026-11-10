@@ -1,0 +1,661 @@
+{
+  "schema_version": "public-v1",
+  "guide_id": "hunter",
+  "class_ko": "사냥꾼",
+  "spec_ko": "사격",
+  "hero_options": [
+    "sentinel"
+  ],
+  "source_url": "https://www.wowhead.com/guide/classes/hunter/marksmanship/rotation-cooldowns-pve-dps",
+  "source_note": "Derived analytical rule metadata from user-edited V11; original article text and full translations excluded.",
+  "baseline_v11_sha256": "5d70279c4dd073eccef1f3b13565a8f555cd81c9f0a5b7eda7e3485e410742be",
+  "rotation_groups": [
+    {
+      "id": "hunter:hunter-rotation:table-1",
+      "scenario": {
+        "hero": "sentinel",
+        "target_min": 1,
+        "target_max": 1,
+        "mode": "single_target",
+        "phase": "unspecified"
+      },
+      "source_section": "hunter-rotation",
+      "rules": [
+        {
+          "id": "hunter:hunter-rotation:table-1:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": null,
+            "name_ko": null,
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[1] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "e9b329dcc8e0e0e3d6f7aec8ee2dd62ff3e69053d619fa949fc5e9ea05a2f77d",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "hunter:hunter-rotation:table-1:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": 212431,
+            "name_ko": "폭발 사격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[1] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "8358cd868e07c7ee22a21e440754ead4a00f88930a57e7b6a638b4658682105c",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "hunter:hunter-rotation:table-1:row-3",
+          "order": 3,
+          "priority": 3,
+          "action": {
+            "spell_id": 260243,
+            "name_ko": "연발 공격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[1] tbody tr:nth-child(3)",
+            "v11_fragment_sha256": "1fad1c179ee5915bb3ee94fa34de9285b4d9a83f5c7c69a75fe7940d0803dd77",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "hunter:hunter-rotation:table-1:row-4",
+          "order": 4,
+          "priority": 4,
+          "action": {
+            "spell_id": 288613,
+            "name_ko": "정조준",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[1] tbody tr:nth-child(4)",
+            "v11_fragment_sha256": "9e1a9afaa3efe3dc947a9e62dbe384c1c3d209ec754a3e15708af4b4e90346be",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "hunter:hunter-rotation:table-1:row-5",
+          "order": 5,
+          "priority": 5,
+          "action": {
+            "spell_id": 1264902,
+            "name_ko": "달빛 회전 표창",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[1] tbody tr:nth-child(5)",
+            "v11_fragment_sha256": "20a47f08ce6ff96a4fb1819ff6e6ef38afe2e6039cfd838597775d08246a6118",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "hunter:hunter-rotation:table-1:row-6",
+          "order": 6,
+          "priority": 6,
+          "action": {
+            "spell_id": 19434,
+            "name_ko": "조준 사격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[1] tbody tr:nth-child(6)",
+            "v11_fragment_sha256": "11b085052135034f5cea2b66743cc6826188386e6154b562ec5ba6d368799d45",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "hunter:hunter-rotation:table-1:row-7",
+          "order": 7,
+          "priority": 7,
+          "action": {
+            "spell_id": 257044,
+            "name_ko": "속사",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[1] tbody tr:nth-child(7)",
+            "v11_fragment_sha256": "abd81564f087169fda047db0c5917cb89f5153e5cc6121f4f9c45948cfba2187",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "hunter:hunter-rotation:table-1:row-8",
+          "order": 8,
+          "priority": 8,
+          "action": {
+            "spell_id": 53351,
+            "name_ko": "마무리 사격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[1] tbody tr:nth-child(8)",
+            "v11_fragment_sha256": "62106c32c7bf06a0df05232424326c40092106eb530157b32ac561f139692401",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "hunter:hunter-rotation:table-1:row-9",
+          "order": 9,
+          "priority": 9,
+          "action": {
+            "spell_id": 185358,
+            "name_ko": "신비한 사격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[1] tbody tr:nth-child(9)",
+            "v11_fragment_sha256": "369f39327b11312c9ca695f34910c85d92fa078ee64f4067357e938ca0a24a6d",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "hunter:hunter-rotation:table-1:row-10",
+          "order": 10,
+          "priority": 10,
+          "action": {
+            "spell_id": 19434,
+            "name_ko": "조준 사격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cooldown_alignment"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[1] tbody tr:nth-child(10)",
+            "v11_fragment_sha256": "2a7a0ca0b01d605e0a00c972fb06c4ae5d0462f4ad48f28213245f5a92fb1734",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "hunter:hunter-rotation:table-1:row-11",
+          "order": 11,
+          "priority": 11,
+          "action": {
+            "spell_id": 1264902,
+            "name_ko": "달빛 회전 표창",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[1] tbody tr:nth-child(11)",
+            "v11_fragment_sha256": "aae76b04d9639677e27b650da4b76d9e51bdb1f5bc20c204d4757d28d2aae9a4",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "hunter:hunter-rotation:table-1:row-12",
+          "order": 12,
+          "priority": 12,
+          "action": {
+            "spell_id": 56641,
+            "name_ko": "고정 사격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cast_timing"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[1] tbody tr:nth-child(12)",
+            "v11_fragment_sha256": "c0b6e77719b91f4d181ab2c64a753044ea96bad558a0f329febc5f32a7e5db2a",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    },
+    {
+      "id": "hunter:hunter-rotation:table-2",
+      "scenario": {
+        "hero": "sentinel",
+        "target_min": null,
+        "target_max": null,
+        "mode": "aoe",
+        "phase": "unspecified"
+      },
+      "source_section": "hunter-rotation",
+      "rules": [
+        {
+          "id": "hunter:hunter-rotation:table-2:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": null,
+            "name_ko": null,
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "trinket_usage"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[2] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "39ac485f708fa28f7769922f0167fdaa2ce5cf19054a029067b4a988c94d3241",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "hunter:hunter-rotation:table-2:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": 212431,
+            "name_ko": "폭발 사격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[2] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "fbe3c78f39260c89b69e3e1ec976e7448288ebb237170dee7b292f8a6c479415",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "hunter:hunter-rotation:table-2:row-3",
+          "order": 3,
+          "priority": 3,
+          "action": {
+            "spell_id": 260243,
+            "name_ko": "연발 공격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[2] tbody tr:nth-child(3)",
+            "v11_fragment_sha256": "1fad1c179ee5915bb3ee94fa34de9285b4d9a83f5c7c69a75fe7940d0803dd77",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "hunter:hunter-rotation:table-2:row-4",
+          "order": 4,
+          "priority": 4,
+          "action": {
+            "spell_id": 288613,
+            "name_ko": "정조준",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[2] tbody tr:nth-child(4)",
+            "v11_fragment_sha256": "26e905d5d2a8ec6f70d486598119027e5ab350bf431f59863e37a117d7fd411c",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "hunter:hunter-rotation:table-2:row-5",
+          "order": 5,
+          "priority": 5,
+          "action": {
+            "spell_id": 1264902,
+            "name_ko": "달빛 회전 표창",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[2] tbody tr:nth-child(5)",
+            "v11_fragment_sha256": "ede3a204614d415f42a69f084f976293d5474dfd0fa3a52873e2a3b9b620d65a",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "hunter:hunter-rotation:table-2:row-6",
+          "order": 6,
+          "priority": 6,
+          "action": {
+            "spell_id": 257620,
+            "name_ko": "일제 사격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[2] tbody tr:nth-child(6)",
+            "v11_fragment_sha256": "4c4e911318688bb0d9fcad79c21e444da379fa1e64beb1d74eb6e99d807553e4",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "hunter:hunter-rotation:table-2:row-7",
+          "order": 7,
+          "priority": 7,
+          "action": {
+            "spell_id": 257044,
+            "name_ko": "속사",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[2] tbody tr:nth-child(7)",
+            "v11_fragment_sha256": "618aa04dc9b53c7be9281928519ef465cf87712dbfadb859c995bab7b261c82e",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "hunter:hunter-rotation:table-2:row-8",
+          "order": 8,
+          "priority": 8,
+          "action": {
+            "spell_id": 19434,
+            "name_ko": "조준 사격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[2] tbody tr:nth-child(8)",
+            "v11_fragment_sha256": "255b1d5d303b37af58586eca7e511f37ea2691ee671112053ab0a2ff10a984d2",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "hunter:hunter-rotation:table-2:row-9",
+          "order": 9,
+          "priority": 9,
+          "action": {
+            "spell_id": 1264902,
+            "name_ko": "달빛 회전 표창",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[2] tbody tr:nth-child(9)",
+            "v11_fragment_sha256": "1085ab609fd589d243537394be52a57da2f2af57e2ba131c3d758ec8d4de1386",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "hunter:hunter-rotation:table-2:row-10",
+          "order": 10,
+          "priority": 10,
+          "action": {
+            "spell_id": 56641,
+            "name_ko": "고정 사격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#hunter-rotation table.priority[2] tbody tr:nth-child(10)",
+            "v11_fragment_sha256": "31f3778fd9b9cab292c8238bd35a0572d50e0e9971fd94aaf67a44b2f82d7150",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    }
+  ],
+  "advanced_guidance_index": [
+    {
+      "id": "hunter:hunter-advanced:tip-1",
+      "topic": ". 폭발 사격 2연속과 12.1 세트",
+      "semantic_tags": [
+        "aoe_targeting"
+      ],
+      "provenance": {
+        "locator": "section#hunter-advanced advanced-item[1]",
+        "v11_fragment_sha256": "655b264ddfe19992c34d426d8cf793aef7c176b2494f00fcdd567e1ce3f1cc46",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "hunter:hunter-advanced:tip-2",
+      "topic": ". 폭발 사격 2연속과 12.1 세트",
+      "semantic_tags": [
+        "cooldown_alignment"
+      ],
+      "provenance": {
+        "locator": "section#hunter-advanced advanced-item[2]",
+        "v11_fragment_sha256": "0efa7b298709bdc8f07159063616bff102ff4edf11c1b7fa87cbfb46fea9b771",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "hunter:hunter-advanced:tip-3",
+      "topic": ". 교묘한 사격과 히드라의 상: 광역 빌드 분기",
+      "semantic_tags": [
+        "aoe_targeting",
+        "buff_management"
+      ],
+      "provenance": {
+        "locator": "section#hunter-advanced advanced-item[3]",
+        "v11_fragment_sha256": "67c76bd1222ed62feac2b42771ce5384bff7db3cf88208b3b51c12c9bcd75297",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "hunter:hunter-advanced:tip-4",
+      "topic": ". 교묘한 사격과 히드라의 상: 광역 빌드 분기",
+      "semantic_tags": [
+        "aoe_targeting"
+      ],
+      "provenance": {
+        "locator": "section#hunter-advanced advanced-item[4]",
+        "v11_fragment_sha256": "58f3901c36806b7feae72adff912180fb1ac8401a9791cda792573f731ca3949",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "hunter:hunter-advanced:tip-5",
+      "topic": ". 교묘한 사격과 히드라의 상: 광역 빌드 분기",
+      "semantic_tags": [
+        "aoe_targeting",
+        "buff_management"
+      ],
+      "provenance": {
+        "locator": "section#hunter-advanced advanced-item[5]",
+        "v11_fragment_sha256": "945ce06276868f48886ab0907b35601fd6f56b19b6c8692c5e0eac22b6874636",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "hunter:hunter-advanced:tip-6",
+      "topic": ". 교묘한 사격과 히드라의 상: 광역 빌드 분기",
+      "semantic_tags": [
+        "aoe_targeting"
+      ],
+      "provenance": {
+        "locator": "section#hunter-advanced advanced-item[6]",
+        "v11_fragment_sha256": "8b48156bbb236b7d8df841249275d4a862b8fbde78a9918cec6fa4fe3f2b105d",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "hunter:hunter-advanced:tip-7",
+      "topic": ". 정밀 사격 소모와 발동 낭비",
+      "semantic_tags": [
+        "proc_overcap"
+      ],
+      "provenance": {
+        "locator": "section#hunter-advanced advanced-item[7]",
+        "v11_fragment_sha256": "4a87748ee944a60f2623a7eb975e91fb30753d7a68ec01e78f1c24300b92ad21",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "hunter:hunter-advanced:tip-8",
+      "topic": ". 이동과 무중단 시전",
+      "semantic_tags": [
+        "cooldown_alignment",
+        "cast_timing",
+        "movement"
+      ],
+      "provenance": {
+        "locator": "section#hunter-advanced advanced-item[8]",
+        "v11_fragment_sha256": "4064818779e22fcac2f35ca696090283cedfdc92e239526795bc2d73735354fd",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "hunter:hunter-advanced:tip-9",
+      "topic": ". 이동과 무중단 시전",
+      "semantic_tags": [
+        "cast_timing",
+        "movement"
+      ],
+      "provenance": {
+        "locator": "section#hunter-advanced advanced-item[9]",
+        "v11_fragment_sha256": "4435a89e4628a352657c93c276a4197045f8a9f742a6b8ecd62329ff19183519",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "hunter:hunter-advanced:tip-10",
+      "topic": ". 조준 사격 2충전과 재충전 손실 방지",
+      "semantic_tags": [
+        "proc_overcap",
+        "cooldown_alignment",
+        "buff_management"
+      ],
+      "provenance": {
+        "locator": "section#hunter-advanced advanced-item[10]",
+        "v11_fragment_sha256": "3ae53382659066b55e6a689d1e9822ba342b348461ab810fad05fd82432dc4f6",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    }
+  ],
+  "publication": {
+    "status": "review_required",
+    "automatic_publish_allowed": false
+  }
+}

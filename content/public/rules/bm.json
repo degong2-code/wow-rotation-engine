@@ -1,0 +1,543 @@
+{
+  "schema_version": "public-v1",
+  "guide_id": "bm",
+  "class_ko": "사냥꾼",
+  "spec_ko": "야수",
+  "hero_options": [
+    "packleader"
+  ],
+  "source_url": "https://www.wowhead.com/guide/classes/hunter/beast-mastery/rotation-cooldowns-pve-dps",
+  "source_note": "Derived analytical rule metadata from user-edited V11; original article text and full translations excluded.",
+  "baseline_v11_sha256": "5d70279c4dd073eccef1f3b13565a8f555cd81c9f0a5b7eda7e3485e410742be",
+  "rotation_groups": [
+    {
+      "id": "bm:bm-rotation:table-1",
+      "scenario": {
+        "hero": "packleader",
+        "target_min": 1,
+        "target_max": 1,
+        "mode": "single_target",
+        "phase": "unspecified"
+      },
+      "source_section": "bm-rotation",
+      "rules": [
+        {
+          "id": "bm:bm-rotation:table-1:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": 217200,
+            "name_ko": "날카로운 사격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cooldown_alignment"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#bm-rotation table.priority[1] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "8308a3a92ba16e20592fc81d1af076a88b26927c46edb9986ea89622ed5b4576",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "bm:bm-rotation:table-1:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": 19574,
+            "name_ko": "야수의 격노",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "buff_management"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#bm-rotation table.priority[1] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "2b65a4d19e53da9702a20855cf902f444be65141eb46ffb16ef111b3a30e34b6",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "bm:bm-rotation:table-1:row-3",
+          "order": 3,
+          "priority": 3,
+          "action": {
+            "spell_id": 34026,
+            "name_ko": "살상 명령",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "aoe_targeting",
+              "buff_management"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#bm-rotation table.priority[1] tbody tr:nth-child(3)",
+            "v11_fragment_sha256": "0304c29ddf32604fe84363f5631c69d2f4e6965f68cd6db55312ce933cc30fa9",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "bm:bm-rotation:table-1:row-4",
+          "order": 4,
+          "priority": 4,
+          "action": {
+            "spell_id": 193455,
+            "name_ko": "코브라 사격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#bm-rotation table.priority[1] tbody tr:nth-child(4)",
+            "v11_fragment_sha256": "9cef5a73068b26033a8033b1109f4c151e3b9b973081adcc53cb002abb86150c",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "bm:bm-rotation:table-1:row-5",
+          "order": 5,
+          "priority": 5,
+          "action": {
+            "spell_id": 217200,
+            "name_ko": "날카로운 사격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#bm-rotation table.priority[1] tbody tr:nth-child(5)",
+            "v11_fragment_sha256": "a814df1755d25e7f13fa62a0f72073bc741664c1bff6cbef7f27eb767e73bf57",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "bm:bm-rotation:table-1:row-6",
+          "order": 6,
+          "priority": 6,
+          "action": {
+            "spell_id": 193455,
+            "name_ko": "코브라 사격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#bm-rotation table.priority[1] tbody tr:nth-child(6)",
+            "v11_fragment_sha256": "824b986ae8eb9c52b649d0a4d3f79b58489c174e8083b3888130def07ed4f849",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    },
+    {
+      "id": "bm:bm-rotation:table-2",
+      "scenario": {
+        "hero": "packleader",
+        "target_min": null,
+        "target_max": null,
+        "mode": "aoe",
+        "phase": "unspecified"
+      },
+      "source_section": "bm-rotation",
+      "rules": [
+        {
+          "id": "bm:bm-rotation:table-2:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": 217200,
+            "name_ko": "날카로운 사격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#bm-rotation table.priority[2] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "4ff6fd3010da7f2bc6ec08cc137bba09e1281c1a9a21b9eb43c19e6cf4671b77",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "bm:bm-rotation:table-2:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": 1264359,
+            "name_ko": "마구잡이 난타",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "aoe_targeting"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#bm-rotation table.priority[2] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "d630ef8278b7bbc00bb9afb5bf4b664b0f0178954a94063e64c74bf7fc96f793",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "bm:bm-rotation:table-2:row-3",
+          "order": 3,
+          "priority": 3,
+          "action": {
+            "spell_id": 19574,
+            "name_ko": "야수의 격노",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#bm-rotation table.priority[2] tbody tr:nth-child(3)",
+            "v11_fragment_sha256": "8942532ba76d6aeaaedb8e5244c0a15faf0abf177d164b417ffcc482abf09eca",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "bm:bm-rotation:table-2:row-4",
+          "order": 4,
+          "priority": 4,
+          "action": {
+            "spell_id": 34026,
+            "name_ko": "살상 명령",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "aoe_targeting"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#bm-rotation table.priority[2] tbody tr:nth-child(4)",
+            "v11_fragment_sha256": "28ad07bfcd231b53d027116f09bcf36b9f8157d1a63739226293dd1788a68fb0",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "bm:bm-rotation:table-2:row-5",
+          "order": 5,
+          "priority": 5,
+          "action": {
+            "spell_id": 193455,
+            "name_ko": "코브라 사격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#bm-rotation table.priority[2] tbody tr:nth-child(5)",
+            "v11_fragment_sha256": "4be00740fe632af1e777498ef97cf13db30a522f4f13f2013fcdb6e19888f378",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "bm:bm-rotation:table-2:row-6",
+          "order": 6,
+          "priority": 6,
+          "action": {
+            "spell_id": 217200,
+            "name_ko": "날카로운 사격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#bm-rotation table.priority[2] tbody tr:nth-child(6)",
+            "v11_fragment_sha256": "cb52057462b04326e15861985cd9c9f231284b04512249055fa7c7230b8523bc",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "bm:bm-rotation:table-2:row-7",
+          "order": 7,
+          "priority": 7,
+          "action": {
+            "spell_id": 193455,
+            "name_ko": "코브라 사격",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#bm-rotation table.priority[2] tbody tr:nth-child(7)",
+            "v11_fragment_sha256": "9f2909afdb7729676c80f2f5c6d9f89548bb3ccd2adf5ea8767f5c79163a7dda",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    }
+  ],
+  "advanced_guidance_index": [
+    {
+      "id": "bm:bm-advanced:tip-1",
+      "topic": "충전 관리와 쿨기 진입",
+      "semantic_tags": [
+        "cooldown_alignment"
+      ],
+      "provenance": {
+        "locator": "section#bm-advanced advanced-item[1]",
+        "v11_fragment_sha256": "bb42600b7d37079bf2e62cd9b563170c14932ddaafe48aa09d5ced839fddd390",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "bm:bm-advanced:tip-2",
+      "topic": "충전 관리와 쿨기 진입",
+      "semantic_tags": [
+        "cooldown_alignment"
+      ],
+      "provenance": {
+        "locator": "section#bm-advanced advanced-item[2]",
+        "v11_fragment_sha256": "90270380026c9d66f3fae28fe545994756cd204f47eef465dab1eb186a639eb0",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "bm:bm-advanced:tip-3",
+      "topic": "충전 관리와 쿨기 진입",
+      "semantic_tags": [
+        "cooldown_alignment",
+        "aoe_targeting",
+        "buff_management"
+      ],
+      "provenance": {
+        "locator": "section#bm-advanced advanced-item[3]",
+        "v11_fragment_sha256": "27834910129b4c51d52182bf5251a871d1983e14e16370b9a53cce3f672f9225",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "bm:bm-advanced:tip-4",
+      "topic": "충전 관리와 쿨기 진입",
+      "semantic_tags": [
+        "cooldown_alignment",
+        "aoe_targeting"
+      ],
+      "provenance": {
+        "locator": "section#bm-advanced advanced-item[4]",
+        "v11_fragment_sha256": "01b8e2f617e7bf157a12be21a60977ba5a21d307b8eee3bb6c0af2882acbb1fa",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "bm:bm-advanced:tip-5",
+      "topic": "충전 관리와 쿨기 진입",
+      "semantic_tags": [
+        "cooldown_alignment",
+        "aoe_targeting"
+      ],
+      "provenance": {
+        "locator": "section#bm-advanced advanced-item[5]",
+        "v11_fragment_sha256": "b742a5ded4f80ecbc849462fab1f19f7a2c36c970c5ab69dad595a6646eb8d0b",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "bm:bm-advanced:tip-6",
+      "topic": "야수 위치와 공격 대상",
+      "semantic_tags": [
+        "pet_control"
+      ],
+      "provenance": {
+        "locator": "section#bm-advanced advanced-item[6]",
+        "v11_fragment_sha256": "59390ea8939c2c2a656b564f71eed2e5894dccad33bc04e2db54038da7c1a772",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "bm:bm-advanced:tip-7",
+      "topic": "야수 위치와 공격 대상",
+      "semantic_tags": [
+        "aoe_targeting",
+        "pet_control"
+      ],
+      "provenance": {
+        "locator": "section#bm-advanced advanced-item[7]",
+        "v11_fragment_sha256": "8752e865ac96c3e111d5ceedded5a2f35d1a0f943af24847229dd862a0356e29",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "bm:bm-advanced:tip-8",
+      "topic": "야수 위치와 공격 대상",
+      "semantic_tags": [
+        "pet_control",
+        "movement"
+      ],
+      "provenance": {
+        "locator": "section#bm-advanced advanced-item[8]",
+        "v11_fragment_sha256": "fd3d48a0c9b60537117c092fca5ecbe485d93a6472723fce3cda9e196032af43",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "bm:bm-advanced:tip-9",
+      "topic": "야수 위치와 공격 대상",
+      "semantic_tags": [
+        "pet_control"
+      ],
+      "provenance": {
+        "locator": "section#bm-advanced advanced-item[9]",
+        "v11_fragment_sha256": "17b7249224dda89823bbbfcf4c15021a12dcbbdfbad8d24bb16addb469f645bc",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "bm:bm-advanced:tip-10",
+      "topic": "야수 위치와 공격 대상",
+      "semantic_tags": [
+        "cast_timing",
+        "pet_control",
+        "movement"
+      ],
+      "provenance": {
+        "locator": "section#bm-advanced advanced-item[10]",
+        "v11_fragment_sha256": "88fdfb44d12304b49671259ad32ee72ce72417b887990b4ae0335da56436aa72",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "bm:bm-advanced:tip-11",
+      "topic": "대상과 높낮이",
+      "semantic_tags": [
+        "cooldown_alignment",
+        "movement"
+      ],
+      "provenance": {
+        "locator": "section#bm-advanced advanced-item[11]",
+        "v11_fragment_sha256": "b1aba704c6a82afdda242c6ad7a1dbb79f5185ac98a98a67e2b14c26be894567",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "bm:bm-advanced:tip-12",
+      "topic": "원문에 같이 제시된 어둠 순찰자 설명",
+      "semantic_tags": [
+        "aoe_targeting"
+      ],
+      "provenance": {
+        "locator": "section#bm-advanced advanced-item[12]",
+        "v11_fragment_sha256": "b22d2d3c090d7865b350e16fdf34baf3290e269b91bdf7dd51422b2b9295e47c",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "bm:bm-advanced:tip-13",
+      "topic": "원문 범위 주의",
+      "semantic_tags": [
+        "cooldown_alignment",
+        "trinket_usage",
+        "pet_control"
+      ],
+      "provenance": {
+        "locator": "section#bm-advanced advanced-item[13]",
+        "v11_fragment_sha256": "ec986d06ed7946698cdbf8292f5264758d0998848b54da1d23485a49a8fa88c5",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "bm:bm-advanced:tip-14",
+      "topic": "우선순위와 고급 운용 교차 점검",
+      "semantic_tags": [
+        "cooldown_alignment",
+        "aoe_targeting",
+        "cast_timing",
+        "trinket_usage",
+        "pet_control",
+        "buff_management",
+        "movement"
+      ],
+      "provenance": {
+        "locator": "section#bm-advanced advanced-item[14]",
+        "v11_fragment_sha256": "31d129e7e551d90ed4294efcfba0daecd0fb7d73a4aa5601a4f70f465ca125b5",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    }
+  ],
+  "publication": {
+    "status": "review_required",
+    "automatic_publish_allowed": false
+  }
+}
