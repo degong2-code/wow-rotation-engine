@@ -1,0 +1,41 @@
+name: Validate and build (public bootstrap)
+
+on:
+  push:
+    branches: [main, 'work/**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile source
+        run: python -m compileall -q engine tests
+      - name: Run offline tests
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Validate synthetic fixture
+        run: python -m engine validate --input examples/synthetic.json
+      - name: Build demo HTML (not a real guide)
+        run: python -m engine build --input examples/synthetic.json --output dist/index.html --allow-demo
+      - name: Confirm the build is deterministic
+        run: |
+          cp dist/index.html /tmp/rotation-demo-first.html
+          python -m engine build --input examples/synthetic.json --output dist/index.html --allow-demo
+          cmp /tmp/rotation-demo-first.html dist/index.html
+      - name: Upload validated demo artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wow-engine-demo-html
+          path: dist/index.html
+          retention-days: 7

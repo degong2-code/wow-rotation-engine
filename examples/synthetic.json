@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "specs": [
+    {
+      "id": "synthetic",
+      "name_ko": "내부 시험용 전문화",
+      "hero": "합성 특성",
+      "rules": [
+        {
+          "id": "example-001",
+          "priority": 1,
+          "spell_id": 1000001,
+          "name_ko": "가상 공격 A",
+          "notes_ko": "조건식·순위·HTML 렌더링을 점검하는 합성 데이터입니다.",
+          "when": {
+            "all": [
+              {
+                "field": "target_count",
+                "op": "gte",
+                "value": 1
+              },
+              {
+                "field": "buff:example",
+                "op": "eq",
+                "value": true
+              }
+            ]
+          },
+          "evidence": {
+            "state": "synthetic"
+          },
+          "review": "pending"
+        },
+        {
+          "id": "example-002",
+          "priority": 2,
+          "spell_id": 1000002,
+          "name_ko": "가상 공격 B",
+          "notes_ko": "실제 WoW 기술 또는 운용법을 나타내지 않습니다.",
+          "when": {
+            "field": "target_count",
+            "op": "gte",
+            "value": 2
+          },
+          "evidence": {
+            "state": "synthetic"
+          },
+          "review": "pending"
+        }
+      ]
+    }
+  ]
+}
