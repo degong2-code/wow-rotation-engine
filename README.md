@@ -78,3 +78,13 @@ python -m engine.condition_worklist --output dist/condition-worklist.json
 177개 우선순위 전체의 검토 상태를 출력합니다. 일부 **구문적으로 분석 가능한 조건은 실제 기술 사용 충분조건이 아닙니다.** 현재 냉기 마법사 빙결 중첩 조건 2개는 출처 외부 대조를 기다리는 **부분 후보**로만 수록했고, 나머지 175개 행은 미정규화 상태입니다. AI·코드 모두 미검증 규칙을 자동 승인하지 않습니다.
 
 세부 설계: [Condition Worklist](docs/CONDITION_WORKLIST.md).
+
+## 원문 변경 감지 실험 (Issue #5)
+
+```bash
+python -m engine.source_snapshots capture --input examples/synthetic-source-before.json --output dist/synthetic-source-before.json
+python -m engine.source_snapshots capture --input examples/synthetic-source-after.json --output dist/synthetic-source-after.json
+python -m engine.source_snapshots diff --previous dist/synthetic-source-before.json --current dist/synthetic-source-after.json --output dist/synthetic-source-diff.json
+```
+
+위 입력은 **완전 합성 문장**입니다. 원문 텍스트를 공개 Artifact에 보관하지 않고 해시만 비교합니다. 결과는 변경 관측 항목의 검토 후보이며 자동 번역·자동 게시와 무관합니다. 상세: [Source Evidence Snapshot](docs/SOURCE_SNAPSHOTS.md).

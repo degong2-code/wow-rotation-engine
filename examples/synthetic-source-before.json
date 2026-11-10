@@ -1,0 +1,16 @@
+{
+  "schema_version": "manual-source-input-v1",
+  "guide_id": "fire",
+  "source_url": "https://www.wowhead.com/guide/classes/mage/fire/rotation-cooldowns-pve-dps",
+  "captured_at": "2026-11-10T10:00:00+00:00",
+  "passages": [
+    {
+      "rule_id": "fire:rotation:table-1:row-1",
+      "text": "SYNTHETIC DATA ONLY. This invented sentence tests content fingerprints."
+    },
+    {
+      "rule_id": "fire:rotation:table-1:row-2",
+      "text": "SYNTHETIC DATA ONLY. Second invented sentence, not from any guide."
+    }
+  ]
+}

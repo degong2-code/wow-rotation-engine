@@ -92,6 +92,29 @@ jobs:
             echo "ERROR: Partial condition proposals bypassed review gate"
             exit 1
           fi
+      - name: Capture synthetic source-text hashes without publishing text
+        run: |
+          python -m engine.source_snapshots capture --input examples/synthetic-source-before.json --output dist/synthetic-source-before.json
+          python -m engine.source_snapshots capture --input examples/synthetic-source-after.json --output dist/synthetic-source-after.json
+      - name: Compare synthetic snapshots, flag source-driven review
+        run: |
+          python -m engine.source_snapshots diff --previous dist/synthetic-source-before.json --current dist/synthetic-source-after.json --output dist/synthetic-source-diff.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          before=json.loads(Path("dist/synthetic-source-before.json").read_text(encoding="utf8"))
+          after=json.loads(Path("dist/synthetic-source-after.json").read_text(encoding="utf8"))
+          diff=json.loads(Path("dist/synthetic-source-diff.json").read_text(encoding="utf8"))
+          assert diff["affected_count"] == 1
+          assert diff["requires_human_review"] is True
+          assert diff["automatic_publish_allowed"] is False
+          assert diff["source_meaning_verified"] is False
+          assert before["source_text_in_snapshot"] is False
+          assert after["source_text_in_snapshot"] is False
+          assert "SYNTHETIC DATA ONLY" not in json.dumps(before)
+          assert "SYNTHETIC DATA ONLY" not in json.dumps(after)
+          assert "SYNTHETIC DATA ONLY" not in json.dumps(diff)
+          PY
       - name: Upload validated artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -103,4 +126,5 @@ jobs:
             dist/review-audit.json
             dist/spell-name-audit.json
             dist/condition-worklist.json
+            dist/synthetic-source-diff.json
           retention-days: 7
