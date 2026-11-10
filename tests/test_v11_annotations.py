@@ -24,16 +24,16 @@ class V11AnnotationTests(unittest.TestCase):
 
     def test_annotation_contract_targets_existing_rules_and_mechanics(self):
         notes = validate_notes(self.draft)
-        self.assertEqual(len(notes), 6)
-        self.assertEqual(sum(kind == "rule" for kind, _ in notes), 4)
+        self.assertEqual(len(notes), 10)
+        self.assertEqual(sum(kind == "rule" for kind, _ in notes), 8)
         self.assertEqual(sum(kind == "mechanic" for kind, _ in notes), 2)
-        self.assertEqual(sum(n["marker"] == "!" for n in notes.values()), 3)
-        self.assertEqual(sum(n["marker"] == "?" for n in notes.values()), 3)
+        self.assertEqual(sum(n["marker"] == "!" for n in notes.values()), 5)
+        self.assertEqual(sum(n["marker"] == "?" for n in notes.values()), 5)
 
     def test_original_v11_tooltip_classes_and_accessibility_are_used(self):
         markers = self.soup.select("#guide-arcane button.note-marker.tip-trigger")
-        # Four priority rows + two mechanics + one quick-reference duplication.
-        self.assertEqual(len(markers), 7)
+        # Eight priority rows + two mechanics + one quick-reference duplication.
+        self.assertEqual(len(markers), 11)
         self.assertTrue(all(b.get("type") == "button" for b in markers))
         self.assertTrue(all(b.get("aria-label") for b in markers))
         self.assertTrue(all(b.get("data-hint-title") for b in markers))
@@ -46,6 +46,26 @@ class V11AnnotationTests(unittest.TestCase):
         self.assertTrue(all(
             ("critical" in b.get("class", [])) == (b.get_text(strip=True) == "!")
             for b in markers
+        ))
+
+    def test_source_disagreement_is_visible_in_critical_v11_markers(self):
+        expected = {
+            "arcane:rotation:sunfury-st:row-6": "sunfury-orb-different-threshold",
+            "arcane:rotation:spellslinger-aoe:row-2": "spellslinger-orb-sources",
+        }
+        for rule_id, note_id in expected.items():
+            with self.subTest(rule=rule_id):
+                selector = (
+                    'tr[data-rule-id="' + rule_id + '"]'
+                    ' button.note-marker.critical'
+                )
+                marker = self.soup.select_one(selector)
+                self.assertIsNotNone(marker)
+                self.assertEqual(marker["data-note"], note_id)
+                self.assertEqual(marker.get_text(strip=True), "!")
+        self.assertIsNotNone(self.soup.select_one(
+            'tr[data-rule-id="arcane:rotation:sunfury-aoe:row-3"]'
+            ' button.note-marker[data-note="sunfury-aoe-tier-stacks"]'
         ))
 
     def test_rule_note_is_located_in_matching_priority_row(self):
