@@ -114,6 +114,37 @@
 - 모든 메커니즘·행은 검토 대기이며, 오프너도 시전 조건에 따른 **예시**로 표기. 고정 매크로·확정 콤보로 재해석하지 않는다.
 - 신규 아이콘 ID가 검증되지 않은 경우 중립 표시를 유지하고 기존 7전문화 원문/HTML은 절대 공개·재작성하지 않는다.
 
+## V11 조건 비교표와 `?` / `!` 마커 재사용 (2026-11-11)
+
+사용자 화면 비교에서 기존 화염 교본의 **표·`?` 상세 설명·`!` 주의 표시**도 비전 CREATE가 재현해야 할 요소로 확인했다. 기존 V11 원본의 실제 DOM/CSS/JS 계약을 분석한 후 별도 UI 시스템을 만들지 않고 다음 요소를 재사용했다.
+
+- `overview-table`: 영웅 특성별 빠른 참고 표. 주의가 필요한 첫 규칙은 `!`를 중복 표시.
+- `priority`: 해당 우선순위 행의 조건 바로 뒤에 원본 V11의 `button.note-marker.tip-trigger` 삽입.
+- `comparison` + `table-scroll`: 기존 성난태양/주문술사 탄막 기준에 더해 번뜩임→신비한 화살/비전 탄막 4행 비교표 추가 (핵심 원리 비교표 2개).
+- `note-marker`의 `?`: 원리·추가 판단 설명. `note-marker.critical`의 `!`: 세트 조건·특성 선택·영웅 특성의 중첩 차이 같은 주의.
+- `data-hint-title/body/href`: 기존 V11 `floating-tip`의 **호버 표시·클릭 고정·자세히 읽기·Escape/닫기·모바일 탭** 기능 그대로 사용. 새 JS나 CSS 없음.
+- `note-key`/ `note-key.important`: 기존 V11 설명 마크 범례. 마크를 무차별적으로 추가하지 않고 `?` 3종·`!` 3종, 총 **6개의 서로 다른 설명 근거 항목**만 구성한다. 빠른 참고 표 재표시까지 포함하면 렌더된 버튼 **7개**.
+
+### 신규 CREATE 데이터 계약
+
+`content/new_guides/arcane.json` → `editorial.annotations.schema_version=v11-notes-v1`:
+- `id`, `target_type` (`rule`/`mechanic`), `target_id`, `marker`, `title`, `body`, `detail_anchor`, `review`.
+- `engine/v2/annotations.py`: 존재하는 규칙 ID·메커니즘 ID만 참조, 유효한 해당 교본 장 앵커만 허용, `!`에 실제 주의 설명이 있는지 검사. HTML/스크립트 삽입 차단을 위한 문자열 이스케이프, 무단 리뷰 승격 거부.
+- `create_guide.py`와 `mechanics.py`: V11 원본과 동일한 클래스로 버튼·비교표·범례 연결.
+- `fidelity.py`: 실제 출력에서 개별 마커 누락, `?`/`!` 의미 불일치, 잘못된 장 링크, 툴팁/접근성 정보 누락 검사.
+- `tests/test_v11_annotations.py`: 모든 6개 항목의 ID, 위치, 심각도, 링크, 범례, 2개 비교표, 악성 입력·잘못된 ID 거부. 공개 GitHub에는 실제 기존 7개 전문화의 장문 원문을 넣지 않는다.
+
+### 실제 V11 JavaScript 사용성 시험
+
+개인 V11 전체 HTML에 위 마커를 삽입한 **로컬 상호작용 전용 미리보기**를 제작하여 Chromium headless에서 실험.
+
+- 기존 7전문화 `manual-view` HTML 바이트 동일. 비전 포함 전체 HTML **992,633 bytes**, SHA-256 `5a7a5bbb92b359279ef5baa9e0ff81e1fd25f363fed6db256dd9035ea67acdb3`.
+- 데스크톱 1365px, 모바일 390px 모두: `?` 마우스 진입→툴팁, 클릭 고정, Escape 닫기, `!` 경고 강조 및 설명, 자세히 읽기 링크, 닫기 버튼, 기존 화염의 `?`/`!` 트리거 **PASS**. JS page errors **0건**.
+- 표 2개, 버튼 7개 확인. 별도 화면 캡처 파일 생성 없음.
+- **정확한 범위:** 이 미리보기는 앞선 비전 메커니즘 로컬 HTML을 바탕으로 동일한 V11 마크업을 위치별 삽입한 상호작용 검증 결과다. GitHub 정식 `create_guide.py`의 최신 코드·데이터를 사용한 완전한 canonical E2E 실행이라는 뜻이 아니다. 정식 코드와 JSON의 생성·구조 검증은 별도 GitHub 합성 CI PASS로 확인했다.
+
+`?`와 `!`의 내용 또한 현재 **초안 해설**로 `needs_manual_gameplay_review` 상태다. 외부 원문의 34개 우선순위 조건별 게임플레이 증거가 모두 검증됐다는 주장을 하지 않는다.
+
 ## 개발 및 인계
 
 - PR #14: 원본 V11 보존·UPDATE 기반
