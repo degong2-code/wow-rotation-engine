@@ -273,6 +273,7 @@ def render_arcane(doc: dict) -> dict:
             '<tr><td>' + _e(g["target_label"]) + '</td><td>'
             + _spell(spellmap[g["rows"][0]["spell"]]) + " — "
             + _e(g["rows"][0]["condition"])
+            + ' ' + note_for("rule", g["rows"][0]["id"])
             + '<div class="muted">' + _e(g["rows"][0]["comment"]) + '</div>'
             + '</td></tr>' for g in groups
         ]
