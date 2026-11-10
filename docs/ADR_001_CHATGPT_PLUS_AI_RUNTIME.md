@@ -71,6 +71,15 @@ AI 제공자는 `AIProvider`(모델 목록, `AIJob` 입력, `AIProposal` 출력)
 
 기존 `ai_proposals.py`의 `--send-api` / `OPENAI_API_KEY` 경로는 이전 시험용으로 남아 있다. **새 무료 정책의 기본 실행 경로와 연결하지 않는다.** 별도의 API 키 유료 호출을 묵시적으로 활성화하거나 비공개 자료를 자동 송신하면 안 된다.
 
+## 4.1. 후속 구현 — 공식 OAuth 로컬 연결 (2026-11-11)
+
+- [ChatGPT Plus 로컬 로그인 사용 및 보안 범위](CHATGPT_PLUS_LOCAL_LOGIN.md)
+- `chatgpt_oauth.py`: 초기 dynamic agent client/재로그인 발급 클라이언트, 고정 host ID, 매번 새로운 state/nonce/PKCE S256, 정확한 127.0.0.1 콜백, token grant, 실제 공개 JWKS를 이용하는 RSA/ECDSA **서명 검증·issuer·audience·nonce·exp/iat·subject 검사** 구현.
+- `chatgpt_signin.py`: 사용자가 본인 로컬 PC에서 명시적으로 실행한 경우에만 브라우저를 열고 loopback 코드를 한 번 소비. 적법하게 인증된 세션을 받아 저장하며, 직접 추론 호출 없이 끝남. `--list-models`만 별도 크레딧 OFF 확인 시 조회.
+- `chatgpt_local_store.py`: 사용자 로컬 WSL/Linux `~/.config/wow-rotation-textbook/chatgpt`에 고정 host ID와 클라이언트별 자격 증명을 0700/0600으로 원자 저장, 공개 GitHub/CI/브라우저 JS 노출 없음.
+- `requirements-v2.txt`: `PyJWT[crypto]` 서명 검증 의존성, 합성 RSA 키·JWKS·모의 token grant·localhost callback 테스트 추가.
+- **현재 검증 범위**: GitHub 오프라인 합성 회귀 PASS. 실제 OAuth 브라우저 동의/계정 모델 목록 조회/사용량 차감 없음. 로컬 자격 증명은 파일 권한 보호(암호화 키체인 아님). 자동 토큰 refresh는 다음 단계. **사용자 실로그인을 완료했다고 주장하지 않는다.**
+
 ## 5. 우선 개발순위 및 완료 기준
 
 1. **AI 비용·인증 경계 구현(진행 중):** 제공자 중립 계약, ChatGPT Plan 어댑터, 오프라인 오류/검토 테스트 → 별도 Draft PR에 보관.
