@@ -1,0 +1,104 @@
+{
+  "schema_version": "public-v1",
+  "baseline": "V11",
+  "source_kind": "user_edited_v11",
+  "data_scope": "facts/IDs/metadata/locators; no full-guide text",
+  "verification": "all_source_meaning_pending_external_review",
+  "counts": {
+    "tables": 23,
+    "rows": 177,
+    "unresolved_spell_ids": 13,
+    "advanced_tips": 79,
+    "specs": 7,
+    "spell_records": 178,
+    "spell_ids": 176
+  },
+  "guides": [
+    {
+      "id": "fire",
+      "class_ko": "마법사",
+      "spec_ko": "화염",
+      "hero_options": [
+        "sunfury"
+      ],
+      "file": "rules/fire.json",
+      "rotation_group_count": 4,
+      "priority_row_count": 27,
+      "advanced_item_count": 17
+    },
+    {
+      "id": "frost",
+      "class_ko": "마법사",
+      "spec_ko": "냉기",
+      "hero_options": [
+        "spellslinger",
+        "frostfire"
+      ],
+      "file": "rules/frost.json",
+      "rotation_group_count": 4,
+      "priority_row_count": 42,
+      "advanced_item_count": 12
+    },
+    {
+      "id": "dk",
+      "class_ko": "죽음의 기사",
+      "spec_ko": "냉기",
+      "hero_options": [
+        "deathbringer"
+      ],
+      "file": "rules/dk.json",
+      "rotation_group_count": 2,
+      "priority_row_count": 26,
+      "advanced_item_count": 8
+    },
+    {
+      "id": "hunter",
+      "class_ko": "사냥꾼",
+      "spec_ko": "사격",
+      "hero_options": [
+        "sentinel"
+      ],
+      "file": "rules/hunter.json",
+      "rotation_group_count": 2,
+      "priority_row_count": 22,
+      "advanced_item_count": 10
+    },
+    {
+      "id": "bm",
+      "class_ko": "사냥꾼",
+      "spec_ko": "야수",
+      "hero_options": [
+        "packleader"
+      ],
+      "file": "rules/bm.json",
+      "rotation_group_count": 2,
+      "priority_row_count": 13,
+      "advanced_item_count": 14
+    },
+    {
+      "id": "rogue",
+      "class_ko": "도적",
+      "spec_ko": "잠행",
+      "hero_options": [
+        "trickster"
+      ],
+      "file": "rules/rogue.json",
+      "rotation_group_count": 5,
+      "priority_row_count": 15,
+      "advanced_item_count": 8
+    },
+    {
+      "id": "assassination",
+      "class_ko": "도적",
+      "spec_ko": "암살",
+      "hero_options": [
+        "fatebound",
+        "deathstalker"
+      ],
+      "file": "rules/assassination.json",
+      "rotation_group_count": 4,
+      "priority_row_count": 32,
+      "advanced_item_count": 10
+    }
+  ]
+}

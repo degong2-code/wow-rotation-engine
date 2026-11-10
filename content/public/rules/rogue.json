@@ -1,0 +1,549 @@
+{
+  "schema_version": "public-v1",
+  "guide_id": "rogue",
+  "class_ko": "도적",
+  "spec_ko": "잠행",
+  "hero_options": [
+    "trickster"
+  ],
+  "source_url": "https://www.wowhead.com/guide/classes/rogue/subtlety/rotation-cooldowns-pve-dps",
+  "source_note": "Derived analytical rule metadata from user-edited V11; original article text and full translations excluded.",
+  "baseline_v11_sha256": "5d70279c4dd073eccef1f3b13565a8f555cd81c9f0a5b7eda7e3485e410742be",
+  "rotation_groups": [
+    {
+      "id": "rogue:rogue-rotation:table-1",
+      "scenario": {
+        "hero": "trickster",
+        "target_min": 1,
+        "target_max": 1,
+        "mode": "single_target",
+        "phase": "shadow_dance_active"
+      },
+      "source_section": "rogue-rotation",
+      "rules": [
+        {
+          "id": "rogue:rogue-rotation:table-1:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": null,
+            "name_ko": null,
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "resource_pooling"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rogue-rotation table.priority[1] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "2d95ead416c6e3ce3dbebdfbcb2b767aa39ea5202b09a2d0d28134f64258a7af",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "rogue:rogue-rotation:table-1:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": null,
+            "name_ko": null,
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rogue-rotation table.priority[1] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "18a6fea554e79e77c43b905fc285b3c8daed1befb1b67ef59686c0aa781a89b2",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    },
+    {
+      "id": "rogue:rogue-rotation:table-2",
+      "scenario": {
+        "hero": "trickster",
+        "target_min": 1,
+        "target_max": 1,
+        "mode": "single_target",
+        "phase": "shadow_dance_inactive"
+      },
+      "source_section": "rogue-rotation",
+      "rules": [
+        {
+          "id": "rogue:rogue-rotation:table-2:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": null,
+            "name_ko": null,
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "resource_pooling"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rogue-rotation table.priority[2] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "1e0a81ce1b0eba9863b7e00f05094180960da851979fc9fdbd48568a5aaa8e23",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "rogue:rogue-rotation:table-2:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": null,
+            "name_ko": null,
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rogue-rotation table.priority[2] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "4915ebc6719ac2861f9508f3ba0b58265b66cbe4fc6ec618cff06b051110aae1",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    },
+    {
+      "id": "rogue:rogue-rotation:table-3",
+      "scenario": {
+        "hero": "trickster",
+        "target_min": 2,
+        "target_max": null,
+        "mode": "aoe",
+        "phase": "shadow_dance_active"
+      },
+      "source_section": "rogue-rotation",
+      "rules": [
+        {
+          "id": "rogue:rogue-rotation:table-3:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": null,
+            "name_ko": null,
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "resource_pooling"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rogue-rotation table.priority[3] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "abc6f030f86252d3beb9c8ab07789e6f2c00c73ab88a014fad6e9aa8c1e702d9",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "rogue:rogue-rotation:table-3:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": null,
+            "name_ko": null,
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "resource_pooling"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rogue-rotation table.priority[3] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "ae9d38c557b5c8a9b03b9b19df3ee795bbb6ebf982d4fdd7a534af422b4c1d84",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "rogue:rogue-rotation:table-3:row-3",
+          "order": 3,
+          "priority": 3,
+          "action": {
+            "spell_id": null,
+            "name_ko": null,
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "resource_pooling",
+              "aoe_targeting"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rogue-rotation table.priority[3] tbody tr:nth-child(3)",
+            "v11_fragment_sha256": "ea378963ccdb9cd7e089882ba9ce423d35fc1d1d03af6cc561fbc105a989335b",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "rogue:rogue-rotation:table-3:row-4",
+          "order": 4,
+          "priority": 4,
+          "action": {
+            "spell_id": null,
+            "name_ko": null,
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rogue-rotation table.priority[3] tbody tr:nth-child(4)",
+            "v11_fragment_sha256": "4611dba1e98040c9c958560eb05ee65b8bb77382ae3e86b9c29b73f7e6aa6b8e",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    },
+    {
+      "id": "rogue:rogue-rotation:table-4",
+      "scenario": {
+        "hero": "trickster",
+        "target_min": 2,
+        "target_max": null,
+        "mode": "aoe",
+        "phase": "shadow_dance_inactive"
+      },
+      "source_section": "rogue-rotation",
+      "rules": [
+        {
+          "id": "rogue:rogue-rotation:table-4:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": null,
+            "name_ko": null,
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "resource_pooling"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rogue-rotation table.priority[4] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "0b84d5b0795e32139d095b0be171faade5fb7effb5f91b955d65a9760870bbaa",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "rogue:rogue-rotation:table-4:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": null,
+            "name_ko": null,
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "resource_pooling",
+              "aoe_targeting"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rogue-rotation table.priority[4] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "8b928b36433175c2fb346fa74d0ca7a0c7fe75e034066c18730c63a85da243ed",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "rogue:rogue-rotation:table-4:row-3",
+          "order": 3,
+          "priority": 3,
+          "action": {
+            "spell_id": null,
+            "name_ko": null,
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rogue-rotation table.priority[4] tbody tr:nth-child(3)",
+            "v11_fragment_sha256": "1679bc0869936163cc6f4d3cd1298dad5de8dd51ea2870d7460abdf530996ad6",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    },
+    {
+      "id": "rogue:rogue-rotation:table-5",
+      "scenario": {
+        "hero": "trickster",
+        "target_min": null,
+        "target_max": null,
+        "mode": "both",
+        "phase": "cooldown_condition"
+      },
+      "source_section": "rogue-rotation",
+      "rules": [
+        {
+          "id": "rogue:rogue-rotation:table-5:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": 185313,
+            "name_ko": "어둠의 춤",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "resource_pooling"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rogue-rotation table.priority[5] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "eab17c3e0dd80ed67a8c53b2a19bd7d4f5626322ad44efe3da409e999ea3dfac",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "rogue:rogue-rotation:table-5:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": 121471,
+            "name_ko": "어둠의 칼날",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cooldown_alignment"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rogue-rotation table.priority[5] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "4f725837977e619fe6bc21365b85a8bfd54fab2946e29ad3213b34d3b23b094b",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "rogue:rogue-rotation:table-5:row-3",
+          "order": 3,
+          "priority": 3,
+          "action": {
+            "spell_id": 426591,
+            "name_ko": "피아귀의 이빨",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cooldown_alignment"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rogue-rotation table.priority[5] tbody tr:nth-child(3)",
+            "v11_fragment_sha256": "4f3165b0aabd4a6ab80c66ddaae105922dc6439c554d5d1da8b487f20e448bbd",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "rogue:rogue-rotation:table-5:row-4",
+          "order": 4,
+          "priority": 4,
+          "action": {
+            "spell_id": 1856,
+            "name_ko": "소멸",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "resource_pooling"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#rogue-rotation table.priority[5] tbody tr:nth-child(4)",
+            "v11_fragment_sha256": "af57d443662e8fc5cd9e1ce98a088a61ebd6d3ee2a297590d2c01dbeb9e57b5c",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    }
+  ],
+  "advanced_guidance_index": [
+    {
+      "id": "rogue:rogue-advanced:tip-1",
+      "topic": "가속과 어둠의 춤 종료 타이밍",
+      "semantic_tags": [
+        "cooldown_alignment",
+        "trinket_usage",
+        "buff_management"
+      ],
+      "provenance": {
+        "locator": "section#rogue-advanced advanced-item[1]",
+        "v11_fragment_sha256": "d4392ddd11a80a7b598c20bd8a85b31e9193e789b45094ce83585368f1f500f7",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "rogue:rogue-advanced:tip-2",
+      "topic": "가속과 어둠의 춤 종료 타이밍",
+      "semantic_tags": [
+        "cooldown_alignment",
+        "cast_timing"
+      ],
+      "provenance": {
+        "locator": "section#rogue-advanced advanced-item[2]",
+        "v11_fragment_sha256": "8616590f424cbd535173ca8eb3f6d72865203b8fca6274447dcc72c0f056f006",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "rogue:rogue-advanced:tip-3",
+      "topic": "고대의 기술 과 강력한 마무리 일격",
+      "semantic_tags": [
+        "resource_pooling",
+        "aoe_targeting",
+        "buff_management"
+      ],
+      "provenance": {
+        "locator": "section#rogue-advanced advanced-item[3]",
+        "v11_fragment_sha256": "20f58e68f249231cf0323681260d0e247c67d3254097429e9432a31af3ae9247",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "rogue:rogue-advanced:tip-4",
+      "topic": "고대의 기술 과 강력한 마무리 일격",
+      "semantic_tags": [
+        "cooldown_alignment",
+        "resource_pooling",
+        "aoe_targeting",
+        "buff_management"
+      ],
+      "provenance": {
+        "locator": "section#rogue-advanced advanced-item[4]",
+        "v11_fragment_sha256": "cd2205a810ad7c25d9b1810f7367f90b55b2c23860fc737d0b844f133678fe2a",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "rogue:rogue-advanced:tip-5",
+      "topic": "최후의 일격 의 GCD 문제",
+      "semantic_tags": [
+        "cast_timing"
+      ],
+      "provenance": {
+        "locator": "section#rogue-advanced advanced-item[5]",
+        "v11_fragment_sha256": "3390a9c6fb2b6411167f7a551500c681a80f1f857282a498f24887a94cb8c01e",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "rogue:rogue-advanced:tip-6",
+      "topic": "어둠의 춤 매크로의 역할",
+      "semantic_tags": [
+        "cooldown_alignment",
+        "cast_timing",
+        "macro_optimization"
+      ],
+      "provenance": {
+        "locator": "section#rogue-advanced advanced-item[6]",
+        "v11_fragment_sha256": "f287653ec039b77512d1366775c1765cbdc8611b03d0743fccbfd586204c13df",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "rogue:rogue-advanced:tip-7",
+      "topic": "어둠의 춤 매크로의 역할",
+      "semantic_tags": [
+        "cooldown_alignment",
+        "macro_optimization"
+      ],
+      "provenance": {
+        "locator": "section#rogue-advanced advanced-item[7]",
+        "v11_fragment_sha256": "19f1cb9b4b2df5ee14b73e3e6b852998cef1683967b183ecfec6b2a5a81f2234",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "rogue:rogue-advanced:tip-8",
+      "topic": "고대의 기술 발동의 구체적인 판단 조건",
+      "semantic_tags": [
+        "resource_pooling",
+        "aoe_targeting",
+        "buff_management"
+      ],
+      "provenance": {
+        "locator": "section#rogue-advanced advanced-item[8]",
+        "v11_fragment_sha256": "f4b69b9afd84dde21ebb58eb94c614efcdd6601d3c08121c438cea67b767589c",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    }
+  ],
+  "publication": {
+    "status": "review_required",
+    "automatic_publish_allowed": false
+  }
+}

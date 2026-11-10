@@ -35,9 +35,20 @@ jobs:
           cp dist/index.html /tmp/rotation-demo-first.html
           python -m engine build --input examples/synthetic.json --output dist/index.html --allow-demo
           cmp /tmp/rotation-demo-first.html dist/index.html
-      - name: Upload validated demo artifact
+      - name: Validate public V11-derived rule metadata
+        run: python -m engine.public_data validate
+      - name: Build public rule index (not an actionable guide)
+        run: python -m engine.public_data build --output dist/public-index.html
+      - name: Confirm public index deterministic
+        run: |
+          cp dist/public-index.html /tmp/rotation-public-first.html
+          python -m engine.public_data build --output dist/public-index.html
+          cmp /tmp/rotation-public-first.html dist/public-index.html
+      - name: Upload validated artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: wow-engine-demo-html
-          path: dist/index.html
+          name: wow-engine-data-review-html
+          path: |
+            dist/index.html
+            dist/public-index.html
           retention-days: 7

@@ -1,0 +1,965 @@
+{
+  "schema_version": "public-v1",
+  "guide_id": "assassination",
+  "class_ko": "도적",
+  "spec_ko": "암살",
+  "hero_options": [
+    "fatebound",
+    "deathstalker"
+  ],
+  "source_url": "https://www.wowhead.com/guide/classes/rogue/assassination/rotation-cooldowns-pve-dps",
+  "source_note": "Derived analytical rule metadata from user-edited V11; original article text and full translations excluded.",
+  "baseline_v11_sha256": "5d70279c4dd073eccef1f3b13565a8f555cd81c9f0a5b7eda7e3485e410742be",
+  "rotation_groups": [
+    {
+      "id": "assassination:assassination-rotation:table-1",
+      "scenario": {
+        "hero": "fatebound",
+        "target_min": 1,
+        "target_max": 1,
+        "mode": "single_target",
+        "phase": "unspecified"
+      },
+      "source_section": "assassination-rotation",
+      "rules": [
+        {
+          "id": "assassination:assassination-rotation:table-1:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": 703,
+            "name_ko": "목조르기",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "buff_management"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[1] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "59e568eef78508e75ef78532164c970601e7b7463179c75e2303649ef62f61b6",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-1:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": 1329,
+            "name_ko": "절단",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [
+              {
+                "field": "combo_points",
+                "op": "gte",
+                "value": 5
+              }
+            ],
+            "semantic_tags": [
+              "resource_pooling"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[1] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "1e2220a3b5c105edbbd6f3411971bcc79191370c0fbbb59eedda0065e79f48e0",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-1:row-3",
+          "order": 3,
+          "priority": 3,
+          "action": {
+            "spell_id": 1943,
+            "name_ko": "파열",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "buff_management"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[1] tbody tr:nth-child(3)",
+            "v11_fragment_sha256": "13b0d9c14ff497a891467c93c447557fbd91249d3eae49c23e7087d9fc644060",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-1:row-4",
+          "order": 4,
+          "priority": 4,
+          "action": {
+            "spell_id": 1856,
+            "name_ko": "소멸",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cooldown_alignment"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[1] tbody tr:nth-child(4)",
+            "v11_fragment_sha256": "610da1b7ccd2f109de7d8ebb057e5dc0f03a0245eae6c3b4043f1d00a73b9eec",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-1:row-5",
+          "order": 5,
+          "priority": 5,
+          "action": {
+            "spell_id": 360194,
+            "name_ko": "죽음표식",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cooldown_alignment"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[1] tbody tr:nth-child(5)",
+            "v11_fragment_sha256": "18c63da46ad1560f22e08af13f5827e6ceb7394589f8e193862ac28299d10a60",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-1:row-6",
+          "order": 6,
+          "priority": 6,
+          "action": {
+            "spell_id": 385627,
+            "name_ko": "왕의 파멸",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cooldown_alignment"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[1] tbody tr:nth-child(6)",
+            "v11_fragment_sha256": "ed781623923a371185b4aab2dea80b8e7b1de2deb5eae89be44f158341e4cd63",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-1:row-7",
+          "order": 7,
+          "priority": 7,
+          "action": {
+            "spell_id": 32645,
+            "name_ko": "독살",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [
+              {
+                "field": "combo_points",
+                "op": "gte",
+                "value": 5
+              }
+            ],
+            "semantic_tags": [
+              "resource_pooling",
+              "buff_management"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[1] tbody tr:nth-child(7)",
+            "v11_fragment_sha256": "13f805c8156477f0d18d00c505397cdfb467d3bb209585f61567e018c15e626b",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    },
+    {
+      "id": "assassination:assassination-rotation:table-2",
+      "scenario": {
+        "hero": "fatebound",
+        "target_min": null,
+        "target_max": null,
+        "mode": "aoe",
+        "phase": "unspecified"
+      },
+      "source_section": "assassination-rotation",
+      "rules": [
+        {
+          "id": "assassination:assassination-rotation:table-2:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": 703,
+            "name_ko": "목조르기",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "buff_management"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[2] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "28b3b7758e7f09f6037969eac4e7494bb634a3be7d8998673126fd075a8f3a38",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-2:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": 1943,
+            "name_ko": "파열",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "buff_management"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[2] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "6bc98f7a5de7810b137b5ea29017e55ae6f5850303a34cd8608320cc4afb085d",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-2:row-3",
+          "order": 3,
+          "priority": 3,
+          "action": {
+            "spell_id": 1247227,
+            "name_ko": "혈폭풍",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[2] tbody tr:nth-child(3)",
+            "v11_fragment_sha256": "8d9fff4e43d7cd333f40f6348d739b1392f07c9815f7990671870153a10d9828",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-2:row-4",
+          "order": 4,
+          "priority": 4,
+          "action": {
+            "spell_id": 51723,
+            "name_ko": "칼날 부채",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "resource_pooling",
+              "aoe_targeting"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[2] tbody tr:nth-child(4)",
+            "v11_fragment_sha256": "bf3a8276a43922608ef896626fea4d7d662237d51fe311ce6d4b1a9425501bb8",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-2:row-5",
+          "order": 5,
+          "priority": 5,
+          "action": {
+            "spell_id": 1856,
+            "name_ko": "소멸",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[2] tbody tr:nth-child(5)",
+            "v11_fragment_sha256": "d2f4768bc1a51c1ce6c6a6b216551ed4cf6be970e2ee23ca7e8b1aed70d9c658",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-2:row-6",
+          "order": 6,
+          "priority": 6,
+          "action": {
+            "spell_id": 360194,
+            "name_ko": "죽음표식",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[2] tbody tr:nth-child(6)",
+            "v11_fragment_sha256": "c42e769bf2f70be4352071d85563ac298f049632655d1f9ec2691889e7158ce7",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-2:row-7",
+          "order": 7,
+          "priority": 7,
+          "action": {
+            "spell_id": 385627,
+            "name_ko": "왕의 파멸",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cooldown_alignment"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[2] tbody tr:nth-child(7)",
+            "v11_fragment_sha256": "171f86c6fb303199ad9ce62a32daa12ca206e78b834b88a85edafa29649a056f",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-2:row-8",
+          "order": 8,
+          "priority": 8,
+          "action": {
+            "spell_id": 32645,
+            "name_ko": "독살",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "resource_pooling"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[2] tbody tr:nth-child(8)",
+            "v11_fragment_sha256": "1a1cf494b67535ed2bc4d74bdc60d96cdc096e8601f7dc0b6df46e5bc7e18222",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    },
+    {
+      "id": "assassination:assassination-rotation:table-3",
+      "scenario": {
+        "hero": "deathstalker",
+        "target_min": 1,
+        "target_max": 1,
+        "mode": "single_target",
+        "phase": "unspecified"
+      },
+      "source_section": "assassination-rotation",
+      "rules": [
+        {
+          "id": "assassination:assassination-rotation:table-3:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": 703,
+            "name_ko": "목조르기",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "buff_management"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[3] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "59e568eef78508e75ef78532164c970601e7b7463179c75e2303649ef62f61b6",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-3:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": 5938,
+            "name_ko": "독칼",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cooldown_alignment",
+              "resource_pooling"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[3] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "334b1dd1e5083bbeefef0afd4b733cfce178416536f8a322e3e72391392d32a0",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-3:row-3",
+          "order": 3,
+          "priority": 3,
+          "action": {
+            "spell_id": 1329,
+            "name_ko": "절단",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "resource_pooling"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[3] tbody tr:nth-child(3)",
+            "v11_fragment_sha256": "67efbc1b1ad8a358a74d7a9b587322f6e57848f585ed52605688b742f13bfe56",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-3:row-4",
+          "order": 4,
+          "priority": 4,
+          "action": {
+            "spell_id": 32645,
+            "name_ko": "독살",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "resource_pooling",
+              "buff_management"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[3] tbody tr:nth-child(4)",
+            "v11_fragment_sha256": "5d2cbb45367c48abe3b81627eb1ecbd5adb7f36a30e4300b0477145164e5e36c",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-3:row-5",
+          "order": 5,
+          "priority": 5,
+          "action": {
+            "spell_id": 1943,
+            "name_ko": "파열",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "buff_management"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[3] tbody tr:nth-child(5)",
+            "v11_fragment_sha256": "6d84e01b60e5bceb5571cdd596063c5cef00b62fab635f5b3c71d71cdf407e26",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-3:row-6",
+          "order": 6,
+          "priority": 6,
+          "action": {
+            "spell_id": 1856,
+            "name_ko": "소멸",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cooldown_alignment"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[3] tbody tr:nth-child(6)",
+            "v11_fragment_sha256": "34e4ea4806f576e5ec17c2f32d2502f5f899e03673d6b0e99803c4cbaab9a17b",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-3:row-7",
+          "order": 7,
+          "priority": 7,
+          "action": {
+            "spell_id": 360194,
+            "name_ko": "죽음표식",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[3] tbody tr:nth-child(7)",
+            "v11_fragment_sha256": "798882aca56250aa446ce585707609bccc406e605e4c39f40cf47f1a6314b86b",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-3:row-8",
+          "order": 8,
+          "priority": 8,
+          "action": {
+            "spell_id": 385627,
+            "name_ko": "왕의 파멸",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cooldown_alignment"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[3] tbody tr:nth-child(8)",
+            "v11_fragment_sha256": "0de54828724d20944478b367c1c48dab771d5cbe34b66696f38a15d17b63cd58",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-3:row-9",
+          "order": 9,
+          "priority": 9,
+          "action": {
+            "spell_id": 32645,
+            "name_ko": "독살",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "buff_management"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[3] tbody tr:nth-child(9)",
+            "v11_fragment_sha256": "d64e4b854a54ac2f7f3db612120d6b4de517692ea4eaff40af732d8b895e83b1",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    },
+    {
+      "id": "assassination:assassination-rotation:table-4",
+      "scenario": {
+        "hero": "deathstalker",
+        "target_min": null,
+        "target_max": null,
+        "mode": "aoe",
+        "phase": "unspecified"
+      },
+      "source_section": "assassination-rotation",
+      "rules": [
+        {
+          "id": "assassination:assassination-rotation:table-4:row-1",
+          "order": 1,
+          "priority": 1,
+          "action": {
+            "spell_id": 703,
+            "name_ko": "목조르기",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "buff_management"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[4] tbody tr:nth-child(1)",
+            "v11_fragment_sha256": "28b3b7758e7f09f6037969eac4e7494bb634a3be7d8998673126fd075a8f3a38",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-4:row-2",
+          "order": 2,
+          "priority": 2,
+          "action": {
+            "spell_id": 1943,
+            "name_ko": "파열",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "buff_management"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[4] tbody tr:nth-child(2)",
+            "v11_fragment_sha256": "a2d805d2bfa9f9989b8827ccce31976b990b45f5da3cdbd39b0963616c88dee8",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-4:row-3",
+          "order": 3,
+          "priority": 3,
+          "action": {
+            "spell_id": 1247227,
+            "name_ko": "혈폭풍",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[4] tbody tr:nth-child(3)",
+            "v11_fragment_sha256": "c99661e930581fe89ae8e4aa215862cc8bedf0c9b0fbb1b97dcec0d72f7044f6",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-4:row-4",
+          "order": 4,
+          "priority": 4,
+          "action": {
+            "spell_id": 51723,
+            "name_ko": "칼날 부채",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "resource_pooling",
+              "aoe_targeting"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[4] tbody tr:nth-child(4)",
+            "v11_fragment_sha256": "2fb2cd80a7b08a4a0b646193d0beefc2d8d44fbc128b98ff97d0bce079d56a3b",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-4:row-5",
+          "order": 5,
+          "priority": 5,
+          "action": {
+            "spell_id": 1856,
+            "name_ko": "소멸",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "buff_management"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[4] tbody tr:nth-child(5)",
+            "v11_fragment_sha256": "c845cf82679623bfb33b6045545067fd7bcc94809aa6c3f594ee264d4b4f62d0",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-4:row-6",
+          "order": 6,
+          "priority": 6,
+          "action": {
+            "spell_id": 360194,
+            "name_ko": "죽음표식",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[4] tbody tr:nth-child(6)",
+            "v11_fragment_sha256": "c42e769bf2f70be4352071d85563ac298f049632655d1f9ec2691889e7158ce7",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-4:row-7",
+          "order": 7,
+          "priority": 7,
+          "action": {
+            "spell_id": 385627,
+            "name_ko": "왕의 파멸",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "cooldown_alignment"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[4] tbody tr:nth-child(7)",
+            "v11_fragment_sha256": "171f86c6fb303199ad9ce62a32daa12ca206e78b834b88a85edafa29649a056f",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        },
+        {
+          "id": "assassination:assassination-rotation:table-4:row-8",
+          "order": 8,
+          "priority": 8,
+          "action": {
+            "spell_id": 32645,
+            "name_ko": "독살",
+            "kind": "ability"
+          },
+          "condition": {
+            "machine_predicates": [],
+            "semantic_tags": [
+              "buff_management"
+            ],
+            "state": "needs_manual_interpretation"
+          },
+          "provenance": {
+            "locator": "section#assassination-rotation table.priority[4] tbody tr:nth-child(8)",
+            "v11_fragment_sha256": "b28f83ac1d19835a53a1a30bac511f9ddb5228239aa0b523c112741bc61fa0e4",
+            "external_source_verified": false
+          },
+          "review": "pending"
+        }
+      ]
+    }
+  ],
+  "advanced_guidance_index": [
+    {
+      "id": "assassination:assassination-advanced:tip-1",
+      "topic": "기력 비축(Pooling)과 독살 연속 강화",
+      "semantic_tags": [
+        "resource_pooling",
+        "buff_management"
+      ],
+      "provenance": {
+        "locator": "section#assassination-advanced advanced-item[1]",
+        "v11_fragment_sha256": "3c13f2d810a08f79106b2009fed7bd00bc916259a94d2906d6189a1c6d67f520",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "assassination:assassination-advanced:tip-2",
+      "topic": "기력 비축(Pooling)과 독살 연속 강화",
+      "semantic_tags": [
+        "cooldown_alignment",
+        "resource_pooling",
+        "aoe_targeting",
+        "buff_management"
+      ],
+      "provenance": {
+        "locator": "section#assassination-advanced advanced-item[2]",
+        "v11_fragment_sha256": "26e6d3bb6052c60dbd136a57793855284e47b8b6796b914ebb75c16592c572b1",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "assassination:assassination-advanced:tip-3",
+      "topic": "운명결속자 · 독칼은 선택적 최적화",
+      "semantic_tags": [
+        "defensive_usage"
+      ],
+      "provenance": {
+        "locator": "section#assassination-advanced advanced-item[3]",
+        "v11_fragment_sha256": "93f1a04ebd7de470ca418b1c3f0ff131c31ea9d89deee6ebaa6526d0c577ed8d",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "assassination:assassination-advanced:tip-4",
+      "topic": "운명결속자 · 독칼은 선택적 최적화",
+      "semantic_tags": [
+        "defensive_usage"
+      ],
+      "provenance": {
+        "locator": "section#assassination-advanced advanced-item[4]",
+        "v11_fragment_sha256": "09bf7e0eb4e71e5e129c4b7556667b4b73517da54c3292653c6aab4915b1992b",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "assassination:assassination-advanced:tip-5",
+      "topic": "죽음추적자 · 어둡고 어두운 밤",
+      "semantic_tags": [
+        "resource_pooling",
+        "buff_management"
+      ],
+      "provenance": {
+        "locator": "section#assassination-advanced advanced-item[5]",
+        "v11_fragment_sha256": "9ba8a5a304f343d7643dccf449c0485f2dddfefba495c4ae87f5b9bc5794ab02",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "assassination:assassination-advanced:tip-6",
+      "topic": "죽음추적자 · 어둡고 어두운 밤",
+      "semantic_tags": [
+        "resource_pooling",
+        "aoe_targeting",
+        "buff_management"
+      ],
+      "provenance": {
+        "locator": "section#assassination-advanced advanced-item[6]",
+        "v11_fragment_sha256": "d8d8540a70f6a50725d1410c6539ed539a662fc727f5aa8d4e4cdf9bc37c7cec",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "assassination:assassination-advanced:tip-7",
+      "topic": "죽음추적자 · 독칼과 칼날 부채",
+      "semantic_tags": [
+        "cooldown_alignment",
+        "resource_pooling"
+      ],
+      "provenance": {
+        "locator": "section#assassination-advanced advanced-item[7]",
+        "v11_fragment_sha256": "81bf8ed97b6d516535a76b4af8ced89ca13ebf887152ea493ac5a7cd346c7b3d",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "assassination:assassination-advanced:tip-8",
+      "topic": "광역 · 피의 향기 중첩 준비",
+      "semantic_tags": [
+        "cooldown_alignment",
+        "aoe_targeting",
+        "buff_management"
+      ],
+      "provenance": {
+        "locator": "section#assassination-advanced advanced-item[8]",
+        "v11_fragment_sha256": "16cd1637b535bebb61efa40a460919f48ab39d705e924567a6ee1391579859cc",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "assassination:assassination-advanced:tip-9",
+      "topic": "광역 · 피의 향기 중첩 준비",
+      "semantic_tags": [
+        "resource_pooling",
+        "aoe_targeting"
+      ],
+      "provenance": {
+        "locator": "section#assassination-advanced advanced-item[9]",
+        "v11_fragment_sha256": "58b7edf625852d8e03687afb48385675e660d23dc992237f242d8852f74833df",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    },
+    {
+      "id": "assassination:assassination-advanced:tip-10",
+      "topic": "우선순위 간 교차 적용 주의",
+      "semantic_tags": [
+        "resource_pooling"
+      ],
+      "provenance": {
+        "locator": "section#assassination-advanced advanced-item[10]",
+        "v11_fragment_sha256": "4e9e6b782e348b428204c493a49738a214d733f833389ea49e6d1fd0d62cf5d7",
+        "external_source_verified": false
+      },
+      "review": "pending",
+      "full_text_in_public_dataset": false
+    }
+  ],
+  "publication": {
+    "status": "review_required",
+    "automatic_publish_allowed": false
+  }
+}
