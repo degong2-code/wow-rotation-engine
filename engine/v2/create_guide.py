@@ -25,6 +25,7 @@ from bs4 import BeautifulSoup
 from .build import ROOT
 from .html_spans import SpanParser, find_class
 from .fidelity import audit_create_fragment
+from .annotations import validate_notes, render_note, render_legend
 from .mechanics import validate as validate_mechanics, render_flows, render_comparisons, rich
 
 BASELINE_SHA = "5d70279c4dd073eccef1f3b13565a8f555cd81c9f0a5b7eda7e3485e410742be"
@@ -160,6 +161,7 @@ def validate_draft(doc: dict) -> dict:
         if not tip["text"] or not tip["topic"]:
             raise ValueError("Missing advanced tip body")
     validate_mechanics(editorial["mechanics"], doc)
+    validate_notes(doc)
     return {
         "spells": spells,
         "row_count": len(row_ids),
@@ -206,14 +208,14 @@ def _aside(title: str, body: str, *, caution: bool = False) -> str:
     )
 
 
-def _priority(group: dict, spells: dict, number: str) -> str:
+def _priority(group: dict, spells: dict, number: str, note_for=None) -> str:
     rows = []
     for row in group["rows"]:
         rows.append(
             '<tr data-rule-id="' + _e(row["id"]) + '"><td>' + str(row["order"])
             + '</td><td>' + _spell(spells[row["spell"]])
             + '</td><td><b>' + _e(row["condition"])
-            + '</b><div class="muted">' + _e(row["comment"])
+            + '</b> ' + (note_for("rule", row["id"]) if note_for else "") + '<div class="muted">' + _e(row["comment"])
             + '</div></td></tr>'
         )
     return (
@@ -248,6 +250,10 @@ def render_arcane(doc: dict) -> dict:
     spellmap = meta["spells"]
     spells_by_key = {spell["key"]: spell for spell in doc["spells"]}
     def link(t): return rich(t, spells_by_key, _spell)
+    notes = validate_notes(doc)
+    def note_for(kind, identifier):
+        note = notes.get((kind, identifier))
+        return render_note(note) if note is not None else ""
     hero_labels = {"sunfury": "성난태양", "spellslinger": "주문술사"}
     switch = _hero_switch(doc["default_hero"])
     editorial = doc["editorial"]
@@ -279,7 +285,7 @@ def render_arcane(doc: dict) -> dict:
         )
 
     overview = (
-        '<p>' + _e(editorial["overview"]["lead"]) + '</p>' + switch
+        '<p>' + _e(editorial["overview"]["lead"]) + '</p>' + switch + render_legend()
         + "".join(overview_variants)
         + '<h3>읽는 순서</h3><ol class="principles">'
         + "".join('<li>' + _e(value) + '</li>' for value in editorial["overview"]["decision_order"])
@@ -297,8 +303,8 @@ def render_arcane(doc: dict) -> dict:
             '<h3>' + _e(item["heading"]) + '</h3><p>' + _e(item["body"]) + '</p>'
             for item in doc["principles"]
         )
-        + render_flows(editorial["mechanics"], "basics", spells_by_key, _spell)
-        + render_comparisons(editorial["mechanics"], spells_by_key, _spell)
+        + render_flows(editorial["mechanics"], "basics", spells_by_key, _spell, note_for)
+        + render_comparisons(editorial["mechanics"], spells_by_key, _spell, note_for)
         + _aside('조건을 읽을 때', chapters["basics"]["caution"])
     )
     opener = (
@@ -308,7 +314,7 @@ def render_arcane(doc: dict) -> dict:
             + _e(step["condition"]) + ' <span class="muted">'
             + _e(step["note"]) + '</span></li>' for step in doc["opener"]
         ) + '</ol>'
-        + render_flows(editorial["mechanics"], "opener", spells_by_key, _spell)
+        + render_flows(editorial["mechanics"], "opener", spells_by_key, _spell, note_for)
         + _aside('오프너를 고정 시퀀스로 사용하지 마세요', chapters["opener"]["caution"], caution=True)
     )
     rotations = (
@@ -317,7 +323,7 @@ def render_arcane(doc: dict) -> dict:
             '<div class="variant" data-hero="' + hero + '"><h3>'
             + hero_labels[hero] + ' · 시전 우선순위</h3>'
             + "".join(
-                _priority(group, spellmap, f"5.{index}")
+                _priority(group, spellmap, f"5.{index}", note_for)
                 for index, group in enumerate(
                     (g for g in doc["rotation_groups"] if g["hero"] == hero), 1
                 )
