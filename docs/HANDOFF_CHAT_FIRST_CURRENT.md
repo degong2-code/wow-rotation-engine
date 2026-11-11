@@ -3,7 +3,7 @@
 > **인계 기준일:** 2026-11-11 (KST)  
 > **상태:** 인계 준비 완료를 위한 증거 정본. 사용자 승인 없이 `main`·원본 교본·공개 Pages를 변경하지 않음.  
 > **우선순위:** **교본의 게임 상태·조건·행동 정확성 > 원리·예외 설명 > 사용성 > HTML 검증 > 독립 엔진 구현**.  
-> **이 문서는 새 채팅 복원 진입점**이다. 구체적 품질 게이트는 [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), 집필 절차는 [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)을 그대로 정본으로 삼으며 복제하지 않는다.
+> **이 문서는 새 채팅 복원 진입점**이다. 구체적 품질 게이트는 [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), 집필 절차는 [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)을 그대로 정본으로 삼으며 복제하지 않는다. **과거 사례로 범용화 가치/오탐을 검증하는 후향적 사례집은 [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md) 참조.**
 
 ## 1. 현재 제품 정의와 사용자 경험
 
