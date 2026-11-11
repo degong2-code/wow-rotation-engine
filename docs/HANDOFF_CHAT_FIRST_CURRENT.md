@@ -150,3 +150,5 @@
 - **2026-11-11 실제 HTML CREATE 결과:** `wow_rotation_v11_enhancement_review_v1.html` 고양 주술사 검토본, **원본 V11 7개 raw byte 동일**, 8전문화 통합·신규 4표/43행·PC/모바일 인터랙션 PASS, SHA256 `ef65b8d36d265e1d0786a87f6030c9b7b75ac2c89042252f0b132cdff602c3b8`. 파일은 해당 개인 채팅에 전달됐으며 **사용자 승인 미완/공개 GitHub에 HTML 없음**. 자세한 검증·범용화 판정은 [실제 제작 기록](QUALITY_FIRST_REAL_HTML_RUN_ENHANCEMENT_20261111.md) 참조.
 
 - **2026-11-11 고양 V2 실물 수정:** `wow_rotation_v11_enhancement_review_v2.html` SHA256 `b8938bd1402212fc57e01d9861ba07dbf192313e2ecc39af7ac15fb168e543e8`, 기존 7개 raw byte 동일, 4표/43행 유지. 사용자 V1 평가에 따른 조건·수치 중심 압축 및 V11 공통 서식·아이콘·기준선 정렬 정책은 [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md)와 [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), 증거는 [사례집 §15](QUALITY_GENERALIZATION_CASEBOOK.md) 참조. V2 개인 채팅 전달, 최종 사용자 승인 전 검토본. 외부 CDN 로딩·실전 최적화 미검증.
+
+- **고양 V2.1:** `wow_rotation_v11_enhancement_review_v2_1.html`, SHA256 `c06570fd49fd8cb527a7350cbe64e7c1d925bc9d50b62f2ccdfaa79c9e0b1f99`. 사용자 요청에 따라 M 정의와 필수 기초 메커니즘 보강. 원본 7개와 상세 우선순위 43행 문구 보존. [사례집 §16](QUALITY_GENERALIZATION_CASEBOOK.md) 및 정책 참고. 개인 채팅 전달, 사용자 최종 승인 대기.
