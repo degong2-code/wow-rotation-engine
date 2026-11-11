@@ -160,3 +160,11 @@ G01/G04/G06의 **전문화 간 독립 전이 효과는 미실증**이다. P·N �
 ## 16. 고양 V2.1 — 압축의 한계와 기초 정의 (2026-11-11)
 
 사용자 피드백: V2는 수치화가 개선됐지만 M=10의 뜻과 핵심 내용이 부족함. 원인은 정보 밀도 개선을 지나친 분량 압축으로 적용한 것. **범용 판단:** 기호 정의는 첫 사용 직전에, 핵심 자원·발동·세트 효과는 생성/소비/수치/행동을 연결하는 설명으로 보존한다. 고양의 개별 스택 수와 설명 길이는 일반화하지 않는다. 실제 V2.1: 요약표 앞 M 정의, 소용돌이치는 무기 기본 원리, 영웅별 환급/뜨거운 손, 휘몰아치는 정기, 세트 2/4 효과 보완. Wowhead 같은 사이트의 [기술·특성](https://www.wowhead.com/ko/guide/classes/shaman/enhancement/abilities-talents-pve-dps) 및 [시즌 세트](https://www.wowhead.com/guide/classes/shaman/enhancement/midnight-season-2) 자료로 해당 부분만 확인. 신규 교본 6,442→7,595자(핵심 보강), 상세 43행 문구 동일, 기존 7개 raw byte 동일, 링크 아이콘 매핑 20종. 오프라인 Chromium 1365/390px에서 정의·팝업·영웅 전환·가로 넘침·JS 오류 검사 통과. 실전 최적화·외부 이미지 로딩·사용자 승인 미완. 개인 HTML은 비공개 전달. 별도 검증 엔진 불필요.
+
+## 17. 징벌 성기사 — 압축과 핵심 설명의 독립 전문화 적용 (2026-11-11)
+
+고양 V2.1 피드백을 처음부터 새 전문화에 적용한 실제 제작. 개인 검토본 `wow_rotation_v11_retribution_review_v1.html` (1,043,615 bytes, SHA256 `c4fd209d7dcc185c784d971da8e476b17e5c6b906a93c0dcab412986006dc408`). 기존 V11 7개 원시 바이트 7/7 동일, 미승인 고양은 포함하지 않음. 8절, 기사단/태양의 사자 ST/AoE 4표 55행(14/14/13/14), 표시 텍스트 7,118자, 조건 칸 701자, 주문 ID/아이콘 파일명 16종. 수치 H(신성한 힘 0~5)는 요약 전 정의, 자원 생성/소비·전쟁의 기술·시즌 2/4세트·영웅별 기초 원리를 남기고 상세 조건은 짧게 작성. 같은 V11 공통 스타일 및 baseline 보정 재사용.
+
+- **출처와 예외:** [Wowhead 운용](https://www.wowhead.com/ko/guide/classes/paladin/retribution/rotation-cooldowns-pve-dps) Bolas, 12.1.5, 2026-10-13. 같은 사이트 기술/특성 설명에 빛의 망치 비용 5·구세의 빛 50 잔존; [빛의 망치 주문](https://www.wowhead.com/ko/spell=427453), [구세의 빛 주문](https://www.wowhead.com/ko/spell=425518)에는 3/60. 비용 변경은 [Icy Veins 해당 패치 변경 내역](https://www.icy-veins.com/wow/retribution-paladin-pve-dps-guide)에서도 확인. 해당 쟁점만 교차검증하고 다른 로테이션을 섞지 않았다. 무료 망치 종료 임박의 임계 초수는 임의로 채우지 않음.
+- **검증:** 오프라인 Chromium set_content(1365×850/390×844), 초기 기사단, 태양의 사자 전환, 기술 팝업 열기/ESC 닫기, 냉기 주문술사 왕복, JS 오류 0 및 문서 가로 넘침 없음. h3/p/chapter/priority table/th/td의 fontSize/fontWeight/lineHeight/margins/paddings/color 비교값 일치. 링크 font/line-height와 부모 일치·baseline. 외부 CDN 로딩은 차단하여 미검증. 파일 URL 직접 탐색은 환경 차단으로 HTML 문자열 브라우저 로딩 사용.
+- **범용성 판정:** 고양 피드백에 따른 기호 정의·필수 메커니즘·조건 압축·서식 재사용을 신규 전문화에 재적용 가능함을 관측. 같은 작성자의 설명 페이지와 개별 주문 수치도 불일치할 수 있다는 사례는 기존 선택적 근거 확인 정책으로 해결했으며 새 검증기/정책은 불필요. 55행/7,118자/특정 수치 고정화 금지. Q0/Q1은 출처 근거 일부 대조, Q4 본문/기능 확인, 실제 플레이 최적화·사용자 Q2/Q3 평가 및 정본 승인 미완. 개인 HTML 비공개 전달. 반복 제작 품질 향상은 사용자 비교 후 판단.
