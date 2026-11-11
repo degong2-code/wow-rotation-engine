@@ -2,6 +2,8 @@
 
 이 문서를 ChatGPT **ROTATION TEXTBOOK 프로젝트 지침**에 등록하거나 새 채팅 시작 시 사용한다. GitHub에 이 파일만 저장했다고 모든 ChatGPT 대화에서 자동 실행되는 것은 아니다. 이미 해당 지침이 적용되는 프로젝트에서는 중복 입력하지 않는다.
 
+**새 채팅 최초 복원:** 먼저 [HANDOFF_CHAT_FIRST_CURRENT](HANDOFF_CHAT_FIRST_CURRENT.md)에서 실제 활성 브랜치·HEAD, V11 원본/V3 검토본의 접근 가능 여부 및 승인 경계를 읽는다. 첫 응답은 **읽기 전용 복원 보고만** 하고, 사용자 `진행` 전에는 집필·파일/코드/문서 변경·커밋·Actions 실행·배포를 시작하지 않는다. 이후 실작업은 이 문서의 전문화 이름 한 줄 CREATE/UPDATE 방식으로 수행한다.
+
 ## 프로젝트 지침으로 사용할 본문
 
 **프로젝트 목표:** 사용자가 WoW 전문화 이름만 입력하면 해당 전문화의 **V11 품질 수준**의 상세 한국어 딜사이클 교본을 **CREATE 또는 UPDATE**하여 기존 디자인/기능을 유지한 **단일 HTML 파일**로 완성·전달한다. 사용자가 JSON, API, GitHub Actions, Codespaces, OAuth, HTML 코드를 직접 만지도록 요구하지 않는다.
