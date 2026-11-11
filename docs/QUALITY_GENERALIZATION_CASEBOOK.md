@@ -249,3 +249,11 @@ G01/G04/G06의 **전문화 간 독립 전이 효과는 미실증**이다. P·N �
 
 [공개 Wowhead 실물 HTML 저장본](https://github.com/aurokin/warcraft_cli/blob/main/tests/fixtures/wowhead/guide_3087_page.html)(분노 전사 과거 버전)에서 `WH.markup.printHtml(..., "guide-body", ...)` 호출의 JS 문자열을 복호화해 **WHML 14,037자**를 추출했고 `data.pageMeta` JSON을 확인. 메뉴용 `interior-sidebar-related-markup`와 구분. 동일 원리를 사용하는 [제3자 파서](https://github.com/aurokin/warcraft_cli/blob/main/packages/wowhead-cli/src/wowhead_cli/page_parser.py)도 발견. 원본 HTML을 확보하면 WHML 탭·접힘·명명 툴팁 참조를 분석할 수 있다는 실제 구현 근거다. 개인 오프라인 검사기(표준 라이브러리만 사용)를 작성해 합성 5개 테스트 PASS. **최신 고양 12.1.5 원본 HTML/각 ? 팁→행 연결은 아직 접근 실패**, 따라서 수집 Gate A는 계속 미통과. 접근 제한 우회·사용자 로컬 설치를 기본으로 하지 않음.
 
+
+## 30. 고양 V3.4 조건 표현 회귀 방지 + WHML 이중 툴팁 누락 검출 (2026-11-11)
+
+- **실물 교본 V3.4:** 개인 `wow_rotation_v11_enhancement_v3_4_conditional_tip_review.html` (1,061,391 bytes; SHA256 `3af8b2c1305fb6776cb700671705de09e082c535e83c08ff3d7bdbf602442fc9`). [Wowhead 고양 12.1.5(2026-10-13)](https://www.wowhead.com/guide/classes/shaman/enhancement/rotation-cooldowns-pve-dps) 최신 Notes에서 토템술사의 소용돌이치는 무기는 **기본 10중첩 사용**, `5~9` 조기 소비는 **정기의 속도로 용암 채찍 재사용 대기시간 초기화 또는 뜨거운 손 연장** 시 예외로 명시. 기존 V3.3의 토템술사 ST/AoE 최하위 12순위 행에서 이 이유/예외가 보이지 않고 `M≥5`만 강조되던 문제를 두 행에 직접 반영. 우선순위 **9+10+12+12=43행**, 원본 7개 뷰·그 밖의 HTML 바이트 동일. Chromium 오프라인 데스크톱 1365x850/모바일 390x844 영웅 전환·도움말 `aria-expanded`/ESC 닫기·JS 오류 없음·가로 넘침 없음 PASS.
+- **원문 추출 감사:** 공개된 [Wowhead 작성 예시](https://www.wowhead.com/guide/help)에 `[span tooltip=... tooltip2=...]` 형태가 있음을 확인. 기존 개인 WHML 검사기는 `tooltip`만 집계하여 **동일 트리거의 2번째 설명 누락 위험**이 있었음. 검사기를 `tooltip2` 등 여러 참조, 중복 정의, 선행 참조 확인하도록 수정. 오프라인 단위 시험 **5→8 PASS**, 이름 참조 연결이 되더라도 **실제 우선순위 행 귀속 검증 0건**임을 분리. 검사기 `wowhead_whml_inspector.py`(SHA256 `cf1fef74771828d83421fd17250e08bd3c2393da9aa72954c98200468411392f`), 테스트 `test_wowhead_whml_inspector.py`(SHA256 `775b44d841d19f8d1df6d40fab860587f702db8760b6ec8ee8059a376ca2faba`). 두 파일 모두 사용자 대화에서만 제공, 저장소 미게시.
+- **원문 접근 범위:** 최신 Wowhead 12.1.5 원본 HTML/실제 `?` 툴팁 이름·상위 선택 상태는 **이번에도 미확보**, 따라서 원문 Gate A 미통과. 검색 색인의 Notes와 교본의 행 조건을 직접 대조한 범위만 확인. 공개 2026년 타 전문화의 HTML fixture에서 `data.pageMeta`와 `WH.markup.printHtml(...,"guide-body")` 존재를 확인했으나, 이를 최신 고양의 구현으로 단정하지 않는다.
+
+**반복 제작에 적용할 범용 규칙:** 원문 내용이 **존재해도 파서가 일부 참조 형식(예: `tooltip2`)을 무시하면 조용히 누락**된다. 반대로 파서가 이름을 연결해도 그 내용이 우선순위 행에 속하는지 입증되지 않으면 교본에 확정 반영하지 않는다. 순위 행에는 기준값과 조기 소비 예외를 직접 표시해 독자가 판단할 수 있도록 한다.

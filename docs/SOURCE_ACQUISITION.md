@@ -65,6 +65,8 @@
 
 [공개 Wowhead 실물 HTML 저장본](https://github.com/aurokin/warcraft_cli/blob/main/tests/fixtures/wowhead/guide_3087_page.html)(분노 전사 과거 버전)에서 `WH.markup.printHtml(..., "guide-body", ...)` 호출의 JS 문자열을 복호화해 **WHML 14,037자**를 추출했고 `data.pageMeta` JSON을 확인. 메뉴용 `interior-sidebar-related-markup`와 구분. 동일 원리를 사용하는 [제3자 파서](https://github.com/aurokin/warcraft_cli/blob/main/packages/wowhead-cli/src/wowhead_cli/page_parser.py)도 발견. 원본 HTML을 확보하면 WHML 탭·접힘·명명 툴팁 참조를 분석할 수 있다는 실제 구현 근거다. 개인 오프라인 검사기(표준 라이브러리만 사용)를 작성해 합성 5개 테스트 PASS. **최신 고양 12.1.5 원본 HTML/각 ? 팁→행 연결은 아직 접근 실패**, 따라서 수집 Gate A는 계속 미통과. 접근 제한 우회·사용자 로컬 설치를 기본으로 하지 않음.
 
+**누락 방지 강화 (2026-11-11):** Wowhead의 [공식 WHML 작성 예시](https://www.wowhead.com/guide/help)는 한 `[span]`에 `tooltip`과 **`tooltip2`**를 동시에 연결할 수 있음을 명시한다. 따라서 `tooltip` 하나만 읽거나 `?` 하나=설명 하나라고 가정하면 누락된다. `tooltip`, `tooltip2` 등 유효한 모든 이름 참조를 추적하고, 정의 중복/미발견은 **명시적 미해결**로 표시한다. **이름으로 설명 정의에 연결했다는 사실과 특정 우선순위 행에 연결했다는 사실은 별개**다. 행 귀속은 실제 부모 구조·상태·순위 식별자로 추가 입증해야 한다. 익명 `?` 아이콘이 없는 페이지의 경우 `해당 없음`은 실제 DOM 확인 뒤에만 사용한다.
+
 **실행 순서(필수, 특정 기술 구현에 종속되지 않음)**
 
 1. 페이지 전체의 관련 컨트롤과 섹션을 식별한다. 명칭이나 DOM 클래스의 고정 목록에 의존하지 않고 실제 표시·전환·펼침 동작을 확인한다. 관련 기술/특성·Talents·세트 페이지도 적용 빌드를 이해하는 데 필요하면 확인한다.
