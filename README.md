@@ -12,6 +12,8 @@ WoW 딜사이클 교본의 **V11 품질을 보존하면서 ChatGPT 채팅에서 
 
 **개발 방향:** 원래 직접 편집한 7개 V11 교본의 설명 깊이와 품질을 기준으로 한다. 신규 비전 초안이 짧거나 단순화된 부분을 보완하기 위해 사용자가 AI 로그인, JSON, Codespaces, Actions, API 키, 외부 관리 UI를 오가게 만들지 않는다. AI 인증 실험 PR #17~#19는 기록으로 보존하되 **기본 사용 경로에서 제외**했다.
 
+**새 채팅 독립 복원 진입점:** [HANDOFF_CHAT_FIRST_CURRENT — 현재 상태·V11/V3 파일 및 승인 구분·품질 게이트·다음 작업](docs/HANDOFF_CHAT_FIRST_CURRENT.md). 새 채팅은 이 문서부터 읽기 전용으로 복원하고 사용자 `진행` 승인 후 작업한다.
+
 **운영 정본:**
 - [ADR-003 — ChatGPT 중심 제작 결정](docs/ADR_003_CHAT_FIRST_EDITORIAL.md)
 - [CHAT_FIRST_PLAYBOOK — CREATE/UPDATE 작업 순서](docs/CHAT_FIRST_PLAYBOOK.md)
