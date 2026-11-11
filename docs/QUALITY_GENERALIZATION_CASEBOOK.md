@@ -184,3 +184,14 @@ G01/G04/G06의 **전문화 간 독립 전이 효과는 미실증**이다. P·N �
 - **[징벌](https://www.wowhead.com/guide/classes/paladin/retribution/rotation-cooldowns-pve-dps):** 직접 열람 텍스트에서 기사단 ST/AoE 각각 4순위까지만 나타남(4/13/4/14 = 35행). 동일 URL의 검색 색인에서는 기사단 ST/AoE 각 14행과 무료 빛의 망치의 하위 조건까지 나타남(14/13/14/14 = 55행). 징벌 V2는 55행과 무료 망치 조건을 보유. 따라서 직접 열람 한 번은 불충분하지만 이전 결과에 이 20행이 누락됐다는 주장은 성립하지 않음.
 - **[고양](https://www.wowhead.com/guide/classes/shaman/enhancement/rotation-cooldowns-pve-dps):** 직접 열람에서 43개 순위 행과 일부 hover 설명은 확인되지만 영웅별 Notes 제목만 노출되는 곳이 있고 쿨다운 탭의 하위 목록이 빠짐. 검색 색인에서 Notes와 토림의 기원 주문 선택 조건, 쇄도하는 토템의 네 가지 강화 중 일부 누락 내용 확인. 고양 V2.1은 토림의 기원 기본 자동 소비와 단일/광역 설정을 설명하지만 폭풍/태고의 폭풍의 실제 적중 수에 따른 자동 주문 변경 및 Ride the Lightning의 비개입은 명시하지 않음. 쇄도하는 토템의 강화 3종은 표에 있지만 대지 강화의 피해 +100%와 별도 Primal Catalyst(다음 용암 채찍 반복 피해 150%)는 누락. 물약별 선택/시점 및 선택 특성 쿨기 분기도 전부 확보·반영했다고 볼 근거 없음. 이 중 원래 원문 수집 누락인지 집필 선별 단계 누락인지 소급 확정하지 않는다.
 - **범용성 판정:** 두 전문화에서 같은 원문 추출 경로 차이가 재현돼 범용 제작 절차에 반영할 가치가 있음. 원문의 선택 상태와 하위 조건을 보존하고 같은 페이지에서 먼저 복구하며 실제 미확인 사항을 표시한다. 의미 있는 정보 확보와 간결한 집필은 구분한다. 별도 크롤러/검증 엔진 개발이나 여러 공략 일괄 수집은 불필요. [SOURCE_ACQUISITION](SOURCE_ACQUISITION.md) 보강. 기존 HTML 수정은 이번 감사 범위 아님.
+
+## 20. 사용자 확정 — 선택형·중첩·접힌 원문 확보를 모든 전문화에 필수 적용 (2026-11-11)
+
+사용자 제공 화면 5종: 징벌 Hero Talent Master Switches(전체 페이지 전환), Major Cooldowns 5탭, 냉죽 Further Details/행별 정보 아이콘, 암살 Shiv Conditions 접이식 및 Fight Style/Vanishing in Opener. **모든 관련 분기의 실제 내용을 확인하라는 사용자 명시적 지시**. 개인 캡처는 저장소에 올리지 않음.
+
+추가 원문 확인(모두 Live 12.1.5, 2026-10-13 갱신; 실제 브라우저 선택 조작 아님):
+- [징벌](https://www.wowhead.com/guide/classes/paladin/retribution/rotation-cooldowns-pve-dps): 쿨다운 다섯 탭의 본문, 별도 대체 오프너와 Advanced Tips 존재 확인. 단순 기본 순위 외에 특성별 쿨다운 정렬과 장신구 타이밍이 실제 행동을 바꿈.
+- [냉죽](https://www.wowhead.com/guide/classes/death-knight/frost/rotation-cooldowns-pve-dps): Further Details에서 냉룡의 격노 재시전 타이밍 및 Frostbane 선택 시 Rime보다 우선하는 조건 확인. 검색 색인에는 Frostbane 행이 포함된 목록이 있지만 직접 열람의 대응 목록에는 없으므로 실제 선택 상태를 확인하기 전 목록 전체를 동일시하지 않음.
+- [암살](https://www.wowhead.com/guide/classes/rogue/assassination/rotation-cooldowns-pve-dps): 검색에서 영웅별 Shiv Conditions 본문 및 제목, Vanishing in Opener, Scent of Blood In Opener 확인. 직접 열람에서 Shiv Conditions 제목 검색은 실패하며, 일부 오프너의 until 하위 조건이 별도 시전 단계처럼 평면화됨. 단순 행 수 비교로는 오독을 막을 수 없다. 원문에 숨어 있는 상세 조건과 그 소속까지 확보 필요.
+
+**범용성 판정:** 기존 고양·징벌 사례(§19)에 냉죽·암살 사례 추가, 여러 전문화에서 실제 추출 차이와 결정적 상세 설명 관측. 따라서 사용자 확정 운영 정책으로 승격. 선택 경로→하위 영역 재탐색→본문·귀속 확인→미확인 복구/표시, 핵심 누락 시 확보 미통과. 새 고정 스키마·크롤러를 만들지 않음. 실제 웹 브라우저로 모든 컨트롤을 전환한 전수 감사, 기존 교본 전체의 누락 재검증 또는 HTML 수정은 이번에 수행하지 않음. 다음 실제 제작/갱신에서 적용·검증.

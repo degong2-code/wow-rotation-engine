@@ -156,3 +156,5 @@
 - **징벌 성기사 V1 신규 검토본:** `wow_rotation_v11_retribution_review_v1.html`, SHA256 `c4fd209d7dcc185c784d971da8e476b17e5c6b906a93c0dcab412986006dc408`. 기존 7개 원시 바이트 동일, 4표/55행, 16종 아이콘 매핑, PC/모바일 오프라인 브라우저 QA 통과. 고양 V2.1의 범용 원칙을 적용한 개인 검토본. [사례집 §17](QUALITY_GENERALIZATION_CASEBOOK.md) 참고. 외부 이미지 로딩/실전 최적화 미검증, 사용자 최종 승인 대기. 공개 GitHub에 HTML 없음.
 
 - **징벌 성기사 V2:** `wow_rotation_v11_retribution_review_v2.html`, SHA256 `6550e32232360fe409438cca1805a303a53a4a700999bd626805c6119463042b`. 사용자 피드백 4개 반영: 공통 직업/전문화 메뉴 축소, 순위와 순차 시전 구분, 실제 제목/내부 링크·구체적 A/B 예외, 의미별 목록. 기존 7개 본문 동일·55행/16종 매핑 유지, PC/모바일 오프라인 QA 통과. [사례집 §18](QUALITY_GENERALIZATION_CASEBOOK.md) 참조. 종료 직전 정확한 최적 초수·실전 최적화·외부 CDN 로딩 미검증. 정본 미승인, 비공개 전달.
+
+- **확정(필수 원문 확보 게이트):** 모든 전문화의 실제 관련 마스터 스위치·하위 탭·빌드/단일·광역·오프너 선택·Further/Advanced·접이식·hover·대체 시퀀스/타임라인의 본문과 상태 귀속을 확인한다. 상위 선택 변경 뒤 하위 컨트롤 재탐색 필수. 핵심 미확인 분기가 남으면 완전 수집·최종 승인 주장 금지. [SOURCE_ACQUISITION](SOURCE_ACQUISITION.md) 정본과 [사례집 §20](QUALITY_GENERALIZATION_CASEBOOK.md) 근거. 이번에는 정책 반영 및 징벌·냉죽·암살의 원문 표현 대조만 수행; 다음 실제 교본에서 누락 감사와 제작 결과를 함께 검증한다.
