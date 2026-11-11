@@ -90,3 +90,15 @@
 **실제 Elements/DOM/내장 JSON 조사 현황:** 현재 이 대화의 원문 읽기 인터페이스는 HTML 소스가 아닌 **웹 텍스트 표현**을 노출한다. 직접 컨테이너 HTTP 요청은 DNS 조회 실패, GitHub Chromium 직접 접속은 403, 연결된 Browser 읽기는 originating browser context 부재로 실패했다. `view-source:`는 지원되지 않는다. 따라서 실제 HTML의 숨겨진 노드/JS 객체 클래스나 tooltip 데이터 구조를 **발견했다는 주장은 불가능**하다. 반대로 최신 검색 색인 텍스트에 **영웅 2×전투 2의 4개 표, ST/AoE Notes 4영역, 오프너 4분기, 주요 쿨다운 5영역** 내용이 함께 드러난 사실은 확인했다. 이는 클릭 없이 상당 부분의 의미 자료를 회수할 수 있다는 증거이지만 페이지 구현이 정적 HTML/인라인 JS/후속 네트워크 중 무엇인지는 입증하지 않는다. 하위 행별 `?` 팁 귀속도 미검증.
 
 **다음 작업 우선순위:** 구조화된 원본 HTML 접근 경로가 마련되면 가장 먼저 **동일 패치 표시 및 선택 상태별 컨트롤-본문-행/팁 소속**을 검증한다. 설치형 브라우저 자동화/반복 클릭은 현재 기본 작업 아님. 미확인 핵심 분기가 남아 있으므로 Gate A FAIL, 최종 교본 미승인.
+
+## V3.3 — 12.1.5 검색 색인 기반 43행 독립 순위 대조 및 150% 설명 교정 (2026-11-11)
+
+**실제 검색 인덱스 확인:** [Wowhead 고양 2026-10-13·12.1.5](https://www.wowhead.com/guide/classes/shaman/enhancement/rotation-cooldowns-pve-dps)의 4개 Priority 표를 현재 V3.2의 43개 행과 순위별 수동 원문 전사+로컬 검증으로 비교. **폭풍인도자 ST 9/9, AoE 10/10, 토템술사 ST 12/12, AoE 12/12 = 기술명·순위 43/43 일치.** 이 값은 **검색 색인상의 기술 배열과의 일치**이지 실제 DOM의 선택 상태·행별 상세 조건·hover `?` 귀속 또는 전투 최적화 PASS가 아니다.
+
+**실제 내용 오류:** 기존 V3.2 고급 설명은 '태고의 폭풍 마지막 번개 화살/연쇄 번개는 150% 효과'라고 기술. [Wowhead 태고의 폭풍 특성](https://www.wowhead.com/guide/classes/shaman/enhancement/abilities-talents-pve-dps)은 화염·냉기·자연 다음 마지막 번개 공격을 앞선 적중 대상 수에 따라 선택한다고 설명. [원시 촉매 주문](https://www.wowhead.com/spell=1260880/primal-catalyst)은 **태고의 폭풍 사용 뒤 다음 용암 채찍 또는 불꽃 회오리의 150% 반복**임을 명시. 따라서 150%를 마지막 번개 타격의 피해 배율이라고 설명한 V3.2 문장 삭제하고, 두 기술 기전 분리해 V3.3에서 교정.
+
+**개인 결과물:** `wow_rotation_v11_enhancement_v3_3_indexed_order_review.html`, 1,061,215 bytes, SHA256 `9856320cf98145d4112e2dcd165b28ee6480eba247054ca667753cdecd2da406`. 개인 감사 자료 `enhancement_v3_3_indexed_order_audit.json`, 25,075 bytes, SHA256 `859f5cc8be4fa724da6ce420baa927c654c770d60ca9aea2309986804ceeb1b8` (우선순위 43건 행동·조건·미확인 상태, 원문 장문 미포함). 두 파일 모두 채팅에서만 전달하며 PUBLIC GitHub에는 올리지 않음.
+
+**검증:** 기존 V11 7개 뷰 원시 바이트+공통 스크립트·푸터 유지, 신규 교본의 4표/43행 유지. 로컬 Chromium 1365×850·390×844 영웅 전환·아이콘 팝업/ESC·기존 교본 왕복·가로 넘침·JS 오류 PASS. Wowhead 실페이지 HTML/DOM/스크립트·마스터 선택지/물약 UI/시각 타임라인/행별 `?` 귀속 **여전히 직접 미확인**; 이 네 항목의 Gate A는 미통과.
+
+**범용 발견:** 검색 색인은 하나의 Opener 목록에 서로 배타적인 `Potion of Recklessness`, `Liquid Luster`, `Light's Potential` 동작과 반복된 `Voltaic Blaze` 단계를 함께 평면화한다. 이는 **원문의 선택형 분기가 텍스트 인덱스에서 합쳐진 증거**이므로, 실제 선택 경로가 확인되기 전 단일 오프너로 채택하면 안 된다. 우선순위 기술·순서 확인과 상세 선택 상태 확인을 서로 다른 승인 관점으로 유지한다.
