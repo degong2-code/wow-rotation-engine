@@ -15,6 +15,8 @@ WoW 딜사이클 교본의 **V11 품질을 보존하면서 ChatGPT 채팅에서 
 **운영 정본:**
 - [ADR-003 — ChatGPT 중심 제작 결정](docs/ADR_003_CHAT_FIRST_EDITORIAL.md)
 - [CHAT_FIRST_PLAYBOOK — CREATE/UPDATE 작업 순서](docs/CHAT_FIRST_PLAYBOOK.md)
+- [EDITORIAL_QUALITY_PROTOCOL — 7전문화 전체 비교 기반 상태→조건→행동 QA](docs/EDITORIAL_QUALITY_PROTOCOL.md)
+- [생존 사냥꾼 V3 실작업 감사·재작성 결과](docs/CHAT_FIRST_RUN_SURVIVAL_V3_20261111.md)
 - [SOURCE_ACQUISITION — 공략 자료 수집·검증 방법](docs/SOURCE_ACQUISITION.md)
 - [CHAT_FIRST_PROJECT_INSTRUCTIONS — 프로젝트 설정용 짧은 지침](docs/CHAT_FIRST_PROJECT_INSTRUCTIONS.md)
 
