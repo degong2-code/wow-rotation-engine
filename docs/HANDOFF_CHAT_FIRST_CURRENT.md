@@ -148,3 +148,5 @@
 - **확정(추가 지침):** 모든 발견마다 범용·일반화 가능성을 **항상 판단**한다. 일회성·특정 패치 문제인지, 기존 Wowhead→필요시 보조 공략 절차로 해결할 수 있는지, 여러 전문화에 반복되는 근본 원인인지 검토한다. **일반화가 불필요하다는 결론도 성공적인 판단**이며, 드문 단일 사례 때문에 별도 엔진·검증 구조를 추가하지 않는다. [사례집 §13](QUALITY_GENERALIZATION_CASEBOOK.md) 참고.
 
 - **2026-11-11 실제 HTML CREATE 결과:** `wow_rotation_v11_enhancement_review_v1.html` 고양 주술사 검토본, **원본 V11 7개 raw byte 동일**, 8전문화 통합·신규 4표/43행·PC/모바일 인터랙션 PASS, SHA256 `ef65b8d36d265e1d0786a87f6030c9b7b75ac2c89042252f0b132cdff602c3b8`. 파일은 해당 개인 채팅에 전달됐으며 **사용자 승인 미완/공개 GitHub에 HTML 없음**. 자세한 검증·범용화 판정은 [실제 제작 기록](QUALITY_FIRST_REAL_HTML_RUN_ENHANCEMENT_20261111.md) 참조.
+
+- **2026-11-11 고양 V2 실물 수정:** `wow_rotation_v11_enhancement_review_v2.html` SHA256 `b8938bd1402212fc57e01d9861ba07dbf192313e2ecc39af7ac15fb168e543e8`, 기존 7개 raw byte 동일, 4표/43행 유지. 사용자 V1 평가에 따른 조건·수치 중심 압축 및 V11 공통 서식·아이콘·기준선 정렬 정책은 [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md)와 [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), 증거는 [사례집 §15](QUALITY_GENERALIZATION_CASEBOOK.md) 참조. V2 개인 채팅 전달, 최종 사용자 승인 전 검토본. 외부 CDN 로딩·실전 최적화 미검증.
