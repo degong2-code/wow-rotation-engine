@@ -66,6 +66,16 @@
 
 이 표의 '기본 작업'은 현재 기준 원본 V11에 따른 것이다. 사용자가 **업데이트된 8전문화 HTML을 새 정본으로 승인**하면 인덱스도 정본의 실제 전문화 목록에 맞춰 갱신한다.
 
+## 4.1. 2026-11-11 신규 생존 사냥꾼 자료 확인
+
+사용자의 `생존 사냥꾼` CREATE 실작업에서 12.1.5 최신 출처를 대조했다.
+- [Wowhead 생존 회전](https://www.wowhead.com/ko/guide/classes/hunter/survival/rotation-cooldowns-pve-dps) · 2026-10-13 갱신
+- [Method 생존 운용](https://www.method.gg/guides/survival-hunter/playstyle-and-rotation) · 2026-10-14 갱신
+- [Icy Veins 생존 회전](https://www.icy-veins.com/wow/survival-hunter-pve-dps-rotation-cooldowns-abilities) · 2026-10-12 갱신
+- [Icy Veins 생존 특성](https://www.icy-veins.com/wow/survival-hunter-pve-dps-spec-builds-talents) · 2026-10-22 갱신
+
+현재 **7개 전문화 V11 원본에는 생존이 없으며**, 2026-11-11 별도 개인 파일로 8번째 교본을 생성해 전달했다. 해당 HTML을 다음 정본으로 승격하는 것은 사용자의 검토·승인을 기다린다. 공략·메뉴 기능/검증 내용: [생존 제작 기록](CHAT_FIRST_RUN_SURVIVAL_20261111.md). 실제 완성 HTML을 공개 저장소에 보관하지 않는다.
+
 ## 5. 저작권·근거 표현
 
 - 외부 공략의 **전체 표·문단·대량 번역문을 복제하지 말고**, 기술적 조건을 검토한 뒤 독자적인 한국어 설명으로 표현한다.
