@@ -1,7 +1,7 @@
 import { chromium } from 'playwright';
 import { createHash } from 'node:crypto';
 
-const URL = 'https://www.wowhead.com/guide/classes/shaman/enhancement/rotation-cooldowns-pve-dps';
+const GUIDE_URL = 'https://www.wowhead.com/guide/classes/shaman/enhancement/rotation-cooldowns-pve-dps';
 const record = {
   probe: 'one-page-browser-ui-access',
   browser: 'chromium',
@@ -14,7 +14,7 @@ try {
   browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({ viewport: { width: 1365, height: 850 }, locale: 'en-US' });
   const page = await context.newPage();
-  const response = await page.goto(URL, { waitUntil: 'domcontentloaded', timeout: 40000 });
+  const response = await page.goto(GUIDE_URL, { waitUntil: 'domcontentloaded', timeout: 40000 });
   await page.waitForTimeout(2000);
   const body = (await page.locator('body').innerText({ timeout: 15000 })).slice(0, 500000);
   const title = await page.title();
