@@ -241,3 +241,11 @@ G01/G04/G06의 **전문화 간 독립 전이 효과는 미실증**이다. P·N �
 ## 28. 고양 V3.3 — 43행 우선순위 배열은 맞지만 기전 설명은 틀린 사례 (2026-11-11)
 
 [감사 상세](ENHANCEMENT_SOURCE_COVERAGE_V3_20261111.md#v33--1215-검색-색인-기반-43행-독립-순위-대조-및-150-설명-교정-2026-11-11). 2026-10-13 Wowhead 색인의 폭풍인도자 9/10행·토템술사 12/12행 총 43개와 개인 V3.2의 **기술명/순위를 독립 대조, 43/43 일치**. 그러나 V3.2는 원시 촉매의 다음 용암 채찍/불꽃 회오리 150% 반복 공격을 태고의 폭풍 마지막 번개 공격에 잘못 설명했다. V3.3에선 두 기전을 분리하여 수정. 원문 색인의 43/43 배열 일치에도 불구하고 **조건·툴팁·자원/기전 정확성이 보장되지 않는 반례**. 또한 물약별 오프너가 색인에서 한 시퀀스로 합쳐지는 실제 사례로 인해 구조적 소속 감사 필요. 비대상 7개 본문·43행·PC/모바일 기능 PASS, Wowhead 실제 DOM/툴팁 수집 Gate A 미통과. 신규 자동 수집기 없이 독립 소스 배열 검증과 단일 오기 교정으로 품질 기여. 개인 HTML/감사 JSON은 저장소 미게시.
+
+## 29. Wowhead 실물 HTML 내 WHML 본문 추출 실증 (2026-11-11)
+
+
+### 실제 원본 HTML의 진입점 — 2026-11-11 검증
+
+[공개 Wowhead 실물 HTML 저장본](https://github.com/aurokin/warcraft_cli/blob/main/tests/fixtures/wowhead/guide_3087_page.html)(분노 전사 과거 버전)에서 `WH.markup.printHtml(..., "guide-body", ...)` 호출의 JS 문자열을 복호화해 **WHML 14,037자**를 추출했고 `data.pageMeta` JSON을 확인. 메뉴용 `interior-sidebar-related-markup`와 구분. 동일 원리를 사용하는 [제3자 파서](https://github.com/aurokin/warcraft_cli/blob/main/packages/wowhead-cli/src/wowhead_cli/page_parser.py)도 발견. 원본 HTML을 확보하면 WHML 탭·접힘·명명 툴팁 참조를 분석할 수 있다는 실제 구현 근거다. 개인 오프라인 검사기(표준 라이브러리만 사용)를 작성해 합성 5개 테스트 PASS. **최신 고양 12.1.5 원본 HTML/각 ? 팁→행 연결은 아직 접근 실패**, 따라서 수집 Gate A는 계속 미통과. 접근 제한 우회·사용자 로컬 설치를 기본으로 하지 않음.
+

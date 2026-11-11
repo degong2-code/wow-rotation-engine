@@ -60,6 +60,11 @@
 
 **Wowhead 내부 마크업에 대한 실제 근거(2026-11-11 확인):** Wowhead의 공식 [Advanced WHML 문서](https://www.wowhead.com/guide/advanced-wowhead-markup)는 `toggler`와 `tabs`를 별도 콘텐츠 구성요소로 설명하며, [가이드 작성 안내](https://www.wowhead.com/guide/help)는 토글 영역의 `id`·본문 영역 `id` 대응과 `tooltip name`·`span tooltip`로 연결하는 **명명된 툴팁** 예시를 제시한다. 따라서 **원본 마크업을 확보한 경우** 단순 평면 텍스트나 순서만으로 팁을 행에 붙이지 말고 ID·이름·DOM 관계를 먼저 대조한다. 단, 이는 공식 가이드 작성 기능의 문서이며 **2026년 고양 회전 생성기의 실제 구현이 동일하다는 증거는 아니다**. 해당 페이지의 HTML/DOM/JS는 아직 직접 검증하지 못했다.
 
+
+### 실제 원본 HTML의 진입점 — 2026-11-11 검증
+
+[공개 Wowhead 실물 HTML 저장본](https://github.com/aurokin/warcraft_cli/blob/main/tests/fixtures/wowhead/guide_3087_page.html)(분노 전사 과거 버전)에서 `WH.markup.printHtml(..., "guide-body", ...)` 호출의 JS 문자열을 복호화해 **WHML 14,037자**를 추출했고 `data.pageMeta` JSON을 확인. 메뉴용 `interior-sidebar-related-markup`와 구분. 동일 원리를 사용하는 [제3자 파서](https://github.com/aurokin/warcraft_cli/blob/main/packages/wowhead-cli/src/wowhead_cli/page_parser.py)도 발견. 원본 HTML을 확보하면 WHML 탭·접힘·명명 툴팁 참조를 분석할 수 있다는 실제 구현 근거다. 개인 오프라인 검사기(표준 라이브러리만 사용)를 작성해 합성 5개 테스트 PASS. **최신 고양 12.1.5 원본 HTML/각 ? 팁→행 연결은 아직 접근 실패**, 따라서 수집 Gate A는 계속 미통과. 접근 제한 우회·사용자 로컬 설치를 기본으로 하지 않음.
+
 **실행 순서(필수, 특정 기술 구현에 종속되지 않음)**
 
 1. 페이지 전체의 관련 컨트롤과 섹션을 식별한다. 명칭이나 DOM 클래스의 고정 목록에 의존하지 않고 실제 표시·전환·펼침 동작을 확인한다. 관련 기술/특성·Talents·세트 페이지도 적용 빌드를 이해하는 데 필요하면 확인한다.
