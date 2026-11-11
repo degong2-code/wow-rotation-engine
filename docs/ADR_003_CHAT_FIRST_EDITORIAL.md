@@ -93,3 +93,7 @@
 ## 8. 기존 결정과의 관계
 
 ADR-001(Plus API Provider) 및 ADR-002(GitHub-only Codex feasibility)는 기존 Draft PR #17~#19에 개발 이력으로 보존하되 **현재 기본 제품 경로를 대체하지 않는다**. PR #14~#19는 모두 Draft·미병합, `main`은 별도 승인 전 그대로 둔다. 최종 HTML의 개인 전달은 코드 GitHub 병합이나 공개 Pages 배포와 별개다.
+
+## 9. 후속 정책의 위치 (2026-11-11)
+
+이 ADR은 **Chat-first 운영 방식으로 전환한 역사적 결정**을 보존한다. 이후 확정된 Wowhead 기본 단일 출처·선택적 보조 검증, 개별 교본보다 범용 제작·품질 평가법 우선, Q0~Q4 및 개발 변경의 기여 검증은 [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md)가 운영 최상위 규정이다. 기존 코드·초안에 남아 있는 다중 사이트 필수 수집/고정 서식·반례 수는 후속 정책을 대신하지 않는다.
