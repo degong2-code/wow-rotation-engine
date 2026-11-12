@@ -181,10 +181,14 @@ def assess_opener_timeline(packet: dict, annotations: dict) -> dict:
     results = []
     covered = set()
     exercised = set()
+    case_ids = set()
     for case in cases:
         if not isinstance(case, dict):
             raise ValueError("Timeline case must be an object")
-        _valid_name(case.get("id"), "case id")
+        ident = _valid_name(case.get("id"), "case id")
+        if ident in case_ids:
+            raise ValueError("Duplicate case id")
+        case_ids.add(ident)
         _check_context(case.get("context"), "case context")
         _check_context(case.get("initial_state"), "case initial state")
         _check_expected(case.get("expected_events"))
