@@ -181,14 +181,27 @@ def capture_loaded_page(page, response, *, required_markers: tuple[str, ...] = (
     return html, source, mhtml
 
 
+def select_analysis_html(dom_html: str, source_html: str | None) -> tuple[str, str]:
+    """Choose the richer inline source, avoiding a hydration-stripped DOM.
+
+    Always keep both inputs privately: a server response may contain WHML that
+    the in-page JavaScript removed, while the DOM may contain new rendered data.
+    """
+    if source_html is not None and _score_html(source_html) > _score_html(dom_html):
+        return source_html, "network_response"
+    return dom_html, "rendered_dom"
+
+
 def acquisition_audit(html: str, *, origin: str, source_html: str | None = None,
                       mhtml: str | None = None, extras: dict | None = None) -> dict:
     """Safe aggregate metrics: never include the source text, URL or file path."""
-    inspection = inspect_embedded_whml(source_html or html)
+    analysis_html, analysis_variant = select_analysis_html(html, source_html)
+    inspection = inspect_embedded_whml(analysis_html)
     guide = [x for x in inspection["payloads"] if x.get("target") == "guide-body"]
     return {
         "schema_version": "source-page-acquisition-audit-v1",
         "origin_kind": origin,
+        "analysis_html_variant": analysis_variant,
         "dom_html_bytes": len(html.encode("utf-8")),
         "dom_html_sha256": _hash(html.encode("utf-8")),
         "raw_response_preserved": source_html is not None,
@@ -221,6 +234,8 @@ def write_private_snapshot(output: Path, html: str, audit: dict,
     output.mkdir(parents=True, exist_ok=True)
     # Explicit file names: use private workspace; NEVER commit these files.
     (output / "page.html").write_text(html, encoding="utf-8")
+    analysis_html, _ = select_analysis_html(html, source_html)
+    (output / "analysis.html").write_text(analysis_html, encoding="utf-8")
     if source_html is not None:
         (output / "network-response.html").write_text(source_html, encoding="utf-8")
     if mhtml is not None:

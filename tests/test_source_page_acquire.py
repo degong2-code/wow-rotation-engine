@@ -93,6 +93,26 @@ class AcquireTests(unittest.TestCase):
         self.assertNotIn("WH.markup.printHtml", dom)
         self.assertIsNone(mhtml)
 
+    def test_analysis_auto_chooses_full_network_markup_if_dom_is_hydrated(self):
+        dom = "<!doctype html><html><body>Hydrated page without script</body></html>"
+        audit = acquisition_audit(dom, origin="browser_url", source_html=SYNTHETIC)
+        self.assertEqual(audit["analysis_html_variant"], "network_response")
+        self.assertEqual(audit["guide_body_payloads"], 1)
+        with TemporaryDirectory() as folder:
+            write_private_snapshot(Path(folder), dom, audit, source_html=SYNTHETIC)
+            self.assertEqual(
+                (Path(folder) / "analysis.html").read_text(), SYNTHETIC
+            )
+            self.assertEqual(
+                (Path(folder) / "page.html").read_text(), dom
+            )
+
+    def test_dom_can_be_more_complete_than_network_response(self):
+        raw = "<!doctype html><html><body>Static</body></html>"
+        audit = acquisition_audit(SYNTHETIC, origin="browser_url", source_html=raw)
+        self.assertEqual(audit["analysis_html_variant"], "rendered_dom")
+        self.assertEqual(audit["guide_body_payloads"], 1)
+
     def test_public_audit_contains_no_source_text(self):
         audit = acquisition_audit(SYNTHETIC, origin="saved_html")
         output = json.dumps(audit, ensure_ascii=False)
