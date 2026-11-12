@@ -38,6 +38,8 @@ WoW 딜사이클 교본의 **V11 품질을 보존하면서 ChatGPT 채팅에서 
 
 **조건 적용 범위와 누락 감사:** [실제 3전문화 WHML 표시 조건 82/61/5개 전수 귀속, 근거 위치·부분 조건 보존](docs/WHML_SCOPE_EVIDENCE_20261112.md). UI 표시 조건을 실제 게임 기술 로직으로 임의 변환하지 않습니다.
 
+**게임플레이 판단 QA:** [원문 근거를 첨부한 우선순위·오프너 반례 검사](docs/GAMEPLAY_DECISION_QA_20261112.md). 근거 없는 행동이나 임계값을 생성하지 않고, 편집 규칙의 충돌·미시험·예외 미모델링을 검사합니다.
+
 **운영 정본:**
 - [ADR-003 — ChatGPT 중심 제작 결정](docs/ADR_003_CHAT_FIRST_EDITORIAL.md)
 - [CHAT_FIRST_PLAYBOOK — CREATE/UPDATE 작업 순서](docs/CHAT_FIRST_PLAYBOOK.md)

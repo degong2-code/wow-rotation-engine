@@ -324,3 +324,10 @@
 - 신규 `engine/source_scoped_evidence.py`: 비공개 원문 위치와 행 수준 상속·행내 부분 `display-options` 범위, 상위 탭·제목·`?` 참조 분리. 조건이 포함된 custom `rt-step`/`rt-step-group`을 **닫힌 블록으로 오해하지 않고** 독립 마커로 보존.
 - 실제 고양 `62 paired + 20 standalone = 82`, 생존 `61+0=61`, 비전 `5+0=5`로 미귀속 0. 원문 행 후보 164/121/72는 우선순위 행 수 아님. 고양·비전 남은 닫힘 짝 불일치 각각 1건은 원문/파서 한계 검토 대기, 고양 행내 혼합 조건 1건 REVIEW.
 - `source_acquisition_pipeline`은 사적 `scoped-evidence-private.json`과 원문 없는 `scoped-audit.json` 및 관련 요약 필드를 생성. 실제 세 원문 CI에서 조건 전수 계수 PASS. **게임플레이 QA/최종 HTML 제작은 아직 미완료**. [상세](WHML_SCOPE_EVIDENCE_20261112.md).
+
+
+## 2026-11-12 원문 근거 Q0/Q1 판단 검사기
+
+- `engine/gameplay_decision_qa.py`, `tests/test_gameplay_decision_qa.py`: 비공개 원시 WHML과 편집자가 명시적으로 작성한 우선순위·오프너 규칙(문맥/발동·중첩·수치/행동/이유/예외/소스 오프셋)을 비교한다. 합성 전투 상태에서 다음 행동 선택·물약별 오프너 순서·동순위 충돌·상위 상태 누락·원문 지문 불일치·미시험 분기·문장만 있는 예외를 감지.
+- 사례는 **합성 데이터만**이며 실제 고양/생존/비전의 게임플레이 Q0/Q1 통과를 뜻하지 않는다. 공개 감사에는 원문·기술명·사례 원문 ID를 출력하지 않는다. `source_meaning_independently_verified=false`, `automatic_publish_allowed=false`.
+- 다음 과제: 원문 세 전문화 중 하나의 실제 사용 조건과 tooltip을 읽어 비공개 규칙 주석을 작성하고, 상충 상태·임계 경계·영웅/물약/오프너 전환 사례로 내용 QA. 기존 개인 V11 7개 및 고양 V3.11 보존. [설계 및 실행](GAMEPLAY_DECISION_QA_20261112.md).
