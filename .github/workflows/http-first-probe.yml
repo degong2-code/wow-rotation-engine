@@ -53,7 +53,15 @@ jobs:
                       assert len(packet["payloads"])==report["guide_body_payloads"]
                       assert sum(len(x["tooltip_definitions"]) for x in packet["payloads"])==report["named_tooltip_definition_count"]
                       assert sum(len(x["conditional_expressions"]) for x in packet["payloads"])==report["conditional_display_count"]
+                      scoped=json.loads((Path(tmp)/"scoped-audit.json").read_text(encoding="utf-8"))
+                      assert scoped["source_text_in_report"] is False
+                      assert scoped["automatic_publish_allowed"] is False
+                      assert scoped["guide_body_payload_count"]==report["guide_body_payloads"]
+                      assert report["private_scoped_evidence_written"] is True
                       print(label+"_private_editorial_packet_indexed=true")
+                      print(label+"_scoped_row_candidates="+str(scoped["source_row_candidates"]))
+                      print(label+"_rows_with_mixed_visibility="+str(scoped["rows_with_mixed_visibility"]))
+                      print(label+"_scoped_structure_issues="+str(scoped["structure_issue_types"]))
                       print(label+"_status=guide_identity_confirmed")
                       print(label+"_guide_body_count="+str(report["guide_body_payloads"]))
                       print(label+"_guide_body_characters="+str(report["guide_body_character_counts"][0]))

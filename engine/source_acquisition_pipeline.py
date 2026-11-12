@@ -26,6 +26,7 @@ from .http_source_fetch import get_html
 from .spec_source_resolver import resolve_specialization
 from .guide_identity import inspect_identity
 from .source_editorial_packet import packet_from_html
+from .source_scoped_evidence import scoped_from_packet, scoped_metadata
 
 PIPELINE_SCHEMA = "source-acquisition-pipeline-v1"
 
@@ -82,6 +83,8 @@ def inspect_and_store(*, dom_html: str, output: Path, kind: str,
 
     # Prepare private source evidence before writing any public-safe audit.
     private_packet = packet_from_html(analysis) if payloads else None
+    scoped_packet = scoped_from_packet(private_packet) if private_packet is not None else None
+    scope_audit = scoped_metadata(scoped_packet) if scoped_packet is not None else None
     report = {
         "schema_version": PIPELINE_SCHEMA,
         "acquisition_kind": kind,
@@ -103,6 +106,14 @@ def inspect_and_store(*, dom_html: str, output: Path, kind: str,
         "issue_types": sorted(set(flags)),
         "static_source_obtained": True,
         "private_editorial_packet_written": private_packet is not None,
+        "private_scoped_evidence_written": scoped_packet is not None,
+        "source_row_candidates": scope_audit["source_row_candidates"] if scope_audit else 0,
+        "source_rows_with_mixed_visibility": scope_audit["rows_with_mixed_visibility"] if scope_audit else 0,
+        "source_scope_structure_issue_types": scope_audit["structure_issue_types"] if scope_audit else {},
+        "source_scope_requires_review": bool(
+            scope_audit and (scope_audit["rows_with_mixed_visibility"]
+                             or scope_audit["structure_issue_types"])
+        ),
         "source_patch_verified": False,
         "real_site_completeness_verified": False,
         "gameplay_meaning_verified": False,
@@ -114,6 +125,15 @@ def inspect_and_store(*, dom_html: str, output: Path, kind: str,
     if private_packet is not None:
         (output / "editorial-evidence-private.json").write_text(
             json.dumps(private_packet, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+    if scoped_packet is not None:
+        (output / "scoped-evidence-private.json").write_text(
+            json.dumps(scoped_packet, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        (output / "scoped-audit.json").write_text(
+            json.dumps(scope_audit, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
         )
     (output / "structure-audit.json").write_text(

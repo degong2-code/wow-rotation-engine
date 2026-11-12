@@ -114,6 +114,10 @@ jobs:
           assert private['source_text_may_be_public'] is False
           assert report['private_editorial_packet_written'] is True
           assert 'original_whml' in private['payloads'][0]
+          scoped=json.loads((root/'scoped-audit.json').read_text(encoding='utf-8'))
+          assert scoped['source_text_in_report'] is False
+          assert scoped['gameplay_action_interpreted'] is False
+          assert report['private_scoped_evidence_written'] is True
           assert (root/'structure-audit.json').exists()
           assert report['source_patch_verified'] is False
           assert report['real_site_completeness_verified'] is False
