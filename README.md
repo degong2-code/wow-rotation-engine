@@ -24,6 +24,8 @@ WoW 딜사이클 교본의 **V11 품질을 보존하면서 ChatGPT 채팅에서 
 
 **동적 DOM 확인 보조:** [브라우저 런타임 수집 규격](docs/LIVE_DOM_CAPTURE.md)과 실제 Chromium 합성 회귀 검사를 추가했습니다. 현재 Wowhead 접근 제한 해결과 원문 전수 확보를 뜻하지 않습니다.
 
+**동적 수집과 누락 감사 통합:** [LIVE_DOM_CAPTURE](docs/LIVE_DOM_CAPTURE.md) — 영웅/전투 하위 UI와 관련 `?`를 실제 브라우저에서 수집하고 [범용 감사](docs/SOURCE_COVERAGE_AUDIT.md)의 검토용 초안에 연결합니다. 원문 전수 확보·게임 판단 최종 검증은 자동 선언하지 않습니다.
+
 **운영 정본:**
 - [ADR-003 — ChatGPT 중심 제작 결정](docs/ADR_003_CHAT_FIRST_EDITORIAL.md)
 - [CHAT_FIRST_PLAYBOOK — CREATE/UPDATE 작업 순서](docs/CHAT_FIRST_PLAYBOOK.md)

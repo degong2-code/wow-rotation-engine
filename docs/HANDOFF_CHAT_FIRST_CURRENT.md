@@ -263,3 +263,10 @@
 - private 원문 JSON과 공개용 감사 JSON을 분리하고 query/fragment 및 파일 경로 노출 차단. 경로 깊이·상태 상한으로 미완료 시 남은 탐색 수 표시. 게임 로직 의미 분석이나 원문 Gate A 자동 PASS 금지.
 - Push/PR 브라우저 테스트 및 기존 전체 오프라인 CI 성공. 고양 12.1.5 Wowhead 서버 HTTP 403 및 현재 원문 패치 불일치는 그대로 미해결. PRIVATE V11 7개 및 고양 V3.10 HTML 무변경.
 - 운영 규격: [LIVE_DOM_CAPTURE](LIVE_DOM_CAPTURE.md). 최종 목표는 사용자에게 JSON/로컬 설치를 요구하지 않는 ChatGPT-first 단일 HTML 제작.
+
+## 2026-11-12 동적 관측↔공통 누락 감사 통합
+
+- `engine/live_dom_capture.py`에 안정적 ID 우선 선택 재현·ID 없는 `?`의 DOM 경로 hover·관측된 미호버 팁 수·깊이 제한·대기 경로 기록을 추가했다. CSS 클래스/스킬 이름에 종속되지 않으며, 화면에서 표시되는 실제 본문과 hover 생성 설명을 구분한다.
+- `engine/live_dom_bridge.py` 및 합성 테스트는 비공개 브라우저 캡처를 `source_coverage`용 검토 초안으로 변환한다. 원문 설명은 개인 기록에만, 공개 보고서는 검사 항목 수와 누락 종류만 포함한다. 경로 식별자는 **사용자 게임플레이 선택 분기로 승격하지 않는다**.
+- 브라우저 캡처에 원문 전수 확보를 자동 보장하는 인증은 없음. 선택 상태가 탐지되지 않았거나 페이지가 제한적으로 보이면 여전히 누락 가능. 특히 실제 최신 고양 Wowhead는 동일 URL 버전 충돌·선행 403 때문에 **Gate A 미통과**다.
+- 코드·검증 기준: [LIVE_DOM_CAPTURE](LIVE_DOM_CAPTURE.md), [SOURCE_COVERAGE_AUDIT](SOURCE_COVERAGE_AUDIT.md). 개인 V11 7개·고양 V3.10 HTML 미수정, PR #20 Draft 유지.

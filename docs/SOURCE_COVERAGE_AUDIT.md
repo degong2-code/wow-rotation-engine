@@ -98,3 +98,11 @@ python -m engine.source_reconcile --structure /tmp/synthetic-structure.json --ob
 - CI 실제 실행: [GitHub Actions 43152516953](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43152516953)에서 **실제 HTML 스모크 PASS + 전체 257개 테스트 PASS**. 최신 게임 패치의 공략 정확성, 현재 Wowhead 전체 DOM, 모든 `?` 본문은 이 검증 범위 밖이다.
 
 **중요:** 실제로 확인된 것은 특정 공개 *과거 저장본*의 HTML 구조다. 여전히 최신 고양 12.1.5 페이지의 직접 HTML 취득·동적 UI 전수 확보는 미완료이며, Gate A PASS로 승격하지 않는다.
+
+## 런타임 DOM → 선언된 수집 기록 자동 연결
+
+`engine/live_dom_bridge.py`는 허용된 브라우저에서 수집한 비공개 런타임 관측을 같은 형식의 `source_coverage` 관측 기록으로 변환한다. 원문 `?`의 inline 속성·복수 참조·실제 hover overlay는 개별 내용 항목으로 유지하고, 호버 누락·상태 상한·미방문 선택지의 누락 후보를 만든다.
+
+**중요:** 컴퓨터가 관측한 UI 클릭 경로를 실제 게임 판단 분기라고 해석하지 않는다. 자동 초안은 모든 `inventory_checked=false`, `real_site_completeness_verified=false`를 전제로 한다. 영웅별·전투별 기술 순서와 물약 예시 구분, 게임 조건의 의미 귀속은 ChatGPT가 실제 원문을 읽고 정한다. 보조 도구를 실행했다는 이유로 Gate A PASS, Q0/Q1 PASS, 최종 HTML 승인으로 승격하지 않는다.
+
+상세 사용 및 CI는 [LIVE_DOM_CAPTURE](LIVE_DOM_CAPTURE.md).
