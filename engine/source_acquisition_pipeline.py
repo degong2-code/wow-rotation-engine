@@ -109,10 +109,16 @@ def inspect_and_store(*, dom_html: str, output: Path, kind: str,
         "private_scoped_evidence_written": scoped_packet is not None,
         "source_row_candidates": scope_audit["source_row_candidates"] if scope_audit else 0,
         "source_rows_with_mixed_visibility": scope_audit["rows_with_mixed_visibility"] if scope_audit else 0,
+        "source_conditions_evidence_accounted": bool(
+            scope_audit and scope_audit["source_condition_expression_count"] == conditional
+            and scope_audit["unassigned_conditional_expressions"] == 0
+        ),
+        "source_conditions_unassigned": scope_audit["unassigned_conditional_expressions"] if scope_audit else 0,
         "source_scope_structure_issue_types": scope_audit["structure_issue_types"] if scope_audit else {},
         "source_scope_requires_review": bool(
             scope_audit and (scope_audit["rows_with_mixed_visibility"]
-                             or scope_audit["structure_issue_types"])
+                             or scope_audit["structure_issue_types"]
+                             or scope_audit["unassigned_conditional_expressions"])
         ),
         "source_patch_verified": False,
         "real_site_completeness_verified": False,

@@ -118,6 +118,12 @@ def scoped_from_packet(packet: dict) -> dict:
                     "original_markup": body[token.start():token.end()],
                     "scope_unverified": True,
                 })
+        accounted_conditions = {scope["start"] for scope in visibility}
+        accounted_conditions.update(x["start"] for x in standalone_conditions)
+        unassigned_conditions = [
+            x["position"] for x in source.get("conditional_expressions", [])
+            if x["position"] not in accounted_conditions
+        ]
         rows = []
         for scope in scopes:
             if scope["tag"] not in EVIDENCE_ROWS:
@@ -186,6 +192,8 @@ def scoped_from_packet(packet: dict) -> dict:
             "source_list_rows": rows,
             "visible_predicate_scope_count": len(visibility),
             "standalone_condition_markers": standalone_conditions,
+            "source_condition_expression_count": len(source.get("conditional_expressions", [])),
+            "unassigned_conditional_positions": unassigned_conditions,
             "unresolved_structure_issues": issues,
             "structure_issue_positions": diagnostics[:20],
             "source_text_may_be_public": False,
@@ -217,6 +225,12 @@ def scoped_metadata(scoped: dict) -> dict:
         "rows_inside_tooltip_definitions": sum(x["inside_tooltip_definition"] for x in rows),
         "standalone_conditional_markers": sum(
             len(p["standalone_condition_markers"]) for p in scoped["payloads"]),
+        "paired_conditional_scopes": sum(
+            p["visible_predicate_scope_count"] for p in scoped["payloads"]),
+        "source_condition_expression_count": sum(
+            p["source_condition_expression_count"] for p in scoped["payloads"]),
+        "unassigned_conditional_expressions": sum(
+            len(p["unassigned_conditional_positions"]) for p in scoped["payloads"]),
         "standalone_conditional_marker_types": dict(sorted(Counter(
             m["tag"] for p in scoped["payloads"]
             for m in p["standalone_condition_markers"]

@@ -58,10 +58,18 @@ jobs:
                       assert scoped["automatic_publish_allowed"] is False
                       assert scoped["guide_body_payload_count"]==report["guide_body_payloads"]
                       assert report["private_scoped_evidence_written"] is True
+                      assert scoped["source_condition_expression_count"]==report["conditional_display_count"]
+                      assert (
+                          scoped["paired_conditional_scopes"]+
+                          scoped["standalone_conditional_markers"]+
+                          scoped["unassigned_conditional_expressions"]
+                      )==scoped["source_condition_expression_count"]
                       print(label+"_private_editorial_packet_indexed=true")
                       print(label+"_scoped_row_candidates="+str(scoped["source_row_candidates"]))
                       print(label+"_rows_with_mixed_visibility="+str(scoped["rows_with_mixed_visibility"]))
                       print(label+"_standalone_conditional_markers="+str(scoped["standalone_conditional_markers"]))
+                      print(label+"_unassigned_conditional_expressions="+str(scoped["unassigned_conditional_expressions"]))
+                      print(label+"_paired_conditional_scopes="+str(scoped["paired_conditional_scopes"]))
                       print(label+"_standalone_marker_types="+str(scoped["standalone_conditional_marker_types"]))
                       print(label+"_scoped_structure_issues="+str(scoped["structure_issue_types"]))
                       print(label+"_scoped_issue_positions="+str(scoped["structure_issue_positions"]))

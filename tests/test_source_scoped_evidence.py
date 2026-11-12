@@ -65,6 +65,8 @@ class ScopeEvidenceTests(unittest.TestCase):
         self.assertIn("unclosed_relevant_scopes", issue)
         meta = scoped_metadata(p)
         self.assertIn("unclosed_relevant_scopes", meta["structure_issue_types"])
+        self.assertEqual(meta["source_condition_expression_count"], 1)
+        self.assertEqual(meta["unassigned_conditional_expressions"], 1)
         self.assertEqual(meta["structure_issue_positions"][0]["open_tag"], "div")
 
     def test_unknown_inline_condition_is_not_falsely_assigned_to_entire_scope(self):
@@ -78,6 +80,8 @@ class ScopeEvidenceTests(unittest.TestCase):
         self.assertTrue(payload["standalone_condition_markers"][0]["scope_unverified"])
         summary = scoped_metadata(p)
         self.assertEqual(summary["standalone_conditional_markers"], 1)
+        self.assertEqual(summary["source_condition_expression_count"], 1)
+        self.assertEqual(summary["unassigned_conditional_expressions"], 0)
         self.assertEqual(summary["standalone_conditional_marker_types"], {"rt-step": 1})
         self.assertFalse(summary["automatic_publish_allowed"])
 
