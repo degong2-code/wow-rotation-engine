@@ -113,14 +113,29 @@ def reconcile(structure: dict, observations: dict, decisions: dict | None = None
     if not isinstance(observations, dict) or observations.get("schema_version") != OBSERVATION_SCHEMA:
         raise _error("invalid captured observation ledger")
     coverage = assess_observations(observations)
+    source_sha256 = structure.get("source_sha256")
+    if not isinstance(source_sha256, str) or not re.fullmatch(r"[0-9a-f]{64}", source_sha256):
+        raise _error("structure must have source_sha256")
+    guide = observations["guide"]
+    bound_accesses = {
+        x["id"] for x in observations["accesses"]
+        if x["kind"] in {"page_html", "live_dom", "rendered_ui"}
+        and x.get("html_sha256") == source_sha256
+        and all(x[field] == guide[field] for field in ("source_url", "patch", "revision"))
+    }
+    provenance_bound = bool(bound_accesses)
     candidates, notes = discover(structure)
     by_id = {c["id"]: c for c in candidates}
     linked: dict[str, dict] = {}
     invalid_mappings = []
     digest_only = []
 
-    def link(candidate_id: str, evidence: str, kind: str, body: str | None):
+    def link(candidate_id: str, evidence: str, kind: str, body: str | None,
+             access_id: str):
         candidate = by_id.get(candidate_id)
+        if access_id not in bound_accesses:
+            invalid_mappings.append({"id": candidate_id, "issue": "source_binding_mismatch"})
+            return
         if candidate is None:
             invalid_mappings.append({"id": candidate_id, "issue": "unknown_candidate"})
             return
@@ -151,7 +166,7 @@ def reconcile(structure: dict, observations: dict, decisions: dict | None = None
                 if not isinstance(cid, str):
                     raise _error("entry source_candidate_ids must contain strings")
                 link(cid, "state=" + str(si) + "/entry=" + entry["id"],
-                     entry["kind"], entry.get("text"))
+                     entry["kind"], entry.get("text"), state["access_id"])
         for choice in state["choices"]:
             ids = choice.get("source_candidate_ids", [])
             if not isinstance(ids, list):
@@ -159,7 +174,8 @@ def reconcile(structure: dict, observations: dict, decisions: dict | None = None
             for cid in ids:
                 if not isinstance(cid, str):
                     raise _error("choice source_candidate_ids must contain strings")
-                link(cid, "state=" + str(si) + "/control=" + choice["control"], "choice", None)
+                link(cid, "state=" + str(si) + "/control=" + choice["control"], "choice",
+                     None, state["access_id"])
 
     # Safe automatic equality, not guessed adjacency: only exact body digest
     # and a unique candidate are eligible. A paraphrase or partial quote will
@@ -167,6 +183,8 @@ def reconcile(structure: dict, observations: dict, decisions: dict | None = None
     for si, state in enumerate(observations["states"]):
         for entry in state["entries"]:
             body = entry.get("text")
+            if state["access_id"] not in bound_accesses:
+                continue
             if entry.get("source_candidate_ids"):
                 continue
             if not isinstance(body, str) or not body.strip():
@@ -213,6 +231,8 @@ def reconcile(structure: dict, observations: dict, decisions: dict | None = None
                             "subtype": candidate.get("subtype"),
                             "section": candidate.get("section")})
     warnings = notes + coverage["warnings"]
+    if not provenance_bound:
+        warnings.append("HTML hash, source URL and patch/revision not bound to observations")
     if structure.get("live_ui_completeness_verified") is not False:
         warnings.append("Unexpected structure completeness claim; not trusted")
     warnings.append("Structural snapshot provenance is not independently authenticated")
@@ -221,6 +241,8 @@ def reconcile(structure: dict, observations: dict, decisions: dict | None = None
     return {
         "schema_version": SCHEMA,
         "structure_candidate_count": len(candidates),
+        "structure_source_sha256": source_sha256,
+        "declared_source_binding_matches": provenance_bound,
         "mapped_candidate_count": len(linked),
         "exact_digest_matched_count": sum(bool(x["exact_text_digest_match"]) for x in linked.values()),
         "auto_matched_candidate_ids": sorted(digest_only),
@@ -230,7 +252,7 @@ def reconcile(structure: dict, observations: dict, decisions: dict | None = None
         "invalid_mappings": invalid_mappings,
         "declared_observation_gaps": coverage["gaps"],
         "warnings": warnings,
-        "candidate_comparison_complete": not pending and not invalid_mappings
+        "candidate_comparison_complete": provenance_bound and not pending and not invalid_mappings
             and not coverage["gaps"] and not static_unresolved and
             not structure.get("candidate_lists_truncated", False),
         "real_site_completeness_verified": False,

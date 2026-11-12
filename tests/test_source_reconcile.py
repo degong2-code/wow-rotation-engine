@@ -26,7 +26,8 @@ def ledger():
             "guide": {"specialization": "Synthetic Spec", "source_url": url,
                       "patch": "Synthetic", "revision": "A"},
             "accesses": [{"id": "local", "kind": "page_html", "source_url": url,
-                          "patch": "Synthetic", "revision": "A"}],
+                          "patch": "Synthetic", "revision": "A",
+                          "html_sha256": inspect_html(HTML)["source_sha256"]}],
             "states": [{"path": [], "access_id": "local", "inventory_checked": True,
                         "choices": [],
                         "entries": [{"id": "sample", "kind": "notes",
@@ -128,6 +129,26 @@ class ReconciliationTests(unittest.TestCase):
         data["states"][0]["entries"][0]["source_candidate_ids"] = "tooltip:1:0"
         with self.assertRaisesRegex(ValueError, "must be a list"):
             reconcile(structure, data)
+
+    def test_different_html_cannot_be_reconciled_as_same_source(self):
+        structure = inspect_html(HTML.replace("Example", "Different"))
+        data = ledger()
+        cid = next(x["id"] for x in discover(structure)[0] if x["kind"] == "tooltip")
+        data["states"][0]["entries"].append({
+            "id": "tip", "kind": "tooltip",
+            "text": "First synthetic tooltip phrase.", "source_candidate_ids": [cid]})
+        result = reconcile(structure, data)
+        self.assertFalse(result["declared_source_binding_matches"])
+        self.assertFalse(result["candidate_comparison_complete"])
+        self.assertIn("source_binding_mismatch",
+                      [x["issue"] for x in result["invalid_mappings"]])
+
+    def test_search_index_does_not_prove_html_source(self):
+        data = ledger()
+        data["accesses"][0]["kind"] = "search_index"
+        result = reconcile(self.structure(), data)
+        self.assertFalse(result["declared_source_binding_matches"])
+        self.assertFalse(result["candidate_comparison_complete"])
 
     def test_wrong_revision_keeps_observation_gap(self):
         s = self.structure()
