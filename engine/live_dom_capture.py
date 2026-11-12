@@ -53,7 +53,20 @@ OBSERVE = r"""() => {
   }).filter(Boolean);
   const main=document.querySelector('main,[role=main]')||document.body;
   const body=(main.innerText||'').slice(0,250000);
-  const tooltipTriggersAll=[...document.querySelectorAll(tipSelector)].map((e,index)=>{
+  const markedTips=[...document.querySelectorAll(tipSelector)];
+  const questionOnly=[...document.querySelectorAll('button,a,span')].filter(
+    e=>e.children.length===0 && (e.textContent||'').trim()==='?'
+  );
+  const candidates=[...new Set([...markedTips,...questionOnly])];
+  const cssPath=(e)=>{
+    const parts=[];
+    for(let node=e;node && node.nodeType===1 && node!==document.documentElement;node=node.parentElement){
+      const siblings=[...node.parentElement.children].filter(el=>el.tagName===node.tagName);
+      parts.unshift(node.tagName.toLowerCase()+':nth-of-type('+(siblings.indexOf(node)+1)+')');
+    }
+    return 'html > '+parts.join(' > ');
+  };
+  const tooltipTriggersAll=candidates.map((e,index)=>{
     if (!visible(e)) return null;
     const attr={};
     for (const k of ['title','data-hint-body','data-tippy-content','data-tooltip-content',
@@ -71,6 +84,7 @@ OBSERVE = r"""() => {
     }
     const row=e.closest('tr');
     return {index,tag:e.tagName.toLowerCase(),id:e.id||null,
+       css_path:cssPath(e),bare_question:!markedTips.includes(e),
        row_id:row?.id||null,near:(row?.innerText||e.parentElement?.innerText||'').slice(0,220),
        attributes:attr,references:refs};
   }).filter(Boolean);
@@ -188,6 +202,10 @@ def _hover(page, max_tips: int) -> list[dict]:
                 target = page.locator('[id=' + json.dumps(dom_id) + ']')
                 if target.count() != 1:
                     raise RuntimeError("Tooltip stable id not unique")
+            elif trigger.get("css_path"):
+                target = page.locator(trigger["css_path"])
+                if target.count() != 1:
+                    raise RuntimeError("Tooltip DOM path no longer uniquely present")
             else:
                 target = page.locator(TOOLTIP_SELECTOR).nth(trigger["index"])
             target.hover(timeout=1200)

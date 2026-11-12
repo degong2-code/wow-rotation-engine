@@ -40,6 +40,10 @@ class LiveDOMTests(unittest.TestCase):
                 "Synthetic hover-generated additional explanatory rule." in
                 " ".join(h["dynamic_tooltips"]) for h in triggered
             ))
+            self.assertTrue(any(
+                "Synthetic tooltip only available from a bare question mark." in
+                " ".join(h["dynamic_tooltips"]) for h in triggered
+            ))
             self.assertFalse(data["errors"], data["errors"])
             public = summarize(data)
             self.assertGreaterEqual(public["observed_state_count"], 5)
@@ -73,6 +77,25 @@ class LiveDOMTests(unittest.TestCase):
             self.assertGreater(public["pending_state_count"], 0)
             self.assertTrue(public["capture_bounded"])
             self.assertFalse(public["real_site_completeness_verified"])
+        finally:
+            page.close()
+
+    def test_bare_question_without_tooltip_attributes_has_stable_path(self):
+        from engine.live_dom_capture import OBSERVE, _hover
+        page = self.browser.new_page()
+        try:
+            page.goto(FIXTURE.as_uri())
+            page.locator("#heroB").click()
+            observed = page.evaluate(OBSERVE)
+            candidates = [t for t in observed["tooltip_triggers"] if t["bare_question"]]
+            self.assertEqual(len(candidates), 1)
+            self.assertFalse(candidates[0]["id"])
+            self.assertTrue(candidates[0]["css_path"].startswith("html > "))
+            hovered = _hover(page, 20)
+            self.assertTrue(any(
+                "Synthetic tooltip only available from a bare question mark." in
+                " ".join(item["dynamic_tooltips"]) for item in hovered
+            ))
         finally:
             page.close()
 
