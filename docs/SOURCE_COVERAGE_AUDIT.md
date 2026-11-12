@@ -88,3 +88,13 @@ python -m engine.source_reconcile --structure /tmp/synthetic-structure.json --ob
 공개용 구조 결과의 섹션 제목은 DOM 좌표(`h2@번호` 등), 컨트롤·선택 항목은 길이와 SHA-256으로 저장한다. 오래된 구조 검사기는 문구를 포함할 수 있으므로 **과거 검사 결과를 새 안전한 보고서로 간주하지 않는다**. 위치의 의미는 별도 비공개 원문 문맥에서 분석한다.
 
 다전문화 실제 색인 조사와 합성 반례 검증: [CROSS_SPEC_SOURCE_VALIDATION_20261112](CROSS_SPEC_SOURCE_VALIDATION_20261112.md). 검색 색인·구버전 직접 열람의 날짜/패치 불일치와 동적 하위 선택 문제를 별도 한계로 관리한다.
+
+## 실제 Wowhead HTML 저장본 2종 스모크 검증 (2026-11-12)
+
+- 공공 GitHub `aurokin/warcraft_cli`의 과거 Wowhead HTML 테스트 fixture를 **고정 커밋 `376f5aec0aad29b4cf4e290b2879ec3e91870fde`**에서 GitHub Actions 실행 중 임시 다운로드하여 검증한다. 내부 `/tmp`에서 제거하며 개인 교본·실제 가이드 HTML은 우리 저장소·공개 Artifact에 추가하지 않는다.
+- `guide_283_page.html`: `WH.markup.printHtml`의 `guide-body` 본문에서 실제 WHML **탭 그룹 2개, 그룹당 하위 탭 3개, 합계 6개**를 확인. `_tab_groups`는 각 옵션의 순서·라벨 해시·닫힘 상태·본문 길이/해시를 기록한다.
+- `guide_3087_page.html`: 같은 형태의 `guide-body` 문자열이 있지만 WHML 탭 그룹은 **0개**다. 두 파일 모두 사이드바용 `WH.getPageData` 호출은 동적 인수이므로 **실행하지 않고 미해석으로 구분**한다.
+- `source_reconcile`는 `whml_tab:<payload>:<group>:<tab>` 단위로 원문 수집 목록과 대조하므로 **탭 그룹이 존재한다는 관측**과 **각 탭 본문을 확보했다는 관측**을 구별한다. 다른 전문화의 숨김 선택에도 같은 원리를 적용한다.
+- CI 실제 실행: [GitHub Actions 43152516953](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43152516953)에서 **실제 HTML 스모크 PASS + 전체 257개 테스트 PASS**. 최신 게임 패치의 공략 정확성, 현재 Wowhead 전체 DOM, 모든 `?` 본문은 이 검증 범위 밖이다.
+
+**중요:** 실제로 확인된 것은 특정 공개 *과거 저장본*의 HTML 구조다. 여전히 최신 고양 12.1.5 페이지의 직접 HTML 취득·동적 UI 전수 확보는 미완료이며, Gate A PASS로 승격하지 않는다.

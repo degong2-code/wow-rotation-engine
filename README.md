@@ -20,6 +20,8 @@ WoW 딜사이클 교본의 **V11 품질을 보존하면서 ChatGPT 채팅에서 
 
 **다전문화 범용화 회귀 검사:** [냉기 마법사·생존 사냥꾼·징벌 성기사의 원문 선택 형태 검토](docs/CROSS_SPEC_SOURCE_VALIDATION_20261112.md). 원본 HTML 구조·관측 기록은 SHA-256 및 패치/수정본이 일치할 때만 연결하고, 검색 색인만으로 라이브 UI 확보를 주장하지 않습니다.
 
+**실제 HTML 구조 스모크:** 과거 공개 Wowhead HTML 2종을 CI에서 임시 분석해 WHML 탭 2그룹·6개 본문과 0그룹을 구분했습니다. [검증 범위·한계](docs/SOURCE_COVERAGE_AUDIT.md). 최신 패치 공략 원문을 전수 확보했다는 의미는 아닙니다.
+
 **운영 정본:**
 - [ADR-003 — ChatGPT 중심 제작 결정](docs/ADR_003_CHAT_FIRST_EDITORIAL.md)
 - [CHAT_FIRST_PLAYBOOK — CREATE/UPDATE 작업 순서](docs/CHAT_FIRST_PLAYBOOK.md)
