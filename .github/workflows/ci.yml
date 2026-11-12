@@ -109,6 +109,11 @@ jobs:
           assert report['named_tooltip_definition_count'] == 1
           assert report['tooltip_reference_count'] == 1
           assert (root/'analysis.html').exists()
+          private=json.loads((root/'editorial-evidence-private.json').read_text(encoding='utf-8'))
+          assert private['source_text_in_file'] is True
+          assert private['source_text_may_be_public'] is False
+          assert report['private_editorial_packet_written'] is True
+          assert 'original_whml' in private['payloads'][0]
           assert (root/'structure-audit.json').exists()
           assert report['source_patch_verified'] is False
           assert report['real_site_completeness_verified'] is False

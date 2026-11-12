@@ -25,6 +25,7 @@ from .source_structure import inspect_html
 from .http_source_fetch import get_html
 from .spec_source_resolver import resolve_specialization
 from .guide_identity import inspect_identity
+from .source_editorial_packet import packet_from_html
 
 PIPELINE_SCHEMA = "source-acquisition-pipeline-v1"
 
@@ -79,6 +80,8 @@ def inspect_and_store(*, dom_html: str, output: Path, kind: str,
         if p.get("nested_structure_issues"):
             flags.append("malformed_nested_markup")
 
+    # Prepare private source evidence before writing any public-safe audit.
+    private_packet = packet_from_html(analysis) if payloads else None
     report = {
         "schema_version": PIPELINE_SCHEMA,
         "acquisition_kind": kind,
@@ -99,6 +102,7 @@ def inspect_and_store(*, dom_html: str, output: Path, kind: str,
         "visible_control_candidates": len(static["control_candidates"]),
         "issue_types": sorted(set(flags)),
         "static_source_obtained": True,
+        "private_editorial_packet_written": private_packet is not None,
         "source_patch_verified": False,
         "real_site_completeness_verified": False,
         "gameplay_meaning_verified": False,
@@ -107,6 +111,12 @@ def inspect_and_store(*, dom_html: str, output: Path, kind: str,
     }
     write_private_snapshot(output, dom_html, audit, source_html=raw_html,
                            mhtml=mhtml)
+    if private_packet is not None:
+        (output / "editorial-evidence-private.json").write_text(
+            json.dumps(private_packet, ensure_ascii=False, indent=2) + "
+",
+            encoding="utf-8",
+        )
     (output / "structure-audit.json").write_text(
         json.dumps(static, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
