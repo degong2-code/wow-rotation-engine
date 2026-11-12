@@ -47,6 +47,8 @@ def build(packet):
         refs = [{"payload_sha256": SHA, "start": begin + row.start(),
                  "end": begin + row.end()}]
         if tooltip:
+            if "tooltip=" + tooltip not in whml[refs[0]["start"]:refs[0]["end"]]:
+                raise SourceAccessError("The tooltip is not referenced by its priority row")
             tip = re.search(r'\[tooltip name="' + re.escape(tooltip) +
                             r'"\][\s\S]*?\[/tooltip\]', whml)
             if tip is None:
