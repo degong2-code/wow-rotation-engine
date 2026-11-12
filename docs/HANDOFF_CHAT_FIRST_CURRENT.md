@@ -182,3 +182,11 @@
 - **고양 V3.6 조건 일관성 감사 (2026-11-11):** 부분 HTML `wow_rotation_v11_enhancement_v3_6_condition_consistency_review.html` (1,065,543 bytes, SHA256 `6103ac48a034a0e29f4a8e617b0816e0f5860d1b775aeff1f3a99c8de6bafb49`), 개인 43행 감사 JSON `enhancement_v3_6_condition_audit.json` (23,849 bytes). 43개 기술명/순위 일치, 색인상 상세 조건 직접 19행/노트·기본 규칙 조합 24행, 원문 `?` 실제 행 귀속 0. 토템술사 ST/AoE 9순위 M10 vs 12순위 M5+ 중복 설명 교정, 5~9 조기 소비가 상위 기술을 건너뛰는지 **판정 보류**로 표시. 10개 정상 상태 판독/2개 미해결, 개인 HTML에는 접이식 12상태 테스트. 기존 7개 노드·43행 보존, 로컬 Chromium PC/모바일 기능 PASS. **원문 Gate A 미통과, 사용자 승인 전.** [감사 기록](ENHANCEMENT_V36_CONDITION_AUDIT_20261111.md)·[사례집 §32](QUALITY_GENERALIZATION_CASEBOOK.md). 개인 파일 공개 금지.
 
 - **고양 V3.7 조건 충돌 1건 보강(2026-11-11):** 개인 `wow_rotation_v11_enhancement_v3_7_proc_pooling_review.html`(1,066,498 bytes / SHA256 `eb6eff4fd9f3d2e66b12b46d6bc21bf36178b4ea6f370a8da84e9a9a79133069`). 폭풍인도자 AoE 10순위 M5+ 최하위 연쇄 번개에서 **폭풍 발동·M9이면 M10 폭풍을 우선 목표**라는 최신 Wowhead 12.1.5 원칙이 누락된 문제를 수정. 상태 검사 15개(13개 순위 일관, 2개 정확한 다음 GCD 보류). V11 7뷰/고양 43행 보존, PC/모바일 팝업·영웅 전환 PASS. 여전히 토템술사 M7 조기 소비와 Stormbringer M9 폭풍 발동 시 극단 상태의 정확한 다음 행동은 미확인. 원문 `?`/물약 탭 실제 귀속 Gate A 미통과. [감사](ENHANCEMENT_V37_PROC_POOLING_AUDIT_20261111.md), [사례집 §33](QUALITY_GENERALIZATION_CASEBOOK.md). 개인 HTML/JSON은 공개 GitHub 미게시, PR #20 Draft 유지.
+
+
+## 2026-11-12 사용자 최신 확정 — 전체 원문 먼저, 툴팁 위치 단서, 의미적 귀속은 다음 단계
+
+- **Gate A 원문 확보:** 전체 관련 영웅·전투·빌드/특성·물약별 오프너·쿨다운·Notes/Further/Advanced·타임라인·실제 존재하는 관련 `?`/hover의 **모든 본문**을 확보한다. 팁이 어느 영웅/전투 탭·섹션·표/행·인접 기술 옆에 있는지 **가능한 위치 단서**를 함께 기록한다. 모든 `?`의 정확한 DOM ID·대상 행 귀속 입증은 필수가 아니다.
+- **Q0/Q1 의미 분석:** ChatGPT가 확보된 내용과 위치 단서로 기술·조건·우선권·예외를 연결한다. 적용 대상이 모호하거나 행동이 바뀌는 경우에 한해 해당 참조를 추가 확인한다. 본문 누락=Gate A FAIL, 본문 확보·중요 의미 미확정=Q0/Q1 REVIEW. 최종 교본 PASS는 핵심 불확실성이 없을 때만 가능.
+- **제약 유지:** 패치 버전 혼합 금지, 배타적인 물약 오프너 합성 금지, `tooltip2` 등의 복수 설명 누락 금지, 장문 Wowhead 원문·개인 HTML의 PUBLIC GitHub 업로드 금지. [SOURCE_ACQUISITION](SOURCE_ACQUISITION.md) 및 [범용 사례집 §34](QUALITY_GENERALIZATION_CASEBOOK.md)를 최신 정책으로 적용한다.
+- **현 상태:** 고양 12.1.5 검색 색인에서는 Notes와 4개 표를 상당 부분 확인했으나 모든 팁의 실제 내용과 물약별 완전한 오프너는 미확인이다. 따라서 아직 Gate A PASS나 V3.7 최종 승인 아님. 이 수정은 교본 HTML 변경을 수반하지 않는다.
