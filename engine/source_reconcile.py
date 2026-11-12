@@ -29,8 +29,8 @@ def _sha(text: str) -> str:
     return hashlib.sha256(normalized.encode("utf-8")).hexdigest()
 
 
-def _candidate(category: str, name: str, **metadata) -> dict:
-    return {"id": category + ":" + name, "kind": category, **metadata}
+def _candidate(category: str, locator: str, **metadata) -> dict:
+    return {"id": category + ":" + locator, "kind": category, **metadata}
 
 
 def discover(structure: dict) -> tuple[list[dict], list[str]]:
@@ -144,13 +144,19 @@ def reconcile(structure: dict, observations: dict, decisions: dict | None = None
 
     for si, state in enumerate(observations["states"]):
         for entry in state["entries"]:
-            for cid in entry.get("source_candidate_ids", []):
+            ids = entry.get("source_candidate_ids", [])
+            if not isinstance(ids, list):
+                raise _error("entry source_candidate_ids must be a list")
+            for cid in ids:
                 if not isinstance(cid, str):
                     raise _error("entry source_candidate_ids must contain strings")
                 link(cid, "state=" + str(si) + "/entry=" + entry["id"],
                      entry["kind"], entry.get("text"))
         for choice in state["choices"]:
-            for cid in choice.get("source_candidate_ids", []):
+            ids = choice.get("source_candidate_ids", [])
+            if not isinstance(ids, list):
+                raise _error("choice source_candidate_ids must be a list")
+            for cid in ids:
                 if not isinstance(cid, str):
                     raise _error("choice source_candidate_ids must contain strings")
                 link(cid, "state=" + str(si) + "/control=" + choice["control"], "choice", None)
@@ -161,6 +167,8 @@ def reconcile(structure: dict, observations: dict, decisions: dict | None = None
     for si, state in enumerate(observations["states"]):
         for entry in state["entries"]:
             body = entry.get("text")
+            if entry.get("source_candidate_ids"):
+                continue
             if not isinstance(body, str) or not body.strip():
                 continue
             h = _sha(body)
@@ -205,8 +213,9 @@ def reconcile(structure: dict, observations: dict, decisions: dict | None = None
                             "subtype": candidate.get("subtype"),
                             "section": candidate.get("section")})
     warnings = notes + coverage["warnings"]
-    if not structure.get("live_ui_completeness_verified") is False:
+    if structure.get("live_ui_completeness_verified") is not False:
         warnings.append("Unexpected structure completeness claim; not trusted")
+    warnings.append("Structural snapshot provenance is not independently authenticated")
     if not observations.get("states"):
         raise _error("empty observations")
     return {

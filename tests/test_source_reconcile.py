@@ -78,8 +78,7 @@ class ReconciliationTests(unittest.TestCase):
         data["states"][0]["entries"].append({
             "id": "tip", "kind": "tooltip", "text": "Unique synthetic tooltip phrase."})
         out = reconcile(structure, data)
-        self.assertEqual(out["auto_matched_candidate_ids"], ["tooltip:7:0"] if False else
-                         [next(x["id"] for x in discover(structure)[0] if
+        self.assertEqual(out["auto_matched_candidate_ids"], [next(x["id"] for x in discover(structure)[0] if
                                x["kind"] == "tooltip" and x["subtype"] == "title")])
         self.assertEqual(out["exact_digest_matched_count"], 1)
 
@@ -122,6 +121,13 @@ class ReconciliationTests(unittest.TestCase):
         out = reconcile(s, ledger())
         self.assertFalse(out["candidate_comparison_complete"])
         self.assertTrue(any("limit" in x for x in out["warnings"]))
+
+    def test_nonlist_source_locator_rejected(self):
+        structure = self.structure()
+        data = ledger()
+        data["states"][0]["entries"][0]["source_candidate_ids"] = "tooltip:1:0"
+        with self.assertRaisesRegex(ValueError, "must be a list"):
+            reconcile(structure, data)
 
     def test_wrong_revision_keeps_observation_gap(self):
         s = self.structure()
