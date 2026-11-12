@@ -65,6 +65,7 @@ class ScopeEvidenceTests(unittest.TestCase):
         self.assertIn("unclosed_relevant_scopes", issue)
         meta = scoped_metadata(p)
         self.assertIn("unclosed_relevant_scopes", meta["structure_issue_types"])
+        self.assertEqual(meta["structure_issue_positions"][0]["open_tag"], "div")
 
     def test_public_summary_has_no_copyrighted_text(self):
         p = capture('[h2]Secret heading[/h2][li display-options="SecretChoice"]'

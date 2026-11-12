@@ -34,7 +34,7 @@ def _attributes(raw: str) -> dict[str, str]:
     }
 
 
-def _nested_scopes(whml: str) -> tuple[list[dict], list[str]]:
+def _nested_scopes(whml: str, diagnostics: list[dict] | None = None) -> tuple[list[dict], list[str]]:
     """Pair exact brackets; unmatched scopes require human review."""
     opened: list[dict] = []
     closed: list[dict] = []
@@ -57,9 +57,16 @@ def _nested_scopes(whml: str) -> tuple[list[dict], list[str]]:
             continue
         if not opened:
             issues.append("closing_without_open")
+            if diagnostics is not None:
+                diagnostics.append({"kind": "closing_without_open",
+                                    "offset": token.start(), "closing_tag": tag})
             continue
         if opened[-1]["tag"] != tag:
             issues.append("crossed_or_unmatched_closing")
+            if diagnostics is not None:
+                diagnostics.append({"kind": "crossed_or_unmatched_closing",
+                                    "offset": token.start(), "closing_tag": tag,
+                                    "open_tag": opened[-1]["tag"]})
             continue
         scope = opened.pop()
         scope["body_end"] = token.start()
@@ -67,6 +74,10 @@ def _nested_scopes(whml: str) -> tuple[list[dict], list[str]]:
         closed.append(scope)
     if opened:
         issues.append("unclosed_relevant_scopes")
+        if diagnostics is not None:
+            diagnostics.extend({"kind": "unclosed_relevant_scopes",
+                                "offset": entry["start"], "open_tag": entry["tag"]}
+                               for entry in opened[-8:])
     return sorted(closed, key=lambda x: x["start"]), sorted(set(issues))
 
 
@@ -85,7 +96,8 @@ def scoped_from_packet(packet: dict) -> dict:
             raise SourceAccessError("Original private WHML is unavailable")
         if len(body) > 3_000_000:
             raise SourceAccessError("Guide source exceeds scoping limit")
-        scopes, issues = _nested_scopes(body)
+        diagnostics: list[dict] = []
+        scopes, issues = _nested_scopes(body, diagnostics)
         visibility = [s for s in scopes if "display-options" in s["attributes"]]
         tabs = [s for s in scopes if s["tag"] == "tab"]
         headings = [s for s in scopes if s["tag"] in HEADING_TAGS]
@@ -150,6 +162,7 @@ def scoped_from_packet(packet: dict) -> dict:
             "source_list_rows": rows,
             "visible_predicate_scope_count": len(visibility),
             "unresolved_structure_issues": issues,
+            "structure_issue_positions": diagnostics[:20],
             "source_text_may_be_public": False,
         })
     return {
@@ -168,6 +181,8 @@ def scoped_metadata(scoped: dict) -> dict:
     """Public-safe counts only: do not emit source fragments or expressions."""
     rows = [row for source in scoped["payloads"] for row in source["source_list_rows"]]
     issues = Counter(issue for p in scoped["payloads"] for issue in p["unresolved_structure_issues"])
+    examples = [sample for p in scoped["payloads"]
+                for sample in p["structure_issue_positions"]]
     return {
         "schema_version": "whml-scoped-source-audit-v1",
         "guide_body_payload_count": len(scoped["payloads"]),
@@ -176,6 +191,7 @@ def scoped_metadata(scoped: dict) -> dict:
         "rows_with_mixed_visibility": sum(x["contains_multiple_visibility_cases"] for x in rows),
         "rows_inside_tooltip_definitions": sum(x["inside_tooltip_definition"] for x in rows),
         "structure_issue_types": dict(sorted(issues.items())),
+        "structure_issue_positions": examples[:20],
         "source_text_in_report": False,
         "gameplay_action_interpreted": False,
         "gameplay_meaning_verified": False,
