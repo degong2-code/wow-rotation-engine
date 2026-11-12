@@ -21,6 +21,9 @@ class SourcePipelineTests(TestCase):
             result = inspect_and_store(dom_html=html, output=root,
                                        kind="saved_html")
             self.assertEqual(result["guide_body_payloads"], 1)
+            self.assertEqual(len(result["guide_body_sha256s"]), 1)
+            self.assertEqual(len(result["guide_body_sha256s"][0]), 64)
+            self.assertGreater(result["guide_body_character_counts"][0], 10)
             self.assertEqual(result["named_tooltip_definition_count"], 1)
             self.assertEqual(result["tooltip_reference_count"], 1)
             self.assertTrue((root / "analysis.html").exists())

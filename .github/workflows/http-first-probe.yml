@@ -46,6 +46,15 @@ jobs:
                                                kind="http_direct")
                       print("http_first_access=valid_guide_body_received")
                       print("named_tip_definitions="+str(report["named_tooltip_definition_count"]))
+                      print("option_definitions="+str(report["option_definition_count"]))
+                      print("conditional_displays="+str(report["conditional_display_count"]))
+                      print("tooltip_references="+str(report["tooltip_reference_count"]))
+                      digest=report["guide_body_sha256s"][0]
+                      length=report["guide_body_character_counts"][0]
+                      expected="6657591171c36c79797b739b2248e37b9d967094e7d33e8dd799293283bd5dbe"
+                      print("guide_body_sha256="+digest)
+                      print("guide_body_characters="+str(length))
+                      print("matches_user_saved_2026_10_13_body="+str(digest==expected).lower())
                       print("source_patch_verified=false")
                       print("real_site_completeness_verified=false")
               except SourceAccessError:
