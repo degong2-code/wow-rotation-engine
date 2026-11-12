@@ -35,12 +35,13 @@ class AcquireTests(unittest.TestCase):
             with ZipFile(archive, "w") as z:
                 z.writestr("Saved Page_files/stylesheet.css", "body { color: red }")
                 z.writestr("Saved Page_files/sidebar.html",
-                           '<html><body>minor sidebar</body></html>')
+                           "<html><body>" + ("Irrelevant resource text " * 300) + "</body></html>")
                 z.writestr("Saved Page.html", SYNTHETIC)
             html, meta = read_saved_zip(archive)
             self.assertEqual(html, SYNTHETIC)
             self.assertEqual(meta["archive_entries"], 3)
             self.assertEqual(meta["html_candidates"], 2)
+            self.assertEqual(meta["resource_entries_ignored"], 2)
             self.assertFalse(meta["companion_folder_required"])
 
     def test_companion_resources_cannot_escape_zip(self):

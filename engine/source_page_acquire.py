@@ -123,7 +123,7 @@ def read_saved_zip(path: Path) -> tuple[str, dict]:
                 "companion_folder_required": False,
                 "archive_entries": len(infos),
                 "html_candidates": len(candidates),
-                "resource_entries_ignored": len(infos) - len(candidates),
+                "resource_entries_ignored": len(infos) - 1,
             }
     except (zipfile.BadZipFile, zipfile.LargeZipFile) as exc:
         raise SourceAccessError("Invalid or unsupported ZIP archive") from exc
