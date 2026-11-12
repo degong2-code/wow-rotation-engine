@@ -43,7 +43,9 @@ def _nested_scopes(whml: str, diagnostics: list[dict] | None = None) -> tuple[li
         closing, tag, attrs_raw = bool(token.group(1)), token.group(2).lower(), token.group(3)
         attrs = _attributes(attrs_raw)
         if not closing:
-            if tag not in PAIRED and "display-options" not in attrs:
+            # Unknown custom WHML components (e.g. timeline steps) can be
+            # standalone tokens. Never invent a closing scope for them.
+            if tag not in PAIRED:
                 continue
             opened.append({
                 "tag": tag,
@@ -102,6 +104,20 @@ def scoped_from_packet(packet: dict) -> dict:
         tabs = [s for s in scopes if s["tag"] == "tab"]
         headings = [s for s in scopes if s["tag"] in HEADING_TAGS]
         definitions = [s for s in scopes if s["tag"] == "tooltip"]
+        standalone_conditions = []
+        for token in TOKENS.finditer(body):
+            if token.group(1) or token.group(2).lower() in PAIRED:
+                continue
+            attrs = _attributes(token.group(3))
+            if "display-options" in attrs:
+                standalone_conditions.append({
+                    "tag": token.group(2).lower(),
+                    "start": token.start(),
+                    "end": token.end(),
+                    "expression": attrs["display-options"],
+                    "original_markup": body[token.start():token.end()],
+                    "scope_unverified": True,
+                })
         rows = []
         for scope in scopes:
             if scope["tag"] not in EVIDENCE_ROWS:
@@ -121,6 +137,10 @@ def scoped_from_packet(packet: dict) -> dict:
             in_tooltip = any(_covering(t, scope) for t in definitions)
             prior_headings = [h for h in headings if h["end"] <= scope["start"]]
             heading = prior_headings[-1] if prior_headings else None
+            nested_markers = [
+                x for x in standalone_conditions
+                if scope["start"] <= x["start"] < scope["end"]
+            ]
             refs = [
                 {"position": r["position"], "definition_name": r["definition_name"]}
                 for r in source.get("tooltip_references", [])
@@ -135,6 +155,10 @@ def scoped_from_packet(packet: dict) -> dict:
                     {"expression": v["attributes"]["display-options"],
                      "start": v["start"], "end": v["end"]}
                     for v in active
+                ],
+                "standalone_condition_markers_inside_row": [
+                    {"tag": m["tag"], "start": m["start"],
+                     "expression": m["expression"]} for m in nested_markers
                 ],
                 "nested_display_fragments": [
                     {"expression": v["attributes"]["display-options"],
@@ -153,7 +177,7 @@ def scoped_from_packet(packet: dict) -> dict:
                 ),
                 "tooltip_references": refs,
                 "inside_tooltip_definition": in_tooltip,
-                "contains_multiple_visibility_cases": bool(internal),
+                "contains_multiple_visibility_cases": bool(internal or nested_markers),
                 "gameplay_action_interpreted": False,
             })
         results.append({
@@ -161,6 +185,7 @@ def scoped_from_packet(packet: dict) -> dict:
             "source_characters": len(body),
             "source_list_rows": rows,
             "visible_predicate_scope_count": len(visibility),
+            "standalone_condition_markers": standalone_conditions,
             "unresolved_structure_issues": issues,
             "structure_issue_positions": diagnostics[:20],
             "source_text_may_be_public": False,
@@ -190,6 +215,12 @@ def scoped_metadata(scoped: dict) -> dict:
         "rows_under_display_predicates": sum(bool(x["active_display_scopes"]) for x in rows),
         "rows_with_mixed_visibility": sum(x["contains_multiple_visibility_cases"] for x in rows),
         "rows_inside_tooltip_definitions": sum(x["inside_tooltip_definition"] for x in rows),
+        "standalone_conditional_markers": sum(
+            len(p["standalone_condition_markers"]) for p in scoped["payloads"]),
+        "standalone_conditional_marker_types": dict(sorted(Counter(
+            m["tag"] for p in scoped["payloads"]
+            for m in p["standalone_condition_markers"]
+        ).items())),
         "structure_issue_types": dict(sorted(issues.items())),
         "structure_issue_positions": examples[:20],
         "source_text_in_report": False,

@@ -61,6 +61,8 @@ jobs:
                       print(label+"_private_editorial_packet_indexed=true")
                       print(label+"_scoped_row_candidates="+str(scoped["source_row_candidates"]))
                       print(label+"_rows_with_mixed_visibility="+str(scoped["rows_with_mixed_visibility"]))
+                      print(label+"_standalone_conditional_markers="+str(scoped["standalone_conditional_markers"]))
+                      print(label+"_standalone_marker_types="+str(scoped["standalone_conditional_marker_types"]))
                       print(label+"_scoped_structure_issues="+str(scoped["structure_issue_types"]))
                       print(label+"_scoped_issue_positions="+str(scoped["structure_issue_positions"]))
                       print(label+"_status=guide_identity_confirmed")

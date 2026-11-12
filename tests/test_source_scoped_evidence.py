@@ -67,6 +67,29 @@ class ScopeEvidenceTests(unittest.TestCase):
         self.assertIn("unclosed_relevant_scopes", meta["structure_issue_types"])
         self.assertEqual(meta["structure_issue_positions"][0]["open_tag"], "div")
 
+    def test_unknown_inline_condition_is_not_falsely_assigned_to_entire_scope(self):
+        p = capture(
+            '[tabs][tab name=AoE][div][rt-step display-options="PotionA"'
+            ' spell=123]Continue[/div][/tab][/tabs]'
+        )
+        payload = p["payloads"][0]
+        self.assertEqual(payload["unresolved_structure_issues"], [])
+        self.assertEqual(len(payload["standalone_condition_markers"]), 1)
+        self.assertTrue(payload["standalone_condition_markers"][0]["scope_unverified"])
+        summary = scoped_metadata(p)
+        self.assertEqual(summary["standalone_conditional_markers"], 1)
+        self.assertEqual(summary["standalone_conditional_marker_types"], {"rt-step": 1})
+        self.assertFalse(summary["automatic_publish_allowed"])
+
+    def test_unknown_conditional_marker_inside_row_requires_separate_review(self):
+        p = capture(
+            '[li]Start [rt-step display-options="PotionB" spell=42] More[/li]'
+        )
+        row = p["payloads"][0]["source_list_rows"][0]
+        self.assertEqual(row["active_display_scopes"], [])
+        self.assertTrue(row["contains_multiple_visibility_cases"])
+        self.assertEqual(row["standalone_condition_markers_inside_row"][0]["expression"], "PotionB")
+
     def test_public_summary_has_no_copyrighted_text(self):
         p = capture('[h2]Secret heading[/h2][li display-options="SecretChoice"]'
                     'Copyright-restricted synthetic material[/li]')
