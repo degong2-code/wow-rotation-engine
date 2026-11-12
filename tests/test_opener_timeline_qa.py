@@ -196,6 +196,26 @@ class OpenerTimelineTests(unittest.TestCase):
         self.assertEqual(result["unreviewed_branch_count"], 1)
         self.assertIn("unreviewed_branch_contexts", result["blocker_codes"])
 
+    def test_later_beat_cannot_return_to_prepull(self):
+        ctx = {"hero": "sample"}
+        at_pull = event("onpull", "Fictional attack", "[spell=101]",
+                        0, "pull", "gcd")
+        prep = event("pre", "Fictional prepull", "[spell=103]",
+                     1, "prepull", "gcd")
+        report = run([branch(ctx, [at_pull, prep])],
+                     [case("bad-phase", ctx, [at_pull, prep])])
+        self.assertEqual(report["case_results"][0]["result"], "ambiguous")
+
+    def test_explicit_start_times_cannot_go_backwards(self):
+        ctx = {"hero": "sample"}
+        early = event("early", "Fictional attack", "[spell=101]",
+                      0, "combat", "gcd", time_ms=2000, time_anchor="start")
+        late = event("late", "Fictional potion", "[spell=102]",
+                     1, "combat", "off_gcd", time_ms=1000, time_anchor="use")
+        report = run([branch(ctx, [early, late])],
+                     [case("bad-time", ctx, [early, late])])
+        self.assertEqual(report["case_results"][0]["result"], "ambiguous")
+
     def test_source_marker_must_be_in_first_citation(self):
         ctx = {"hero": "sample"}
         bad = event("bad", "Fictional potion", "[spell=102]",
