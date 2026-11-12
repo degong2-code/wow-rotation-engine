@@ -28,6 +28,8 @@ WoW 딜사이클 교본의 **V11 품질을 보존하면서 ChatGPT 채팅에서 
 
 **고양 최신 실물 원본 검증(2026-11-12):** 사용자가 제공한 Wowhead 12.1.5 저장본에서 tooltip 44개·선택 정의 16개·조건 표시 82개 및 물약별 실제 오프너 12조합을 확인했습니다. 선택이 게임 행동을 바꾸는 경우에만 분기하도록 [범용 수집 정책](docs/SOURCE_COVERAGE_AUDIT.md)을 수정했습니다. [증거 메타데이터](docs/ENHANCEMENT_SAVED_HTML_EVIDENCE_20261112.md). 개인 HTML/원문 미게시.
 
+**원문 HTML 자동 취득기:** [Ctrl+S 대응 HTML·ZIP·MHTML 취득 설계](docs/AUTO_PAGE_ACQUISITION.md). 정상 접근 가능한 브라우저에서 원문 HTML을 자동 저장하고 공통 WHML 분석에 넘깁니다. 사용자 저장 시 동반되는 `_files` 리소스 폴더는 일반적으로 원문 조건 분석에 필수는 아닙니다. 서버 403 우회는 포함하지 않습니다.
+
 **운영 정본:**
 - [ADR-003 — ChatGPT 중심 제작 결정](docs/ADR_003_CHAT_FIRST_EDITORIAL.md)
 - [CHAT_FIRST_PLAYBOOK — CREATE/UPDATE 작업 순서](docs/CHAT_FIRST_PLAYBOOK.md)

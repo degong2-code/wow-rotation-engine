@@ -278,3 +278,10 @@
 - **정정된 범용 원칙:** 물약 종류를 무조건 단순 예시 처리하지 않음. 실제 `display-options`가 오프너 시전 시간/순서/기술을 바꾸는지 보고 결정 축 여부 판단. 고양의 영웅×ST/AoE×3물약 = **12개 실질 조합**이며 폭풍인도자 AoE에서 Recklessness와 나머지 2개 사이 **낙뢰 선시전 여부도 달라짐**. 다른 전문화에서 동일하다고 단정하지 않음.
 - **고양 V3.11 개인 HTML:** `wow_rotation_v11_enhancement_v3_11_verified_potion_branches_review.html`, 1,112,664 bytes, SHA256 `b14d47ca44ed015132f1a355db77353c4e95d6450fbc31207bc293c5450159f2`. 기존 7개 V11 본문 완전 동일, 고양 4표·43행 동일. 4오프너×3 native details 조합; Chromium PC·모바일 영웅 전환·물약 펼침/상호 배타적 선택·가로 넘침 0·JS 오류 0.
 - **보류:** 원본에는 광역용 tooltip `SBAOE-O-Pot`이 존재하지만 실제 광역 UI는 `SBST-O-Pot`을 참조하는 능력치 팁 혼선이 있으며 상태→다음 GCD 2건은 독립 gameplay Q0/Q1 검증이 필요. V3.11은 미승인 검토본. 실제 브라우저 동적 실행 자체를 모델이 다시 수행했다고 주장하지 않음. [검증 근거](ENHANCEMENT_SAVED_HTML_EVIDENCE_20261112.md), [범용 사례 §38](QUALITY_GENERALIZATION_CASEBOOK.md).
+
+
+## 2026-11-12 Ctrl+S 대응 범용 자동 원문 취득기
+
+- 추가: `engine/source_page_acquire.py`, HTML/ZIP·오류·출처 선택 단위 테스트, 실제 Chromium HTML/MHTML 취득 테스트. **접속이 허용된** 페이지에서 `page.content()`와 최초 응답을 수집하며, `analysis.html`로 가장 풍부한 인라인 원문을 자동 선택. 사용자가 저장한 ZIP에서는 메인 HTML만 선별한다.
+- `_files` 폴더는 브라우저 '웹페이지, 전체'의 CSS/JS/이미지 보관용. 이번 고양 12.1.5 원문 해석은 메인 HTML의 WHML로 가능했으며 다른 페이지는 동적 자료가 필요할 수 있다.
+- 접근 제한(403)을 자동 해결했다는 뜻은 아님. 연결된 접근 가능한 브라우저가 있어야 실제 최신 Wowhead 원문을 직접 저장 가능. 공개 저장소에는 개인 원본 HTML·ZIP·MHTML을 올리지 않는다. [운영 문서](AUTO_PAGE_ACQUISITION.md).

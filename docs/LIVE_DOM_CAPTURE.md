@@ -53,3 +53,8 @@ python -m engine.live_dom_bridge \
 ```
 
 위 실행은 개발 환경 예시다. `/tmp/private-coverage-ledger.json`은 **원문 텍스트가 포함된 비공개 자료**여서 PUBLIC 저장소·Actions Artifact에 포함하지 않는다. 공개 감사 보고서도 원문 본문을 복제하지 않는다. 브라우저 CI에서는 합성 픽스처만 사용하고 종료 후 모든 파일을 삭제한다.
+
+
+## 자동 취득과 런타임 탐색 구분
+
+[Source Page Acquisition](AUTO_PAGE_ACQUISITION.md)은 페이지 HTML과 선택적 MHTML을 먼저 저장하고, 본 모듈은 정상 렌더링된 페이지의 **동적 선택·hover**를 조사한다. 내장 원문이 HTML에 있으면 `_files` 폴더가 필요 없지만 모든 사이트에서 전수 확보를 보장하지 않는다.
