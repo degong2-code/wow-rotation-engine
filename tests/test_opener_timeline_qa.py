@@ -77,7 +77,7 @@ class OpenerTimelineTests(unittest.TestCase):
                                  time_anchor="start")
                     items = [move]
                     branches.append(branch(context, items))
-                    cases.append(case("synthetic-case", context, items))
+                    cases.append(case("-".join((hero, targets, potion)), context, items))
         report = run(branches, cases)
         self.assertEqual(report["branch_count"], 12)
         self.assertEqual(report["case_outcome_counts"], {"matched": 12})
@@ -214,6 +214,14 @@ class OpenerTimelineTests(unittest.TestCase):
                 "branches": [branch(ctx, [item])],
                 "cases": [case("x", ctx, [item])],
             })
+
+    def test_duplicate_case_ids_are_rejected(self):
+        ctx = {"hero": "sample"}
+        item = event("item", "Fictional attack", "[spell=101]",
+                     1, "combat", "gcd")
+        with self.assertRaisesRegex(ValueError, "Duplicate case id"):
+            run([branch(ctx, [item])], [case("same", ctx, [item]),
+                                        case("same", ctx, [item])])
 
     def test_same_schema_for_unrelated_spec_and_no_source_text_leak(self):
         ctx = {"spec": "other", "build": "unrelated"}
