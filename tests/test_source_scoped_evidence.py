@@ -94,6 +94,25 @@ class ScopeEvidenceTests(unittest.TestCase):
         self.assertTrue(row["contains_multiple_visibility_cases"])
         self.assertEqual(row["standalone_condition_markers_inside_row"][0]["expression"], "PotionB")
 
+
+    def test_historical_priority_rows_and_notes_do_not_share_list_identity(self):
+        evidence = capture(
+            '[tabs][tab name="ST"][div display-options=HeroA]'
+            '[ol][li]Priority one[/li][li]Priority two[/li][/ol]'
+            '[ul][li]Explanation, not priority[/li][/ul]'
+            '[/div][/tab][/tabs]'
+        )
+        rows = evidence["payloads"][0]["source_list_rows"]
+        self.assertEqual([x["containing_list"]["tag"] for x in rows],
+                         ["ol", "ol", "ul"])
+        self.assertEqual([x["containing_list"]["ordinal"] for x in rows],
+                         [1, 2, 1])
+        self.assertEqual(len({x["containing_list"]["start"] for x in rows}), 2)
+        summary = scoped_metadata(evidence)
+        self.assertEqual(summary["rows_in_ordered_lists"], 2)
+        self.assertEqual(summary["rows_in_unordered_lists"], 1)
+        self.assertFalse(summary["gameplay_action_interpreted"])
+
     def test_public_summary_has_no_copyrighted_text(self):
         p = capture('[h2]Secret heading[/h2][li display-options="SecretChoice"]'
                     'Copyright-restricted synthetic material[/li]')

@@ -104,6 +104,8 @@ def scoped_from_packet(packet: dict) -> dict:
         tabs = [s for s in scopes if s["tag"] == "tab"]
         headings = [s for s in scopes if s["tag"] in HEADING_TAGS]
         definitions = [s for s in scopes if s["tag"] == "tooltip"]
+        list_containers = [s for s in scopes if s["tag"] in {"ol", "ul"}]
+        list_row_counts: dict[int, int] = {}
         standalone_conditions = []
         for token in TOKENS.finditer(body):
             if token.group(1) or token.group(2).lower() in PAIRED:
@@ -141,6 +143,19 @@ def scoped_from_packet(packet: dict) -> dict:
                 (t for t in tabs if _covering(t, scope)), key=lambda x: x["start"],
             )
             in_tooltip = any(_covering(t, scope) for t in definitions)
+            # Ordered priorities, unordered explanatory notes and timelines
+            # are different source containers. This is only structural
+            # provenance, not proof that a row is a rotation action.
+            parent_lists = sorted(
+                (l for l in list_containers if _covering(l, scope)),
+                key=lambda l: (l["end"] - l["start"]), reverse=True,
+            )
+            list_parent = parent_lists[-1] if parent_lists else None
+            ordinal = None
+            if list_parent is not None:
+                location = list_parent["start"]
+                list_row_counts[location] = list_row_counts.get(location, 0) + 1
+                ordinal = list_row_counts[location]
             prior_headings = [h for h in headings if h["end"] <= scope["start"]]
             heading = prior_headings[-1] if prior_headings else None
             nested_markers = [
@@ -155,6 +170,11 @@ def scoped_from_packet(packet: dict) -> dict:
             rows.append({
                 "kind": "source_list_item" if scope["tag"] == "li" else "source_table_row",
                 "source_start": scope["start"],
+                "containing_list": (
+                    {"tag": list_parent["tag"], "start": list_parent["start"],
+                     "end": list_parent["end"], "ordinal": ordinal}
+                    if list_parent is not None else None
+                ),
                 "source_end": scope["end"],
                 "original_whml_fragment": body[scope["body_start"]:scope["body_end"]],
                 "active_display_scopes": [
@@ -223,6 +243,14 @@ def scoped_metadata(scoped: dict) -> dict:
         "rows_under_display_predicates": sum(bool(x["active_display_scopes"]) for x in rows),
         "rows_with_mixed_visibility": sum(x["contains_multiple_visibility_cases"] for x in rows),
         "rows_inside_tooltip_definitions": sum(x["inside_tooltip_definition"] for x in rows),
+        "rows_in_ordered_lists": sum(
+            bool(x["containing_list"] and x["containing_list"]["tag"] == "ol")
+            for x in rows
+        ),
+        "rows_in_unordered_lists": sum(
+            bool(x["containing_list"] and x["containing_list"]["tag"] == "ul")
+            for x in rows
+        ),
         "standalone_conditional_markers": sum(
             len(p["standalone_condition_markers"]) for p in scoped["payloads"]),
         "paired_conditional_scopes": sum(
