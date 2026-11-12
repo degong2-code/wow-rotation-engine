@@ -113,8 +113,7 @@ def inspect_and_store(*, dom_html: str, output: Path, kind: str,
                            mhtml=mhtml)
     if private_packet is not None:
         (output / "editorial-evidence-private.json").write_text(
-            json.dumps(private_packet, ensure_ascii=False, indent=2) + "
-",
+            json.dumps(private_packet, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
         )
     (output / "structure-audit.json").write_text(
