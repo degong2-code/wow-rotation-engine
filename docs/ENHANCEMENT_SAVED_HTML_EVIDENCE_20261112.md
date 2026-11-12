@@ -50,7 +50,7 @@
 
 ## 개인 교본 및 QA
 
-- **개인 V3.11 검토본:** `wow_rotation_v11_enhancement_v3_11_verified_potion_branches_review.html` · 1,112,408 bytes · SHA-256 `6ffce9e14e85db1c720f2ccce0796d435eeaf1cb4c434f040ed1b24a2528bc9d`.
+- **개인 V3.11 검토본:** `wow_rotation_v11_enhancement_v3_11_verified_potion_branches_review.html` · 1,112,664 bytes · SHA-256 `b14d47ca44ed015132f1a355db77353c4e95d6450fbc31207bc293c5450159f2`.
 - 오프너 장에 물약 3선택 × 4 오프너 = **12개의 접기/펼치기 시퀀스**를 반영하고 Recklessness를 원문 기본 선택으로 표시. 기존 V11 7개 전문화 body는 정확히 동일, 고양 기존 4개 Priority 표 43행 불변.
 - 로컬 Chromium(기존 시스템 `/usr/bin/chromium`)에서 PC 1365×850/모바일 390×844: 영웅 전환, 물약 시퀀스 상호 배타적 펼침, 가로 넘침 없음, JavaScript 오류 0 확인.
 - **콘텐츠 QA:** 직접 저장된 WHML 분기 시퀀스를 반영했으나 우선순위의 미확정 상태 2건 및 물약 능력치 팁의 원문 내부 참조 불일치는 별개 검토 대상. 최종 사용자 승인 전 검토본이다.
