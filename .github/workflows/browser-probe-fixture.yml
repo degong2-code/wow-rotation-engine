@@ -1,0 +1,61 @@
+name: Read-only dynamic DOM probe (synthetic browser fixture)
+
+on:
+  push:
+    branches: [main, 'work/**']
+    paths:
+      - 'engine/live_dom_capture.py'
+      - 'tests/test_live_dom_capture.py'
+      - 'examples/synthetic-live-dom.html'
+      - '.github/workflows/browser-probe-fixture.yml'
+  pull_request:
+    paths:
+      - 'engine/live_dom_capture.py'
+      - 'tests/test_live_dom_capture.py'
+      - 'examples/synthetic-live-dom.html'
+      - '.github/workflows/browser-probe-fixture.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-fixture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install optional browser probe dependency
+        run: |
+          python -m pip install "playwright>=1.48,<2"
+          python -m playwright install --with-deps chromium
+      - name: Run synthetic dynamic DOM capture regressions
+        run: python -m unittest discover -s tests -p 'test_live_dom_capture.py' -v
+      - name: Verify private capture / public metadata split
+        run: |
+          python -m engine.live_dom_capture \
+            --html examples/synthetic-live-dom.html \
+            --max-states 15 --max-depth 3 \
+            --private-output /tmp/private-capture-fixture.json \
+            --audit-output /tmp/public-capture-audit.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          raw=Path('/tmp/private-capture-fixture.json').read_text()
+          audit=Path('/tmp/public-capture-audit.json').read_text()
+          a=json.loads(audit)
+          assert 'Synthetic Dynamic Rotation' in raw
+          assert 'Synthetic separate referenced tooltip body' in raw
+          assert 'Synthetic separate referenced tooltip body' not in audit
+          assert a['observed_state_count'] >= 5, a['observed_state_count']
+          assert a['full_source_text_in_report'] is False
+          assert a['real_site_completeness_verified'] is False
+          assert a['gameplay_meaning_verified'] is False
+          assert a['automatic_publish_allowed'] is False
+          PY
+          rm -f /tmp/private-capture-fixture.json /tmp/public-capture-audit.json

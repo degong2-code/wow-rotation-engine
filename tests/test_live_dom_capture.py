@@ -11,7 +11,10 @@ FIXTURE = HERE / "examples" / "synthetic-live-dom.html"
 class LiveDOMTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        from playwright.sync_api import sync_playwright
+        try:
+            from playwright.sync_api import sync_playwright
+        except ImportError:
+            raise unittest.SkipTest("Playwright is an optional browser-only dependency")
         cls.runner = sync_playwright().start()
         cls.browser = cls.runner.chromium.launch(headless=True)
 
