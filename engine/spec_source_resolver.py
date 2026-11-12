@@ -122,7 +122,7 @@ SHORT_NAMES = {
 
 
 def _normalize(value: str) -> str:
-    return re.sub(r"[\s\u00b7\-_/()]+", "", value.casefold())
+    return re.sub(r"[\s\u00b7\-_()]+", "", value.casefold())
 
 
 def _keys(spec: Specialization) -> set[str]:
