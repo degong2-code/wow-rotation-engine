@@ -146,3 +146,10 @@
 - **개인 결과물:** `wow_rotation_v11_enhancement_v3_10_crash_lightning_proc_context_review.html` · **1,067,897 bytes** · SHA256 `537be20cc9109aa9103c9babefc565137d336e50473c138059f5174e056655b1`. 개인 감사 `enhancement_v310_source_meaning_coverage_audit.json` · **13,005 bytes** · SHA256 `1a6cee20d44fb46204520da38a15403e82e35340cf53909e7e2a42f3db2e6970`.
 - **QA:** V3.9과 비교해 고양 심화 문구 1곳만 변경, 기존 V11 비대상 7개 섹션 완전 동일, 고양 4표·43행(9/10/12/12) 불변. 로컬 Chromium PC 1365×850/모바일 390×844에서 영웅 전환, 기술 팝업·ESC, JS 오류 0·가로 넘침 없음.
 - **미완료:** 최신 Wowhead의 모든 실제 `?` 설명 본문·위치 전수 확보, 폭풍인도자 M9/토템술사 M7 판단. **Gate A FAIL, Q0/Q1 일부 REVIEW, 최종 승인 전 검토본**. 실제 브라우저 직접 조사 원본 HTML 접근은 DNS 실패이며 검색 색인의 설명을 실물 hover 증명으로 승격하지 않음.
+
+
+## 2026-11-12 최신 원문 HTML 사용자 제공 — V3.11 취득·물약 분기 교정
+
+이전 단계의 ‘물약명은 오프너의 행동 분기가 아니다’ 및 ‘현재 최신 HTML/실제 `?` 미확보’ 문구는 **사용자 제공 전의 역사적 상태**다. 사용자 저장 ZIP의 12.1.5/2026-10-13 Wowhead 원본 WHML에서 **영웅 2×전투 2×물약 3 = 12가지 오프너 선택**과 관련 변경 행동을 실제 확인했다. 44개 명명 tooltip 본문이 HTML 리터럴에 포함돼 있고 참조 45회 중 미정의가 0. 다만 `SBAOE-O-Pot` 미사용/광역의 단일용 팁 참조라는 내부 불일치 및 일부 다음 GCD 상태 판단은 별도 QA 대상으로 유지한다.
+
+**V3.11 개인 검토본:** `wow_rotation_v11_enhancement_v3_11_verified_potion_branches_review.html` · 1,112,408 bytes · SHA256 `6ffce9e14e85db1c720f2ccce0796d435eeaf1cb4c434f040ed1b24a2528bc9d`. 오프너만 실제 물약 선택 12가지로 갱신(기본 Recklessness), 7개 기존 전문화 본문 및 고양 우선순위 43행 동일. PC/모바일 영웅 선택·원문 분기 펼침, 가로 넘침/JS 오류 없음. 최종 사용자 승인 전. [원문 증거·범용 정책](ENHANCEMENT_SAVED_HTML_EVIDENCE_20261112.md).

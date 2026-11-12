@@ -270,3 +270,11 @@
 - `engine/live_dom_bridge.py` 및 합성 테스트는 비공개 브라우저 캡처를 `source_coverage`용 검토 초안으로 변환한다. 원문 설명은 개인 기록에만, 공개 보고서는 검사 항목 수와 누락 종류만 포함한다. 경로 식별자는 **사용자 게임플레이 선택 분기로 승격하지 않는다**.
 - 브라우저 캡처에 원문 전수 확보를 자동 보장하는 인증은 없음. 선택 상태가 탐지되지 않았거나 페이지가 제한적으로 보이면 여전히 누락 가능. 특히 실제 최신 고양 Wowhead는 동일 URL 버전 충돌·선행 403 때문에 **Gate A 미통과**다.
 - 코드·검증 기준: [LIVE_DOM_CAPTURE](LIVE_DOM_CAPTURE.md), [SOURCE_COVERAGE_AUDIT](SOURCE_COVERAGE_AUDIT.md). 개인 V11 7개·고양 V3.10 HTML 미수정, PR #20 Draft 유지.
+
+
+## 2026-11-12 현재 최신 인계 — 사용자 제공 Wowhead 실제 저장본·고양 V3.11
+
+- 사용자가 최신 고양 Wowhead 12.1.5(Updated 2026/10/13)의 실제 페이지를 열어 영웅/단일·광역/오프너/`?` 작동을 확인하고 6MB ZIP 전달. **이전 최신 HTML 접근 실패·툴팁 미확보 판단은 이 저장본 범위에서 해소**. 내부 WHML 68,350자, tooltip 정의 44개/참조 45회/미정의 0개, 16개 선택 정의/82개 조건부 표시/7개 접힘 확보. 사적 ZIP/원문은 공개 저장소에 넣지 않음.
+- **정정된 범용 원칙:** 물약 종류를 무조건 단순 예시 처리하지 않음. 실제 `display-options`가 오프너 시전 시간/순서/기술을 바꾸는지 보고 결정 축 여부 판단. 고양의 영웅×ST/AoE×3물약 = **12개 실질 조합**이며 폭풍인도자 AoE에서 Recklessness와 나머지 2개 사이 **낙뢰 선시전 여부도 달라짐**. 다른 전문화에서 동일하다고 단정하지 않음.
+- **고양 V3.11 개인 HTML:** `wow_rotation_v11_enhancement_v3_11_verified_potion_branches_review.html`, 1,112,408 bytes, SHA256 `6ffce9e14e85db1c720f2ccce0796d435eeaf1cb4c434f040ed1b24a2528bc9d`. 기존 7개 V11 본문 완전 동일, 고양 4표·43행 동일. 4오프너×3 native details 조합; Chromium PC·모바일 영웅 전환·물약 펼침/상호 배타적 선택·가로 넘침 0·JS 오류 0.
+- **보류:** 원본에는 광역용 tooltip `SBAOE-O-Pot`이 존재하지만 실제 광역 UI는 `SBST-O-Pot`을 참조하는 능력치 팁 혼선이 있으며 상태→다음 GCD 2건은 독립 gameplay Q0/Q1 검증이 필요. V3.11은 미승인 검토본. 실제 브라우저 동적 실행 자체를 모델이 다시 수행했다고 주장하지 않음. [검증 근거](ENHANCEMENT_SAVED_HTML_EVIDENCE_20261112.md), [범용 사례 §38](QUALITY_GENERALIZATION_CASEBOOK.md).

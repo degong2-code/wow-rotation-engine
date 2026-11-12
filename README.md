@@ -26,6 +26,8 @@ WoW 딜사이클 교본의 **V11 품질을 보존하면서 ChatGPT 채팅에서 
 
 **동적 수집과 누락 감사 통합:** [LIVE_DOM_CAPTURE](docs/LIVE_DOM_CAPTURE.md) — 영웅/전투 하위 UI와 관련 `?`를 실제 브라우저에서 수집하고 [범용 감사](docs/SOURCE_COVERAGE_AUDIT.md)의 검토용 초안에 연결합니다. 원문 전수 확보·게임 판단 최종 검증은 자동 선언하지 않습니다.
 
+**고양 최신 실물 원본 검증(2026-11-12):** 사용자가 제공한 Wowhead 12.1.5 저장본에서 tooltip 44개·선택 정의 16개·조건 표시 82개 및 물약별 실제 오프너 12조합을 확인했습니다. 선택이 게임 행동을 바꾸는 경우에만 분기하도록 [범용 수집 정책](docs/SOURCE_COVERAGE_AUDIT.md)을 수정했습니다. [증거 메타데이터](docs/ENHANCEMENT_SAVED_HTML_EVIDENCE_20261112.md). 개인 HTML/원문 미게시.
+
 **운영 정본:**
 - [ADR-003 — ChatGPT 중심 제작 결정](docs/ADR_003_CHAT_FIRST_EDITORIAL.md)
 - [CHAT_FIRST_PLAYBOOK — CREATE/UPDATE 작업 순서](docs/CHAT_FIRST_PLAYBOOK.md)

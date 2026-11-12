@@ -106,3 +106,10 @@ python -m engine.source_reconcile --structure /tmp/synthetic-structure.json --ob
 **중요:** 컴퓨터가 관측한 UI 클릭 경로를 실제 게임 판단 분기라고 해석하지 않는다. 자동 초안은 모든 `inventory_checked=false`, `real_site_completeness_verified=false`를 전제로 한다. 영웅별·전투별 기술 순서와 물약 예시 구분, 게임 조건의 의미 귀속은 ChatGPT가 실제 원문을 읽고 정한다. 보조 도구를 실행했다는 이유로 Gate A PASS, Q0/Q1 PASS, 최종 HTML 승인으로 승격하지 않는다.
 
 상세 사용 및 CI는 [LIVE_DOM_CAPTURE](LIVE_DOM_CAPTURE.md).
+
+
+## 실제 저장본 반례: 설명 정의·선택 조건을 원본 WHML에서 먼저 확인 (2026-11-12)
+
+사용자 제공 실제 Wowhead 고양 최신 HTML에서는 빈 `template[data-tooltip-name]` 44개로 인해 DOM만 읽으면 팁 누락이 생긴다. 동일 HTML 안의 원시 `WH.markup.printHtml`에는 tooltip 정의 44개/참조 45회, `display-option` 정의 16개/조건식 82개가 **완전한 문자열 형태로 저장**돼 있었다. `engine/embedded_markup.py`는 일반적으로 이런 내장 literal에서 각 tooltip의 본문 길이/해시와 radio 선택 그룹·checked/조건식을 **본문 유출 없이** 감사한다. [실물 증거](ENHANCEMENT_SAVED_HTML_EVIDENCE_20261112.md).
+
+**기존 문서의 '물약은 illustrative' 예시는 필요조건이 아니다.** 실제 조건부 표시 규칙이 **행동/시점**을 변경하는 경우 물약도 독립적인 결정 축이다. 다른 전문화에서 선택지가 단순 예시라면 중립 사용 슬롯을 유지한다. 4개 potion radio group을 전부 동시에 독립적으로 곱해 324개의 허구 조합을 만드는 것도 금지. 상위 영웅·전투 선택 후 실제 나타나는 하위 그룹만 따라간다.
