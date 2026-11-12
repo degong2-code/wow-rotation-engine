@@ -53,7 +53,7 @@ class StructureTests(unittest.TestCase):
 
     def test_location_clues_preserved_without_row_certainty_claim(self):
         r = inspect_html(HTML)
-        self.assertTrue(any(x["table_row"] == "r1" and x["section"] == "Single rotation"
+        self.assertTrue(any(x["table_row"] == "r1" and x["section"].startswith("h3@")
                             for x in r["tooltip_trigger_candidates"]))
         self.assertFalse(r["live_ui_completeness_verified"])
         self.assertFalse(r["gameplay_meaning_verified"])
@@ -107,7 +107,7 @@ class StructureTests(unittest.TestCase):
         r = inspect_html(html)
         self.assertTrue(any(x["type"] == "tab" and x["targets_in_html"] == ["more"]
                             for x in r["control_candidates"]))
-        self.assertTrue(any(x["options"] == ["First", "Second"]
+        self.assertTrue(any(len(x["options"]) == 2 and all(opt["characters"] > 0 for opt in x["options"])
                             for x in r["control_candidates"]))
         self.assertTrue(any(x["id"] == "more" for x in r["hidden_region_candidates"]))
 

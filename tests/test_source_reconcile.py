@@ -166,6 +166,9 @@ class ReconciliationTests(unittest.TestCase):
         ids = [x["id"] for x in candidates if x["kind"] == "tooltip"]
         self.assertEqual(len(ids), 2)
         data = ledger()
+        # This separate synthetic HTML is a different fingerprint; bind it
+        # explicitly rather than bypassing the source provenance guard.
+        data["accesses"][0]["html_sha256"] = structure["source_sha256"]
         data["states"][0]["entries"].append({
             "id": "tip", "kind": "tooltip", "text": "Synthetic first.",
             "source_candidate_ids": [ids[0]]})
