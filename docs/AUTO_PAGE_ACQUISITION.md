@@ -76,3 +76,17 @@ python -m engine.source_acquisition_pipeline \
 `--capture-ui`는 브라우저가 정상 열리는 경우 실제 탭·`?`를 hover한 관측을 **별도 비공개 파일**에 덧붙인다. 현재 기본 코드는 **서버에서 Wowhead 403을 우회하지 않고**, 동일 호스트 밖으로 나가는 메인 프레임 이동을 제한한다. 도메인 이동이 필요한 정상 사이트는 현재 자동으로 실패하도록 설계했다.
 
 브라우저 연동을 사용할 수 없는 ChatGPT 세션에서는 URL 취득을 성공한 것처럼 주장하지 않는다. 정상 접근 가능한 출처의 원문만 비교 분석하며, 완전한 최신성·선택 상태 전수·실전 로직 정확성은 별도 QA를 거친다.
+
+## HTTP 우선 접근 검증 (2026-11-12)
+
+새 `engine/http_source_fetch.py`는 브라우저 없이 **일반 HTTPS GET 한 번**으로 공개 공략 HTML을 읽는 보조 수단이다. 명시적 `RotationTextbookSourceReview/0.1` User-Agent를 사용하며 브라우저로 위장하지 않는다. Wowhead의 HTTPS 호스트만 허용하고, 쿠키·세션 복사·프록시 전환·재시도·보안 챌린지 우회는 사용하지 않는다. 응답이 **403이면 그 HTTP 요청은 명시적으로 거부된 것**으로, **429이면 속도 제한**으로 판단하고 둘 다 추가 요청 없이 중단한다. 200이어도 가이드 내장 `guide-body`가 없거나 예전 패치라면 최신 원문 확보가 완료됐다고 처리하지 않는다.
+
+```bash
+python -m engine.source_acquisition_pipeline \
+  --http-url https://www.wowhead.com/guide/classes/shaman/enhancement/rotation-cooldowns-pve-dps \
+  --allow-remote --output dist/private_source_capture
+```
+
+`--http-url`은 브라우저 미사용, `--url`은 Chromium으로 동적 수집하는 **서로 다른 모드**다. 직접 HTTP가 차단됐다고 브라우저·프록시·다른 IP로 자동 우회하거나 HTTP 403을 성공으로 바꾸지 않는다. 서버의 차단 여부는 사용자 브라우저에서 화면이 열리는지와 독립적인 요청 단위 결과다.
+
+**검증:** 일반 HTTP unit 테스트는 네트워크 호출을 모킹하여 200 HTML, 403, 429, 비HTML, 200 차단 페이지, 리다이렉트 호스트 위험, 크기 제한, 안전한 공통 분석 연결을 검증한다. 실제 HTTP 진단은 단 한 번의 요청만 하며, 성공 여부와 접근 상태만 공개하고 원본 본문을 PUBLIC CI Artifact에 저장하지 않는다. 원문의 패치·수정일 및 작성 내용 검토는 별도 QA다.

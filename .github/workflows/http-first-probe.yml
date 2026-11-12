@@ -1,0 +1,54 @@
+name: HTTP-first Wowhead access diagnostic (no bypass)
+
+on:
+  push:
+    branches: ['work/chat-first-v11-20261111']
+    paths:
+      - 'engine/http_source_fetch.py'
+      - '.github/workflows/http-first-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Make one transparent normal HTTPS GET
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from tempfile import TemporaryDirectory
+          from engine.http_source_fetch import get_html
+          from engine.source_acquisition_pipeline import inspect_and_store
+          from engine.source_page_acquire import SourceAccessError
+          url="https://www.wowhead.com/guide/classes/shaman/enhancement/rotation-cooldowns-pve-dps"
+          try:
+              html=get_html(url)
+          except SourceAccessError as exc:
+              reason=str(exc)
+              status=("forbidden_403" if "403" in reason else
+                      "rate_limited_429" if "429" in reason else
+                      "request_failed")
+              print("http_first_access="+status)
+              print("real_source_acquired=false")
+          else:
+              try:
+                  with TemporaryDirectory() as temp:
+                      report=inspect_and_store(dom_html=html, output=Path(temp),
+                                               kind="http_direct")
+                      print("http_first_access=valid_guide_body_received")
+                      print("named_tip_definitions="+str(report["named_tooltip_definition_count"]))
+                      print("source_patch_verified=false")
+                      print("real_site_completeness_verified=false")
+              except SourceAccessError:
+                  print("http_first_access=html_but_guide_content_missing")
+                  print("real_source_acquired=false")
+          PY

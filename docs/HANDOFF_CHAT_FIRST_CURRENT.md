@@ -291,3 +291,9 @@
 - `engine/source_acquisition_pipeline.py` 추가: 접근 가능한 URL 또는 저장 HTML/ZIP → HTML 원본·네트워크 응답 비교 → 분석용 HTML 결정 → `source_structure`/`embedded_markup`로 관련 선택·tooltip 구조·불일치 계수 → 비공개 원문과 메타데이터 감사 결과 분리. `--capture-ui`에서는 실제 런타임 UI 관측 추가.
 - 브라우저 연결 상태 검사: 현재 대화에서 Browser extension은 **원래 브라우저 세션이 아니므로 목록 조회 불가**. 사용자 세션과 동일 브라우저로 자동 접근 가능하다는 주장은 하지 않음. 서버 HTTP 403도 우회하지 않음.
 - 새 합성 unit/CI는 `guide-body`가 없는 페이지를 fail-closed, WHML 설명 참조/옵션 문제를 카운트하며 저장 ZIP fallback 검증. 원문 전체 저장과 최종 패치 검증은 서로 다른 게이트 유지.
+
+## 2026-11-12 HTTP-first 취득 경로 및 403 판정
+
+- `engine/http_source_fetch.py`는 일반 HTTPS GET을 **실제 사용자 브라우저를 재현하지 않고** 한 번만 수행한다. WoWhead 호스트·동일 호스트 redirect 제한, 쿠키/계정·프록시·UA 브라우저 위장 금지, 403/429 즉시 종료, 응답 크기/HTML 구조 검사. `source_acquisition_pipeline --http-url --allow-remote`로 기존 WHML·tooltip 감사까지 연결.
+- `403 Forbidden`은 해당 요청이 서버에 의해 거부됐다는 뜻이다. 사용자 브라우저에서는 공략 열람이 가능하므로 사용자 전반에 권한이 없다는 판정은 불가. 구체적 거부 사유(접근 정책, 네트워크, 자동화 제한 등)는 HTTP 응답 코드 단독으로 확인 불가.
+- HTTP 200이어도 `guide-body` 존재·패치/수정일 독립 검사 전에는 최신 공략을 확보했다고 판정하지 않는다. 원본·V11/V3.11 개인 HTML은 공개 저장소에 넣지 않으며 최신 실전 로직 Q0/Q1을 자동 승인하지 않는다.

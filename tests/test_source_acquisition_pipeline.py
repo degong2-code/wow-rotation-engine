@@ -76,6 +76,46 @@ class SourcePipelineTests(TestCase):
             self.assertIn("tooltip_reference_without_definition", audit["issue_types"])
             self.assertNotIn('"missing"', json.dumps(audit))
 
+
+    def test_cli_http_first_reaches_whml_audit_without_browser(self):
+        from unittest.mock import patch
+        from engine.source_acquisition_pipeline import main
+        with TemporaryDirectory() as temp:
+            output = Path(temp) / "private"
+            html = FIXTURE.read_text(encoding="utf-8")
+            with patch("engine.source_acquisition_pipeline.get_html", return_value=html) as fetch:
+                with patch("sys.argv", [
+                    "pipeline", "--http-url",
+                    "https://www.wowhead.com/guide/classes/shaman/enhancement/rotation-cooldowns-pve-dps",
+                    "--allow-remote", "--output", str(output)
+                ]):
+                    from contextlib import redirect_stdout
+                    from io import StringIO
+                    with redirect_stdout(StringIO()):
+                        self.assertEqual(main(), 0)
+            self.assertEqual(fetch.call_count, 1)
+            audit = json.loads((output / "pipeline-audit.json").read_text(encoding="utf-8"))
+            self.assertEqual(audit["acquisition_kind"], "http_direct")
+            self.assertEqual(audit["guide_body_payloads"], 1)
+            self.assertFalse(audit["source_patch_verified"])
+            self.assertFalse(audit["automatic_publish_allowed"])
+
+    def test_cli_http_forbidden_writes_no_source(self):
+        from unittest.mock import patch
+        from engine.source_acquisition_pipeline import main
+        with TemporaryDirectory() as temp:
+            output = Path(temp) / "private"
+            with patch("engine.source_acquisition_pipeline.get_html",
+                       side_effect=SourceAccessError("HTTP 403 Forbidden")):
+                with patch("sys.argv", [
+                    "pipeline", "--http-url",
+                    "https://www.wowhead.com/guide/classes/shaman/enhancement/rotation-cooldowns-pve-dps",
+                    "--allow-remote", "--output", str(output)
+                ]):
+                    with self.assertRaisesRegex(SourceAccessError, "403 Forbidden"):
+                        main()
+            self.assertFalse(output.exists())
+
     def test_private_zip_not_required_to_extract_assets(self):
         with TemporaryDirectory() as temp:
             zip_path = Path(temp) / "full_page.zip"
