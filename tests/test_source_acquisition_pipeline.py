@@ -9,6 +9,7 @@ from engine.source_acquisition_pipeline import (
     inspect_and_store, require_authorized_navigation
 )
 from engine.source_page_acquire import SourceAccessError
+from engine.spec_source_resolver import resolve_specialization
 
 FIXTURE = Path(__file__).resolve().parents[1] / "examples" / "synthetic-source-structure.html"
 
@@ -39,6 +40,79 @@ class SourcePipelineTests(TestCase):
             with self.assertRaisesRegex(ValueError, "SHA-256"):
                 inspect_and_store(dom_html=html, output=output, kind="saved_html",
                                   expected_guide_sha256="invalid")
+            self.assertFalse(output.exists())
+
+
+    def test_specialization_auto_resolution_identity_and_whml_audit(self):
+        from engine.source_acquisition_pipeline import run_specialization
+        spec = resolve_specialization("고양 주술사")
+        synthetic = (
+            '<!doctype html><html><head>'
+            '<title>Enhancement Shaman Rotation Guide - Midnight - Wowhead</title></head>'
+            '<body><h1>Enhancement Shaman Rotation Guide</h1>'
+            '<main>12.1.5 Patch Updated: 2026/10/13</main>'
+            '<script>WH.markup.printHtml('
+            '"[tooltip name=Example]Synthetic source-only note[/tooltip]",'
+            '"guide-body", false);</script></body></html>'
+        )
+        with TemporaryDirectory() as temp:
+            output = Path(temp) / "source"
+            seen = []
+            def fetch(url):
+                seen.append(url)
+                return synthetic
+            result = run_specialization("고양 주술사", output,
+                                        expected_patch="12.1.5",
+                                        min_updated="2026-10-13",
+                                        fetch_html=fetch)
+            self.assertEqual(seen, [spec.guide_url])
+            self.assertTrue(result["guide_identity_matched"])
+            self.assertTrue(result["expected_patch_visible"])
+            self.assertEqual(result["observed_guide_update_date"], "2026-10-13")
+            self.assertEqual(result["named_tooltip_definition_count"], 1)
+            self.assertFalse(result["source_patch_verified"])
+            self.assertFalse(result["automatic_publish_allowed"])
+            self.assertNotIn("Synthetic source-only note",
+                             (output / "pipeline-audit.json").read_text())
+
+    def test_ambiguous_spec_fails_before_fetch(self):
+        from engine.source_acquisition_pipeline import run_specialization
+        from engine.spec_source_resolver import AmbiguousSpecialization
+        with TemporaryDirectory() as temp:
+            called = []
+            with self.assertRaises(AmbiguousSpecialization):
+                run_specialization("냉기", Path(temp) / "source",
+                                   fetch_html=lambda u: called.append(u))
+            self.assertEqual(called, [])
+
+    def test_wrong_guide_title_fails_without_writing(self):
+        from engine.source_acquisition_pipeline import run_specialization
+        other = (
+            '<!doctype html><html><head><title>Arcane Mage Rotation Guide</title></head>'
+            '<body><h1>Arcane Mage Rotation Guide</h1><script>'
+            'WH.markup.printHtml("[tooltip name=x]Synthetic[/tooltip]", "guide-body", false);'
+            '</script></body></html>'
+        )
+        with TemporaryDirectory() as temp:
+            output = Path(temp) / "source"
+            with self.assertRaisesRegex(SourceAccessError, "Guide heading"):
+                run_specialization("고양 주술사", output, fetch_html=lambda _: other)
+            self.assertFalse(output.exists())
+
+    def test_outdated_guide_fails_before_persisting(self):
+        from engine.source_acquisition_pipeline import run_specialization
+        old = (
+            '<!doctype html><html><head>'
+            '<title>Enhancement Shaman Rotation Guide - Midnight</title></head>'
+            '<body><h1>Enhancement Shaman Rotation Guide</h1>'
+            '12.0.7 Patch Updated: 2026/04/20</body></html>'
+        )
+        with TemporaryDirectory() as temp:
+            output = Path(temp) / "source"
+            with self.assertRaisesRegex(SourceAccessError, "older than required"):
+                run_specialization("고양 주술사", output,
+                                   min_updated="2026-10-13",
+                                   fetch_html=lambda _: old)
             self.assertFalse(output.exists())
 
     def test_saved_html_to_full_metadata_audit(self):

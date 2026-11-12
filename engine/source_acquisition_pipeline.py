@@ -23,6 +23,8 @@ from .source_page_acquire import (
 )
 from .source_structure import inspect_html
 from .http_source_fetch import get_html
+from .spec_source_resolver import resolve_specialization
+from .guide_identity import inspect_identity
 
 PIPELINE_SCHEMA = "source-acquisition-pipeline-v1"
 
@@ -114,6 +116,38 @@ def inspect_and_store(*, dom_html: str, output: Path, kind: str,
     return report
 
 
+
+def run_specialization(query: str, output: Path, *,
+                       expected_patch: str | None = None,
+                       min_updated: str | None = None,
+                       expected_guide_sha256: str | None = None,
+                       fetch_html=None) -> dict:
+    """Resolve name to exact guide, verify identity, and audit without a browser.
+
+    Source metadata is not evidence of the globally latest game build: patch
+    release/currentness still requires independent ChatGPT editorial checking.
+    """
+    spec = resolve_specialization(query)
+    fetch = fetch_html if fetch_html is not None else get_html
+    html = fetch(spec.guide_url)
+    identity = inspect_identity(
+        html, spec, expected_patch=expected_patch, min_updated=min_updated,
+    )
+    report = inspect_and_store(
+        dom_html=html, output=output, kind="specialization_http",
+        expected_guide_sha256=expected_guide_sha256,
+    )
+    report.update(identity)
+    # These are route/identity metadata, not proprietary source passages.
+    report["resolved_guide_url"] = spec.guide_url
+    report["source_patch_verified"] = False
+    report["editorial_review_required"] = True
+    (output / "pipeline-audit.json").write_text(
+        json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    return report
+
+
 def require_authorized_navigation(url: str, expected_host: str) -> None:
     """Block main-frame redirect requests to other hosts before following them."""
     _validate_remote_url(url)
@@ -182,6 +216,7 @@ def main(argv: list[str] | None = None) -> int:
     src = parser.add_mutually_exclusive_group(required=True)
     src.add_argument("--url")
     src.add_argument("--http-url", help="One direct HTTPS GET; no browser, cookies or retries")
+    src.add_argument("--specialization", help="Korean/English spec name; resolves to canonical Wowhead URL")
     src.add_argument("--saved-html", type=Path)
     src.add_argument("--saved-zip", type=Path)
     parser.add_argument("--allow-remote", action="store_true")
@@ -189,10 +224,25 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--mhtml", action="store_true")
     parser.add_argument("--capture-ui", action="store_true")
     parser.add_argument("--expected-guide-sha256", help="Optional known-good WHML body SHA-256 for update comparison")
+    parser.add_argument("--expected-patch", help="Optional patch string to require in visible page metadata")
+    parser.add_argument("--min-updated", help="Optional minimum observed guide update date (YYYY-MM-DD)")
     parser.add_argument("--max-states", type=int, default=24)
     parser.add_argument("--max-depth", type=int, default=3)
     args = parser.parse_args(argv)
-    if args.http_url:
+    if (args.expected_patch or args.min_updated) and not args.specialization:
+        parser.error("--expected-patch/--min-updated require --specialization")
+    if args.specialization:
+        if not args.allow_remote:
+            parser.error("Specialization mode requires --allow-remote")
+        if args.mhtml or args.capture_ui:
+            parser.error("Dynamic UI/MHTML are not available in HTTP-first spec mode")
+        result = run_specialization(
+            args.specialization, args.output,
+            expected_patch=args.expected_patch,
+            min_updated=args.min_updated,
+            expected_guide_sha256=args.expected_guide_sha256,
+        )
+    elif args.http_url:
         if not args.allow_remote:
             parser.error("Direct HTTP mode requires --allow-remote")
         if args.mhtml or args.capture_ui:
