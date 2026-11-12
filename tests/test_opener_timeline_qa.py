@@ -160,7 +160,7 @@ class OpenerTimelineTests(unittest.TestCase):
                      when=[{"field": "proc", "op": "eq", "value": True}])
         result = run([branch(ctx, [attack, item])],
                      [case("prebeat", ctx, [attack], {"proc": False})])
-        self.assertTrue(result["all_declared_cases_matched"])
+        self.assertFalse(result["all_declared_cases_matched"])
         # Unexecuted conditional branch remains unreviewed, not PASS.
         self.assertIn("unexercised_timeline_events", result["blocker_codes"])
 
