@@ -36,6 +36,10 @@ class LiveDOMTests(unittest.TestCase):
             triggered = [h for s in data["states"] for h in s["hover_results"]]
             self.assertTrue(any("Synthetic separate referenced tooltip body"
                                 in str(h["trigger"]["references"]) for h in triggered))
+            self.assertTrue(any(
+                "Synthetic hover-generated additional explanatory rule." in
+                " ".join(h["dynamic_tooltips"]) for h in triggered
+            ))
             self.assertFalse(data["errors"], data["errors"])
             public = summarize(data)
             self.assertGreaterEqual(public["observed_state_count"], 5)

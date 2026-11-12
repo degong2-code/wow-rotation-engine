@@ -30,6 +30,17 @@ for(const id of heroes){document.getElementById('hero'+id.toUpperCase()).addEven
 for(const id of ['a-st','a-aoe-body']){const button=document.querySelector('[aria-controls="'+id+'"]');
  button.addEventListener('click',()=>{for(const other of ['a-st','a-aoe-body'])document.getElementById(other).hidden=other!==id;
  for(const el of document.querySelectorAll('#a [role="tab"]'))el.setAttribute('aria-selected',String(el===button));});}
+const tipButton=document.getElementById('tipbutton');
+tipButton.addEventListener('mouseenter',()=>{
+ const tip=document.createElement('div');
+ tip.setAttribute('role','tooltip');
+ tip.id='runtime-synthetic-overlay';
+ tip.textContent='Synthetic hover-generated additional explanatory rule.';
+ document.body.appendChild(tip);
+});
+tipButton.addEventListener('mouseleave',()=>{
+ document.getElementById('runtime-synthetic-overlay')?.remove();
+});
 document.getElementById('betaMode').addEventListener('change',e=>{
  document.getElementById('beta-extra').hidden=e.target.value!=='alternate';});
 </script></html>
