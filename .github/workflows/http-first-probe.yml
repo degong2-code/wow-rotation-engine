@@ -8,6 +8,8 @@ on:
       - 'engine/spec_source_resolver.py'
       - 'engine/guide_identity.py'
       - 'engine/source_acquisition_pipeline.py'
+      - 'engine/gameplay_decision_qa.py'
+      - 'tests/live_enhancement_decision_review.py'
       - '.github/workflows/http-first-probe.yml'
   workflow_dispatch:
 
@@ -90,3 +92,7 @@ jobs:
                   print(label+"_status="+code)
                   print(label+"_current_patch_verified=false")
           PY
+
+      - name: Check source-locked 12.1.5 gameplay decision cases without publishing HTML
+        run: |
+          PYTHONPATH=. python tests/live_enhancement_decision_review.py
