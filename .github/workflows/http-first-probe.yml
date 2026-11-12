@@ -9,6 +9,8 @@ on:
       - 'engine/guide_identity.py'
       - 'engine/source_acquisition_pipeline.py'
       - 'engine/gameplay_decision_qa.py'
+      - 'engine/source_scoped_evidence.py'
+      - 'tests/test_source_scoped_evidence.py'
       - 'tests/live_enhancement_decision_review.py'
       - '.github/workflows/http-first-probe.yml'
   workflow_dispatch:
@@ -57,6 +59,10 @@ jobs:
                       assert sum(len(x["conditional_expressions"]) for x in packet["payloads"])==report["conditional_display_count"]
                       scoped=json.loads((Path(tmp)/"scoped-audit.json").read_text(encoding="utf-8"))
                       assert scoped["source_text_in_report"] is False
+                      assert (scoped["rows_in_ordered_lists"] +
+                              scoped["rows_in_unordered_lists"]
+                              <= scoped["source_row_candidates"])
+                      assert scoped["rows_in_ordered_lists"] > 0
                       assert scoped["automatic_publish_allowed"] is False
                       assert scoped["guide_body_payload_count"]==report["guide_body_payloads"]
                       assert report["private_scoped_evidence_written"] is True
@@ -68,6 +74,8 @@ jobs:
                       )==scoped["source_condition_expression_count"]
                       print(label+"_private_editorial_packet_indexed=true")
                       print(label+"_scoped_row_candidates="+str(scoped["source_row_candidates"]))
+                      print(label+"_ordered_list_row_candidates="+str(scoped["rows_in_ordered_lists"]))
+                      print(label+"_unordered_list_row_candidates="+str(scoped["rows_in_unordered_lists"]))
                       print(label+"_rows_with_mixed_visibility="+str(scoped["rows_with_mixed_visibility"]))
                       print(label+"_standalone_conditional_markers="+str(scoped["standalone_conditional_markers"]))
                       print(label+"_unassigned_conditional_expressions="+str(scoped["unassigned_conditional_expressions"]))
