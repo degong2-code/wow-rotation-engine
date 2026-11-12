@@ -242,3 +242,10 @@
 - **배경:** `source_structure`는 숨김 패널·`?` 후보를 찾아도 실제 문장을 읽었다는 기록과 연결되지 않아 수집 누락을 한눈에 알기 어려웠다. `engine/source_reconcile.py`가 구조 후보와 `source_coverage`의 수집 기록을 연결해 `unmapped_candidates`, `static_body_unresolved_ids`, `invalid_mappings`를 보고하도록 함. 자료가 없거나 의미가 미확정일 때 자동 PASS 금지.
 - **범용성:** 특정 전문화/기술 고정 없음. `tooltip2` 같은 다중 팁 독립 검사, 숨김 설명 DOM과 트리거의 중복 방지, 정확한 본문 해시 일치만 자동 연결, 접근 패치 충돌·수집 내용 누락을 별도 유지. 위치 ID는 HTML 스냅샷 내부 전용이고, 의미상 귀속은 ChatGPT가 검토.
 - **보안/승인:** 개인 HTML·Wowhead 장문 원문은 PUBLIC 미게시. `real_site_completeness_verified=false`, `gameplay_meaning_verified=false`, `automatic_publish_allowed=false` 유지. 실사이트 원본 접근 장애나 최신 고양의 Gate A FAIL을 해결했다고 주장하지 않음. [공통 감사 기준](SOURCE_COVERAGE_AUDIT.md).
+
+## 2026-11-12 후속 — 범용 출처 지문·다전문화 구조 검증
+
+- `engine/source_structure.py` 결과에 `source_sha256` 추가. `engine/source_reconcile.py`는 수집 기록의 `html_sha256` 및 URL·패치·수정본 일치가 없으면 후보 연결을 유효한 증거로 인정하지 않음. `search_index`는 HTML 지문의 증명이 되지 않는다. **이 일치 자체는 실사이트 최신성·전수성 증명이 아님.**
+- 구조 보고서에서 섹션·컨트롤·옵션의 원문 문구를 DOM 위치/해시로 대체하여 PUBLIC 출력에 장문 원문이 실리지 않도록 함. 실제 의미 분석에는 비공개 원문 문맥 활용.
+- [CROSS_SPEC_SOURCE_VALIDATION_20261112](CROSS_SPEC_SOURCE_VALIDATION_20261112.md): 최신 2026-10-13 검색 색인에서 냉기 마법사(영웅별 우선순위), 생존 사냥꾼(추가 선택), 징벌 성기사(단일/광역 오프너 전환) 패턴 확인. 이 UI 패턴을 본뜬 **합성 테스트 8개** 추가. 전수 원문을 확보했다고 주장하지 않음. 냉기 마법사는 색인 2026-10-13 vs 직접 열람 2026-04-20/12.0.7 충돌을 확인.
+- CI Push·PR에서 **전체 오프라인 254개 테스트 PASS**(커밋 `1d4a25bb835b3a3269a11a0e5857cde4496731c1`). 고양 V3.10 및 V11 비공개 HTML 변경 없음. 다음 과제는 실제 최신 HTML/렌더링 상태의 합법적·안정적 접근 후 공통 수집 검증 적용.

@@ -78,3 +78,13 @@ python -m engine.source_reconcile --structure /tmp/synthetic-structure.json --ob
 이 합성 예시는 의도적으로 선택지를 미방문으로 남겼으므로 결과에 **미수집 후보와 기존 누락**이 함께 나온다. 성공을 증명하는 예시가 아니다.
 
 **QA 판정의 분리:** `candidate_comparison_complete`가 참이어도 **선언된 정적 후보만 연결됐다는 뜻**이다. 현재 도구 출력의 `real_site_completeness_verified`, `gameplay_meaning_verified`, `automatic_publish_allowed`는 항상 `false`다. JavaScript 동적 생성, 원본 패치 확인의 독립성, 숨겨진 실제 사이트의 미발견 요소는 자동으로 해결되지 않는다. `?`의 본문 확보와 위치/행 귀속을 혼동하지 않는다. 분석·집필 후 Q0/Q1 콘텐츠 QA와 별도 HTML/JS QA를 수행한다.
+
+## HTML 지문으로 원본과 관측 기록 연결 (2026-11-12)
+
+정적 HTML 탐색 결과 `source_sha256`은 해당 HTML 전체의 SHA-256이다. 같은 HTML을 조사한 관측 기록의 `accesses[]`에 `html_sha256`을 **정확히 동일한 값**으로 넣고, `kind=page_html/live_dom/rendered_ui`, 기준 URL·패치·수정본이 모두 맞을 때에만 `source_reconcile`의 명시 연결 및 본문 해시 연결을 유효하게 취급한다. **검색 색인은 그 HTML 자체가 아니므로 `search_index` 접근에 HTML 지문을 붙여 자동 연결해서는 안 된다.**
+
+`declared_source_binding_matches=true`는 관측 파일과 구조 파일의 *동일 소스 선언 일치*만 뜻한다. 실제 사이트 인증이나 모든 `?`의 전수 확보가 아니다. 다른 패치 또는 다른 HTML인 경우 `source_binding_mismatch`와 경고를 남기고 후보 수집 완료를 차단한다.
+
+공개용 구조 결과의 섹션 제목은 DOM 좌표(`h2@번호` 등), 컨트롤·선택 항목은 길이와 SHA-256으로 저장한다. 오래된 구조 검사기는 문구를 포함할 수 있으므로 **과거 검사 결과를 새 안전한 보고서로 간주하지 않는다**. 위치의 의미는 별도 비공개 원문 문맥에서 분석한다.
+
+다전문화 실제 색인 조사와 합성 반례 검증: [CROSS_SPEC_SOURCE_VALIDATION_20261112](CROSS_SPEC_SOURCE_VALIDATION_20261112.md). 검색 색인·구버전 직접 열람의 날짜/패치 불일치와 동적 하위 선택 문제를 별도 한계로 관리한다.

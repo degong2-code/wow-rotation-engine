@@ -18,6 +18,8 @@ WoW 딜사이클 교본의 **V11 품질을 보존하면서 ChatGPT 채팅에서 
 
 **구조 후보 ↔ 수집 기록 대조(2026-11-12):** 정적 HTML에서 발견한 숨김 패널·툴팁·선택지 후보를 관측 원문과 대조해 **추가 확인할 항목**을 정리하는 `engine.source_reconcile` 도구와 합성 회귀 검사를 추가했습니다. [원문 확보 감사 문서](docs/SOURCE_COVERAGE_AUDIT.md). 실제 최신 Wowhead의 원문 수집/검증을 자동 대체하지 않습니다.
 
+**다전문화 범용화 회귀 검사:** [냉기 마법사·생존 사냥꾼·징벌 성기사의 원문 선택 형태 검토](docs/CROSS_SPEC_SOURCE_VALIDATION_20261112.md). 원본 HTML 구조·관측 기록은 SHA-256 및 패치/수정본이 일치할 때만 연결하고, 검색 색인만으로 라이브 UI 확보를 주장하지 않습니다.
+
 **운영 정본:**
 - [ADR-003 — ChatGPT 중심 제작 결정](docs/ADR_003_CHAT_FIRST_EDITORIAL.md)
 - [CHAT_FIRST_PLAYBOOK — CREATE/UPDATE 작업 순서](docs/CHAT_FIRST_PLAYBOOK.md)
