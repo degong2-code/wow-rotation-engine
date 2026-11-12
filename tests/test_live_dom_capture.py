@@ -46,6 +46,32 @@ class LiveDOMTests(unittest.TestCase):
         finally:
             page.close()
 
+    def test_private_url_components_not_exported(self):
+        private = {
+            "source_url": "https://user:secret@example.invalid/private/file?token=abc#anchor",
+            "source_sha256": "a" * 64,
+            "states": [], "errors": [], "pending_state_count": 0,
+        }
+        public = summarize(private)
+        import json
+        output = json.dumps(public)
+        self.assertEqual(public["host"], "example.invalid")
+        for secret in ("user:secret", "/private/file", "token=abc", "anchor"):
+            self.assertNotIn(secret, output)
+
+    def test_state_limit_exposes_unvisited_frontier(self):
+        page = self.browser.new_page()
+        try:
+            page.goto(FIXTURE.as_uri())
+            private = capture(page, max_states=1, max_depth=3)
+            public = summarize(private)
+            self.assertEqual(public["observed_state_count"], 1)
+            self.assertGreater(public["pending_state_count"], 0)
+            self.assertTrue(public["capture_bounded"])
+            self.assertFalse(public["real_site_completeness_verified"])
+        finally:
+            page.close()
+
     def test_bounded_state_count_and_no_assumed_real_completeness(self):
         page = self.browser.new_page()
         try:

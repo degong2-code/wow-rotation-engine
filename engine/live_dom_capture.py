@@ -11,7 +11,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlsplit
 
 CONTROL_SELECTOR = (
     "button[aria-controls], [role=tab], select, input[type=radio], "
@@ -89,11 +89,17 @@ def digest(text: str) -> dict:
 
 def summarize(record: dict) -> dict:
     """Metadata-only public-safe report: drop UI prose and raw tooltip contents."""
+    url = urlsplit(record["source_url"])
     return {
         "schema_version": "live-dom-capture-report-v1",
-        "origin": record["source_url"],
+        "source_kind": url.scheme,
+        "host": url.hostname or "",
+        "path_sha256": hashlib.sha256(url.path.encode("utf-8")).hexdigest(),
+        # Never expose query strings, fragments, filesystem paths or credentials.
         "source_sha256": record["source_sha256"],
         "observed_state_count": len(record["states"]),
+        "pending_state_count": record.get("pending_state_count", 0),
+        "capture_bounded": record.get("pending_state_count", 0) > 0,
         "states": [
             {"path": [{"kind": step["kind"], "index": step["index"],
                        "value_sha256": digest(str(step.get("value", "")))["sha256"]}
@@ -175,7 +181,7 @@ def capture(page, max_states: int = 24, max_depth: int = 3,
         "schema_version": "live-dom-private-observation-v1",
         "source_url": page.url,
         "source_sha256": hashlib.sha256(html.encode("utf-8")).hexdigest(),
-        "states": [], "errors": [],
+        "states": [], "errors": [], "pending_state_count": 0,
     }
     queue = [[]]
     seen = set()
@@ -190,6 +196,8 @@ def capture(page, max_states: int = 24, max_depth: int = 3,
             page.wait_for_timeout(80)
             for step in path:
                 _perform(page, step)
+                if page.url != result["source_url"]:
+                    raise RuntimeError("Controlled element navigated away from the authorized source")
             observation = page.evaluate(OBSERVE)
             hovers = _hover(page, max_tooltips_per_state)
             observation["body"] = observation["body"][:MAX_TEXT]
@@ -203,6 +211,7 @@ def capture(page, max_states: int = 24, max_depth: int = 3,
             result["errors"].append(
                 {"state_index": len(result["states"]), "type": type(exc).__name__}
             )
+    result["pending_state_count"] = len(queue)
     return result
 
 
