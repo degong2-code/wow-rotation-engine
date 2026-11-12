@@ -5,13 +5,17 @@ on:
     branches: [main, 'work/**']
     paths:
       - 'engine/live_dom_capture.py'
+      - 'engine/live_dom_bridge.py'
       - 'tests/test_live_dom_capture.py'
+      - 'tests/test_live_dom_bridge.py'
       - 'examples/synthetic-live-dom.html'
       - '.github/workflows/browser-probe-fixture.yml'
   pull_request:
     paths:
       - 'engine/live_dom_capture.py'
+      - 'engine/live_dom_bridge.py'
       - 'tests/test_live_dom_capture.py'
+      - 'tests/test_live_dom_bridge.py'
       - 'examples/synthetic-live-dom.html'
       - '.github/workflows/browser-probe-fixture.yml'
   workflow_dispatch:
@@ -58,4 +62,27 @@ jobs:
           assert a['gameplay_meaning_verified'] is False
           assert a['automatic_publish_allowed'] is False
           PY
+          python -m engine.live_dom_bridge \
+            --capture /tmp/private-capture-fixture.json \
+            --specialization "Synthetic Test Specialization" \
+            --patch "synthetic-patch" --revision "fixture-revision" \
+            --private-ledger /tmp/private-source-ledger.json \
+            --audit-output /tmp/public-source-audit.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          private=Path('/tmp/private-source-ledger.json').read_text(encoding='utf-8')
+          public=Path('/tmp/public-source-audit.json').read_text(encoding='utf-8')
+          audit=json.loads(public)
+          assert audit['observation_tip_count'] >= 3
+          assert audit['declared_gap_types']['inventory_not_checked'] >= 1
+          assert not audit['declared_coverage_candidate']
+          assert not audit['real_site_completeness_verified']
+          assert not audit['automatic_publish_allowed']
+          assert 'Synthetic hover-generated additional explanatory rule.' in private
+          assert 'Synthetic hover-generated additional explanatory rule.' not in public
+          assert 'Synthetic separate referenced tooltip body.' in private
+          assert 'Synthetic separate referenced tooltip body.' not in public
+          PY
+          rm -f /tmp/private-source-ledger.json /tmp/public-source-audit.json
           rm -f /tmp/private-capture-fixture.json /tmp/public-capture-audit.json
