@@ -102,3 +102,8 @@ python -m engine.source_acquisition_pipeline \
 - **현재 기본 순서:** (1) 일반 HTTP 한 번으로 정적 HTML 취득 → (2) 숨김 WHML, 툴팁 원문, 선택 조건 감사 → (3) 필요한 경우에만 정상 접근 가능한 브라우저에서 실제 동적 UI 확인 → (4) 수집 불가·버전 충돌 때만 사용자 저장 HTML 대체. HTTP 403·429 시 자동 우회·기한 없는 반복 요청 금지.
 
 위 검증에서 PUBLIC GitHub에 올린 것은 코드와 SHA·개수·오류 유형뿐이며 원문 HTML·WHML·개인 V11/V3.11 HTML은 게시하지 않았다. HTML 원본 직접 취득이 성공해도 **새 전문화의 정확한 패치·빌드·게임 로직 QA는 별도**다.
+
+
+## 전문화 이름만 입력하는 공통 취득 경로 (2026-11-12)
+
+[실제 원문 3개와 40전문화 명칭 매핑·집필 패킷 검증](SPECIALIZATION_ONLY_ACQUISITION_20261112.md). URL을 사람이 전달하지 않아도 `source_acquisition_pipeline --specialization '고양 주술사' --allow-remote --output dist/private_sources/enhancement`로 HTTP 직접 취득부터 guide-body/tooltip/조건부 표시 감사까지 실행한다. title/h1 불일치·모호한 전문화·선택한 패치/최소 업데이트 일자 불일치는 **원문 저장 전 차단**. 원문 `guide-body` WHML 및 그 참조 위치는 `editorial-evidence-private.json`으로만 보존. 게임 로직 승인 및 V11 HTML 제작은 별도 후속 단계.

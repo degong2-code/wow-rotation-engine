@@ -34,6 +34,8 @@ WoW 딜사이클 교본의 **V11 품질을 보존하면서 ChatGPT 채팅에서 
 
 **HTTP-first 실제 취득 검증:** 브라우저 없이 일반 HTTPS GET으로 고양 12.1.5 원문의 WHML 68,350자·툴팁 44개를 취득했고 **사용자 저장본의 원문 SHA-256과 동일**함을 확인했습니다. 생존 사냥꾼도 동일 수집기로 원문 53,084자 취득(패치 별도 검증 필요). [실측 및 HTTP 403 대응](docs/AUTO_PAGE_ACQUISITION.md).
 
+**전문화 이름만 입력하는 원문 취득:** [40전문화 이름 해석·실제 고양/생존/비전 자동 취득·비공개 조건/툴팁 패킷](docs/SPECIALIZATION_ONLY_ACQUISITION_20261112.md). 콘텐츠 판단 및 V11 HTML 생성 QA는 이후 별도 수행합니다.
+
 **운영 정본:**
 - [ADR-003 — ChatGPT 중심 제작 결정](docs/ADR_003_CHAT_FIRST_EDITORIAL.md)
 - [CHAT_FIRST_PLAYBOOK — CREATE/UPDATE 작업 순서](docs/CHAT_FIRST_PLAYBOOK.md)

@@ -113,3 +113,8 @@ python -m engine.source_reconcile --structure /tmp/synthetic-structure.json --ob
 사용자 제공 실제 Wowhead 고양 최신 HTML에서는 빈 `template[data-tooltip-name]` 44개로 인해 DOM만 읽으면 팁 누락이 생긴다. 동일 HTML 안의 원시 `WH.markup.printHtml`에는 tooltip 정의 44개/참조 45회, `display-option` 정의 16개/조건식 82개가 **완전한 문자열 형태로 저장**돼 있었다. `engine/embedded_markup.py`는 일반적으로 이런 내장 literal에서 각 tooltip의 본문 길이/해시와 radio 선택 그룹·checked/조건식을 **본문 유출 없이** 감사한다. [실물 증거](ENHANCEMENT_SAVED_HTML_EVIDENCE_20261112.md).
 
 **기존 문서의 '물약은 illustrative' 예시는 필요조건이 아니다.** 실제 조건부 표시 규칙이 **행동/시점**을 변경하는 경우 물약도 독립적인 결정 축이다. 다른 전문화에서 선택지가 단순 예시라면 중립 사용 슬롯을 유지한다. 4개 potion radio group을 전부 동시에 독립적으로 곱해 324개의 허구 조합을 만드는 것도 금지. 상위 영웅·전투 선택 후 실제 나타나는 하위 그룹만 따라간다.
+
+
+## 2026-11-12 사용자 입력 전문화 → 원문 집필 패킷
+
+[실제 3전문화 취득·검증](SPECIALIZATION_ONLY_ACQUISITION_20261112.md): 일반 Wowhead HTTP GET만으로 사용자가 이름을 입력한 공략을 열고 title/h1 정체성·표시 패치/Updated를 확인했다. `editorial-evidence-private.json`은 `display-options` 조건 표현의 원시 문자열/위치와 tooltip 정의·참조 본문을 원본 WHML과 함께 **비공개로 보존**해 읽지 못한 설명과 실제 로직 판단 실수를 예방한다. 별도의 `pipeline-audit.json`은 수치/해시만 공개한다. 조건 문자열을 저장했다는 사실은 ChatGPT가 해당 행동 순서·예외까지 해석했다는 증거가 아니다. 원문 전체 상태/콘텐츠/HTML QA 단계는 지속한다.

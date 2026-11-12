@@ -306,3 +306,13 @@
 - **다전문화 재현:** 생존 사냥꾼 가이드도 같은 정적 HTTP 취득기로 guide-body 53,084자, tooltip 39, 선택 정의 8 검출. **생존 원문 패치·수정일 직접 대조 전에는 최신성 미승인**. [실측 로그](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43179069846).
 - `engine/http_source_fetch.py` (직접 GET 1회, 403/429 중단, Wowhead HTTPS 호스트/리다이렉트 제한, 쿠키/세션 없음), `engine/source_acquisition_pipeline.py --http-url`, `--expected-guide-sha256`(기존 확인 WHML 지문 비교) 추가. 기본 접근은 **HTTP → WHML 조건 추출 → 필요시 브라우저**로 변경. 사용자가 저장 HTML을 반복 첨부해야 한다고 주장하지 말 것.
 - 보안/품질: 원문 HTML·사용자 원본 V11/V3.11을 PUBLIC 저장소에 게시하지 않음. 자료 접근/동일성·원문 완전성·게임 Q0/Q1·HTML QA는 분리하고 완료한 것만 표기.
+
+
+## 2026-11-12 최신 연속 개발 — 전문화명 입력부터 비공개 편집 패킷
+
+- `engine/spec_source_resolver.py`: 13직업·40전문화의 정규 한글/영문 명칭, 몇 가지 명시 단축어, 모호함 방지(냉기·신성 등). 전문화 이름만으로 canonical Wowhead guide URL 탐색. 실제 존재·최신성은 HTTP 결과로 별도 검사.
+- `engine/guide_identity.py`: page title/h1 정본 일치 확인, 페이지에 보이는 Patch·Updated 표기 및 수정 메타데이터를 기록. 패치/최소 수정일 기준이 주어졌는데 미일치 또는 미확보면 실패. 일반 스크립트 안에만 있는 패치 문자열은 가시 패치 증거가 아님.
+- `source_acquisition_pipeline --specialization`: URL 생성 → HTTP 한 번 → 정체성 검사 → WHML 분석 → 비공개 원문 저장. `--expected-guide-sha256` 과거 검증본문 지문 비교 가능. 자동 게시/Gate A/Q0/Q1 PASS는 여전히 false.
+- `engine/source_editorial_packet.py`: **개인 보관용** 전체 원시 WHML, 명명된 tooltip 원문 및 참조·조건부 표시·선택 정의·위치 정보를 보존; 이후 ChatGPT가 조건/행동을 분석할 때 사용. 공개 CI에는 패킷 개수·지문 일치만 출력, 실제 원문 자체를 올리지 않음.
+- 실제 Wowhead: 고양(68,350자/툴팁 44/선택 16/10-13), 생존(53,084/39/8/10-13), 비전(30,016/7/2/10-16) `title/h1` 정체성 및 12.1.5 패치 표시 감지 통과. 세 전문화의 비공개 조건/tooltip 패킷도 모두 원문 개수 대조 PASS. 고양 `guide-body` SHA는 사용자 12.1.5 저장본과 완전 동일. [실증 및 잔여 단계](SPECIALIZATION_ONLY_ACQUISITION_20261112.md).
+- 남은 과제: 비공개 패킷을 읽어 **상태→조건→행동→이유→예외**를 독립 추출/반례 검토 후 최신 패치·영웅·아이템 선택별 완성 교본 V11 HTML 생성. URL 취득/패킷 생성 성공은 교본 완성 아님.
