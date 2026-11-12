@@ -61,3 +61,28 @@ jobs:
                   print("http_first_access=html_but_guide_content_missing")
                   print("real_source_acquired=false")
           PY
+          # One independent additional specialization, for generalized HTTP discovery.
+          # Never print or upload full third-party source content.
+          python - <<'PY'
+          from pathlib import Path
+          from tempfile import TemporaryDirectory
+          from engine.http_source_fetch import get_html
+          from engine.source_acquisition_pipeline import inspect_and_store
+          from engine.source_page_acquire import SourceAccessError
+          url='https://www.wowhead.com/guide/classes/hunter/survival/rotation-cooldowns-pve-dps'
+          try:
+              html=get_html(url)
+              with TemporaryDirectory() as temp:
+                  r=inspect_and_store(dom_html=html, output=Path(temp), kind='http_direct')
+                  print('survival_http_status=valid_guide_body_received')
+                  print('survival_guide_body_payloads='+str(r['guide_body_payloads']))
+                  print('survival_guide_body_characters='+str(r['guide_body_character_counts'][0]))
+                  print('survival_named_tooltips='+str(r['named_tooltip_definition_count']))
+                  print('survival_option_definitions='+str(r['option_definition_count']))
+                  print('survival_content_version_verified=false')
+          except SourceAccessError as exc:
+              msg=str(exc)
+              reason='forbidden_403' if '403' in msg else 'rate_limited_429' if '429' in msg else 'not_acquired'
+              print('survival_http_status='+reason)
+              print('survival_content_version_verified=false')
+          PY
