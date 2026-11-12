@@ -113,6 +113,9 @@ def _simulate(events: list[dict], initial_state: dict) -> tuple[str, list, set]:
     state = dict(initial_state)
     selected = []
     exercised = set()
+    phase_order = {"prepull": 0, "pull": 1, "combat": 2}
+    last_phase = 0
+    last_start_ms = None
     for beat in sorted({event["beat"] for event in events}):
         group = [event for event in events if event["beat"] == beat]
         certain, uncertain = [], []
@@ -126,6 +129,20 @@ def _simulate(events: list[dict], initial_state: dict) -> tuple[str, list, set]:
             return "underdetermined", [], set()
         if sum(e["lane"] == "gcd" for e in certain) > 1:
             return "ambiguous", [], set()
+        # A later decision point cannot return to a previous pull phase.
+        if certain and min(phase_order[e["phase"]] for e in certain) < last_phase:
+            return "ambiguous", [], set()
+        if certain:
+            last_phase = max(phase_order[e["phase"]] for e in certain)
+        # Compare only explicitly supplied action start/use times, never
+        # infer cast duration or projectile impacts.
+        observed = [e["time_ms"] for e in certain
+                    if e.get("time_ms") is not None
+                    and e.get("time_anchor") in {"start", "use"}]
+        if observed:
+            if last_start_ms is not None and min(observed) < last_start_ms:
+                return "ambiguous", [], set()
+            last_start_ms = max(observed)
         changes = {}
         for event in certain:
             for field, value in event.get("set_state", {}).items():
