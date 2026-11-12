@@ -5,6 +5,9 @@ on:
     branches: ['work/chat-first-v11-20261111']
     paths:
       - 'engine/http_source_fetch.py'
+      - 'engine/spec_source_resolver.py'
+      - 'engine/guide_identity.py'
+      - 'engine/source_acquisition_pipeline.py'
       - '.github/workflows/http-first-probe.yml'
   workflow_dispatch:
 
@@ -21,68 +24,42 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Make one transparent normal HTTPS GET
+      - name: Resolve specialization input to real current Wowhead guide
         run: |
           python - <<'PY'
           from pathlib import Path
           from tempfile import TemporaryDirectory
-          from engine.http_source_fetch import get_html
-          from engine.source_acquisition_pipeline import inspect_and_store
+          from engine.source_acquisition_pipeline import run_specialization
           from engine.source_page_acquire import SourceAccessError
-          url="https://www.wowhead.com/guide/classes/shaman/enhancement/rotation-cooldowns-pve-dps"
-          try:
-              html=get_html(url)
-          except SourceAccessError as exc:
-              reason=str(exc)
-              status=("forbidden_403" if "403" in reason else
-                      "rate_limited_429" if "429" in reason else
-                      "request_failed")
-              print("http_first_access="+status)
-              print("real_source_acquired=false")
-          else:
+          from engine.spec_source_resolver import SpecializationResolutionError
+
+          # No source HTML, page title or copyrighted guide text in CI output.
+          # One ordinary HTTPS GET per specialization, no cookies or retries.
+          for name, baseline in (
+              ("고양 주술사", "6657591171c36c79797b739b2248e37b9d967094e7d33e8dd799293283bd5dbe"),
+              ("생존 사냥꾼", None),
+              ("비전 마법사", None),
+          ):
+              label={"고양 주술사":"enhancement","생존 사냥꾼":"survival",
+                     "비전 마법사":"arcane"}[name]
               try:
-                  with TemporaryDirectory() as temp:
-                      report=inspect_and_store(dom_html=html, output=Path(temp),
-                                               kind="http_direct")
-                      print("http_first_access=valid_guide_body_received")
-                      print("named_tip_definitions="+str(report["named_tooltip_definition_count"]))
-                      print("option_definitions="+str(report["option_definition_count"]))
-                      print("conditional_displays="+str(report["conditional_display_count"]))
-                      print("tooltip_references="+str(report["tooltip_reference_count"]))
-                      digest=report["guide_body_sha256s"][0]
-                      length=report["guide_body_character_counts"][0]
-                      expected="6657591171c36c79797b739b2248e37b9d967094e7d33e8dd799293283bd5dbe"
-                      print("guide_body_sha256="+digest)
-                      print("guide_body_characters="+str(length))
-                      print("matches_user_saved_2026_10_13_body="+str(digest==expected).lower())
-                      print("source_patch_verified=false")
-                      print("real_site_completeness_verified=false")
-              except SourceAccessError:
-                  print("http_first_access=html_but_guide_content_missing")
-                  print("real_source_acquired=false")
-          PY
-          # One independent additional specialization, for generalized HTTP discovery.
-          # Never print or upload full third-party source content.
-          python - <<'PY'
-          from pathlib import Path
-          from tempfile import TemporaryDirectory
-          from engine.http_source_fetch import get_html
-          from engine.source_acquisition_pipeline import inspect_and_store
-          from engine.source_page_acquire import SourceAccessError
-          url='https://www.wowhead.com/guide/classes/hunter/survival/rotation-cooldowns-pve-dps'
-          try:
-              html=get_html(url)
-              with TemporaryDirectory() as temp:
-                  r=inspect_and_store(dom_html=html, output=Path(temp), kind='http_direct')
-                  print('survival_http_status=valid_guide_body_received')
-                  print('survival_guide_body_payloads='+str(r['guide_body_payloads']))
-                  print('survival_guide_body_characters='+str(r['guide_body_character_counts'][0]))
-                  print('survival_named_tooltips='+str(r['named_tooltip_definition_count']))
-                  print('survival_option_definitions='+str(r['option_definition_count']))
-                  print('survival_content_version_verified=false')
-          except SourceAccessError as exc:
-              msg=str(exc)
-              reason='forbidden_403' if '403' in msg else 'rate_limited_429' if '429' in msg else 'not_acquired'
-              print('survival_http_status='+reason)
-              print('survival_content_version_verified=false')
+                  with TemporaryDirectory() as tmp:
+                      report=run_specialization(
+                          name, Path(tmp), expected_guide_sha256=baseline)
+                      print(label+"_status=guide_identity_confirmed")
+                      print(label+"_guide_body_count="+str(report["guide_body_payloads"]))
+                      print(label+"_guide_body_characters="+str(report["guide_body_character_counts"][0]))
+                      print(label+"_named_tooltips="+str(report["named_tooltip_definition_count"]))
+                      print(label+"_choice_definitions="+str(report["option_definition_count"]))
+                      print(label+"_modified_date="+str(report["observed_guide_update_date"]))
+                      print(label+"_visible_patches="+",".join(report["visible_patch_candidates"]))
+                      print(label+"_same_user_saved_body="+str(report["matches_known_baseline"]).lower())
+                      print(label+"_current_patch_verified="+str(report["source_patch_verified"]).lower())
+              except (SourceAccessError, SpecializationResolutionError) as exc:
+                  msg=str(exc)
+                  code=("forbidden_403" if "403" in msg else
+                        "rate_limited_429" if "429" in msg else
+                        "source_or_identity_unavailable")
+                  print(label+"_status="+code)
+                  print(label+"_current_patch_verified=false")
           PY
