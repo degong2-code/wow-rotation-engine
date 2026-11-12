@@ -109,6 +109,14 @@ def _parent_row(node: Node) -> str | None:
     return None
 
 
+def _safe_reference(value: str) -> str:
+    # Preserve short structural identifiers, not narrative strings.
+    token = value.removeprefix("#")
+    if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_.:-]{0,63}", token):
+        return value[:65]
+    return "sha256:" + hashlib.sha256(value.encode("utf-8")).hexdigest()[:24]
+
+
 def _ref_body(ref: str, ids: dict[str, Node]) -> tuple[str, str | None]:
     target = ids.get(ref.removeprefix("#"))
     if target is None:
@@ -147,7 +155,7 @@ def inspect_html(html: str) -> dict:
     for n, node in enumerate(parser.nodes):
         a = node.attrs
         if node.tag in HEADING:
-            active_heading = _compact(node.text())
+            active_heading = node.tag + '@' + str(n)
         heading = active_heading
         if node.tag == "script":
             data = node.text()
@@ -192,10 +200,10 @@ def inspect_html(html: str) -> dict:
                     while ancestor is not None and ancestor is not node:
                         ancestor = ancestor.parent
                     if ancestor is node:
-                        options.append(_compact(x.text()))
+                        options.append(_digest(x.text()))
             controls.append({
                 "element": n, "type": control_type, "id": a.get("id"),
-                "label": _compact(a.get("aria-label", "") or node.text(), 75),
+                "label_digest": _digest(a.get("aria-label", "") or node.text()),
                 "section": heading, "targets": targets,
                 "targets_in_html": [v for v in targets if v in ids],
                 "targets_not_in_html": [v for v in targets if v not in ids],
@@ -214,7 +222,7 @@ def inspect_html(html: str) -> dict:
                 status, body = _ref_body(ref, ids)
                 found.append((attr, status, body, ref))
                 if status != "reference_body":
-                    unresolved.append({"element": n, "attribute": attr, "reference": _compact(ref, 120)})
+                    unresolved.append({"element": n, "attribute": attr, "reference": _safe_reference(ref)})
         if a.get("data-tooltip"):
             value = a["data-tooltip"]
             if value.lstrip("#") in ids:
@@ -224,7 +232,7 @@ def inspect_html(html: str) -> dict:
             else:
                 status, body = "unresolved_reference", None
                 unresolved.append({"element": n, "attribute": "data-tooltip",
-                                   "reference": _compact(value, 120)})
+                                   "reference": _safe_reference(value)})
             found.append(("data-tooltip", status, body, value if status == "reference_body" else None))
         # Text-only '?' or info triggers often have content in JS, not static HTML.
         if not found and node.tag in {"button", "span", "a"} and _compact(node.text()) == "?":
@@ -236,7 +244,7 @@ def inspect_html(html: str) -> dict:
                 "descriptions": [
                     {"attribute": attr, "status": status,
                      "body": _digest(body) if body is not None else None,
-                     "reference": _compact(ref, 120) if ref is not None else None}
+                     "reference": _safe_reference(ref) if ref is not None else None}
                     for attr, status, body, ref in found
                 ],
             })
@@ -245,6 +253,7 @@ def inspect_html(html: str) -> dict:
     return {
         "schema_version": SCHEMA,
         "inspection": "static_html_only",
+        "source_sha256": hashlib.sha256(html.encode("utf-8")).hexdigest(),
         "node_count": len(parser.nodes),
         "control_candidates": controls,
         "hidden_region_candidates": hidden_regions,

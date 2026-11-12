@@ -36,7 +36,7 @@ class StructureTests(unittest.TestCase):
         self.assertGreaterEqual(len(r["hidden_region_candidates"]), 5)
         self.assertTrue(any(x["id"] == "stPanel" for x in r["hidden_region_candidates"]))
         self.assertTrue(any(x["type"] == "details_summary" for x in r["control_candidates"]))
-        self.assertTrue(any(x["options"] == ["Example 1", "Example 2"] for x in r["control_candidates"]))
+        self.assertTrue(any(len(x["options"]) == 2 and all(opt["characters"] > 0 for opt in x["options"]) for x in r["control_candidates"]))
         self.assertTrue(any(x["targets"] == ["stPanel"] and
                             x["targets_in_html"] == ["stPanel"] for x in r["control_candidates"]))
         self.assertEqual(r["embedded_script_markers"]["WH.markup.printHtml"], 1)
@@ -79,6 +79,18 @@ class StructureTests(unittest.TestCase):
     def test_duplicate_identifiers(self):
         r = inspect_html('<div id="duplicate"></div><div id="duplicate"></div>')
         self.assertEqual(r["duplicate_ids"], ["duplicate"])
+
+    def test_metadata_excludes_heading_and_selection_prose(self):
+        import json
+        source = ('<h2>Synthetic secret editorial heading.</h2>'
+                  '<select><option>Synthetic private selection.</option></select>'
+                  '<button aria-label="Synthetic private control.">Go</button>')
+        result = inspect_html(source)
+        output = json.dumps(result)
+        self.assertNotIn("Synthetic secret editorial", output)
+        self.assertNotIn("Synthetic private selection", output)
+        self.assertNotIn("Synthetic private control", output)
+        self.assertEqual(len(result["source_sha256"]), 64)
 
     def test_limits_and_input_types(self):
         with self.assertRaises(ValueError):
