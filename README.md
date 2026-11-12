@@ -40,6 +40,8 @@ WoW 딜사이클 교본의 **V11 품질을 보존하면서 ChatGPT 채팅에서 
 
 **게임플레이 판단 QA:** [원문 근거를 첨부한 우선순위·오프너 반례 검사](docs/GAMEPLAY_DECISION_QA_20261112.md). 근거 없는 행동이나 임계값을 생성하지 않고, 편집 규칙의 충돌·미시험·예외 미모델링을 검사합니다.
 
+**실제 게임 상태 판단 검증(2026-11-12):** [고양 주술사 12.1.5 폭풍인도자 단일 10규칙·13상태 및 no_rule 반례](docs/ENHANCEMENT_ST_DECISION_QA_20261112.md). 원문 SHA·스킬 ID·툴팁 참조를 대조했으며 전체 전문화/게임 최적화 승인과 구분합니다.
+
 **운영 정본:**
 - [ADR-003 — ChatGPT 중심 제작 결정](docs/ADR_003_CHAT_FIRST_EDITORIAL.md)
 - [CHAT_FIRST_PLAYBOOK — CREATE/UPDATE 작업 순서](docs/CHAT_FIRST_PLAYBOOK.md)
