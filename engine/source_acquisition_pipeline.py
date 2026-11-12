@@ -21,6 +21,7 @@ from .source_page_acquire import (
     select_analysis_html, write_private_snapshot,
 )
 from .source_structure import inspect_html
+from .http_source_fetch import get_html
 
 PIPELINE_SCHEMA = "source-acquisition-pipeline-v1"
 
@@ -166,6 +167,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     src = parser.add_mutually_exclusive_group(required=True)
     src.add_argument("--url")
+    src.add_argument("--http-url", help="One direct HTTPS GET; no browser, cookies or retries")
     src.add_argument("--saved-html", type=Path)
     src.add_argument("--saved-zip", type=Path)
     parser.add_argument("--allow-remote", action="store_true")
@@ -175,7 +177,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--max-states", type=int, default=24)
     parser.add_argument("--max-depth", type=int, default=3)
     args = parser.parse_args(argv)
-    if args.url:
+    if args.http_url:
+        if not args.allow_remote:
+            parser.error("Direct HTTP mode requires --allow-remote")
+        if args.mhtml or args.capture_ui:
+            parser.error("--mhtml/--capture-ui require a browser; HTTP mode does not execute UI")
+        html = get_html(args.http_url)
+        result = inspect_and_store(dom_html=html, output=args.output,
+                                   kind="http_direct")
+    elif args.url:
         if not args.allow_remote:
             parser.error("URL mode requires --allow-remote")
         result = run_browser(args.url, args.output,
