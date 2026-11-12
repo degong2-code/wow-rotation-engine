@@ -74,7 +74,7 @@ class SourcePipelineTests(TestCase):
                                       kind="saved_html")
             self.assertEqual(audit["missing_named_tooltip_definitions"], 1)
             self.assertIn("tooltip_reference_without_definition", audit["issue_types"])
-            self.assertNotIn("missing", json.dumps(audit))
+            self.assertNotIn('"missing"', json.dumps(audit))
 
     def test_private_zip_not_required_to_extract_assets(self):
         with TemporaryDirectory() as temp:
