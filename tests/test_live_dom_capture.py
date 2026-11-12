@@ -76,6 +76,43 @@ class LiveDOMTests(unittest.TestCase):
         finally:
             page.close()
 
+    def test_stable_id_replay_ignores_stale_position(self):
+        from engine.live_dom_capture import _perform
+        page = self.browser.new_page()
+        try:
+            page.goto(FIXTURE.as_uri())
+            page.locator("#heroB").click()
+            _perform(page, {"index": 999, "kind": "select",
+                            "dom_id": "betaMode", "value": "alternate"})
+            self.assertTrue(page.locator("#beta-extra").is_visible())
+        finally:
+            page.close()
+
+    def test_tooltip_limit_is_visible_as_unvisited_and_not_approved(self):
+        page = self.browser.new_page()
+        try:
+            page.goto(FIXTURE.as_uri())
+            data = capture(page, max_states=12, max_depth=3,
+                           max_tooltips_per_state=0)
+            report = summarize(data)
+            self.assertTrue(report["known_capture_gaps"])
+            self.assertTrue(any(s["unhovered_tooltip_triggers"] > 0
+                                for s in report["states"]))
+            self.assertFalse(report["real_site_completeness_verified"])
+        finally:
+            page.close()
+
+    def test_depth_limit_reveals_unvisited_child_states(self):
+        page = self.browser.new_page()
+        try:
+            page.goto(FIXTURE.as_uri())
+            report = summarize(capture(page, max_states=24, max_depth=0))
+            self.assertEqual(report["observed_state_count"], 1)
+            self.assertGreater(report["depth_limited_state_count"], 0)
+            self.assertTrue(report["known_capture_gaps"])
+        finally:
+            page.close()
+
     def test_bounded_state_count_and_no_assumed_real_completeness(self):
         page = self.browser.new_page()
         try:

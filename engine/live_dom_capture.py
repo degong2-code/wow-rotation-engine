@@ -53,7 +53,7 @@ OBSERVE = r"""() => {
   }).filter(Boolean);
   const main=document.querySelector('main,[role=main]')||document.body;
   const body=(main.innerText||'').slice(0,250000);
-  const tooltipTriggers=[...document.querySelectorAll(tipSelector)].map((e,index)=>{
+  const tooltipTriggersAll=[...document.querySelectorAll(tipSelector)].map((e,index)=>{
     if (!visible(e)) return null;
     const attr={};
     for (const k of ['title','data-hint-body','data-tippy-content','data-tooltip-content',
@@ -73,10 +73,13 @@ OBSERVE = r"""() => {
     return {index,tag:e.tagName.toLowerCase(),id:e.id||null,
        row_id:row?.id||null,near:(row?.innerText||e.parentElement?.innerText||'').slice(0,220),
        attributes:attr,references:refs};
-  }).filter(Boolean).slice(0,150);
+  }).filter(Boolean);
   const dynamicOverlays=[...document.querySelectorAll('[role=tooltip],.tippy-box,.tooltip-inner')]
     .filter(visible).map(e=>(e.innerText||'').trim()).filter(Boolean).slice(0,20);
-  return {title:document.title, url:location.href,body,controls,tooltip_triggers:tooltipTriggers,
+  return {title:document.title, url:location.href,body,controls,
+          tooltip_trigger_total:tooltipTriggersAll.length,
+          tooltip_triggers_truncated:tooltipTriggersAll.length>150,
+          tooltip_triggers:tooltipTriggersAll.slice(0,150),
           dynamic_tooltips:dynamicOverlays,
           visible_page_heading:(main.querySelector('h1')?.innerText||'').slice(0,200)};
 }"""
@@ -100,18 +103,33 @@ def summarize(record: dict) -> dict:
         "observed_state_count": len(record["states"]),
         "pending_state_count": record.get("pending_state_count", 0),
         "capture_bounded": record.get("pending_state_count", 0) > 0,
+        "depth_limited_state_count": record.get("depth_limited_state_count", 0),
         "states": [
             {"path": [{"kind": step["kind"], "index": step["index"],
                        "value_sha256": digest(str(step.get("value", "")))["sha256"]}
                       for step in state["path"]],
              "body_digest": digest(state["observation"]["body"]),
              "visible_controls": len(state["observation"]["controls"]),
-             "visible_tooltip_triggers": len(state["observation"]["tooltip_triggers"]),
+             "visible_tooltip_triggers": state["observation"].get("tooltip_trigger_total",
+                                           len(state["observation"]["tooltip_triggers"])),
+             "tooltip_snapshot_truncated": state["observation"].get("tooltip_triggers_truncated", False),
+             "unhovered_tooltip_triggers": max(0, state["observation"].get("tooltip_trigger_total",
+                                           len(state["observation"]["tooltip_triggers"]))
+                                           - len(state["hover_results"])),
              "hovered_tooltips": len(state["hover_results"]),
              "hover_body_found": sum(bool(h["dynamic_tooltips"]) for h in state["hover_results"])}
             for state in record["states"]],
         "errors": [{"state_index": e["state_index"], "type": e["type"]}
                    for e in record["errors"]],
+        "known_capture_gaps": (record.get("pending_state_count", 0) > 0
+                               or record.get("depth_limited_state_count", 0) > 0
+                               or bool(record["errors"])
+                               or any(
+                                  st["observation"].get("tooltip_trigger_total",
+                                      len(st["observation"]["tooltip_triggers"])) >
+                                  len(st["hover_results"])
+                                  for st in record["states"]
+                               )),
         "full_source_text_in_report": False,
         "real_site_completeness_verified": False,
         "gameplay_meaning_verified": False,
@@ -128,21 +146,28 @@ def controls_to_actions(observation: dict, path: list[dict]) -> list[dict]:
         if c["kind"] == "select":
             for option in c["options"]:
                 if option["value"] != c["selected_value"]:
-                    result.append({"index": c["index"], "kind": "select", "value": option["value"]})
+                    result.append({"index": c["index"], "kind": "select", "dom_id": c.get("id"), "value": option["value"]})
         elif c["kind"] in {"radio", "checkbox"}:
             if not c["checked"]:
-                result.append({"index": c["index"], "kind": c["kind"]})
+                result.append({"index": c["index"], "kind": c["kind"], "dom_id": c.get("id")})
         elif c["kind"] in {"tab", "summary"}:
             # Strictly only controlled tabs or HTML disclosure summaries, never
             # arbitrary page buttons with potential non-navigation side effects.
             if c["kind"] == "summary" or c["target"] or c["selected"] is not None:
                 if c["selected"] != "true" and c["expanded"] != "true":
-                    result.append({"index": c["index"], "kind": c["kind"]})
+                    result.append({"index": c["index"], "kind": c["kind"], "dom_id": c.get("id")})
     return result
 
 
 def _perform(page, action: dict) -> None:
-    item = page.locator(CONTROL_SELECTOR).nth(action["index"])
+    # Prefer stable ids: expanding an ancestor may insert new controls before it.
+    dom_id = action.get("dom_id")
+    if dom_id:
+        item = page.locator('[id=' + json.dumps(dom_id) + ']')
+        if item.count() != 1:
+            raise RuntimeError("Control stable id is not uniquely present")
+    else:
+        item = page.locator(CONTROL_SELECTOR).nth(action["index"])
     kind = action["kind"]
     if kind == "select":
         item.select_option(value=action["value"], timeout=2000)
@@ -158,7 +183,14 @@ def _hover(page, max_tips: int) -> list[dict]:
     result = []
     for trigger in observed[:max_tips]:
         try:
-            page.locator(TOOLTIP_SELECTOR).nth(trigger["index"]).hover(timeout=1200)
+            dom_id = trigger.get("id")
+            if dom_id:
+                target = page.locator('[id=' + json.dumps(dom_id) + ']')
+                if target.count() != 1:
+                    raise RuntimeError("Tooltip stable id not unique")
+            else:
+                target = page.locator(TOOLTIP_SELECTOR).nth(trigger["index"])
+            target.hover(timeout=1200)
             page.wait_for_timeout(40)
             overlays = page.evaluate(OBSERVE)["dynamic_tooltips"]
             result.append({"trigger_index": trigger["index"],
@@ -172,7 +204,7 @@ def _hover(page, max_tips: int) -> list[dict]:
 
 def capture(page, max_states: int = 24, max_depth: int = 3,
             max_tooltips_per_state: int = 30) -> dict:
-    if max_states < 1 or max_states > 150 or max_depth < 0 or max_depth > 8:
+    if max_states < 1 or max_states > 150 or max_depth < 0 or max_depth > 8 or max_tooltips_per_state < 0 or max_tooltips_per_state > 150:
         raise ValueError("Out-of-range capture limits")
     html = page.content()
     if len(html.encode("utf-8")) > MAX_HTML:
@@ -182,6 +214,7 @@ def capture(page, max_states: int = 24, max_depth: int = 3,
         "source_url": page.url,
         "source_sha256": hashlib.sha256(html.encode("utf-8")).hexdigest(),
         "states": [], "errors": [], "pending_state_count": 0,
+        "depth_limited_state_count": 0,
     }
     queue = [[]]
     seen = set()
@@ -204,9 +237,12 @@ def capture(page, max_states: int = 24, max_depth: int = 3,
             result["states"].append(
                 {"path": path, "observation": observation, "hover_results": hovers}
             )
+            potential = controls_to_actions(observation, path)
             if len(path) < max_depth:
-                for action in controls_to_actions(observation, path):
+                for action in potential:
                     queue.append(path + [action])
+            elif potential:
+                result["depth_limited_state_count"] += 1
         except Exception as exc:
             result["errors"].append(
                 {"state_index": len(result["states"]), "type": type(exc).__name__}
