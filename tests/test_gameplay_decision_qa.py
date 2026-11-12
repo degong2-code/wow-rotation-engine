@@ -257,6 +257,51 @@ class GameplayDecisionQATests(unittest.TestCase):
         self.assertEqual(result["unexercised_rule_count"], 1)
         self.assertIn("unexercised_rule_branches", result["blocker_codes"])
 
+
+    def test_historical_tooltip_only_action_citation_must_not_pass(self):
+        from copy import deepcopy
+        bad = rule("historical", "priority", "Synthetic A", rank=1)
+        body = PACKET["payloads"][0]["original_whml"]
+        tooltip_start = body.index("[tooltip name=proc]")
+        tooltip_end = body.index("[/tooltip]", tooltip_start) + len("[/tooltip]")
+        # A different action is mentioned in the prose tooltip but not in the
+        # first action row. Earlier generic validation could accept it.
+        bad["action_source_marker"] = "Fictional stack"
+        bad["evidence"].append({
+            "payload_sha256": DIGEST,
+            "start": tooltip_start, "end": tooltip_end
+        })
+        result = report([bad], [case("invalid", "Synthetic A")])
+        self.assertEqual(result["invalid_action_marker_rule_count"], 1)
+        self.assertIn("action_not_in_cited_source_span", result["blocker_codes"])
+        positive = deepcopy(bad)
+        positive["action_source_marker"] = "Spend on proc"
+        result2 = report([positive], [case("valid", "Synthetic A")])
+        self.assertEqual(result2["invalid_action_marker_rule_count"], 0)
+
+    def test_missing_higher_state_is_not_evidence_that_lower_rule_wins(self):
+        rules = [
+            rule("high", "priority", "Synthetic A", rank=1,
+                 when=[{"field": "proc", "op": "eq", "value": True}]),
+            rule("low", "priority", "Synthetic B", rank=2),
+        ]
+        result = report(rules, [
+            case("unknown-top-condition", "Synthetic B", state={}),
+            case("certain-high", "Synthetic A", state={"proc": True}),
+        ])
+        self.assertEqual(result["unexercised_rule_count"], 1)
+        self.assertIn("unexercised_rule_branches", result["blocker_codes"])
+        self.assertEqual(result["case_results"][0]["result"], "underdetermined")
+
+    def test_tied_conflicting_action_is_not_counted_as_tested_winner(self):
+        rules = [
+            rule("a", "priority", "Synthetic A", rank=1),
+            rule("b", "priority", "Synthetic B", rank=1)
+        ]
+        result = report(rules, [case("tie", "Synthetic A")])
+        self.assertEqual(result["unexercised_rule_count"], 2)
+        self.assertEqual(result["case_results"][0]["result"], "ambiguous")
+
     def test_private_rule_text_not_in_public_report(self):
         rules = [rule("secret", "priority", "Copyrighted Fictional Ability", rank=1,
                       reason="A detailed source-only paragraph about the ability")]

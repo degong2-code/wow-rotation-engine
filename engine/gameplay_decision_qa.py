@@ -103,17 +103,23 @@ def _verify_action_marker(rule: dict, payloads: list) -> bool:
         return True
     if not isinstance(marker, str) or not 3 <= len(marker) <= 100:
         return False
-    for ref in rule.get("evidence", []):
-        if not isinstance(ref, dict):
+    # The FIRST citation is the action's own source span. Later citations
+    # may be explanatory tooltips/notes and must not legitimize an unrelated
+    # action. The source markup can represent an action as a list, table, or
+    # custom component, so do not impose a class-specific row/tag template.
+    citations = rule.get("evidence")
+    if not isinstance(citations, list) or not citations:
+        return False
+    ref = citations[0]
+    if not isinstance(ref, dict):
+        return False
+    for payload in payloads:
+        if payload.get("sha256") != ref.get("payload_sha256"):
             continue
-        for payload in payloads:
-            if payload.get("sha256") != ref.get("payload_sha256"):
-                continue
-            start, end = ref.get("start"), ref.get("end")
-            body = payload["original_whml"]
-            if type(start) is int and type(end) is int and 0 <= start < end <= len(body):
-                if marker in body[start:end]:
-                    return True
+        start, end = ref.get("start"), ref.get("end")
+        body = payload["original_whml"]
+        if type(start) is int and type(end) is int and 0 <= start < end <= len(body):
+            return marker in body[start:end]
     return False
 
 
@@ -124,12 +130,18 @@ def _rule_exercised_as_winner(rule: dict, cases: list[dict], rules: list[dict]) 
             continue
         if rule["kind"] == "opener":
             return True
-        higher = any(
-            other["kind"] == "priority" and other["rank"] < rule["rank"]
-            and _applicability(other, case) is True
+        competing = any(
+            other is not rule and other["kind"] == "priority"
+            and (
+                other["rank"] < rule["rank"]
+                or (other["rank"] == rule["rank"] and other["action"] != rule["action"])
+            )
+            and _applicability(other, case) is not False
             for other in rules
         )
-        if not higher:
+        # Missing higher-priority state is UNKNOWN, not a proven selection.
+        # Ties leading to a different action are not a tested winner either.
+        if not competing:
             return True
     return False
 
