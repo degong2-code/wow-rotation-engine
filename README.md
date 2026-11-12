@@ -42,6 +42,8 @@ WoW 딜사이클 교본의 **V11 품질을 보존하면서 ChatGPT 채팅에서 
 
 **실제 게임 상태 판단 검증(2026-11-12):** [고양 주술사 12.1.5 폭풍인도자 단일 10규칙·13상태 및 no_rule 반례](docs/ENHANCEMENT_ST_DECISION_QA_20261112.md). 원문 SHA·스킬 ID·툴팁 참조를 대조했으며 전체 전문화/게임 최적화 승인과 구분합니다.
 
+**과거자료·범용 품질 역검증:** [V11 7뷰 원시 HTML 보존, V3.9→V3.11 변경 범위, 과거 원문 F01~F09와 물약 예외 반례](docs/HISTORICAL_REGRESSION_AUDIT_20261112.md). 장/표 수 고정을 피하고 정상 교본의 오탐까지 검증합니다.
+
 **운영 정본:**
 - [ADR-003 — ChatGPT 중심 제작 결정](docs/ADR_003_CHAT_FIRST_EDITORIAL.md)
 - [CHAT_FIRST_PLAYBOOK — CREATE/UPDATE 작업 순서](docs/CHAT_FIRST_PLAYBOOK.md)
