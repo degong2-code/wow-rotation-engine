@@ -220,3 +220,11 @@
 - **개인 V3.10:** `wow_rotation_v11_enhancement_v3_10_crash_lightning_proc_context_review.html` · 1,067,897 bytes · SHA256 `537be20cc9109aa9103c9babefc565137d336e50473c138059f5174e056655b1`. V3.9에서 고양 고급 운용의 낙뢰 초기화 문장 1곳 보강. 사용 가능하면 즉시 재사용하되 ‘불꽃 회오리 발동에 따른 완전 초기화 가능성’과 시즌 세트의 부분적 쿨다운 감소를 구별. 실제 아이콘 위치·정확한 기전 조건 미확인이라고 명시.
 - **선별 감사:** 개인 `enhancement_v310_source_meaning_coverage_audit.json` · 13,005 bytes · SHA256 `1a6cee20d44fb46204520da38a15403e82e35340cf53909e7e2a42f3db2e6970`. 최신 2026-10-13 Wowhead 검색 색인 부근의 주요 의미 27개를 대조(22개 기존 반영/보강, 2개 부분, 3개 의미 검증 필요). **원문 전체 `?` 트리거 27개를 발견했다는 뜻이 아님**.
 - **검증:** 기존 V11 7개 본문 동일, 고양 4표/43행 유지. Chromium PC·모바일 영웅 전환, 팝업/ESC, overflow 없음, JS 오류 0. Gate A FAIL, Q0/Q1 일부 REVIEW, 승인 전 검토본. 기존 실제 Wowhead DOM 접근 불가와 패치 버전 충돌(12.0.7 vs 12.1.5)은 그대로 유효. [상세 감사](ENHANCEMENT_SOURCE_COVERAGE_V3_20261111.md), [사례집 §37](QUALITY_GENERALIZATION_CASEBOOK.md).
+
+
+## 2026-11-12 범용 원문 확보 감사기 — 특정 전문화 코드 없이 재사용
+
+- **목표:** 고양 V3.10 같은 단발 수정 대신, 사용자가 전문화명만 입력하는 ChatGPT-first 제작에서 모든 전문화의 **동적 선택→하위 선택·접힘·툴팁 내용** 누락을 같은 방식으로 점검한다. 크롤러나 자동 집필 엔진이 아니라 **선택적 내부 감사 보조**다.
+- **구현:** `engine/source_coverage.py`, `tests/test_source_coverage.py`, `examples/synthetic-source-coverage.json`, `docs/SOURCE_COVERAGE_AUDIT.md`. 합성 테스트에서 중첩 선택, 새 하위 선택, 물약 예시의 카르테시안 과잉 분기 방지, 툴팁 본문/위치 분리, 동일 URL의 패치 충돌, 본문 누락, 오탐 방어를 검증한다.
+- **분리:** 결과의 `declared_coverage_candidate`는 **입력에 선언된 요소에만** 적용한다. 실제 웹페이지 전체에 대해 발견하지 못한 `?`가 없다는 증명은 아님. `real_site_completeness_verified=false`, `gameplay_meaning_verified=false`, `automatic_publish_allowed=false` 유지. 기존 V11 HTML과 최신 고양 V3.10 개인 교본은 변경하지 않았으며 PUBLIC에 올리지 않음.
+- **다음 초점:** 실제 접근 가능한 새로운 전문화에서 원문 내용/선택을 수집할 때 이 공통 감사로 누락을 줄이는지 비교 검증. 브라우저/네트워크 접근 문제는 이 모듈만으로 해결되지 않는다.

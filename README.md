@@ -14,6 +14,8 @@ WoW 딜사이클 교본의 **V11 품질을 보존하면서 ChatGPT 채팅에서 
 
 **새 채팅 독립 복원 진입점:** [HANDOFF_CHAT_FIRST_CURRENT — 현재 상태·V11/V3 파일 및 승인 구분·품질 게이트·다음 작업](docs/HANDOFF_CHAT_FIRST_CURRENT.md). 새 채팅은 이 문서부터 읽기 전용으로 복원하고 사용자 `진행` 승인 후 작업한다.
 
+**범용 원문 확보 보조 도구 (2026-11-12):** [중첩 선택·툴팁 본문·위치 단서·패치 일관성 감사](docs/SOURCE_COVERAGE_AUDIT.md)를 추가했습니다. 신규 전문화에도 동일한 방식으로 누락 경로를 검사하지만, 실제 웹사이트를 크롤링하거나 자동으로 원문 확보·게임플레이 검증을 완료하는 도구가 아닙니다. 원문 내용은 ChatGPT가 확보하고 의미 분석합니다. 개인 HTML과 외부 장문 원문을 PUBLIC 저장소에 올리지 않습니다.
+
 **운영 정본:**
 - [ADR-003 — ChatGPT 중심 제작 결정](docs/ADR_003_CHAT_FIRST_EDITORIAL.md)
 - [CHAT_FIRST_PLAYBOOK — CREATE/UPDATE 작업 순서](docs/CHAT_FIRST_PLAYBOOK.md)
