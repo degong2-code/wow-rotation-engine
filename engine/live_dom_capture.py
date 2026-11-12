@@ -248,6 +248,8 @@ def capture(page, max_states: int = 24, max_depth: int = 3,
                 {"state_index": len(result["states"]), "type": type(exc).__name__}
             )
     result["pending_state_count"] = len(queue)
+    # Private only: identifies unvisited branches for the source coverage audit.
+    result["pending_paths"] = queue[:500]
     return result
 
 
