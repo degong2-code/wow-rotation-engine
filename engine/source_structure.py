@@ -205,14 +205,14 @@ def inspect_html(html: str) -> dict:
         found = []
         for attr in INLINE_TIPS:
             if attr in a:
-                found.append((attr, "inline_body" if a[attr].strip() else "empty_body", a[attr]))
+                found.append((attr, "inline_body" if a[attr].strip() else "empty_body", a[attr], None))
         for attr in REFERENCE_TIPS:
             if attr not in a:
                 continue
             refs = a[attr].split() if attr == "aria-describedby" else [a[attr]]
             for ref in refs:
                 status, body = _ref_body(ref, ids)
-                found.append((attr, status, body))
+                found.append((attr, status, body, ref))
                 if status != "reference_body":
                     unresolved.append({"element": n, "attribute": attr, "reference": _compact(ref, 120)})
         if a.get("data-tooltip"):
@@ -225,18 +225,19 @@ def inspect_html(html: str) -> dict:
                 status, body = "unresolved_reference", None
                 unresolved.append({"element": n, "attribute": "data-tooltip",
                                    "reference": _compact(value, 120)})
-            found.append(("data-tooltip", status, body))
+            found.append(("data-tooltip", status, body, value if status == "reference_body" else None))
         # Text-only '?' or info triggers often have content in JS, not static HTML.
         if not found and node.tag in {"button", "span", "a"} and _compact(node.text()) == "?":
-            found.append(("question_icon", "body_not_found_in_static_html", None))
+            found.append(("question_icon", "body_not_found_in_static_html", None, None))
         if found and len(tooltips) < MAX_ITEMS:
             tooltips.append({
                 "element": n, "tag": node.tag, "id": a.get("id"),
                 "section": heading, "table_row": _parent_row(node),
                 "descriptions": [
                     {"attribute": attr, "status": status,
-                     "body": _digest(body) if body is not None else None}
-                    for attr, status, body in found
+                     "body": _digest(body) if body is not None else None,
+                     "reference": _compact(ref, 120) if ref is not None else None}
+                    for attr, status, body, ref in found
                 ],
             })
 
