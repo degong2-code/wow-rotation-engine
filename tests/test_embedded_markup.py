@@ -80,6 +80,37 @@ class EmbeddedWhmlTests(unittest.TestCase):
         self.assertIn("unclosed_tab_or_tab_group",
                       report["payloads"][0]["nested_structure_issues"])
 
+
+    def test_conditional_switches_and_named_tooltip_bodies(self):
+        body = (
+            '[display-option="HeroA" radio="Hero" checked]Hero A[/display-option]'
+            '[display-option="HeroB" radio="Hero"]Hero B[/display-option]'
+            '[display-option="PotA" radio="Potion" checked]Potion A[/display-option]'
+            '[display-option="PotB" radio="Potion"]Potion B[/display-option]'
+            '[tooltip name="Why"]Synthetic detailed source condition.[/tooltip]'
+            '[li display-options="(HeroA)&(PotA)"]First[/li]'
+            '[li display-options="(HeroA)&!PotA"]Second[/li]'
+            '[span class=tip tooltip=Why]?</span>'
+        )
+        report = inspect_embedded_whml(fixture(body))["payloads"][0]
+        switches = report["display_switches"]
+        self.assertEqual(len(switches["option_definitions"]), 4)
+        self.assertEqual(switches["radio_groups"]["Potion"], ["PotA", "PotB"])
+        self.assertEqual(switches["conditional_occurrences"], 2)
+        self.assertEqual(switches["unknown_conditional_option_ids"], [])
+        self.assertEqual(len(report["named_tooltip_bodies"]), 1)
+        self.assertTrue(report["named_tooltip_bodies"][0]["body_digest"]["characters"] > 0)
+        import json
+        output = json.dumps(report)
+        self.assertNotIn("Synthetic detailed source condition", output)
+        self.assertNotIn("Hero A", output)
+
+    def test_undefined_conditional_reference_reported(self):
+        body = ('[display-option="Choice" radio="Main"]X[/display-option]'
+                '[li display-options="Choice|Missing"]Explanation[/li]')
+        switches = inspect_embedded_whml(fixture(body))["payloads"][0]["display_switches"]
+        self.assertEqual(switches["unknown_conditional_option_ids"], ["Missing"])
+
     def test_escaped_quoted_attribute(self):
         payload = '[tooltip name="tip"]"Escaped" content[/tooltip][span tooltip=tip]?[/span]'
         p = inspect_embedded_whml(fixture(payload))["payloads"][0]

@@ -85,6 +85,69 @@ def _tab_groups(body: str) -> tuple[list[dict], list[str]]:
     return groups, sorted(set(problems))
 
 
+
+TOOLTIP_BODY = re.compile(r"\[tooltip\b([^\]]*)\](.*?)\[/tooltip\]", re.I | re.S)
+DISPLAY_OPTION = re.compile(
+    r"\[display-option\s*=\s*(?:\"([^\"]+)\"|'([^']+)'|([^\s\]]+))"
+    r"([^\]]*)\](.*?)\[/display-option\]", re.I | re.S
+)
+OPTION_TOKEN = re.compile(r"[A-Za-z][A-Za-z0-9_-]*")
+
+
+def _decision_controls(body: str) -> dict:
+    """Inventory declared switches and all conditional display expressions.
+
+    The actual meaning of these switches, including whether a potion changes
+    an opener, is an editorial question and is never inferred here.
+    """
+    options = []
+    for m in DISPLAY_OPTION.finditer(body):
+        ident = next(v for v in m.groups()[:3] if v is not None)
+        attr = _attrs(m.group(4))
+        options.append({
+            "id": ident[:120],
+            "radio_group": attr.get("radio", "")[:120],
+            "checked_by_default": bool(re.search(r"(?:^|\s)checked(?:\s|$)", m.group(4))),
+            "label_digest": _digest(m.group(5)),
+        })
+    declared = {option["id"] for option in options}
+    expressions = []
+    for tag in TAG.finditer(body):
+        attr = _attrs(tag.group(2))
+        if "display-options" not in attr:
+            continue
+        expr = attr["display-options"]
+        names = sorted(set(OPTION_TOKEN.findall(expr)))
+        expressions.append({
+            "tag": tag.group(1).lower(),
+            "expression": expr[:500],
+            "option_ids": names,
+            "unknown_option_ids": sorted(set(names) - declared),
+        })
+    radio_groups = {}
+    for option in options:
+        radio_groups.setdefault(option["radio_group"], []).append(option["id"])
+    return {
+        "option_definitions": options,
+        "radio_groups": radio_groups,
+        "conditional_occurrences": len(expressions),
+        "conditional_expressions": expressions,
+        "unknown_conditional_option_ids": sorted({
+            ident for expr in expressions for ident in expr["unknown_option_ids"]
+        }),
+    }
+
+
+def _tooltip_definition_bodies(body: str) -> list[dict]:
+    """Capture contents by digest, avoiding empty hydrated DOM templates."""
+    definitions = []
+    for m in TOOLTIP_BODY.finditer(body):
+        ident = _attrs(m.group(1)).get("name")
+        if ident:
+            definitions.append({"name": ident[:120], "body_digest": _digest(m.group(2))})
+    return definitions
+
+
 def inspect_embedded_whml(html: str) -> dict:
     calls = list(CALL.finditer(html))
     payloads = []
@@ -109,6 +172,8 @@ def inspect_embedded_whml(html: str) -> dict:
                 if re.fullmatch(r"tooltip\d*", key):
                     references.append({"attribute": key, "name": value[:120]})
         tab_groups, nested_issues = _tab_groups(body)
+        tooltip_bodies = _tooltip_definition_bodies(body)
+        display_switches = _decision_controls(body)
         defined = set(definitions)
         used = {x["name"] for x in references}
         payloads.append({
@@ -117,6 +182,8 @@ def inspect_embedded_whml(html: str) -> dict:
             "sha256": hashlib.sha256(body.encode("utf-8")).hexdigest(),
             "components": controls,
             "tab_groups": tab_groups,
+            "named_tooltip_bodies": tooltip_bodies,
+            "display_switches": display_switches,
             "nested_structure_issues": nested_issues,
             "named_tooltip_definitions": definitions,
             "tooltip_references": references,
