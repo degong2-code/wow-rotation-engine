@@ -46,6 +46,14 @@ jobs:
                   with TemporaryDirectory() as tmp:
                       report=run_specialization(
                           name, Path(tmp), expected_guide_sha256=baseline)
+                      from pathlib import Path
+                      import json
+                      packet=json.loads((Path(tmp)/"editorial-evidence-private.json").read_text(encoding="utf-8"))
+                      assert packet["source_text_may_be_public"] is False
+                      assert len(packet["payloads"])==report["guide_body_payloads"]
+                      assert sum(len(x["tooltip_definitions"]) for x in packet["payloads"])==report["named_tooltip_definition_count"]
+                      assert sum(len(x["conditional_expressions"]) for x in packet["payloads"])==report["conditional_display_count"]
+                      print(label+"_private_editorial_packet_indexed=true")
                       print(label+"_status=guide_identity_confirmed")
                       print(label+"_guide_body_count="+str(report["guide_body_payloads"]))
                       print(label+"_guide_body_characters="+str(report["guide_body_character_counts"][0]))
