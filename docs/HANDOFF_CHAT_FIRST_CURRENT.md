@@ -256,3 +256,10 @@
 - 새로운 `embedded_markup._tab_groups`는 각 하위 탭의 본문 해시·길이·닫힘 여부를 별도 추적하고 `source_reconcile`는 미확보 탭을 독립 후보로 표시. 과거와 동일한 WHML 형식이 아니어도 된다는 범용 탐색 원칙 유지.
 - [성공한 Push CI](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43152516953): 전체 257개 오프라인 테스트 + 공개 과거 HTML 스모크 성공. 프라이빗 V11·고양 V3.10 HTML 무변경, 공개 원문/개인 HTML 저장 금지 유지.
 - 남은 병목: 실제 최신 Wowhead HTML 및 렌더링 후 생성되는 동적 선택지·모든 `?` 본문을 확보하는 접근 경로. [공통 취득 감사](SOURCE_COVERAGE_AUDIT.md) 참고.
+
+## 2026-11-12 동적 DOM 수집 어댑터 추가
+
+- `engine/live_dom_capture.py`, 가상 동적 UI fixture, 브라우저 회귀 테스트, 전용 Playwright CI 추가. 실제 Chromium에서 영웅 전환→하위 ST/AoE·다른 영웅 선택형·접이식·`?`의 관련 본문을 관측.
+- private 원문 JSON과 공개용 감사 JSON을 분리하고 query/fragment 및 파일 경로 노출 차단. 경로 깊이·상태 상한으로 미완료 시 남은 탐색 수 표시. 게임 로직 의미 분석이나 원문 Gate A 자동 PASS 금지.
+- Push/PR 브라우저 테스트 및 기존 전체 오프라인 CI 성공. 고양 12.1.5 Wowhead 서버 HTTP 403 및 현재 원문 패치 불일치는 그대로 미해결. PRIVATE V11 7개 및 고양 V3.10 HTML 무변경.
+- 운영 규격: [LIVE_DOM_CAPTURE](LIVE_DOM_CAPTURE.md). 최종 목표는 사용자에게 JSON/로컬 설치를 요구하지 않는 ChatGPT-first 단일 HTML 제작.

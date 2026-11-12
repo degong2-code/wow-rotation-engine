@@ -22,6 +22,8 @@ WoW 딜사이클 교본의 **V11 품질을 보존하면서 ChatGPT 채팅에서 
 
 **실제 HTML 구조 스모크:** 과거 공개 Wowhead HTML 2종을 CI에서 임시 분석해 WHML 탭 2그룹·6개 본문과 0그룹을 구분했습니다. [검증 범위·한계](docs/SOURCE_COVERAGE_AUDIT.md). 최신 패치 공략 원문을 전수 확보했다는 의미는 아닙니다.
 
+**동적 DOM 확인 보조:** [브라우저 런타임 수집 규격](docs/LIVE_DOM_CAPTURE.md)과 실제 Chromium 합성 회귀 검사를 추가했습니다. 현재 Wowhead 접근 제한 해결과 원문 전수 확보를 뜻하지 않습니다.
+
 **운영 정본:**
 - [ADR-003 — ChatGPT 중심 제작 결정](docs/ADR_003_CHAT_FIRST_EDITORIAL.md)
 - [CHAT_FIRST_PLAYBOOK — CREATE/UPDATE 작업 순서](docs/CHAT_FIRST_PLAYBOOK.md)
