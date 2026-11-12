@@ -87,6 +87,21 @@ def discover(structure: dict) -> tuple[list[dict], list[str]]:
         if target != "guide-body":
             notes.append("Non-guide WHML target not assumed relevant: payload " + str(i))
             continue
+        for group in payload.get("tab_groups", []):
+            for tab in group.get("tabs", []):
+                gid, tid = group["group_index"], tab["tab_index"]
+                result.append(_candidate(
+                    "whml_tab", str(i) + ":" + str(gid) + ":" + str(tid),
+                    subtype="tab_option", section="guide-body",
+                    group=gid, tab=tid, label_digest=tab.get("label_digest"),
+                    static_status=("body_available" if tab.get("closed")
+                                   and tab.get("body_digest", {}).get("characters")
+                                   else "missing_body"),
+                    body_digest=tab.get("body_digest")))
+            if not group.get("closed"):
+                notes.append("WHML tab group was not closed in static markup")
+        for problem in payload.get("nested_structure_issues", []):
+            notes.append("WHML tab parsing issue: " + problem)
         for j, ref in enumerate(payload.get("tooltip_references", [])):
             result.append(_candidate("whml_reference", str(i) + ":" + str(j),
                                      subtype=ref["attribute"], section="guide-body",
@@ -191,7 +206,7 @@ def reconcile(structure: dict, observations: dict, decisions: dict | None = None
                 continue
             h = _sha(body)
             possible = [c for c in candidates if c["id"] not in linked
-                        and c["kind"] in {"tooltip", "panel"}
+                        and c["kind"] in {"tooltip", "panel", "whml_tab"}
                         and c.get("body_digest") and c["body_digest"].get("sha256") == h
                         and (c["kind"] != "tooltip" or entry["kind"] == "tooltip")]
             if len(possible) == 1:
@@ -224,7 +239,8 @@ def reconcile(structure: dict, observations: dict, decisions: dict | None = None
     for candidate in candidates:
         cid = candidate["id"]
         if candidate.get("static_status") in {"unresolved_name", "empty_body",
-                                              "unresolved_reference", "body_not_found_in_static_html"}:
+                                              "unresolved_reference", "body_not_found_in_static_html",
+                                              "missing_body"}:
             static_unresolved.append(cid)
         if cid not in linked and cid not in exclusions:
             pending.append({"id": cid, "kind": candidate["kind"],

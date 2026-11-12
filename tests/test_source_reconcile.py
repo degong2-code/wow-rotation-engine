@@ -176,6 +176,23 @@ class ReconciliationTests(unittest.TestCase):
         self.assertEqual(len([x for x in result["unmapped_candidates"]
                               if x["kind"] == "tooltip"]), 1)
 
+    def test_whml_nested_tab_body_is_new_capture_candidate(self):
+        source = ('<script>WH.markup.printHtml('
+                  '"[tabs name=Example][tab name=One]Synthetic tab body[/tab]'
+                  '[tab name=Two]Another synthetic body[/tab][/tabs]",'
+                  '"guide-body", false);</script>')
+        structure = inspect_html(source)
+        candidates, _ = discover(structure)
+        tabs = [x for x in candidates if x["kind"] == "whml_tab"]
+        self.assertEqual(len(tabs), 2)
+        self.assertNotEqual(tabs[0]["body_digest"], tabs[1]["body_digest"])
+        self.assertTrue(all(x["static_status"] == "body_available" for x in tabs))
+        observations = ledger()
+        observations["accesses"][0]["html_sha256"] = structure["source_sha256"]
+        result = reconcile(structure, observations)
+        self.assertEqual(len([x for x in result["unmapped_candidates"]
+                              if x["kind"] == "whml_tab"]), 2)
+
     def test_missing_position_does_not_create_new_content_gap(self):
         structure = self.structure()
         data = ledger()

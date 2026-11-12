@@ -55,6 +55,31 @@ class EmbeddedWhmlTests(unittest.TestCase):
             'WH.markup.printHtml("[span tooltip=b]Y[/span]", "guide-body");</script>')
         self.assertEqual([p["target"] for p in data["payloads"]], ["sidebar", "guide-body"])
 
+    def test_two_groups_six_tabs_and_distinct_bodies(self):
+        group = ('[tabs name="First Group"]'
+                 + ''.join('[tab name="A-' + str(i) + '"]Synthetic A-' + str(i)
+                           + '[/tab]' for i in range(3)) + '[/tabs]')
+        group += ('[tabs name="Second Group"]'
+                  + ''.join('[tab name="B-' + str(i) + '"]Synthetic B-' + str(i)
+                            + '[/tab]' for i in range(3)) + '[/tabs]')
+        report = inspect_embedded_whml(fixture(group))
+        groups = report["payloads"][0]["tab_groups"]
+        self.assertEqual(len(groups), 2)
+        self.assertEqual([len(x["tabs"]) for x in groups], [3, 3])
+        self.assertTrue(all(x["closed"] for x in groups))
+        self.assertTrue(all(tab["closed"] and tab["body_digest"]["characters"] > 0
+                            for group in groups for tab in group["tabs"]))
+        self.assertNotIn("Synthetic A-0", json.dumps(report))
+
+    def test_unclosed_tab_is_detected_as_missing_body(self):
+        report = inspect_embedded_whml(fixture(
+            '[tabs name="x"][tab name="a"]Synthetic unclosed body'))
+        group = report["payloads"][0]["tab_groups"][0]
+        self.assertFalse(group["closed"])
+        self.assertFalse(group["tabs"][0]["closed"])
+        self.assertIn("unclosed_tab_or_tab_group",
+                      report["payloads"][0]["nested_structure_issues"])
+
     def test_escaped_quoted_attribute(self):
         payload = '[tooltip name="tip"]"Escaped" content[/tooltip][span tooltip=tip]?[/span]'
         p = inspect_embedded_whml(fixture(payload))["payloads"][0]
