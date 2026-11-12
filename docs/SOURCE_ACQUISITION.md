@@ -166,3 +166,8 @@
 ## 2026-11-12 브라우저 원문 HTML 자동 취득기
 
 [자동 취득 규격](AUTO_PAGE_ACQUISITION.md)에 따라 URL이 정상 열리는 Chromium 환경에서는 사용자 Ctrl+S 없이 `page.content()` 및 원본 네트워크 응답을 보존하고, 더 완전한 인라인 WHML을 담은 HTML을 후속 공통 분석에 넘긴다. ZIP/HTML fallback과 선택형 MHTML 저장도 구현. **HTTP 403은 우회하지 않는다**. 사용자 PC 브라우저가 열리는 것과 서버 브라우저 자동 취득은 별개이며, `site_version_verified=false`/Gate A 별도 평가를 유지한다.
+
+
+## 2026-11-12 HTTP-first 취득 실증으로 접근성 판단 갱신
+
+일반 HTTPS GET으로 고양 최신 공략의 WHML **68,350자·44 tooltip 정의·45 참조·16 선택·82 조건 표시**를 확보. **본문 SHA-256이 사용자가 제공한 12.1.5/2026-10-13 저장본과 정확히 일치**했다. Playwright의 옛 403은 당시 해당 브라우저 자동화 요청의 거부였지, 모든 HTTP 직접 취득의 실패를 뜻하지 않았다. 추가로 생존 사냥꾼 guide-body 53,084자·툴팁 39개·선택 8개를 같은 수집기로 확보(패치 독립검증 미완료). 현행 기본 순서는 **HTTP 직접 → WHML 완전성 검사 → 필요한 경우에만 렌더링 UI 보조 → 실패 시 저장 HTML**. [상세·안전 수칙](AUTO_PAGE_ACQUISITION.md).

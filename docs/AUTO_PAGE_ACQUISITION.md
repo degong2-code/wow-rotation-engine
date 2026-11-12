@@ -90,3 +90,15 @@ python -m engine.source_acquisition_pipeline \
 `--http-url`은 브라우저 미사용, `--url`은 Chromium으로 동적 수집하는 **서로 다른 모드**다. 직접 HTTP가 차단됐다고 브라우저·프록시·다른 IP로 자동 우회하거나 HTTP 403을 성공으로 바꾸지 않는다. 서버의 차단 여부는 사용자 브라우저에서 화면이 열리는지와 독립적인 요청 단위 결과다.
 
 **검증:** 일반 HTTP unit 테스트는 네트워크 호출을 모킹하여 200 HTML, 403, 429, 비HTML, 200 차단 페이지, 리다이렉트 호스트 위험, 크기 제한, 안전한 공통 분석 연결을 검증한다. 실제 HTTP 진단은 단 한 번의 요청만 하며, 성공 여부와 접근 상태만 공개하고 원본 본문을 PUBLIC CI Artifact에 저장하지 않는다. 원문의 패치·수정일 및 작성 내용 검토는 별도 QA다.
+
+## HTTP 직접 취득 실제 검증 — 2026-11-12
+
+**기존 Playwright GitHub 서버 브라우저 403은 일반 HTTP 전체의 접근 거부 증거가 아니었다.** 일반 HTTPS GET `RotationTextbookSourceReview/0.1` (쿠키·세션·브라우저 위장·프록시 변경·재시도 없음)로 같은 고양 주술사 페이지의 `guide-body`를 받아 `engine.source_acquisition_pipeline`의 WHML 감사에 통과했다.
+
+- [실제 고양 원본 취득 로그](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43178828406): 68,350자, 명명된 툴팁 44개, 참조 45회, 선택 정의 16개, 조건부 표시 82회.
+- **핵심 교차 검증:** `guide-body` SHA-256 `6657591171c36c79797b739b2248e37b9d967094e7d33e8dd799293283bd5dbe`가 **사용자 직접 저장·12.1.5/2026-10-13 확인본과 바이트 단위로 동일**했다. 이는 전체 페이지 래퍼 HTML까지 동일하다는 뜻은 아니다.
+- [다전문화 HTTP 검증](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43179069846): **생존 사냥꾼** guide-body 53,084자, 이름 있는 툴팁 39개, 선택 정의 8개. **생존의 실제 패치/수정일은 아직 독립 검증하지 않았으므로 최신 교본 승인 불가**.
+- `--expected-guide-sha256 <64자리>` 선택 인수로 과거 확인된 원문 본문 SHA와 새 수집 결과를 비교한다. 일치하면 `matches_known_baseline=true`, 변경되면 `source_change_review_required=true`가 된다. **일치 ≠ 게임 판단 정답 또는 자동 게시 승인.**
+- **현재 기본 순서:** (1) 일반 HTTP 한 번으로 정적 HTML 취득 → (2) 숨김 WHML, 툴팁 원문, 선택 조건 감사 → (3) 필요한 경우에만 정상 접근 가능한 브라우저에서 실제 동적 UI 확인 → (4) 수집 불가·버전 충돌 때만 사용자 저장 HTML 대체. HTTP 403·429 시 자동 우회·기한 없는 반복 요청 금지.
+
+위 검증에서 PUBLIC GitHub에 올린 것은 코드와 SHA·개수·오류 유형뿐이며 원문 HTML·WHML·개인 V11/V3.11 HTML은 게시하지 않았다. HTML 원본 직접 취득이 성공해도 **새 전문화의 정확한 패치·빌드·게임 로직 QA는 별도**다.

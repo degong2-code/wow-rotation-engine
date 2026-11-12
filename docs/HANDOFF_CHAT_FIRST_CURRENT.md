@@ -297,3 +297,12 @@
 - `engine/http_source_fetch.py`는 일반 HTTPS GET을 **실제 사용자 브라우저를 재현하지 않고** 한 번만 수행한다. WoWhead 호스트·동일 호스트 redirect 제한, 쿠키/계정·프록시·UA 브라우저 위장 금지, 403/429 즉시 종료, 응답 크기/HTML 구조 검사. `source_acquisition_pipeline --http-url --allow-remote`로 기존 WHML·tooltip 감사까지 연결.
 - `403 Forbidden`은 해당 요청이 서버에 의해 거부됐다는 뜻이다. 사용자 브라우저에서는 공략 열람이 가능하므로 사용자 전반에 권한이 없다는 판정은 불가. 구체적 거부 사유(접근 정책, 네트워크, 자동화 제한 등)는 HTTP 응답 코드 단독으로 확인 불가.
 - HTTP 200이어도 `guide-body` 존재·패치/수정일 독립 검사 전에는 최신 공략을 확보했다고 판정하지 않는다. 원본·V11/V3.11 개인 HTML은 공개 저장소에 넣지 않으며 최신 실전 로직 Q0/Q1을 자동 승인하지 않는다.
+
+
+## 2026-11-12 최신 인계 — HTTP 직접 다운로드 성공 및 교본 제작 입력 경로 전환
+
+- **실제 HTTP 통과:** GitHub runner에서 일반 GET(`RotationTextbookSourceReview/0.1`, 쿠키/프록시/봇 위장 없음)으로 고양 `guide-body` 확보. 기존 Playwright 403은 이 경로 전체의 거부가 아니었다. [실측 CI](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43178828406).
+- **사용자 확인본과 동일:** guide-body 68,350자, tooltip 정의 44/참조 45, 선택 16/조건부 82, SHA256 `6657591171c36c79797b739b2248e37b9d967094e7d33e8dd799293283bd5dbe`로 기존 12.1.5/2026-10-13 원문과 **본문 동일** 확인. 전체 페이지 HTML 동일 또는 실제 실전 로직 증명으로 확대 해석 금지.
+- **다전문화 재현:** 생존 사냥꾼 가이드도 같은 정적 HTTP 취득기로 guide-body 53,084자, tooltip 39, 선택 정의 8 검출. **생존 원문 패치·수정일 직접 대조 전에는 최신성 미승인**. [실측 로그](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43179069846).
+- `engine/http_source_fetch.py` (직접 GET 1회, 403/429 중단, Wowhead HTTPS 호스트/리다이렉트 제한, 쿠키/세션 없음), `engine/source_acquisition_pipeline.py --http-url`, `--expected-guide-sha256`(기존 확인 WHML 지문 비교) 추가. 기본 접근은 **HTTP → WHML 조건 추출 → 필요시 브라우저**로 변경. 사용자가 저장 HTML을 반복 첨부해야 한다고 주장하지 말 것.
+- 보안/품질: 원문 HTML·사용자 원본 V11/V3.11을 PUBLIC 저장소에 게시하지 않음. 자료 접근/동일성·원문 완전성·게임 Q0/Q1·HTML QA는 분리하고 완료한 것만 표기.

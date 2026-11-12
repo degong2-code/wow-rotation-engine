@@ -56,3 +56,8 @@
 - **콘텐츠 QA:** 직접 저장된 WHML 분기 시퀀스를 반영했으나 우선순위의 미확정 상태 2건 및 물약 능력치 팁의 원문 내부 참조 불일치는 별개 검토 대상. 최종 사용자 승인 전 검토본이다.
 
 **개인 감사:** `enhancement_v311_verified_source_coverage_audit.json`은 본문 자체 대신 12분기 및 구조 수치/원본 SHA/검증 범위를 기록하며, 이 또한 GitHub PUBLIC에는 업로드하지 않는다.
+
+
+## 2026-11-12 직접 HTTP로 사용자 검증본과 본문 일치 확인
+
+[HTTP 첫 실제 취득 및 지문 검증](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43178828406)과 [다전문화 검증](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43179069846). 고양의 `guide-body` 68,350자/툴팁 정의 44개/참조 45회/선택 16개/조건부 82회가 다시 검출됐으며 WHML 원문 SHA256 `6657591171c36c79797b739b2248e37b9d967094e7d33e8dd799293283bd5dbe`가 **사용자가 저장한 본문 지문과 동일**했다. 서버 Playwright 403이 직접 HTTP까지 차단된다는 이전 추정은 수정한다. 최신성은 사용자 확인 저장본과 동일하다는 **출처 연계 근거**로만 판단하며 게임 콘텐츠 정확성·UI 모든 상태 실행은 별도 판정한다. 독립적으로 생존 사냥꾼도 HTTP 수집 성공했으나 최신 패치 판단은 미완료. PUBLIC 원문 업로드 없음.
