@@ -69,6 +69,34 @@ jobs:
           assert report["source_text_in_report"] is False
           assert report["automatic_publish_allowed"] is False
           PY
+      - name: Smoke-test two pinned historical Wowhead HTML fixtures (not current guides)
+        run: |
+          set -euo pipefail
+          base=https://raw.githubusercontent.com/aurokin/warcraft_cli/376f5aec0aad29b4cf4e290b2879ec3e91870fde/tests/fixtures/wowhead
+          curl -fsSL --retry 2 --max-time 30 "$base/guide_283_page.html" -o /tmp/historical-tabs.html
+          curl -fsSL --retry 2 --max-time 30 "$base/guide_3087_page.html" -o /tmp/historical-notabs.html
+          python -m engine.source_structure --input /tmp/historical-tabs.html --output /tmp/historical-tabs-audit.json
+          python -m engine.source_structure --input /tmp/historical-notabs.html --output /tmp/historical-notabs-audit.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path('/tmp/historical-tabs-audit.json').read_text(encoding='utf8'))
+          b=json.loads(Path('/tmp/historical-notabs-audit.json').read_text(encoding='utf8'))
+          aa=[p for p in a['embedded_whml']['payloads'] if p['target']=='guide-body']
+          bb=[p for p in b['embedded_whml']['payloads'] if p['target']=='guide-body']
+          assert len(aa)==len(bb)==1
+          assert a['embedded_whml']['unsupported_nonliteral_calls']==1
+          assert b['embedded_whml']['unsupported_nonliteral_calls']==1
+          groups=aa[0]['tab_groups']
+          assert len(groups)==2 and [len(g['tabs']) for g in groups]==[3,3]
+          assert all(tab['closed'] and tab['body_digest']['characters']>0 for g in groups for tab in g['tabs'])
+          assert bb[0]['tab_groups']==[]
+          assert a['source_text_in_report'] is False and b['source_text_in_report'] is False
+          assert not a['live_ui_completeness_verified'] and not b['live_ui_completeness_verified']
+          assert not a['automatic_publish_allowed'] and not b['automatic_publish_allowed']
+          print('REAL HISTORICAL HTML: two groups/six tab bodies versus no tab groups; not current-guide verification')
+          PY
+          rm -f /tmp/historical-tabs.html /tmp/historical-notabs.html /tmp/historical-tabs-audit.json /tmp/historical-notabs-audit.json
       - name: Run offline tests
         run: python -m unittest discover -s tests -p 'test_*.py' -v
       - name: Validate synthetic fixture
