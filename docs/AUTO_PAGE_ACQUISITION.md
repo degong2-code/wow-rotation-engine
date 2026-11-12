@@ -55,3 +55,24 @@ python -m engine.source_structure \
 사용자가 전달한 실제 Wowhead 전체 페이지 ZIP을 오프라인에서 메인 HTML 선별 점수로 검사했다. **총 210개 파일 항목, HTML 후보 26개**, 메인 HTML 1개와 동반 `_files` 폴더 항목 209개로 구성되어 있었다. `_files` 내부에는 **약 993KB인 부가 HTML**도 있어 메인 HTML(839,307바이트)보다 크다. 가장 큰 HTML을 고르는 수집기는 이 파일을 잘못 선택할 수 있다. 현재 코드는 내장 `WH.markup.printHtml`/`guide-body` 등을 우선해 **메인 HTML을 정확히 선택**했고, 해당 HTML SHA-256은 사용자 저장본의 기록(`d05d86b5db57b012373293ba5bae8b7c1f4b1e7711da29b3944df8b0ef5ea755`)과 일치했다.
 
 이 검사 역시 **이미 사용자 브라우저에서 저장한 ZIP의 재해석**이다. ChatGPT 실행 환경에서 Wowhead URL의 최신 페이지를 직접 다운로드하는 능력이 확인됐다는 뜻은 아니다. 실제 ZIP/HTML/리소스 문구는 공개 저장소에 올리지 않는다.
+
+## 브라우저 → WHML 분석 원스텝 파이프라인 (2026-11-12 후속)
+
+`engine/source_acquisition_pipeline.py`는 별도 파일 수동 처리 없이 다음 작업을 **하나의 내부 명령**으로 수행한다.
+
+1. 정상 접근 가능한 HTTPS 원문 취득 또는 저장 HTML/ZIP에서 메인 HTML 확보
+2. 렌더링 HTML과 최초 응답 HTML 중 내장 원문이 더 풍부한 쪽으로 `analysis.html` 선택
+3. 구조 분석기로 숨김 패널·탭·`?` 후보 탐색 및 WHML의 named tooltip/조건부 선택 정의 개수 검사
+4. 미정의 팁 참조·미선언 선택 조건·잘린 후보 목록·미해석 스크립트 등의 위험을 별도 표시
+5. 비공개 원문(`analysis.html` 등)과 요약 검사(`pipeline-audit.json`)를 분리
+
+```bash
+python -m engine.source_acquisition_pipeline \
+  --url https://www.wowhead.com/guide/classes/shaman/enhancement/rotation-cooldowns-pve-dps \
+  --allow-remote --capture-ui \
+  --output dist/private_source_capture
+```
+
+`--capture-ui`는 브라우저가 정상 열리는 경우 실제 탭·`?`를 hover한 관측을 **별도 비공개 파일**에 덧붙인다. 현재 기본 코드는 **서버에서 Wowhead 403을 우회하지 않고**, 동일 호스트 밖으로 나가는 메인 프레임 이동을 제한한다. 도메인 이동이 필요한 정상 사이트는 현재 자동으로 실패하도록 설계했다.
+
+브라우저 연동을 사용할 수 없는 ChatGPT 세션에서는 URL 취득을 성공한 것처럼 주장하지 않는다. 정상 접근 가능한 출처의 원문만 비교 분석하며, 완전한 최신성·선택 상태 전수·실전 로직 정확성은 별도 QA를 거친다.

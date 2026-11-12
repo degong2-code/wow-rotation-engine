@@ -7,6 +7,8 @@ on:
       - 'engine/live_dom_capture.py'
       - 'engine/live_dom_bridge.py'
       - 'engine/source_page_acquire.py'
+      - 'engine/source_acquisition_pipeline.py'
+      - 'tests/test_source_acquisition_pipeline.py'
       - 'tests/test_source_page_acquire_browser.py'
       - 'tests/test_live_dom_capture.py'
       - 'tests/test_live_dom_bridge.py'
@@ -17,6 +19,8 @@ on:
       - 'engine/live_dom_capture.py'
       - 'engine/live_dom_bridge.py'
       - 'engine/source_page_acquire.py'
+      - 'engine/source_acquisition_pipeline.py'
+      - 'tests/test_source_acquisition_pipeline.py'
       - 'tests/test_source_page_acquire_browser.py'
       - 'tests/test_live_dom_capture.py'
       - 'tests/test_live_dom_bridge.py'
@@ -44,6 +48,29 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Verify full HTML and MHTML collection in Chromium
         run: python -m unittest discover -s tests -p 'test_source_page_acquire_browser.py' -v
+      - name: Verify browser HTML passes the common static source pipeline
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          from engine.source_acquisition_pipeline import inspect_and_store
+          fixture=Path('examples/synthetic-source-structure.html').absolute()
+          target=Path('/tmp/synthetic-browser-source')
+          with sync_playwright() as pw:
+              browser=pw.chromium.launch(headless=True)
+              try:
+                  page=browser.new_page()
+                  page.goto(fixture.as_uri())
+                  report=inspect_and_store(dom_html=page.content(), output=target, kind='browser_url')
+                  assert report['guide_body_payloads']==1
+                  assert report['named_tooltip_definition_count']==1
+                  assert not report['real_site_completeness_verified']
+                  assert (target/'analysis.html').exists()
+              finally:
+                  browser.close()
+          PY
+          rm -rf /tmp/synthetic-browser-source
       - name: Run synthetic dynamic DOM capture regressions
         run: python -m unittest discover -s tests -p 'test_live_dom_capture.py' -v
       - name: Verify private capture / public metadata split

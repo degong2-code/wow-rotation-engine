@@ -285,3 +285,9 @@
 - 추가: `engine/source_page_acquire.py`, HTML/ZIP·오류·출처 선택 단위 테스트, 실제 Chromium HTML/MHTML 취득 테스트. **접속이 허용된** 페이지에서 `page.content()`와 최초 응답을 수집하며, `analysis.html`로 가장 풍부한 인라인 원문을 자동 선택. 사용자가 저장한 ZIP에서는 메인 HTML만 선별한다.
 - `_files` 폴더는 브라우저 '웹페이지, 전체'의 CSS/JS/이미지 보관용. 이번 고양 12.1.5 원문 해석은 메인 HTML의 WHML로 가능했으며 다른 페이지는 동적 자료가 필요할 수 있다.
 - 접근 제한(403)을 자동 해결했다는 뜻은 아님. 연결된 접근 가능한 브라우저가 있어야 실제 최신 Wowhead 원문을 직접 저장 가능. 공개 저장소에는 개인 원본 HTML·ZIP·MHTML을 올리지 않는다. [운영 문서](AUTO_PAGE_ACQUISITION.md).
+
+## 2026-11-12 원문 자동 취득·감사 통합 2차
+
+- `engine/source_acquisition_pipeline.py` 추가: 접근 가능한 URL 또는 저장 HTML/ZIP → HTML 원본·네트워크 응답 비교 → 분석용 HTML 결정 → `source_structure`/`embedded_markup`로 관련 선택·tooltip 구조·불일치 계수 → 비공개 원문과 메타데이터 감사 결과 분리. `--capture-ui`에서는 실제 런타임 UI 관측 추가.
+- 브라우저 연결 상태 검사: 현재 대화에서 Browser extension은 **원래 브라우저 세션이 아니므로 목록 조회 불가**. 사용자 세션과 동일 브라우저로 자동 접근 가능하다는 주장은 하지 않음. 서버 HTTP 403도 우회하지 않음.
+- 새 합성 unit/CI는 `guide-body`가 없는 페이지를 fail-closed, WHML 설명 참조/옵션 문제를 카운트하며 저장 ZIP fallback 검증. 원문 전체 저장과 최종 패치 검증은 서로 다른 게이트 유지.

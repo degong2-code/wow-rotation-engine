@@ -30,6 +30,8 @@ WoW 딜사이클 교본의 **V11 품질을 보존하면서 ChatGPT 채팅에서 
 
 **원문 HTML 자동 취득기:** [Ctrl+S 대응 HTML·ZIP·MHTML 취득 설계](docs/AUTO_PAGE_ACQUISITION.md). 정상 접근 가능한 브라우저에서 원문 HTML을 자동 저장하고 공통 WHML 분석에 넘깁니다. 사용자 저장 시 동반되는 `_files` 리소스 폴더는 일반적으로 원문 조건 분석에 필수는 아닙니다. 서버 403 우회는 포함하지 않습니다.
 
+**원클릭에 가까운 원문 취득·감사 통합:** [source_acquisition_pipeline](docs/AUTO_PAGE_ACQUISITION.md)에서 URL → 분석용 HTML → 선택지·`?` 구조 감사까지 통합했습니다. 서버 Wowhead 접근은 별도 문제이며, 사이트 차단을 우회하지 않습니다.
+
 **운영 정본:**
 - [ADR-003 — ChatGPT 중심 제작 결정](docs/ADR_003_CHAT_FIRST_EDITORIAL.md)
 - [CHAT_FIRST_PLAYBOOK — CREATE/UPDATE 작업 순서](docs/CHAT_FIRST_PLAYBOOK.md)
