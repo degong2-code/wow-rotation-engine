@@ -12,6 +12,8 @@ import hashlib
 from html.parser import HTMLParser
 import json
 from pathlib import Path
+
+from .embedded_markup import inspect_embedded_whml
 import re
 
 SCHEMA = "html-structure-inventory-v1"
@@ -242,6 +244,8 @@ def inspect_html(html: str) -> dict:
         "unresolved_tooltip_references": unresolved,
         "duplicate_ids": sorted(set(duplicate_ids)),
         "embedded_script_markers": {k: v for k, v in markers.items() if v},
+        "embedded_whml": inspect_embedded_whml(html),
+        "static_embedded_whml_decoded": bool(inspect_embedded_whml(html)["decoded_payloads"]),
         "candidate_lists_truncated": any(
             len(x) == MAX_ITEMS for x in (controls, hidden_regions, tooltips)
         ),
