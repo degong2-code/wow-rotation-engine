@@ -173,6 +173,9 @@ def _evaluate_case(case: dict, rules: list[dict]) -> dict:
         if any(len(actions) != 1 for actions in steps.values()):
             return {"id": case["id"], "result": "ambiguous",
                     "competing_rule_count": len(certain)}
+        if sorted(steps) != list(range(1, max(steps) + 1)):
+            return {"id": case["id"], "result": "underdetermined",
+                    "competing_rule_count": 0}
         sequence = [next(iter(steps[k])) for k in sorted(steps)]
         return {"id": case["id"], "result": "matched" if sequence == case["expected_actions"]
                 else "mismatch", "competing_rule_count": 0}
@@ -255,8 +258,19 @@ def assess_annotations(packet: dict, annotations: dict) -> dict:
                 raise ValueError("Opener case needs expected action sequence")
             for action in actions:
                 _valid_name(action, "expected opener action")
-        evaluations.append(_evaluate_case(case, rules))
+        evaluated = _evaluate_case(case, rules)
+        # Case IDs are author-controlled and can reveal source content. Public
+        # reports use ordinal references only; private annotations retain IDs.
+        evaluated.pop("id", None)
+        evaluated["case_index"] = len(evaluations) + 1
+        evaluations.append(evaluated)
     outcomes = Counter(e["result"] for e in evaluations)
+    unexercised = sum(
+        not any(case["kind"] == rule["kind"] and
+                _applicability(rule, case) is True for case in cases)
+        for rule in rules
+    )
+    exception_rules = sum(bool(rule["exceptions"]) for rule in rules)
     blockers = []
     if invalid_evidence:
         blockers.append("invalid_source_evidence")
@@ -264,6 +278,12 @@ def assess_annotations(packet: dict, annotations: dict) -> dict:
         blockers.append("same_conditions_conflicting_actions")
     if not cases:
         blockers.append("no_decision_cases")
+    if unexercised:
+        blockers.append("unexercised_rule_branches")
+    if exception_rules:
+        # A free-text exception is not executable. It may override the winner.
+        # Until represented by exact guarded rules, next-action QA is incomplete.
+        blockers.append("unmodeled_rule_exceptions")
     if any(e["result"] != "matched" for e in evaluations):
         blockers.append("undecided_or_conflicting_decision_cases")
     return {
@@ -274,6 +294,8 @@ def assess_annotations(packet: dict, annotations: dict) -> dict:
         "case_results": evaluations,
         "invalid_evidence_rule_count": len(invalid_evidence),
         "conflicting_identical_rule_pairs": len(duplicate_decisions),
+        "unexercised_rule_count": unexercised,
+        "unmodeled_exception_rule_count": exception_rules,
         "blocker_codes": sorted(set(blockers)),
         "all_declared_cases_matched": bool(cases) and not blockers,
         "source_meaning_independently_verified": False,

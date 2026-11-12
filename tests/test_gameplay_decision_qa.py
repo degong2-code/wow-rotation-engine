@@ -159,6 +159,72 @@ class GameplayDecisionQATests(unittest.TestCase):
         ])
         self.assertTrue(result["all_declared_cases_matched"])
 
+
+    def test_text_exception_never_silently_passes(self):
+        overridden = rule("exception", "priority", "Synthetic A", rank=1)
+        overridden["exceptions"] = ["When the synthetic object moves, do something else"]
+        result = report([overridden], [case("exception", "Synthetic A")])
+        self.assertEqual(result["unmodeled_exception_rule_count"], 1)
+        self.assertIn("unmodeled_rule_exceptions", result["blocker_codes"])
+        self.assertFalse(result["all_declared_cases_matched"])
+
+    def test_unexercised_branch_is_reported_even_if_other_cases_match(self):
+        rules = [
+            rule("proc", "priority", "Spender", rank=1,
+                 when=[{"field": "proc", "op": "eq", "value": True}]),
+            rule("filler", "priority", "Builder", rank=2),
+        ]
+        result = report(rules, [case("inactive", "Builder", state={"proc": False})])
+        self.assertEqual(result["case_outcome_counts"], {"matched": 1})
+        self.assertEqual(result["unexercised_rule_count"], 1)
+        self.assertIn("unexercised_rule_branches", result["blocker_codes"])
+
+    def test_missing_opener_step_is_an_unknown_sequence(self):
+        result = report([
+            rule("first", "opener", "Synthetic A", step=1),
+            rule("third", "opener", "Synthetic C", step=3),
+        ], [{"id": "gap", "kind": "opener", "context": {}, "state": {},
+             "expected_actions": ["Synthetic A", "Synthetic C"]}])
+        self.assertEqual(result["case_results"][0]["result"], "underdetermined")
+
+    def test_case_identifier_is_private_even_when_case_passes(self):
+        result = report(
+            [rule("a", "priority", "Synthetic A", rank=1)],
+            [case("source-only-skill-name", "Synthetic A")]
+        )
+        self.assertTrue(result["all_declared_cases_matched"])
+        output = json.dumps(result)
+        self.assertNotIn("source-only-skill-name", output)
+        self.assertEqual(result["case_results"][0]["case_index"], 1)
+
+    def test_cli_uses_private_packet_without_echoing_whml(self):
+        from tempfile import TemporaryDirectory
+        from pathlib import Path
+        from engine.gameplay_decision_qa import main
+        from unittest.mock import patch
+        from contextlib import redirect_stdout
+        from io import StringIO
+        with TemporaryDirectory() as temp:
+            root = Path(temp)
+            packet = root / "private-packet.json"
+            annotation = root / "private-annotation.json"
+            result_file = root / "audit.json"
+            packet.write_text(json.dumps(PACKET), encoding="utf-8")
+            annotation.write_text(json.dumps({
+                "schema_version": SCHEMA,
+                "rules": [rule("a", "priority", "Synthetic A", rank=1)],
+                "cases": [case("private-case-identifier", "Synthetic A")]
+            }), encoding="utf-8")
+            with redirect_stdout(StringIO()) as captured:
+                self.assertEqual(main([
+                    "--source-packet", str(packet),
+                    "--annotations", str(annotation),
+                    "--report", str(result_file),
+                ]), 0)
+            self.assertTrue(result_file.exists())
+            self.assertNotIn("private-case-identifier", captured.getvalue())
+            self.assertNotIn("Fictional stack", result_file.read_text())
+
     def test_private_rule_text_not_in_public_report(self):
         rules = [rule("secret", "priority", "Copyrighted Fictional Ability", rank=1,
                       reason="A detailed source-only paragraph about the ability")]
