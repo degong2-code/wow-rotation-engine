@@ -11,6 +11,7 @@ from tempfile import TemporaryDirectory
 from engine.gameplay_decision_qa import SCHEMA, assess_annotations
 from engine.source_acquisition_pipeline import run_specialization
 from engine.source_page_acquire import SourceAccessError
+from engine.source_scoped_evidence import scoped_from_packet
 
 SHA = "6657591171c36c79797b739b2248e37b9d967094e7d33e8dd799293283bd5dbe"
 CONTEXT = {"hero": "Stormbringer", "targets": "single"}
@@ -129,6 +130,115 @@ def build(packet):
     return {"schema_version": SCHEMA, "minimum_decision_cases": 6,
             "rules": rules, "cases": cases}
 
+
+def review_historical_source_facts(packet):
+    """Past editorial good/bad cases, verified against the SAME private WHML.
+
+    This is source fact regression, NOT simulated DPS or proof of an optimal
+    rotation. Its selectors rely on source provenance, not any fixed table
+    markup in the generic engine.
+    """
+    whml = packet["payloads"][0]["original_whml"]
+    scoped = scoped_from_packet(packet)["payloads"][0]
+    indexed = {}
+    for row in scoped["source_list_rows"]:
+        containing = row.get("containing_list")
+        if (row["kind"] != "source_list_item" or not containing
+                or containing["tag"] != "ol"
+                or row["inside_tooltip_definition"]):
+            continue
+        tabs = [tab["label_whml"] for tab in row["containing_tabs"]]
+        if not tabs or tabs[-1] not in {"Single-Target Priority", "AoE Priority"}:
+            continue
+        for hero in ("SB-Master", "T-Master"):
+            if not any(s["expression"] == hero
+                       for s in row["active_display_scopes"]):
+                continue
+            key = (tabs[-1], hero, containing["start"])
+            indexed.setdefault(key, []).append(row)
+
+    def group(tab, hero, count):
+        choices = [(loc, rows) for (tab0, hero0, loc), rows in indexed.items()
+                   if tab0 == tab and hero0 == hero]
+        if len(choices) != 1 or len(choices[0][1]) != count:
+            raise SourceAccessError("Historic priority table shape changed")
+        rows = choices[0][1]
+        if [r["containing_list"]["ordinal"] for r in rows] != list(range(1, count + 1)):
+            raise SourceAccessError("Historic priority row ordering is not preserved")
+        return rows
+
+    st = "Single-Target Priority"
+    aoe = "AoE Priority"
+    ts = group(st, "T-Master", 12)
+    ta = group(aoe, "T-Master", 12)
+    sa = group(aoe, "SB-Master", 10)
+    ss = group(st, "SB-Master", 9)
+
+    def spell(row):
+        match = re.search(r"\[spell=(\d+)\]", row["original_whml_fragment"])
+        if match is None:
+            raise SourceAccessError("Historic source priority action is unidentifiable")
+        return int(match.group(1))
+
+    def require(condition):
+        if not condition:
+            raise SourceAccessError("Historic source fact conflicts with acquired guide")
+
+    # F01/F02: Totemic ST and AoE reverse the ordering of the same two actions.
+    require((spell(ts[2]), spell(ts[3])) == (60103, 197214))
+    require((spell(ta[2]), spell(ta[3])) == (197214, 60103))
+    require("[spell=201900]" in ts[2]["original_whml_fragment"]
+            and "[spell=453405]" in ts[2]["original_whml_fragment"])
+    require("[spell=201900]" in ta[3]["original_whml_fragment"]
+            and "[spell=453405]" in ta[3]["original_whml_fragment"])
+
+    # F03/F04: a proc at 10, otherwise a different action at 9+ in AoE.
+    require(spell(sa[5]) == 454009 and "[b]10[/b]" in sa[5]["original_whml_fragment"])
+    require(spell(sa[6]) == 188443 and "[b]9+[/b]" in sa[6]["original_whml_fragment"])
+    require(spell(ss[5]) == 454009 and "[b]10[/b]" in ss[5]["original_whml_fragment"])
+
+    # F05: a normal 10-stack consumer takes precedence over 5+ fallback.
+    for rows, consumer in ((ts, 188196), (ta, 188443)):
+        require(spell(rows[8]) == consumer and "[b]10[/b]" in rows[8]["original_whml_fragment"])
+        require(spell(rows[11]) == consumer and "[b]5+[/b]" in rows[11]["original_whml_fragment"])
+
+    # F06/F07/F08/F09: critical meaning resides in adjacent tooltip notes,
+    # not merely the priority row. All are source-anchored; no interpretation
+    # is generalized to a different specialization or a newer revision.
+    tips = {t["name"]: t["body_whml"] for t in packet["payloads"][0]["tooltip_definitions"]}
+    require("[spell=1250364]" in tips["SpendT-ST"]
+            and "[spell=60103]" in tips["SpendT-ST"]
+            and "[spell=201900]" in tips["SpendT-ST"])
+    require("[spell=114051]" in tips["SpendSB-ST"]
+            and "[spell=384352]" in tips["SpendSB-ST"]
+            and "[spell=384444]" in tips["SpendSB-ST"])
+    require("off the GCD" in tips["DoomT-ST"] and "[spell=1218047]" in tips["DoomT-ST"])
+    require("GCD" in tips["DoomT-AoE"] and "[spell=187874]" in tips["DoomT-AoE"])
+
+    # Historical §35 considered potion choices irrelevant. §38 corrected it.
+    # The actual Stormbringer AoE opener changes *Crash Lightning* prepull
+    # timing for Recklessness versus the two alternative potions.
+    steps = re.findall(r"\[rt-step-group\s*=\s*187874\b([^\]]*)\]", whml)
+    def has_step(choice, need):
+        return any('display-options="' + choice + '"' in attrs and need in attrs
+                   for attrs in steps)
+    require(has_step("SB-OP-AOE-Reck", "prepull"))
+    require(has_step("SB-OP-AOE-LL", 'text="Pull"'))
+    require(has_step("SB-OP-AOE-LP", 'text="Pull"'))
+
+    # This checks 10 grouped historical assertions and 4 different source
+    # combinations. It deliberately does not claim a whole-rotation verdict.
+    return {
+        "historical_source_fact_groups_checked": 10,
+        "hero_target_priority_combinations_checked": 4,
+        "historic_potion_generalization_refuted": True,
+        "source_scope_index_passed": True,
+        "whole_rotation_validated": False,
+        "gameplay_meaning_verified": False,
+        "automatic_publish_allowed": False,
+    }
+
+
 def review(packet):
     annotations = build(packet)
     report = assess_annotations(packet, annotations)
@@ -146,7 +256,9 @@ def review(packet):
     }]
     gap = assess_annotations(packet, example)
     assert gap["case_results"][0]["result"] == "no_rule"
+    past = review_historical_source_facts(packet)
     return {
+        **past,
         "source_baseline_matched": True,
         "declared_cases_consistent": report["decision_case_count"],
         "source_anchored_rules": report["annotation_rule_count"],
