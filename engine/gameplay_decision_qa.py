@@ -90,6 +90,49 @@ def _verify_evidence(rule: dict, payloads: list) -> bool:
     return True
 
 
+
+
+def _verify_action_marker(rule: dict, payloads: list) -> bool:
+    """An optional exact action marker must be inside one cited source span.
+
+    Confirms a concrete source token, not that the gameplay interpretation or
+    author-written rationale is true. A marker cannot substitute for evidence.
+    """
+    marker = rule.get("action_source_marker")
+    if marker is None:
+        return True
+    if not isinstance(marker, str) or not 3 <= len(marker) <= 100:
+        return False
+    for ref in rule.get("evidence", []):
+        if not isinstance(ref, dict):
+            continue
+        for payload in payloads:
+            if payload.get("sha256") != ref.get("payload_sha256"):
+                continue
+            start, end = ref.get("start"), ref.get("end")
+            body = payload["original_whml"]
+            if type(start) is int and type(end) is int and 0 <= start < end <= len(body):
+                if marker in body[start:end]:
+                    return True
+    return False
+
+
+def _rule_exercised_as_winner(rule: dict, cases: list[dict], rules: list[dict]) -> bool:
+    """Being technically applicable is insufficient if always shadowed."""
+    for case in cases:
+        if case["kind"] != rule["kind"] or _applicability(rule, case) is not True:
+            continue
+        if rule["kind"] == "opener":
+            return True
+        higher = any(
+            other["kind"] == "priority" and other["rank"] < rule["rank"]
+            and _applicability(other, case) is True
+            for other in rules
+        )
+        if not higher:
+            return True
+    return False
+
 def _equals(a: Any, b: Any) -> bool:
     return type(a) is type(b) and a == b
 
@@ -205,6 +248,7 @@ def assess_annotations(packet: dict, annotations: dict) -> dict:
         raise ValueError("Cases must be a bounded list")
     ids = set()
     invalid_evidence = []
+    invalid_action_markers = []
     duplicate_decisions = []
     seen = {}
     for rule in rules:
@@ -233,6 +277,8 @@ def assess_annotations(packet: dict, annotations: dict) -> dict:
                 raise ValueError("Opener rule needs positive step, rank=null")
         if not _verify_evidence(rule, packet["payloads"]):
             invalid_evidence.append(ident)
+        if not _verify_action_marker(rule, packet["payloads"]):
+            invalid_action_markers.append(ident)
         key = _identity(rule)
         if key in seen and seen[key]["action"] != rule["action"]:
             duplicate_decisions.append((seen[key]["id"], ident))
@@ -266,18 +312,25 @@ def assess_annotations(packet: dict, annotations: dict) -> dict:
         evaluations.append(evaluated)
     outcomes = Counter(e["result"] for e in evaluations)
     unexercised = sum(
-        not any(case["kind"] == rule["kind"] and
-                _applicability(rule, case) is True for case in cases)
+        not _rule_exercised_as_winner(rule, cases, rules)
         for rule in rules
     )
     exception_rules = sum(bool(rule["exceptions"]) for rule in rules)
     blockers = []
     if invalid_evidence:
         blockers.append("invalid_source_evidence")
+    if invalid_action_markers:
+        blockers.append("action_not_in_cited_source_span")
     if duplicate_decisions:
         blockers.append("same_conditions_conflicting_actions")
     if not cases:
         blockers.append("no_decision_cases")
+    minimum = annotations.get("minimum_decision_cases")
+    if minimum is not None:
+        if type(minimum) is not int or not 1 <= minimum <= MAX_CASES:
+            raise ValueError("minimum_decision_cases must be an integer 1..MAX_CASES")
+        if len(cases) < minimum:
+            blockers.append("insufficient_decision_cases")
     if unexercised:
         blockers.append("unexercised_rule_branches")
     if exception_rules:
@@ -293,6 +346,7 @@ def assess_annotations(packet: dict, annotations: dict) -> dict:
         "case_outcome_counts": dict(sorted(outcomes.items())),
         "case_results": evaluations,
         "invalid_evidence_rule_count": len(invalid_evidence),
+        "invalid_action_marker_rule_count": len(invalid_action_markers),
         "conflicting_identical_rule_pairs": len(duplicate_decisions),
         "unexercised_rule_count": unexercised,
         "unmodeled_exception_rule_count": exception_rules,

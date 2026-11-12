@@ -225,6 +225,38 @@ class GameplayDecisionQATests(unittest.TestCase):
             self.assertNotIn("private-case-identifier", captured.getvalue())
             self.assertNotIn("Fictional stack", result_file.read_text())
 
+
+    def test_source_marker_must_occur_in_the_cited_action_span(self):
+        invalid = rule("invalid", "priority", "Synthetic A", rank=1)
+        invalid["action_source_marker"] = "[spell=999999]"
+        result = report([invalid], [case("case", "Synthetic A")])
+        self.assertEqual(result["invalid_action_marker_rule_count"], 1)
+        self.assertIn("action_not_in_cited_source_span", result["blocker_codes"])
+        valid = rule("valid", "priority", "Synthetic A", rank=1)
+        valid["action_source_marker"] = "Spend on proc"
+        result2 = report([valid], [case("case", "Synthetic A")])
+        self.assertEqual(result2["invalid_action_marker_rule_count"], 0)
+
+    def test_case_count_gate_for_real_source_reviews(self):
+        annotations = {
+            "schema_version": SCHEMA,
+            "rules": [rule("r", "priority", "Synthetic A", rank=1)],
+            "cases": [case("only-one", "Synthetic A")],
+            "minimum_decision_cases": 6,
+        }
+        result = assess_annotations(PACKET, annotations)
+        self.assertIn("insufficient_decision_cases", result["blocker_codes"])
+        self.assertFalse(result["all_declared_cases_matched"])
+
+    def test_shadowed_filler_does_not_count_as_exercised(self):
+        rules = [
+            rule("high", "priority", "Synthetic A", rank=1),
+            rule("lower", "priority", "Synthetic B", rank=2),
+        ]
+        result = report(rules, [case("always-high", "Synthetic A")])
+        self.assertEqual(result["unexercised_rule_count"], 1)
+        self.assertIn("unexercised_rule_branches", result["blocker_codes"])
+
     def test_private_rule_text_not_in_public_report(self):
         rules = [rule("secret", "priority", "Copyrighted Fictional Ability", rank=1,
                       reason="A detailed source-only paragraph about the ability")]
