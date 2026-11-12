@@ -14,6 +14,33 @@ FIXTURE = Path(__file__).resolve().parents[1] / "examples" / "synthetic-source-s
 
 
 class SourcePipelineTests(TestCase):
+
+    def test_verified_body_hash_equality_is_not_publish_approval(self):
+        from engine.embedded_markup import inspect_embedded_whml
+        html = FIXTURE.read_text(encoding="utf-8")
+        expected = next(x["sha256"] for x in inspect_embedded_whml(html)["payloads"]
+                        if x["target"] == "guide-body")
+        with TemporaryDirectory() as temp:
+            same = inspect_and_store(dom_html=html, output=Path(temp) / "same",
+                                     kind="saved_html", expected_guide_sha256=expected)
+            other = inspect_and_store(dom_html=html, output=Path(temp) / "other",
+                                      kind="saved_html", expected_guide_sha256="0" * 64)
+            self.assertTrue(same["matches_known_baseline"])
+            self.assertFalse(same["source_change_review_required"])
+            self.assertFalse(other["matches_known_baseline"])
+            self.assertTrue(other["source_change_review_required"])
+            self.assertFalse(same["source_patch_verified"])
+            self.assertFalse(same["automatic_publish_allowed"])
+
+    def test_invalid_expected_hash_fails_before_saving_source(self):
+        html = FIXTURE.read_text(encoding="utf-8")
+        with TemporaryDirectory() as temp:
+            output = Path(temp) / "unsafe"
+            with self.assertRaisesRegex(ValueError, "SHA-256"):
+                inspect_and_store(dom_html=html, output=output, kind="saved_html",
+                                  expected_guide_sha256="invalid")
+            self.assertFalse(output.exists())
+
     def test_saved_html_to_full_metadata_audit(self):
         html = FIXTURE.read_text(encoding="utf-8")
         with TemporaryDirectory() as temp:

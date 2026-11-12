@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -28,7 +29,8 @@ PIPELINE_SCHEMA = "source-acquisition-pipeline-v1"
 
 def inspect_and_store(*, dom_html: str, output: Path, kind: str,
                       raw_html: str | None = None, mhtml: str | None = None,
-                      metadata: dict | None = None, require_guide_body: bool = True) -> dict:
+                      metadata: dict | None = None, require_guide_body: bool = True,
+                      expected_guide_sha256: str | None = None) -> dict:
     """Fail closed before writing snapshots if the requested guide is absent."""
     analysis, variant = select_analysis_html(dom_html, raw_html)
     _validate_html(analysis, ())
@@ -41,6 +43,13 @@ def inspect_and_store(*, dom_html: str, output: Path, kind: str,
         )
     payloads = [p for p in static["embedded_whml"]["payloads"]
                 if p.get("target") == "guide-body"]
+    hashes = [p["sha256"] for p in payloads]
+    if expected_guide_sha256 is not None:
+        if not re.fullmatch(r"[0-9a-f]{64}", expected_guide_sha256):
+            raise ValueError("Expected guide body SHA-256 must be 64 lowercase hexadecimal characters")
+        matches_baseline = expected_guide_sha256 in hashes
+    else:
+        matches_baseline = None
     options = sum(len(p.get("display_switches", {}).get("option_definitions", []))
                   for p in payloads)
     conditional = sum(p.get("display_switches", {}).get("conditional_occurrences", 0)
@@ -75,7 +84,9 @@ def inspect_and_store(*, dom_html: str, output: Path, kind: str,
         "analysis_html_sha256": hashlib.sha256(analysis.encode("utf-8")).hexdigest(),
         "analysis_html_characters": len(analysis),
         "guide_body_payloads": len(payloads),
-        "guide_body_sha256s": [p["sha256"] for p in payloads],
+        "guide_body_sha256s": hashes,
+        "matches_known_baseline": matches_baseline,
+        "source_change_review_required": matches_baseline is False,
         "guide_body_character_counts": [p["characters"] for p in payloads],
         "named_tooltip_definition_count": named_definitions,
         "tooltip_reference_count": references,
@@ -112,7 +123,8 @@ def require_authorized_navigation(url: str, expected_host: str) -> None:
 
 def run_browser(url: str, output: Path, *, capture_mhtml: bool = False,
                 capture_ui: bool = False, max_states: int = 24,
-                max_depth: int = 3) -> dict:
+                max_depth: int = 3,
+                expected_guide_sha256: str | None = None) -> dict:
     _validate_remote_url(url)
     try:
         from playwright.sync_api import sync_playwright
@@ -140,7 +152,7 @@ def run_browser(url: str, output: Path, *, capture_mhtml: bool = False,
             )
             report = inspect_and_store(
                 dom_html=dom, raw_html=raw, mhtml=mhtml, output=output,
-                kind="browser_url",
+                kind="browser_url", expected_guide_sha256=expected_guide_sha256,
             )
             if capture_ui:
                 from .live_dom_capture import capture, summarize
@@ -176,6 +188,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--mhtml", action="store_true")
     parser.add_argument("--capture-ui", action="store_true")
+    parser.add_argument("--expected-guide-sha256", help="Optional known-good WHML body SHA-256 for update comparison")
     parser.add_argument("--max-states", type=int, default=24)
     parser.add_argument("--max-depth", type=int, default=3)
     args = parser.parse_args(argv)
@@ -186,7 +199,8 @@ def main(argv: list[str] | None = None) -> int:
             parser.error("--mhtml/--capture-ui require a browser; HTTP mode does not execute UI")
         html = get_html(args.http_url)
         result = inspect_and_store(dom_html=html, output=args.output,
-                                   kind="http_direct")
+                                   kind="http_direct",
+                                   expected_guide_sha256=args.expected_guide_sha256)
     elif args.url:
         if not args.allow_remote:
             parser.error("URL mode requires --allow-remote")
@@ -194,7 +208,8 @@ def main(argv: list[str] | None = None) -> int:
                              capture_mhtml=args.mhtml,
                              capture_ui=args.capture_ui,
                              max_states=args.max_states,
-                             max_depth=args.max_depth)
+                             max_depth=args.max_depth,
+                             expected_guide_sha256=args.expected_guide_sha256)
     else:
         if args.mhtml or args.capture_ui:
             parser.error("--mhtml and --capture-ui require URL browser mode")
@@ -205,6 +220,7 @@ def main(argv: list[str] | None = None) -> int:
         result = inspect_and_store(
             dom_html=html, output=args.output,
             kind=metadata["kind"], metadata=metadata,
+            expected_guide_sha256=args.expected_guide_sha256,
         )
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0
