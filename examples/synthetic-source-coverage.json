@@ -1,0 +1,97 @@
+{
+  "schema_version": "source-coverage-observation-v1",
+  "guide": {
+    "specialization": "SYNTHETIC SPEC",
+    "source_url": "https://example.invalid/synthetic",
+    "patch": "synthetic-patch",
+    "revision": "synthetic-rev"
+  },
+  "accesses": [
+    {
+      "id": "index",
+      "kind": "search_index",
+      "source_url": "https://example.invalid/synthetic",
+      "patch": "synthetic-patch",
+      "revision": "synthetic-rev"
+    }
+  ],
+  "states": [
+    {
+      "path": [],
+      "access_id": "index",
+      "inventory_checked": false,
+      "choices": [
+        {
+          "control": "hero",
+          "role": "decision",
+          "options": [
+            "A",
+            "B"
+          ]
+        }
+      ],
+      "entries": []
+    },
+    {
+      "path": [
+        {
+          "control": "hero",
+          "option": "A"
+        }
+      ],
+      "access_id": "index",
+      "inventory_checked": false,
+      "choices": [
+        {
+          "control": "fight",
+          "role": "decision",
+          "options": [
+            "single",
+            "aoe"
+          ]
+        }
+      ],
+      "entries": []
+    },
+    {
+      "path": [
+        {
+          "control": "hero",
+          "option": "A"
+        },
+        {
+          "control": "fight",
+          "option": "single"
+        }
+      ],
+      "access_id": "index",
+      "inventory_checked": false,
+      "choices": [
+        {
+          "control": "potion",
+          "role": "illustrative",
+          "options": [
+            "sample-1",
+            "sample-2"
+          ]
+        }
+      ],
+      "entries": [
+        {
+          "id": "opener",
+          "kind": "opener",
+          "text": "Synthetic opener with a potion use slot."
+        },
+        {
+          "id": "tip",
+          "kind": "tooltip",
+          "text": "Synthetic condition note.",
+          "position": {
+            "section": "priority",
+            "near": "Example Spell"
+          }
+        }
+      ]
+    }
+  ]
+}
