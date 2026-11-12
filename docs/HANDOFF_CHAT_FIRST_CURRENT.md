@@ -213,3 +213,10 @@
 - **개인 V3.9:** `wow_rotation_v11_enhancement_v3_9_tooltip_context_review.html` 1,067,634 bytes · SHA256 `1b98ac9aa7bc228d76307118f6c371c9ed630f3a0fd818f71aa135179cfff66e`. V3.8 기반 폭풍인도자 단일·광역 오프너의 첫 폭풍의 일격을 **선택적 1회**로 정정(요약·상세·고급 문맥에 연쇄 반영). 최신 Wowhead 2026-10-13/12.1.5 검색 색인의 오프너 부근 추가 설명 근거. GitHub에는 개인 HTML/원문 장문 미게시.
 - **추가 수집:** 최신 한국어 검색 색인에서 4개 Priority 주변 설명 및 오프너의 Sample Timeline 주변 설명을 확인. 관련 `?` 위젯의 실제 개수·모든 본문·화면 위치는 여전히 미확인. **일부 내용 복구는 Gate A PASS가 아님.** [고양 확보 기록](ENHANCEMENT_SOURCE_COVERAGE_V3_20261111.md), [사례집 §36](QUALITY_GENERALIZATION_CASEBOOK.md).
 - **QA:** 기존 7개 전문화 본문 동일, 고양 43행/4오프너 유지, Chromium PC/모바일 영웅 전환·팝업/ESC·넘침·JS 예외 없음. 고양 M7·M9 판단 보류 유지. PR #20 Draft 유지, 최종 사용자 승인 전.
+
+
+## 2026-11-12 추가 인계 — V3.10 설명 1건 보강 및 27개 의미 대조
+
+- **개인 V3.10:** `wow_rotation_v11_enhancement_v3_10_crash_lightning_proc_context_review.html` · 1,067,897 bytes · SHA256 `537be20cc9109aa9103c9babefc565137d336e50473c138059f5174e056655b1`. V3.9에서 고양 고급 운용의 낙뢰 초기화 문장 1곳 보강. 사용 가능하면 즉시 재사용하되 ‘불꽃 회오리 발동에 따른 완전 초기화 가능성’과 시즌 세트의 부분적 쿨다운 감소를 구별. 실제 아이콘 위치·정확한 기전 조건 미확인이라고 명시.
+- **선별 감사:** 개인 `enhancement_v310_source_meaning_coverage_audit.json` · 13,005 bytes · SHA256 `1a6cee20d44fb46204520da38a15403e82e35340cf53909e7e2a42f3db2e6970`. 최신 2026-10-13 Wowhead 검색 색인 부근의 주요 의미 27개를 대조(22개 기존 반영/보강, 2개 부분, 3개 의미 검증 필요). **원문 전체 `?` 트리거 27개를 발견했다는 뜻이 아님**.
+- **검증:** 기존 V11 7개 본문 동일, 고양 4표/43행 유지. Chromium PC·모바일 영웅 전환, 팝업/ESC, overflow 없음, JS 오류 0. Gate A FAIL, Q0/Q1 일부 REVIEW, 승인 전 검토본. 기존 실제 Wowhead DOM 접근 불가와 패치 버전 충돌(12.0.7 vs 12.1.5)은 그대로 유효. [상세 감사](ENHANCEMENT_SOURCE_COVERAGE_V3_20261111.md), [사례집 §37](QUALITY_GENERALIZATION_CASEBOOK.md).
