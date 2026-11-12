@@ -235,3 +235,10 @@
 - `engine/source_structure.py`는 실제 접근 가능한 정적 HTML의 숨김/접힌 영역, 다중 탭, 폼 선택, `?` 팁 본문 또는 참조 후보 및 위치 단서를 수집한다. `engine/embedded_markup.py`는 `WH.markup.printHtml`의 JSON 문자열 리터럴에 담긴 WHML의 `tooltip`·`tooltip2`·`tabs`·`toggler`를 식별한다. **최신 고양 원문을 전수 수집했다는 뜻은 아니다.**
 - 실제 역사적 공개 분노 전사 HTML fixture에서 `printHtml` 호출 2개(사이드바 동적 데이터 1개, `guide-body` 14,037자 본문 리터럴 1개)를 확인해 접근 경로를 실증. 동적 JS 실행·우회·네트워크 다운로드 없음.
 - 합성 기반 테스트 및 GitHub CI 통합. 공개 저장소에는 실제 가이드 HTML/원문/개인 V11 파일을 올리지 않는다. 실제 페이지의 숨김/동적 선택지 전수 여부와 콘텐츠 Q0/Q1은 별도 판단.
+
+
+## 2026-11-12 범용 HTML 구조 후보와 수집 기록 대조기 추가
+
+- **배경:** `source_structure`는 숨김 패널·`?` 후보를 찾아도 실제 문장을 읽었다는 기록과 연결되지 않아 수집 누락을 한눈에 알기 어려웠다. `engine/source_reconcile.py`가 구조 후보와 `source_coverage`의 수집 기록을 연결해 `unmapped_candidates`, `static_body_unresolved_ids`, `invalid_mappings`를 보고하도록 함. 자료가 없거나 의미가 미확정일 때 자동 PASS 금지.
+- **범용성:** 특정 전문화/기술 고정 없음. `tooltip2` 같은 다중 팁 독립 검사, 숨김 설명 DOM과 트리거의 중복 방지, 정확한 본문 해시 일치만 자동 연결, 접근 패치 충돌·수집 내용 누락을 별도 유지. 위치 ID는 HTML 스냅샷 내부 전용이고, 의미상 귀속은 ChatGPT가 검토.
+- **보안/승인:** 개인 HTML·Wowhead 장문 원문은 PUBLIC 미게시. `real_site_completeness_verified=false`, `gameplay_meaning_verified=false`, `automatic_publish_allowed=false` 유지. 실사이트 원본 접근 장애나 최신 고양의 Gate A FAIL을 해결했다고 주장하지 않음. [공통 감사 기준](SOURCE_COVERAGE_AUDIT.md).

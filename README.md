@@ -16,6 +16,8 @@ WoW 딜사이클 교본의 **V11 품질을 보존하면서 ChatGPT 채팅에서 
 
 **범용 원문 확보 보조 도구 (2026-11-12):** [중첩 선택·툴팁 본문·위치 단서·패치 일관성 감사](docs/SOURCE_COVERAGE_AUDIT.md)를 추가했습니다. 신규 전문화에도 동일한 방식으로 누락 경로를 검사하지만, 실제 웹사이트를 크롤링하거나 자동으로 원문 확보·게임플레이 검증을 완료하는 도구가 아닙니다. 원문 내용은 ChatGPT가 확보하고 의미 분석합니다. 개인 HTML과 외부 장문 원문을 PUBLIC 저장소에 올리지 않습니다.
 
+**구조 후보 ↔ 수집 기록 대조(2026-11-12):** 정적 HTML에서 발견한 숨김 패널·툴팁·선택지 후보를 관측 원문과 대조해 **추가 확인할 항목**을 정리하는 `engine.source_reconcile` 도구와 합성 회귀 검사를 추가했습니다. [원문 확보 감사 문서](docs/SOURCE_COVERAGE_AUDIT.md). 실제 최신 Wowhead의 원문 수집/검증을 자동 대체하지 않습니다.
+
 **운영 정본:**
 - [ADR-003 — ChatGPT 중심 제작 결정](docs/ADR_003_CHAT_FIRST_EDITORIAL.md)
 - [CHAT_FIRST_PLAYBOOK — CREATE/UPDATE 작업 순서](docs/CHAT_FIRST_PLAYBOOK.md)

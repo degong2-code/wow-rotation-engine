@@ -55,3 +55,26 @@ HTML 원본을 확보할 수 있을 경우 `python -m engine.source_structure --
 직접 확인한 공개 역사적 예시: [aurokin/warcraft_cli의 분노 전사 HTML fixture](https://github.com/aurokin/warcraft_cli/blob/main/tests/fixtures/wowhead/guide_3087_page.html)에서 `printHtml` 호출 두 개가 있으며, 하나는 사이드바용 동적 `WH.getPageData`, 다른 하나는 `guide-body`의 14,037자 리터럴이었다. 이 특정 예시에는 WHML `tooltip` 정의·`tabs`·`toggler`가 없었고, **최신 고양 12.1.5의 구조나 모든 `?`가 존재한다는 증거는 아니다.**
 
 이 탐색은 기존 `engine/source_coverage.py`의 **수집 기록 내부 감사**보다 한 단계 앞에서 후보를 발견해 누락 여부를 사람이/ChatGPT가 대조할 수 있게 한다. 두 도구를 사용해도 실제 라이브 UI에서 동적으로 생성되는 추가 선택지까지 전수 확보했음을 증명하지 못한다. 현 원문 Gate A는 별도 판정이며 교본 최종 승인으로 자동 이어지지 않는다.
+
+## 수집 기록과 구조 후보 자동 대조 — source_reconcile (2026-11-12)
+
+`source_structure`가 정적 HTML에서 발견한 후보는 실제 수집됐다는 뜻이 아니다. `source_reconcile`은 이 후보들을 `source_coverage`의 **이미 확보한 본문/선택 기록**과 대조하여 미확인 항목을 명시한다. 전문화별 기술명을 코드에 박아 넣지 않는다.
+
+수집·분석자가 다음 순서로 이용한다. **사용자에게 JSON 조작을 요청하지 않는다.**
+
+1. 실제로 확보할 수 있었던 HTML을 내부적으로 분석해 `structure.json`을 만든다. 원본 HTML, 개인 V11, 장문 원문은 PUBLIC 저장소에 업로드하지 않는다.
+2. 해당 원문을 읽어 작성한 내부 `observations.json`의 각 설명 항목에 `source_candidate_ids`를 붙인다. 툴팁은 `tooltip:<HTML element index>:<description index>`, 접힌 영역은 `panel:<index>`, 선택 컨트롤은 `control:<index>`, WHML 참조는 `whml_reference:<payload index>:<reference index>`다. 이 ID들은 **하나의 HTML 구조 검사 결과 안에서만 유효**하며, 다른 리비전에서는 다시 대조한다.
+3. 본문을 정확히 수집했지만 개별 ID를 아직 모를 경우, 도구는 **중복 없는 정확한 본문 해시 일치**만 자동 연결한다. 비슷한 단어나 위치만으로 원문이 동일하다고 추측하지 않는다. 특정 팁의 인접 행을 완전히 입증할 의무는 없다.
+4. 다른 출처/맥락에 속하는 후보는 필요시 `source-reconciliation-decisions-v1`의 `not_relevant`에 후보 ID와 8자 이상의 구체적 이유를 작성한다. 자동으로 모든 버튼을 게임 선택으로 취급하지 않으며, 제외 수를 결과에 별도로 기록한다.
+5. `unmapped_candidates`를 추가 수집 후보로 조사한다. `static_body_unresolved_ids`는 HTML의 참조만으로 본문을 확보할 수 없었던 설명을 뜻한다. `invalid_mappings`는 대상 없는 연결·종류 오류·중복 연결이다. **수집할 필요 없는 UI 요소와 실제 누락된 필수 원문을 의미 분석으로 구별한다.**
+
+실행(공개 합성 자료만 사용):
+
+```bash
+python -m engine.source_structure --input examples/synthetic-source-structure.html --output /tmp/synthetic-structure.json
+python -m engine.source_reconcile --structure /tmp/synthetic-structure.json --observations examples/synthetic-source-coverage.json --output /tmp/synthetic-reconcile.json
+```
+
+이 합성 예시는 의도적으로 선택지를 미방문으로 남겼으므로 결과에 **미수집 후보와 기존 누락**이 함께 나온다. 성공을 증명하는 예시가 아니다.
+
+**QA 판정의 분리:** `candidate_comparison_complete`가 참이어도 **선언된 정적 후보만 연결됐다는 뜻**이다. 현재 도구 출력의 `real_site_completeness_verified`, `gameplay_meaning_verified`, `automatic_publish_allowed`는 항상 `false`다. JavaScript 동적 생성, 원본 패치 확인의 독립성, 숨겨진 실제 사이트의 미발견 요소는 자동으로 해결되지 않는다. `?`의 본문 확보와 위치/행 귀속을 혼동하지 않는다. 분석·집필 후 Q0/Q1 콘텐츠 QA와 별도 HTML/JS QA를 수행한다.
