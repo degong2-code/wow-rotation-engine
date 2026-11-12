@@ -38,6 +38,21 @@ jobs:
           assert result["source_text_in_report"] is False
           assert "unvisited_choice" in {g["type"] for g in result["gaps"]}
           PY
+      - name: Verify synthetic static HTML and embedded WHML
+        run: |
+          python -m engine.source_structure --input examples/synthetic-source-structure.html --output dist/html-structure-audit.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path('dist/html-structure-audit.json').read_text(encoding='utf8'))
+          assert len(report['hidden_region_candidates']) >= 3
+          assert len(report['tooltip_trigger_candidates']) >= 1
+          assert report['embedded_whml']['decoded_payloads'] == 1
+          assert report['embedded_whml']['payloads'][0]['target'] == 'guide-body'
+          assert report['source_text_in_report'] is False
+          assert report['live_ui_completeness_verified'] is False
+          assert report['automatic_publish_allowed'] is False
+          PY
       - name: Run offline tests
         run: python -m unittest discover -s tests -p 'test_*.py' -v
       - name: Validate synthetic fixture

@@ -45,3 +45,13 @@
 **반복 제작 경로:** 전문화명 입력 → ChatGPT가 기준 패치의 원문·모든 관련 선택형 콘텐츠·팁 본문을 확보 → 이 공통 감사기로 *선언된 선택 상태의 누락* 확인(필요한 경우) → ChatGPT의 상태/조건/행동/원인 분석 → 모순 및 근거 QA → 기존 V11 보존·PC/모바일 UI 검증 → 단일 HTML 전달.
 
 본문 수집과 해석을 분리한다. 물약은 이름별 오프너가 아니라 오프너의 **물약 사용 타이밍**으로 표현한다. 고양 V3.10의 확보 미완료가 이 도구 도입만으로 해소되는 것은 아니다.
+
+## 정적 HTML 및 페이지 내 WHML 탐색 (2026-11-12 확장)
+
+HTML 원본을 확보할 수 있을 경우 `python -m engine.source_structure --input examples/synthetic-source-structure.html --output /tmp/structure-audit.json` 으로 오프라인 탐색한다. `role=tab`, `aria-controls`, Bootstrap 탭과 숨김 패널, `details`, select/optgroup, `aria-describedby`, `title`, `data-hint-body` 등에서 **선택지/툴팁 후보**를 기록한다. 숨김 섹션은 본문 길이/해시를, `?`는 섹션·표 행·본문 또는 참조 상태를 기록하되 장문 원문은 보고서에 싣지 않는다.
+
+`engine/embedded_markup.py`는 역사적 Wowhead 실제 저장 HTML에 나타난 `WH.markup.printHtml` 호출 가운데 **JSON 호환 문자열 리터럴**만 해석한다. `guide-body`와 `interior-sidebar-related-markup`처럼 대상 컨테이너를 분리하고, WHML의 `tabs`, `toggler`, 명명된 `tooltip` 정의, `tooltip2`를 포함한 참조 이름·중복·미발견 여부를 보고한다. **JavaScript를 실행하지 않으며** 동적 인수와 다른 문자열 직렬화 형태는 미지원으로 표시한다.
+
+직접 확인한 공개 역사적 예시: [aurokin/warcraft_cli의 분노 전사 HTML fixture](https://github.com/aurokin/warcraft_cli/blob/main/tests/fixtures/wowhead/guide_3087_page.html)에서 `printHtml` 호출 두 개가 있으며, 하나는 사이드바용 동적 `WH.getPageData`, 다른 하나는 `guide-body`의 14,037자 리터럴이었다. 이 특정 예시에는 WHML `tooltip` 정의·`tabs`·`toggler`가 없었고, **최신 고양 12.1.5의 구조나 모든 `?`가 존재한다는 증거는 아니다.**
+
+이 탐색은 기존 `engine/source_coverage.py`의 **수집 기록 내부 감사**보다 한 단계 앞에서 후보를 발견해 누락 여부를 사람이/ChatGPT가 대조할 수 있게 한다. 두 도구를 사용해도 실제 라이브 UI에서 동적으로 생성되는 추가 선택지까지 전수 확보했음을 증명하지 못한다. 현 원문 Gate A는 별도 판정이며 교본 최종 승인으로 자동 이어지지 않는다.

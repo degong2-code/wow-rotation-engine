@@ -87,5 +87,18 @@ class StructureTests(unittest.TestCase):
             inspect_html("X" * (12 * 1024 * 1024 + 1))
 
 
+    def test_nested_optgroups_and_bootstrap_tab_anchor(self):
+        html = ('<a href="#more" data-bs-toggle="tab">More</a>'
+                '<div id="more" hidden>Hidden synthetic content</div>'
+                '<select><optgroup label="Examples"><option>First</option>'
+                '<option>Second</option></optgroup></select>')
+        r = inspect_html(html)
+        self.assertTrue(any(x["type"] == "tab" and x["targets_in_html"] == ["more"]
+                            for x in r["control_candidates"]))
+        self.assertTrue(any(x["options"] == ["First", "Second"]
+                            for x in r["control_candidates"]))
+        self.assertTrue(any(x["id"] == "more" for x in r["hidden_region_candidates"]))
+
+
 if __name__ == "__main__":
     unittest.main()

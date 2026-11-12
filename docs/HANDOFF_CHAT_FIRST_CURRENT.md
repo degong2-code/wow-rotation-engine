@@ -228,3 +228,10 @@
 - **구현:** `engine/source_coverage.py`, `tests/test_source_coverage.py`, `examples/synthetic-source-coverage.json`, `docs/SOURCE_COVERAGE_AUDIT.md`. 합성 테스트에서 중첩 선택, 새 하위 선택, 물약 예시의 카르테시안 과잉 분기 방지, 툴팁 본문/위치 분리, 동일 URL의 패치 충돌, 본문 누락, 오탐 방어를 검증한다.
 - **분리:** 결과의 `declared_coverage_candidate`는 **입력에 선언된 요소에만** 적용한다. 실제 웹페이지 전체에 대해 발견하지 못한 `?`가 없다는 증명은 아님. `real_site_completeness_verified=false`, `gameplay_meaning_verified=false`, `automatic_publish_allowed=false` 유지. 기존 V11 HTML과 최신 고양 V3.10 개인 교본은 변경하지 않았으며 PUBLIC에 올리지 않음.
 - **다음 초점:** 실제 접근 가능한 새로운 전문화에서 원문 내용/선택을 수집할 때 이 공통 감사로 누락을 줄이는지 비교 검증. 브라우저/네트워크 접근 문제는 이 모듈만으로 해결되지 않는다.
+
+
+## 2026-11-12 범용 HTML 내부 구조 탐색 보강
+
+- `engine/source_structure.py`는 실제 접근 가능한 정적 HTML의 숨김/접힌 영역, 다중 탭, 폼 선택, `?` 팁 본문 또는 참조 후보 및 위치 단서를 수집한다. `engine/embedded_markup.py`는 `WH.markup.printHtml`의 JSON 문자열 리터럴에 담긴 WHML의 `tooltip`·`tooltip2`·`tabs`·`toggler`를 식별한다. **최신 고양 원문을 전수 수집했다는 뜻은 아니다.**
+- 실제 역사적 공개 분노 전사 HTML fixture에서 `printHtml` 호출 2개(사이드바 동적 데이터 1개, `guide-body` 14,037자 본문 리터럴 1개)를 확인해 접근 경로를 실증. 동적 JS 실행·우회·네트워크 다운로드 없음.
+- 합성 기반 테스트 및 GitHub CI 통합. 공개 저장소에는 실제 가이드 HTML/원문/개인 V11 파일을 올리지 않는다. 실제 페이지의 숨김/동적 선택지 전수 여부와 콘텐츠 Q0/Q1은 별도 판단.

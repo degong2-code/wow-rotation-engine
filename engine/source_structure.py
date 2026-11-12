@@ -167,7 +167,7 @@ def inspect_html(html: str) -> dict:
             control_type = "select"
         elif node.tag == "summary":
             control_type = "details_summary"
-        elif role == "tab":
+        elif role == "tab" or a.get("data-bs-toggle") in {"tab", "pill"} or a.get("data-toggle") in {"tab", "pill"}:
             control_type = "tab"
         elif node.tag == "input" and a.get("type", "").lower() in {"radio", "checkbox"}:
             control_type = a["type"].lower()
@@ -180,13 +180,19 @@ def inspect_html(html: str) -> dict:
             for attr in ("aria-controls", "data-bs-target", "data-target"):
                 if a.get(attr):
                     targets += a[attr].split()
-            if role == "tab" and a.get("href", "").startswith("#"):
+            if control_type == "tab" and a.get("href", "").startswith("#"):
                 targets.append(a["href"])
             targets = [x.lstrip("#") for x in targets]
             options = []
             if node.tag == "select":
-                options = [_compact(x.text()) for x in parser.nodes
-                           if x.parent is node and x.tag == "option"]
+                for x in parser.nodes:
+                    if x.tag != "option":
+                        continue
+                    ancestor = x.parent
+                    while ancestor is not None and ancestor is not node:
+                        ancestor = ancestor.parent
+                    if ancestor is node:
+                        options.append(_compact(x.text()))
             controls.append({
                 "element": n, "type": control_type, "id": a.get("id"),
                 "label": _compact(a.get("aria-label", "") or node.text(), 75),
@@ -208,7 +214,7 @@ def inspect_html(html: str) -> dict:
                 status, body = _ref_body(ref, ids)
                 found.append((attr, status, body))
                 if status != "reference_body":
-                    unresolved.append({"element": n, "attribute": attr, "reference": ref})
+                    unresolved.append({"element": n, "attribute": attr, "reference": _compact(ref, 120)})
         if a.get("data-tooltip"):
             value = a["data-tooltip"]
             if value.lstrip("#") in ids:
@@ -218,7 +224,7 @@ def inspect_html(html: str) -> dict:
             else:
                 status, body = "unresolved_reference", None
                 unresolved.append({"element": n, "attribute": "data-tooltip",
-                                   "reference": value})
+                                   "reference": _compact(value, 120)})
             found.append(("data-tooltip", status, body))
         # Text-only '?' or info triggers often have content in JS, not static HTML.
         if not found and node.tag in {"button", "span", "a"} and _compact(node.text()) == "?":
@@ -234,6 +240,7 @@ def inspect_html(html: str) -> dict:
                 ],
             })
 
+    embedded = inspect_embedded_whml(html)
     return {
         "schema_version": SCHEMA,
         "inspection": "static_html_only",
@@ -244,8 +251,8 @@ def inspect_html(html: str) -> dict:
         "unresolved_tooltip_references": unresolved,
         "duplicate_ids": sorted(set(duplicate_ids)),
         "embedded_script_markers": {k: v for k, v in markers.items() if v},
-        "embedded_whml": inspect_embedded_whml(html),
-        "static_embedded_whml_decoded": bool(inspect_embedded_whml(html)["decoded_payloads"]),
+        "embedded_whml": embedded,
+        "static_embedded_whml_decoded": bool(embedded["decoded_payloads"]),
         "candidate_lists_truncated": any(
             len(x) == MAX_ITEMS for x in (controls, hidden_regions, tooltips)
         ),
