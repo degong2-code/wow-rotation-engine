@@ -13,7 +13,7 @@ import re
 from .source_page_acquire import SourceAccessError
 from .spec_source_resolver import Specialization
 
-_DATE = re.compile(r"\b20\d{2}[-/.]\d{1,2}[-/.]\d{1,2}\b")
+_DATE = re.compile(r"(?<!\d)20\d{2}[-/.]\d{1,2}[-/.]\d{1,2}(?!\d)")
 _MODIFIED = re.compile(
     r"(?:Updated|업데이트됨)\s*[:：]?\s*(20\d{2}[-/.]\d{1,2}[-/.]\d{1,2})",
     re.I,
