@@ -153,6 +153,44 @@ class OpenerTimelineTests(unittest.TestCase):
         }])
         self.assertEqual(bad["case_results"][0]["result"], "mismatch")
 
+    def test_explicit_intra_beat_effect_enables_following_hit(self):
+        ctx = {"spec": "different-hero-specialization"}
+        buff = event("buff", "Fictional potion", "[spell=102]",
+                     1, "combat", "off_gcd", within_beat_order=0,
+                     set_state={"powered": True})
+        hit = event("hit", "Fictional attack", "[spell=101]",
+                    1, "combat", "gcd", within_beat_order=1,
+                    when=[{"field": "powered", "op": "eq", "value": True}])
+        report = run([branch(ctx, [buff, hit])],
+                     [case("active-before-hit", ctx, [buff, hit],
+                           {"powered": False})])
+        self.assertTrue(report["all_declared_cases_matched"])
+
+    def test_reversed_intra_beat_effect_cannot_empower_earlier_hit(self):
+        ctx = {"spec": "different-hero-specialization"}
+        buff = event("buff", "Fictional potion", "[spell=102]",
+                     1, "combat", "off_gcd", within_beat_order=1,
+                     set_state={"powered": True})
+        hit = event("hit", "Fictional attack", "[spell=101]",
+                    1, "combat", "gcd", within_beat_order=0,
+                    when=[{"field": "powered", "op": "eq", "value": True}])
+        report = run([branch(ctx, [buff, hit])],
+                     [case("cannot-act-first", ctx, [buff, hit],
+                           {"powered": False})])
+        self.assertEqual(report["case_results"][0]["result"], "mismatch")
+
+    def test_unordered_events_cannot_read_uncommitted_same_beat_effect(self):
+        ctx = {"spec": "different-hero-specialization"}
+        buff = event("buff", "Fictional potion", "[spell=102]",
+                     1, "combat", "off_gcd", set_state={"powered": True})
+        hit = event("hit", "Fictional attack", "[spell=101]",
+                    1, "combat", "gcd",
+                    when=[{"field": "powered", "op": "eq", "value": True}])
+        report = run([branch(ctx, [buff, hit])],
+                     [case("unordered", ctx, [buff, hit],
+                           {"powered": False})])
+        self.assertEqual(report["case_results"][0]["result"], "mismatch")
+
     def test_partially_declared_order_does_not_pass(self):
         ctx = {"spec": "unrelated-example"}
         before = event("buff", "Fictional potion", "[spell=102]",
