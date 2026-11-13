@@ -6,6 +6,12 @@
 > **이 문서는 새 채팅 복원 진입점**이다. **최상위 운영 정책은 [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md)**, 구체적 품질 게이트는 [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), 집필 절차는 [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)을 정본으로 삼으며 중복 복제하지 않는다. **과거 사례로 범용화 가치/오탐을 검증하는 후향적 사례집은 [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md) 참조.**
 
 
+## 0.15 조화 드루이드 V3 — 실제 최신 원문에서 숨겨진 6개 오프너 선택 분기 복원 (2026-11-14)
+
+- **실제 source 원문 복구**: [Wowhead 12.1.5 WHML 증거](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43462279342) guide-body SHA `1b28301de948d116c73be53a84ea43f0799d6a153663347c9d717e1609d7e48c`. 동적 웹 검색 색인은 빈 오프너로 표시됐지만 원본 WHML에는 숲의 수호자(화신/영혼 소집/쐐기)와 엘룬의 대행자(화신/영혼 소집/쐐기) **6선택/58기술·복합 마커/19보조 표식**이 존재. [선택형 분기 위치 증명](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43462734350), [보조 rt-sup 범위 증거](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43463478583). UI 접근 제약을 원문 부재로 오판하지 않으며, 기본 수집기를 그대로 사용.
+- **개인 최종 V3 REVIEW 단일 HTML:** `wow_rotation_v11_balance_1215_six_source_openers_v3_REVIEW.html`, **1,033,035B**, SHA256 `ca9e90c3b7d07acf103838b72b56ba8a5b9d78a45363424d272cbd8476ce0694`. 빌드별 단계 14/9/7 및 11/10/7 원문 순서 반영. 첫 화면/원리의 '일월식→화신' 의도된 선사용 vs '화신→일월식' 불가 구분; 물약 Light's Potential(`rt-sup=1236616`)은 영혼 소집 경로의 **특정 복합 단계 동시 표식**, `rt-step=330323`은 구형 아이템 장착을 뜻하지 않는 **사용 장신구 자리**로 해석. 7/7 원본 전문화 본문 보존, PC/모바일 두 화면 Q4 PASS.
+- **한계:** 선택형 WHML 기술 마커와 적용 영웅/빌드 선택은 실제 확보했지만 각 그룹의 보조 효과/툴팁 전체와 실전 최적 판단은 여전히 Q0/Q1 REVIEW. 실제 Wowhead 동적 UI 클릭 PASS를 주장하지 않음. 개인 HTML·공략 장문 공개 GitHub 업로드 금지. [자세한 사례·일반화 방침](BALANCE_ZERO_BASE_CREATE_REVIEW_20261113.md).
+- **다음 우선순위:** 생존/비전/고양에서도 동일 WHML 내 동적 타임라인 복원 능력과 적용 범위를 실제 콘텐츠 제작에 재사용하되 새 검사기 개발보다 **선택형 원문→정확한 교본을 만드는 과정**에 초점. 원문 기술 마커 확보 이후에는 사용자 Q3 및 게임판단 반례로 Q0/Q1 문제를 줄임.
 ## 0.14 조화 드루이드 V2 — 서로 배타적인 쿨다운 분기 혼합 오류 교정 (2026-11-14)
 
 - [교정 근거·재현](BALANCE_ZERO_BASE_CREATE_REVIEW_20261113.md): 12.1.5 Wowhead의 **단일 FoN→일월식**과 **광역 FoN→화신** 선택 분기를 한 줄의 광역 오프너로 합치면서 '자연의 군대 → 화신 → 일월식'이라는 시전 불가능한 시퀀스가 첫 화면에 나타난 문제 확인. **천체의 정렬/화신 활성 중 일반 일월식 시전 불가**라는 실제 배타 상태가 원인. 새 검사기 제작 없이 첫 화면·오프너·표·실전 예제의 모드/활성 상태 조건을 함께 교정.
