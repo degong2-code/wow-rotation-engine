@@ -116,8 +116,13 @@ def inspect_original_opener_choices(packet: dict) -> dict:
     declared = {option["id"] for option in options}
     trace = {}
     for group, group_choices in EXPECTED_GROUPS.items():
-        hero = "SB-Master" if "-SB-" in group else "T-Master"
-        fight = "OP-AOE" if group.endswith("-AOE") else "OP-ST"
+        # Resolve exactly declared UI identifiers, preserving source case.
+        hero_label = "SB-Master" if "-SB-" in group else "T-Master"
+        fight_label = "Op-AoE" if group.endswith("-AOE") else "Op-ST"
+        hero = next((x for x in declared if x.casefold() == hero_label.casefold()), None)
+        fight = next((x for x in declared if x.casefold() == fight_label.casefold()), None)
+        if hero is None or fight is None:
+            raise SourceAccessError("Parent hero/fight option definitions changed")
         for choice in group_choices:
             selected = {choice, hero, fight}
             resolved = []
@@ -175,7 +180,7 @@ def main() -> None:
             report = inspect_original_opener_choices(source)
             print("opener_review_status=source_choice_evidence_consistent")
             for name, value in report.items():
-                print("opener_review_" + name + "=" + str(value).lower())
+                print("opener_review_" + name + "=" + json.dumps(value, ensure_ascii=True))
     except (SourceAccessError, ValueError, AssertionError):
         print("opener_review_status=access_or_structure_review_required")
 
