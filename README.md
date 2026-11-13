@@ -1,5 +1,7 @@
 # WoW Rotation Engine
 
+> **최상위 작업 원칙 (2026-11-13 사용자 재확정):** 목표는 **어떤 전문화의 공략이든 정확히 이해·구조화해 V11 수준 이상의 실전 한국어 단일 HTML 교본을 반복 제작/업데이트**하는 것이다. 개별 선택지·물약·도구·테스트는 그 목적을 위한 수단이다. **교본 제작 전체 흐름에 기여하지 않는 미시 검증이나 새 엔진 개발은 확대하지 않는다.** 모든 새 채팅과 개발 작업은 [QUALITY_FIRST_POLICY §0](docs/QUALITY_FIRST_POLICY.md)의 범위·종료 원칙을 먼저 적용한다. [새 채팅·프로젝트 지침](docs/CHAT_FIRST_PROJECT_INSTRUCTIONS.md) · [현재 인계](docs/HANDOFF_CHAT_FIRST_CURRENT.md) · [제작 절차](docs/CHAT_FIRST_PLAYBOOK.md).
+
 WoW 딜사이클 교본의 **V11 품질을 보존하면서 ChatGPT 채팅에서 전문화 이름만으로 CREATE/UPDATE**하는 프로젝트입니다. HTML 보존·검증용 V2 엔진은 재사용하되, 별도 AI API 앱 구축을 필수 경로로 삼지 않습니다.
 
 > **현재 상태: GitHub CI + 실제 V2 코드 + V11 파생 규칙 데이터(PUBLIC)**. 7개 전문화의 구조화된 규칙 **메타데이터**를 이관했습니다. 와우헤드 원문 전체·대량 번역문과 기존 V11 HTML 전체는 게시하지 않았으며, 생성 뷰어는 실전 딜사이클 가이드가 아닙니다.
