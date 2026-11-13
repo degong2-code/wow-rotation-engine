@@ -403,11 +403,20 @@ def potion_source_marker_inventory(packet: dict) -> dict:
                     continue
                 expr = [x["attributes"]["display-options"] for x in enclosing
                         if "display-options" in x["attributes"]]
-                if source_scopes_visible(expr, {choice, hero, fight}, declared) is True:
+                # A generic potion note may mention the same spell and
+                # inherit the final UI group without being an opener action.
+                # Require an exact choice token in at least one visibility
+                # predicate of the containing list action itself.
+                scoped_to_this_choice = any(
+                    choice in re.findall(r"[A-Za-z0-9_-]+", expression)
+                    for expression in expr
+                )
+                if (scoped_to_this_choice and
+                        source_scopes_visible(expr, {choice, hero, fight}, declared) is True):
                     valid.append(pos)
             source_action_candidates[choice] = {
-                "list_spell_markers_visible": len(valid),
-                "list_spell_marker_positions": valid[:5],
+                "choice_gated_list_action_markers": len(valid),
+                "list_action_marker_positions": valid[:5],
             }
     return {
         "potion_token_counts": result,
