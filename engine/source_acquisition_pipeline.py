@@ -23,7 +23,7 @@ from .source_page_acquire import (
 )
 from .source_structure import inspect_html
 from .http_source_fetch import get_html
-from .spec_source_resolver import resolve_specialization
+from .spec_source_resolver import Specialization, resolve_specialization
 from .guide_identity import inspect_identity
 from .source_editorial_packet import packet_from_html
 from .source_scoped_evidence import scoped_from_packet, scoped_metadata, unbound_selector_impact
@@ -206,7 +206,16 @@ def require_authorized_navigation(url: str, expected_host: str) -> None:
 def run_browser(url: str, output: Path, *, capture_mhtml: bool = False,
                 capture_ui: bool = False, max_states: int = 24,
                 max_depth: int = 3,
-                expected_guide_sha256: str | None = None) -> dict:
+                expected_guide_sha256: str | None = None,
+                specialization: Specialization | None = None,
+                expected_patch: str | None = None,
+                min_updated: str | None = None) -> dict:
+    """Authorized browser acquisition; optionally bind identity to a spec.
+
+    Patch identity is checked on the ACTUAL returned source before private
+    source material is persisted. This never assumes that an indexed search
+    result and the directly opened page serve the same guide revision.
+    """
     _validate_remote_url(url)
     try:
         from playwright.sync_api import sync_playwright
@@ -232,10 +241,25 @@ def run_browser(url: str, output: Path, *, capture_mhtml: bool = False,
                 page, response, required_markers=("WH.markup.printHtml",),
                 capture_mhtml=capture_mhtml,
             )
+            identity = None
+            if specialization is not None:
+                analysis_html, _ = select_analysis_html(dom, raw)
+                identity = inspect_identity(
+                    analysis_html, specialization,
+                    expected_patch=expected_patch, min_updated=min_updated,
+                )
             report = inspect_and_store(
                 dom_html=dom, raw_html=raw, mhtml=mhtml, output=output,
-                kind="browser_url", expected_guide_sha256=expected_guide_sha256,
+                kind="specialization_browser" if specialization else "browser_url",
+                expected_guide_sha256=expected_guide_sha256,
             )
+            if identity is not None:
+                report.update(identity)
+                report["resolved_guide_url"] = specialization.guide_url
+                report["editorial_review_required"] = True
+                # A visible patch/date is a necessary gate, never an independent
+                # confirmation that all hidden guide choices are current.
+                report["source_patch_verified"] = False
             if capture_ui:
                 from .live_dom_capture import capture, summarize
                 evidence = capture(page, max_states=max_states, max_depth=max_depth)
@@ -250,10 +274,12 @@ def run_browser(url: str, output: Path, *, capture_mhtml: bool = False,
                 )
                 report["ui_states_observed"] = ui_report["observed_state_count"]
                 report["ui_known_capture_gaps"] = ui_report["known_capture_gaps"]
-                (output / "pipeline-audit.json").write_text(
-                    json.dumps(report, ensure_ascii=False, indent=2) + "\n",
-                    encoding="utf-8",
-                )
+                report["ui_capture_report_written"] = True
+            # Keep acquisition, identity and UI coverage in ONE final report.
+            (output / "pipeline-audit.json").write_text(
+                json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
             return report
         finally:
             browser.close()
@@ -282,14 +308,24 @@ def main(argv: list[str] | None = None) -> int:
     if args.specialization:
         if not args.allow_remote:
             parser.error("Specialization mode requires --allow-remote")
-        if args.mhtml or args.capture_ui:
-            parser.error("Dynamic UI/MHTML are not available in HTTP-first spec mode")
-        result = run_specialization(
-            args.specialization, args.output,
-            expected_patch=args.expected_patch,
-            min_updated=args.min_updated,
-            expected_guide_sha256=args.expected_guide_sha256,
-        )
+        if args.capture_ui or args.mhtml:
+            spec = resolve_specialization(args.specialization)
+            result = run_browser(
+                spec.guide_url, args.output, capture_ui=args.capture_ui,
+                capture_mhtml=args.mhtml, max_states=args.max_states,
+                max_depth=args.max_depth,
+                expected_guide_sha256=args.expected_guide_sha256,
+                specialization=spec,
+                expected_patch=args.expected_patch,
+                min_updated=args.min_updated,
+            )
+        else:
+            result = run_specialization(
+                args.specialization, args.output,
+                expected_patch=args.expected_patch,
+                min_updated=args.min_updated,
+                expected_guide_sha256=args.expected_guide_sha256,
+            )
     elif args.http_url:
         if not args.allow_remote:
             parser.error("Direct HTTP mode requires --allow-remote")
