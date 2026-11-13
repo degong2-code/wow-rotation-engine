@@ -362,6 +362,130 @@ def project_priority_view(
     return rows
 
 
+
+def _predicate_entails(known: dict, required: dict) -> bool:
+    """Sound, intentionally incomplete implication for one source-state field.
+
+    This checks only explicit predicates. It does NOT infer WoW mechanics or
+    turn an opaque condition_text into a gameplay predicate.
+    """
+    if known["field"] != required["field"]:
+        return False
+    if known == required:
+        return True
+    if known["op"] == "eq":
+        return _compare(known["value"], required["op"], required["value"]) is True
+    if known["op"] == "neq":
+        return (required["op"] == "neq"
+                and _equals(known["value"], required["value"]))
+    if known["op"] not in {"lt", "lte", "gt", "gte"} or (
+        required["op"] not in {"lt", "lte", "gt", "gte"}
+    ):
+        return False
+    a, b = known["value"], required["value"]
+    if any(type(x) not in (int, float) for x in (a, b)):
+        return False
+    if known["op"] in {"lt", "lte"} and required["op"] in {"lt", "lte"}:
+        return a < b or (a == b and (
+            known["op"] == "lt" or required["op"] == "lte"
+        ))
+    if known["op"] in {"gt", "gte"} and required["op"] in {"gt", "gte"}:
+        return a > b or (a == b and (
+            known["op"] == "gt" or required["op"] == "gte"
+        ))
+    return False
+
+
+def _clause_entails(known: list[dict], required: list[dict]) -> bool:
+    """Every required AND predicate is established by a known AND predicate."""
+    return all(
+        any(_predicate_entails(item, condition) for item in known)
+        for condition in required
+    )
+
+
+def audit_priority_shadowing(
+    source_rules: list[dict], *, view_context: dict,
+    min_targets: int, max_targets: int | None = None,
+) -> dict:
+    """Flag lower-priority actions provably masked by earlier encoded rules.
+
+    Applies to canonical priority rows of ANY specialization. A lower rule is
+    shadowed only if each possible OR branch is covered by at least one earlier
+    rule's explicit AND clause. Rules with unmodeled textual exceptions cannot
+    establish such a proof. This is a REVIEW signal: never delete a rule,
+    change its rank, or claim gameplay meaning is verified by this audit.
+
+    Numeric and equality implications are deliberately incomplete. Missing
+    proof is UNKNOWN, not proof of reachability or correctness. Only harmless
+    row indices and counts are returned, never source prose or spell names.
+    """
+    rows = project_priority_view(
+        source_rules, view_context=view_context,
+        min_targets=min_targets, max_targets=max_targets,
+    )
+    by_id = {rule["id"]: rule for rule in source_rules}
+    shadowed = []
+    for row in rows:
+        lower = by_id[row["source_rule_id"]]
+        if lower["exceptions"]:
+            continue
+        lower_clauses = lower.get("when_any", [lower.get("when", [])])
+        # Ignore branches that are impossible for this ST/AoE view. The
+        # projector retains the original branches for faithful HTML output.
+        lower_clauses = [
+            clause for clause in lower_clauses
+            if all(_target_predicate_possible(c, min_targets, max_targets)
+                   for c in clause)
+        ]
+        if not lower_clauses:
+            continue
+        prior = []
+        for upper_row in rows:
+            if upper_row["source_rank"] >= row["source_rank"]:
+                continue
+            upper = by_id[upper_row["source_rule_id"]]
+            if upper["exceptions"]:
+                continue
+            for clause in upper.get("when_any", [upper.get("when", [])]):
+                if all(_target_predicate_possible(c, min_targets, max_targets)
+                       for c in clause):
+                    prior.append((upper, clause))
+        if not prior:
+            continue
+        # Different earlier rows may cover different OR alternatives. Do
+        # not incorrectly require one earlier rule to cover every branch.
+        if all(any(_clause_entails(lower_clause, prior_clause)
+                   for _, prior_clause in prior)
+               for lower_clause in lower_clauses):
+            different_action = any(
+                upper["action"] != lower["action"] and
+                any(_clause_entails(branch, prior_clause)
+                    for prior_upper, prior_clause in prior
+                    if prior_upper is upper)
+                for branch in lower_clauses for upper, _ in prior
+            )
+            shadowed.append({
+                "view_rank": row["view_rank"],
+                "different_action": different_action,
+            })
+    different = [item["view_rank"] for item in shadowed
+                 if item["different_action"]]
+    same = [item["view_rank"] for item in shadowed
+            if not item["different_action"]]
+    return {
+        "schema_version": "priority-shadow-audit-v1",
+        "view_row_count": len(rows),
+        "provably_shadowed_view_ranks": [item["view_rank"] for item in shadowed],
+        "different_action_shadowed_view_ranks": different,
+        "same_action_shadowed_view_ranks": same,
+        "priority_shadow_review_required": bool(different),
+        "basis": "explicit_predicate_implication_only",
+        "all_other_rows_reachable_verified": False,
+        "source_meaning_verified": False,
+        "automatic_publish_allowed": False,
+    }
+
 def audit_priority_view(
     source_rules: list[dict], rendered_rows: list[dict], *,
     view_context: dict, min_targets: int, max_targets: int | None = None,
