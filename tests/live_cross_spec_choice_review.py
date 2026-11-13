@@ -51,6 +51,21 @@ def review_source(packet: dict) -> dict:
         else:
             recognized += 1
             decisions += 1
+    raw = "\n".join(p["original_whml"] for p in packet["payloads"])
+    undeclared_diagnostics = {}
+    for option_id in sorted(undeclared_option_ids):
+        escaped = re.escape(option_id)
+        undeclared_diagnostics[option_id] = {
+            "mentions_in_source": len(re.findall(escaped, raw)),
+            "looks_like_display_option_definition": bool(re.search(
+                r"\[display-option\s*=\s*['\"]?" + escaped + r"\b", raw,
+                re.I)),
+            "looks_like_toggler_definition": bool(re.search(
+                r"\[toggler\s*=\s*['\"]?" + escaped + r"\b", raw,
+                re.I)),
+            "matches_case_insensitive_declared_id": any(
+                x.casefold() == option_id.casefold() for x in declared),
+        }
     return {
         "captured_real_source": True,
         "conditional_expression_count": len(expressions),
@@ -59,6 +74,7 @@ def review_source(packet: dict) -> dict:
         "unrecognized_visibility_expressions_review": unknown,
         "unrecognized_reason_counts": dict(sorted(unknown_kinds.items())),
         "undeclared_technical_option_identifiers": sorted(undeclared_option_ids)[:12],
+        "undeclared_identifier_structure": undeclared_diagnostics,
         "grammar_decisions_consistent": recognized + unknown == len(expressions),
         "hero_and_fight_contexts_verified": False,
         "gameplay_meaning_verified": False,
