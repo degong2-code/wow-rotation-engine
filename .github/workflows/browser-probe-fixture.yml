@@ -46,38 +46,32 @@ jobs:
         run: |
           python -m pip install "playwright>=1.48,<2"
           python -m playwright install --with-deps chromium
-      - name: One-off authorized Survival 12.1.5 live dynamic UI smoke (no source retained)
+      - name: One-off authorized Survival HTTP-first plus optional UI smoke (no source retained)
         if: github.ref_name == 'work/chat-first-spec-ui-acquisition-20261113'
         run: |
           python - <<'PY'
           from pathlib import Path
           from tempfile import TemporaryDirectory
-          from engine.source_acquisition_pipeline import run_browser
-          from engine.spec_source_resolver import resolve_specialization
+          from engine.source_acquisition_pipeline import run_specialization_with_ui
           from engine.source_page_acquire import SourceAccessError
-          spec=resolve_specialization("생존 사냥꾼")
           with TemporaryDirectory() as private_dir:
               try:
-                  result=run_browser(
-                      spec.guide_url, Path(private_dir),
-                      capture_ui=True, max_states=8, max_depth=2,
-                      specialization=spec, expected_patch="12.1.5",
-                      min_updated="2026-10-13",
+                  result=run_specialization_with_ui(
+                      '생존 사냥꾼', Path(private_dir),
+                      capture_ui=True, max_states=6, max_depth=2,
+                      expected_patch='12.1.5', min_updated='2026-10-13',
                   )
-              except (SourceAccessError, RuntimeError, TimeoutError) as exc:
-                  msg=str(exc)
-                  category=("denied_or_blocked" if any(x in msg for x in ("403","429","denied","blocked"))
-                            else "access_or_browser_error")
-                  print("survival_live_ui=REVIEW")
-                  print("survival_live_ui_issue="+category)
+              except SourceAccessError as exc:
+                  print('survival_http_first_gate=FAIL_OR_REVIEW')
+                  print('survival_http_first_reason=source_unavailable_or_revision_mismatch')
               else:
-                  print("survival_live_ui=OBSERVED_NOT_COMPLETE")
-                  print("survival_live_ui_states_observed="+str(result.get("ui_states_observed",0)))
-                  print("survival_live_ui_known_capture_gaps="+str(result.get("ui_known_capture_gaps",True)).lower())
-                  print("survival_live_ui_guide_identity="+str(result["guide_identity_matched"]).lower())
-                  print("survival_live_ui_source_selector_review="+
-                        str(result["source_selector_action_review_required"]).lower())
-                  print("survival_live_ui_gameplay_verified=false")
+                  print('survival_http_first_gate=SOURCE_IDENTITY_ONLY')
+                  print('survival_http_first_source_preserved='+
+                        str((Path(private_dir)/'editorial-evidence-private.json').is_file()).lower())
+                  print('survival_http_first_ui_status='+result['ui_capture_status'])
+                  print('survival_http_first_ui_states='+str(result['ui_states_observed']))
+                  print('survival_http_first_ui_gaps='+str(result['ui_known_capture_gaps']).lower())
+                  print('survival_http_first_publish_allowed='+str(result['automatic_publish_allowed']).lower())
           PY
       - name: Verify full HTML and MHTML collection in Chromium
         run: python -m unittest discover -s tests -p 'test_source_page_acquire_browser.py' -v
