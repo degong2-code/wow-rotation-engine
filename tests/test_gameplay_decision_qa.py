@@ -623,8 +623,10 @@ class PriorityShadowGeneralizationTests(unittest.TestCase):
             r("second", 2, "Synthetic B", [c("stacks", "gte", 1)]),
             r("third", 3, "Synthetic A", [c("stacks", "gte", 2)]),
         ])
-        self.assertIn(3, audit["same_action_shadowed_view_ranks"])
+        self.assertIn(3, audit["mixed_action_shadowed_view_ranks"])
         self.assertNotIn(3, audit["different_action_shadowed_view_ranks"])
+        self.assertNotIn(3, audit["same_action_shadowed_view_ranks"])
+        self.assertTrue(audit["priority_shadow_review_required"])
 
 
 if __name__ == "__main__":
