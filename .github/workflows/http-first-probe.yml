@@ -15,6 +15,7 @@ on:
       - 'tests/live_enhancement_decision_review.py'
       - 'tests/live_enhancement_opener_review.py'
       - 'tests/live_enhancement_opener_timeline_review.py'
+      - 'tests/live_enhancement_potion_timeline_review.py'
       - 'tests/live_cross_spec_choice_review.py'
       - '.github/workflows/http-first-probe.yml'
   workflow_dispatch:
@@ -120,3 +121,7 @@ jobs:
       - name: Check conditional-source grammar across Survival Hunter and Arcane Mage
         run: |
           PYTHONPATH=. python tests/live_cross_spec_choice_review.py
+
+      - name: Review source-locked potion action placements and timing across 12 actual choices
+        run: |
+          PYTHONPATH=. python tests/live_enhancement_potion_timeline_review.py
