@@ -116,7 +116,13 @@ def _guard(event: dict, state: dict) -> bool | None:
 
 
 def _simulate(events: list[dict], initial_state: dict) -> tuple[str, list, set]:
-    """Simulate only explicitly annotated effects; no game rules inferred."""
+    """Replay only author-declared guards and effects, never inferred mechanics.
+
+    Unordered events in a beat read the SAME initial state and commit together.
+    When within_beat_order is explicitly declared, the earlier off-GCD action
+    may modify state BEFORE the later GCD action checks its guard. This is
+    required for activations such as Doom Winds -> empowered strike.
+    """
     state = dict(initial_state)
     selected = []
     exercised = set()
@@ -125,48 +131,68 @@ def _simulate(events: list[dict], initial_state: dict) -> tuple[str, list, set]:
     last_start_ms = None
     for beat in sorted({event["beat"] for event in events}):
         group = [event for event in events if event["beat"] == beat]
-        certain, uncertain = [], []
-        for event in group:
-            status = _guard(event, state)
-            if status is True:
-                certain.append(event)
-            elif status is None:
-                uncertain.append(event)
-        if uncertain:
-            return "underdetermined", [], set()
-        if sum(e["lane"] == "gcd" for e in certain) > 1:
-            return "ambiguous", [], set()
-        if any(e.get("within_beat_order") is not None for e in certain):
-            # When explicit intra-beat order is declared, cover every
-            # simultaneously active action or fail closed.
-            orders = [e.get("within_beat_order") for e in certain]
-            if any(o is None for o in orders):
+        ordered = any(e.get("within_beat_order") is not None for e in group)
+        certain = []
+        if ordered:
+            # Do not silently evaluate an unsequenced conditional against the
+            # wrong intra-beat state. This is a review, not a guessed order.
+            if any(e.get("within_beat_order") is None for e in group):
                 return "underdetermined", [], set()
-            if len(set(orders)) != len(orders):
-                return "ambiguous", [], set()
-        # A later decision point cannot return to a previous pull phase.
-        if certain and min(phase_order[e["phase"]] for e in certain) < last_phase:
-            return "ambiguous", [], set()
-        if certain:
-            last_phase = max(phase_order[e["phase"]] for e in certain)
-        # Compare only explicitly supplied action start/use times, never
-        # infer cast duration or projectile impacts.
-        observed = [e["time_ms"] for e in certain
-                    if e.get("time_ms") is not None
-                    and e.get("time_anchor") in {"start", "use"}]
-        if observed:
-            if last_start_ms is not None and min(observed) < last_start_ms:
-                return "ambiguous", [], set()
-            last_start_ms = max(observed)
-        changes = {}
-        for event in certain:
-            for field, value in event.get("set_state", {}).items():
-                if field in changes and not _equals(changes[field], value):
+            for event in sorted(group, key=lambda e: e["within_beat_order"]):
+                status = _guard(event, state)
+                if status is None:
+                    return "underdetermined", [], set()
+                if status is False:
+                    continue
+                if (event["lane"] == "gcd" and
+                        any(e["lane"] == "gcd" for e in certain)):
                     return "ambiguous", [], set()
-                changes[field] = value
+                if (certain and
+                        event["within_beat_order"] ==
+                        certain[-1]["within_beat_order"]):
+                    return "ambiguous", [], set()
+                certain.append(event)
+                # Explicitly ordered effects are visible to *later* actions
+                # in the same decision beat, never to earlier actions.
+                state.update(event.get("set_state", {}))
+        else:
+            uncertain = []
+            for event in group:
+                status = _guard(event, state)
+                if status is True:
+                    certain.append(event)
+                elif status is None:
+                    uncertain.append(event)
+            if uncertain:
+                return "underdetermined", [], set()
+            if sum(e["lane"] == "gcd" for e in certain) > 1:
+                return "ambiguous", [], set()
+            changes = {}
+            for event in certain:
+                for field, value in event.get("set_state", {}).items():
+                    if field in changes and not _equals(changes[field], value):
+                        return "ambiguous", [], set()
+                    changes[field] = value
+            # Without declared order, changes are NOT visible within a beat.
+            state.update(changes)
+
+        # The sequence of applicable events cannot return to an earlier pull
+        # phase. Ordered events are checked in declared execution order.
+        for event in certain:
+            current_phase = phase_order[event["phase"]]
+            if current_phase < last_phase:
+                return "ambiguous", [], set()
+            last_phase = current_phase
+            # No inference of spell cast durations, projectile arrivals or
+            # GCD lengths: compare only explicit start/use timestamps.
+            if (event.get("time_ms") is not None and
+                    event.get("time_anchor") in {"start", "use"}):
+                instant = event["time_ms"]
+                if last_start_ms is not None and instant < last_start_ms:
+                    return "ambiguous", [], set()
+                last_start_ms = instant
         selected.extend(_event_signature(event) for event in certain)
         exercised.update(e["id"] for e in certain)
-        state.update(changes)
     return "ready", sorted(selected), exercised
 
 
