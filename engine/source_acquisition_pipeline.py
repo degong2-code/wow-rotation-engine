@@ -26,7 +26,7 @@ from .http_source_fetch import get_html
 from .spec_source_resolver import resolve_specialization
 from .guide_identity import inspect_identity
 from .source_editorial_packet import packet_from_html
-from .source_scoped_evidence import scoped_from_packet, scoped_metadata
+from .source_scoped_evidence import scoped_from_packet, scoped_metadata, unbound_selector_impact
 
 PIPELINE_SCHEMA = "source-acquisition-pipeline-v1"
 
@@ -85,6 +85,12 @@ def inspect_and_store(*, dom_html: str, output: Path, kind: str,
     private_packet = packet_from_html(analysis) if payloads else None
     scoped_packet = scoped_from_packet(private_packet) if private_packet is not None else None
     scope_audit = scoped_metadata(scoped_packet) if scoped_packet is not None else None
+    selector_impact = (
+        unbound_selector_impact(private_packet, scoped_packet)
+        if scoped_packet is not None else None
+    )
+    if selector_impact and selector_impact["ordered_action_review_required"]:
+        flags.append("unbound_selector_ordered_action_candidate")
     report = {
         "schema_version": PIPELINE_SCHEMA,
         "acquisition_kind": kind,
@@ -104,6 +110,13 @@ def inspect_and_store(*, dom_html: str, output: Path, kind: str,
         "hidden_region_candidates": len(static["hidden_region_candidates"]),
         "visible_control_candidates": len(static["control_candidates"]),
         "issue_types": sorted(set(flags)),
+        "source_selector_impact": selector_impact,
+        "source_selector_references_resolved": bool(
+            selector_impact and selector_impact["source_selector_references_resolved"]
+        ),
+        "source_selector_action_review_required": bool(
+            selector_impact and selector_impact["ordered_action_review_required"]
+        ),
         "static_source_obtained": True,
         "private_editorial_packet_written": private_packet is not None,
         "private_scoped_evidence_written": scoped_packet is not None,
