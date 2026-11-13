@@ -89,3 +89,9 @@ python -m engine.source_acquisition_pipeline \
 - 공개 저장소와 GitHub 로그에는 원문·개인 교본·툴팁 장문을 저장하지 않는다. GitHub Actions는 일시적 비공개 디렉터리의 감사 메타데이터만 기록한다.
 
 **실제 제품 판단:** 12.1.5 원문 취득은 가능하지만 현재 모든 선택 상태의 조건 귀속을 재현하지 못했으므로 생존 사냥꾼 검토본 게임 Q0/Q1은 REVIEW를 유지한다. 새 버전 번호나 새로운 우선순위 행을 근거 없이 만들지 않는다.
+
+### 실제 통합 경로 최종 확인 (2026-11-13)
+
+- [HTTP-first + Chromium 실제 실사이트 통합 실행](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43436834292): `survival_http_first_gate=SOURCE_IDENTITY_ONLY`, `source_preserved=true`, `ui_status=browser_access_denied`, `ui_states=0`, `ui_gaps=true`, `publish_allowed=false`. CI는 실제 수집한 원문을 공개 출력/Artifact로 보존하지 않음.
+- 따라서 구현 목표 중 **접근 가능한 최신 원문 보호·버전 혼합 차단·UI 갭 명시**는 실사이트에서 관측됨. **선택형 UI 실제 획득, 숨은 팁·선택 적용범위 전수 해석, 실제 생존 교본 Q0/Q1 승인**은 달성하지 못함.
+- 기존 HTTP 진단/브라우저 CI의 one-off 실사이트 시험 코드는 실행 후 원복했으며, 실질적 코드 변경(HTTP-first 보존·일치 지문 결합)과 회귀 테스트만 PR #22에 남김.
