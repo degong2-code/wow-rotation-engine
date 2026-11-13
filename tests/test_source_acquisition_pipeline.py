@@ -277,7 +277,7 @@ class SourcePipelineTests(TestCase):
         from io import StringIO
         with TemporaryDirectory() as tmp:
             output = Path(tmp) / "source"
-            with patch("engine.source_acquisition_pipeline.run_browser",
+            with patch("engine.source_acquisition_pipeline.run_specialization_with_ui",
                        return_value={"gameplay_meaning_verified": False}) as browse:
                 with patch("sys.argv", [
                     "pipeline", "--specialization", "생존 사냥꾼",
@@ -288,14 +288,121 @@ class SourcePipelineTests(TestCase):
                     with redirect_stdout(StringIO()):
                         self.assertEqual(main(), 0)
             args, kwargs = browse.call_args
-            self.assertEqual(args[0], resolve_specialization("생존 사냥꾼").guide_url)
-            self.assertIs(kwargs["specialization"],
-                          resolve_specialization("생존 사냥꾼"))
+            self.assertEqual(args[0], "생존 사냥꾼")
             self.assertEqual(kwargs["max_states"], 12)
             self.assertEqual(kwargs["max_depth"], 2)
             self.assertTrue(kwargs["capture_ui"])
             self.assertEqual(kwargs["expected_patch"], "12.1.5")
             self.assertEqual(kwargs["min_updated"], "2026-10-13")
+
+
+    def test_http_first_preserves_source_if_authorized_chromium_is_denied(self):
+        from unittest.mock import patch
+        from engine.source_acquisition_pipeline import run_specialization_with_ui
+        source = self._synthetic_guide_version("12.1.5", "2026/10/13")
+        with TemporaryDirectory() as tmp:
+            output = Path(tmp) / "source"
+            with patch("engine.source_acquisition_pipeline.get_html",
+                       return_value=source) as get:
+                with patch("engine.source_acquisition_pipeline.run_browser",
+                           side_effect=SourceAccessError(
+                               "Browser navigation was denied or failed (HTTP 403)"
+                           )) as browse:
+                    audit = run_specialization_with_ui(
+                        "생존 사냥꾼", output, expected_patch="12.1.5",
+                        min_updated="2026-10-13",
+                    )
+            self.assertEqual(get.call_count, 1)
+            self.assertEqual(browse.call_count, 1)
+            self.assertEqual(audit["ui_capture_status"], "browser_access_denied")
+            self.assertTrue(audit["ui_known_capture_gaps"])
+            self.assertFalse(audit["browser_enrichment_accepted"])
+            self.assertEqual(audit["guide_body_payloads"], 1)
+            self.assertTrue((output / "analysis.html").exists())
+            self.assertTrue((output / "editorial-evidence-private.json").exists())
+            self.assertFalse((output / "private-ui-capture.json").exists())
+            self.assertFalse(audit["real_site_completeness_verified"])
+            self.assertFalse(audit["automatic_publish_allowed"])
+            self.assertNotIn("Synthetic actionable source",
+                             (output / "pipeline-audit.json").read_text())
+
+    def test_http_first_rejects_stale_source_before_optional_browser(self):
+        from unittest.mock import patch
+        from engine.source_acquisition_pipeline import run_specialization_with_ui
+        old = self._synthetic_guide_version("12.0.7", "2026/05/03")
+        with TemporaryDirectory() as tmp:
+            output = Path(tmp) / "source"
+            with patch("engine.source_acquisition_pipeline.get_html",
+                       return_value=old):
+                with patch("engine.source_acquisition_pipeline.run_browser") as browse:
+                    with self.assertRaisesRegex(SourceAccessError, "Requested patch"):
+                        run_specialization_with_ui(
+                            "생존 사냥꾼", output, expected_patch="12.1.5",
+                            min_updated="2026-10-13",
+                        )
+            browse.assert_not_called()
+            self.assertFalse(output.exists())
+
+    def test_http_first_does_not_merge_different_browser_guide_body(self):
+        from unittest.mock import patch
+        from engine.source_acquisition_pipeline import run_specialization_with_ui
+        src = self._synthetic_guide_version("12.1.5", "2026/10/13")
+        with TemporaryDirectory() as tmp:
+            output = Path(tmp) / "source"
+            with patch("engine.source_acquisition_pipeline.get_html",
+                       return_value=src):
+                with patch("engine.source_acquisition_pipeline.run_browser",
+                           return_value={
+                               "guide_body_sha256s": ["0"*64],
+                               "observed_guide_update_date": "2026-10-13",
+                               "ui_states_observed": 6,
+                               "ui_known_capture_gaps": False,
+                           }):
+                    result = run_specialization_with_ui(
+                        "생존 사냥꾼", output, expected_patch="12.1.5",
+                    )
+            self.assertEqual(result["ui_capture_status"],
+                             "browser_source_body_mismatch")
+            self.assertFalse(result["browser_enrichment_accepted"])
+            self.assertTrue(result["ui_known_capture_gaps"])
+            self.assertFalse((output / "private-ui-capture.json").exists())
+
+    def test_http_first_merges_only_matching_browser_ui_capture(self):
+        from unittest.mock import patch
+        from engine.source_acquisition_pipeline import (
+            run_specialization_with_ui, run_specialization
+        )
+        src = self._synthetic_guide_version("12.1.5", "2026/10/13")
+        with TemporaryDirectory() as tmp:
+            output = Path(tmp) / "source"
+            with patch("engine.source_acquisition_pipeline.get_html",
+                       return_value=src):
+                original_run = run_specialization(
+                    "생존 사냥꾼", Path(tmp) / "comparison",
+                    expected_patch="12.1.5",
+                )
+                def fake_browser(url, dest, **kw):
+                    dest.mkdir(parents=True, exist_ok=True)
+                    (dest / "private-ui-capture.json").write_text('{"states":[]}')
+                    (dest / "ui-audit.json").write_text('{"known_capture_gaps":true}')
+                    return {
+                        "guide_body_sha256s": original_run["guide_body_sha256s"],
+                        "observed_guide_update_date": "2026-10-13",
+                        "ui_states_observed": 3,
+                        "ui_known_capture_gaps": True,
+                    }
+                with patch("engine.source_acquisition_pipeline.run_browser",
+                           side_effect=fake_browser):
+                    result = run_specialization_with_ui(
+                        "생존 사냥꾼", output, expected_patch="12.1.5",
+                    )
+            self.assertTrue(result["browser_enrichment_accepted"])
+            self.assertEqual(result["ui_capture_status"], "observed_partial")
+            self.assertTrue(result["ui_known_capture_gaps"])
+            self.assertEqual(result["ui_states_observed"], 3)
+            self.assertTrue((output / "private-ui-capture.json").exists())
+            self.assertTrue((output / "ui-audit.json").exists())
+            self.assertFalse(result["automatic_publish_allowed"])
 
     @staticmethod
     def _synthetic_guide_version(patch, updated, *, name="Survival Hunter"):
