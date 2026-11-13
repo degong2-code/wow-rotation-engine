@@ -38,10 +38,13 @@ def _pred(field: str, value: bool) -> list[dict]:
 
 
 def _expected(action: str, beat: int, phase: str, lane: str,
-              time_ms: int | None = None) -> dict:
+              time_ms: int | None = None,
+              within_beat_order: int | None = None) -> dict:
     e = {"action": action, "beat": beat, "phase": phase, "lane": lane}
     if time_ms is not None:
         e.update(time_ms=time_ms, time_anchor="start")
+    if within_beat_order is not None:
+        e["within_beat_order"] = within_beat_order
     return e
 
 
@@ -84,7 +87,8 @@ def _build_index(packet: dict) -> tuple[str, dict]:
 def _event(source: str, steps: list, spell: int, ident: str,
            beat: int, phase: str, lane: str = "gcd", *,
            occurrence: int = 0, when: list | None = None,
-           effect: dict | None = None, time_ms: int | None = None) -> dict:
+           effect: dict | None = None, time_ms: int | None = None,
+           within_beat_order: int | None = None) -> dict:
     matching = [x for x in steps if x["spell"] == spell]
     if len(matching) <= occurrence:
         raise SourceAccessError("Actual source step action absent")
@@ -101,6 +105,8 @@ def _event(source: str, steps: list, spell: int, ident: str,
     }
     if time_ms is not None:
         e.update(time_ms=time_ms, time_anchor="start")
+    if within_beat_order is not None:
+        e["within_beat_order"] = within_beat_order
     return e
 
 
@@ -115,6 +121,7 @@ def _doom_event(raw: str, ident: str, beat: int) -> dict:
     return {
         "id": ident, "action": "spell:384352", "beat": beat,
         "phase": "combat", "lane": "off_gcd",
+        "within_beat_order": 0,
         "when": _pred("doom_winds_ready", True),
         "set_state": {"doom_winds_active": True},
         "evidence": [{
@@ -206,7 +213,7 @@ def build_partial_annotations(packet: dict) -> dict:
                     partner = 187874
                 events.append(_doom_event(raw, "doom-winds", pair_beat))
                 events.append(_event(raw, source_steps, partner, "paired-gcd",
-                                     pair_beat, "combat"))
+                                     pair_beat, "combat", within_beat_order=1))
                 events.append(_event(raw, source_steps, 60103, "followup-lava",
                                      pair_beat + 1, "combat",
                                      occurrence=1 if context["targets"] == "single" else 0,
@@ -227,8 +234,10 @@ def build_partial_annotations(packet: dict) -> dict:
                     expectation.append(
                         _expected("spell:60103", beat_base + 2, "combat", "gcd"))
                 expectation += [
-                    _expected("spell:384352", pair_beat, "combat", "off_gcd"),
-                    _expected("spell:" + str(partner), pair_beat, "combat", "gcd"),
+                    _expected("spell:384352", pair_beat, "combat", "off_gcd",
+                              within_beat_order=0),
+                    _expected("spell:" + str(partner), pair_beat, "combat", "gcd",
+                              within_beat_order=1),
                     _expected("spell:60103", pair_beat + 1, "combat", "gcd"),
                 ]
                 cases.append({
@@ -303,6 +312,15 @@ def check_mutations(packet: dict, authored: dict) -> dict:
                 if x["id"] == "doom-winds")
     doom["set_state"]["doom_winds_active"] = False
     expect(missing_effect, "mismatch")
+
+    # A shared GCD does not mean the two actions are order-insensitive.
+    reversed_pair = one("T-OP-AOE-LL", "-doom-paired")
+    doom = next(x for x in reversed_pair["branches"][0]["events"]
+                if x["id"] == "doom-winds")
+    partner = next(x for x in reversed_pair["branches"][0]["events"]
+                   if x["id"] == "paired-gcd")
+    doom["within_beat_order"], partner["within_beat_order"] = 1, 0
+    expect(reversed_pair, "mismatch")
 
     return {
         "deliberately_wrong_cases_rejected": len(checks),
