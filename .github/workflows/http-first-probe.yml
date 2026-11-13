@@ -12,6 +12,7 @@ on:
       - 'engine/source_scoped_evidence.py'
       - 'tests/test_source_scoped_evidence.py'
       - 'tests/live_enhancement_decision_review.py'
+      - 'tests/live_enhancement_opener_review.py'
       - '.github/workflows/http-first-probe.yml'
   workflow_dispatch:
 
@@ -104,3 +105,7 @@ jobs:
       - name: Check source-locked 12.1.5 gameplay decision cases without publishing HTML
         run: |
           PYTHONPATH=. python tests/live_enhancement_decision_review.py
+
+      - name: Check source-locked Enhancement opener choices (no raw WHML in output)
+        run: |
+          PYTHONPATH=. python tests/live_enhancement_opener_review.py
