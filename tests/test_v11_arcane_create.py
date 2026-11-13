@@ -9,7 +9,8 @@ from unittest.mock import patch
 
 from engine.v2.build import ROOT, read_json, render, validate
 from engine.v2.create_guide import (
-    JS_PATCHES, OLD_IDS, create_arcane, validate_draft, _original_guides,
+    JS_PATCHES, OLD_IDS, create_arcane, create_private_preview,
+    validate_draft, _original_guides,
 )
 from engine.v2.import_v11 import bootstrap
 
@@ -79,6 +80,83 @@ class ArcaneCreateTests(unittest.TestCase):
             return create_arcane(
                 self.original.encode("utf-8"),
                 self.draft if document is None else document,
+            )
+
+    def test_private_create_defaults_to_no_rejected_legacy_baseline(self):
+        # The previous tool accepted an unapproved pre-canonical Arcane draft
+        # as its implicit default. Refuse it before touching private V11 bytes.
+        with TemporaryDirectory() as temp:
+            root = Path(temp)
+            private = root / "original-private.html"
+            private.write_text(self.original, encoding="utf-8")
+            bad = root / "historical-arcane-draft.json"
+            bad.write_text(json.dumps(self.draft), encoding="utf-8")
+            output = root / "result.html"
+            with self.assertRaisesRegex(ValueError, "Legacy handwritten"):
+                create_private_preview(private, bad, output)
+            self.assertFalse(output.exists())
+
+    def test_old_draft_can_only_be_replayed_as_explicit_review_comparison(self):
+        with TemporaryDirectory() as temp:
+            root = Path(temp)
+            private = root / "original-private.html"
+            private.write_text(self.original, encoding="utf-8")
+            old = root / "historical-arcane-draft.json"
+            old.write_text(json.dumps(self.draft), encoding="utf-8")
+            output = root / "historical-comparison.html"
+            with patch("engine.v2.create_guide.BASELINE_SHA", self.baseline_hash):
+                report = create_private_preview(
+                    private, old, output, allow_legacy_review=True
+                )
+            self.assertTrue(output.exists())
+            self.assertEqual(
+                report["content_basis"], "historical_legacy_comparison_only"
+            )
+            self.assertFalse(report["gameplay_accuracy_verified"])
+            self.assertFalse(report["approved_visual_baseline_verified"])
+
+    def test_canonical_draft_is_normal_private_create_path(self):
+        draft = deepcopy(self.draft)
+        rules = []
+        for hero in ("sunfury", "spellslinger"):
+            for rank in range(1, 10):
+                rules.append({
+                    "id": f"source-{hero}-{rank}",
+                    "kind": "priority", "rank": rank, "step": None,
+                    "context": {"hero": hero}, "action": "비전 탄막",
+                    "when": (
+                        [{"field": "target_count", "op": "gte", "value": 5}]
+                        if rank == 9 else
+                        [{"field": "arcane_charges", "op": "lt", "value": 3}]
+                        if rank == 1 else []
+                    ),
+                    "condition_text": (
+                        "비전 충전물 3개 미만" if rank == 1
+                        else "합성 출처의 선택 조건"
+                    ),
+                    "reason": "합성 근거에만 기초한 검토 설명",
+                    "exceptions": [],
+                })
+        draft["canonical_priority_rules"] = rules
+        with TemporaryDirectory() as temp:
+            root = Path(temp)
+            private = root / "original-private.html"
+            private.write_text(self.original, encoding="utf-8")
+            source = root / "source-first.json"
+            source.write_text(json.dumps(draft), encoding="utf-8")
+            output = root / "canonical-private.html"
+            with patch("engine.v2.create_guide.BASELINE_SHA", self.baseline_hash):
+                report = create_private_preview(private, source, output)
+            self.assertTrue(output.exists())
+            self.assertEqual(report["arcane_priority_rows"], 34)
+            self.assertEqual(
+                report["content_basis"], "canonical_source_rules_review_required"
+            )
+            self.assertFalse(report["gameplay_accuracy_verified"])
+            self.assertFalse(report["approved_visual_baseline_verified"])
+            self.assertIn(
+                'data-canonical-id="source-sunfury-1"',
+                output.read_text(encoding="utf-8")
             )
 
     def test_real_draft_is_review_gated_with_two_heroes_and_four_scenarios(self):
