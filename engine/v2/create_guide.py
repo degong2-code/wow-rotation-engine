@@ -71,8 +71,8 @@ def validate_draft(doc: dict) -> dict:
         raise ValueError("Arcane default hero must be declared")
 
     sources = doc["sources"]
-    if len(sources) < 2:
-        raise ValueError("Require at least two source references")
+    if not isinstance(sources, list) or not sources:
+        raise ValueError("At least one baseline source reference is required")
     for src in sources:
         parsed = urlsplit(src["url"])
         if parsed.scheme != "https" or parsed.hostname not in SOURCE_HOSTS:
