@@ -504,5 +504,117 @@ class SourceProjectionContractTests(unittest.TestCase):
         self.assertEqual(project_priority_view([rule],view_context={"hero":"A"},min_targets=1,max_targets=1),[])
         self.assertEqual(len(project_priority_view([rule],view_context={"hero":"A"},min_targets=2)),1)
 
+
+class PriorityShadowGeneralizationTests(unittest.TestCase):
+    """Regression: a higher generic guard must not erase a lower exception."""
+
+    @staticmethod
+    def c(field, op, value):
+        return SourceProjectionContractTests.condition(field, op, value)
+
+    @staticmethod
+    def r(ident, rank, action, when=None, *, hero="A"):
+        return SourceProjectionContractTests.canonical(
+            ident, rank, action, when, hero=hero
+        )
+
+    def audit(self, rules, *, hero="A", min_targets=1, max_targets=1):
+        from engine.gameplay_decision_qa import audit_priority_shadowing
+        return audit_priority_shadowing(
+            rules, view_context={"hero": hero},
+            min_targets=min_targets, max_targets=max_targets,
+        )
+
+    def test_survival_style_zero_stack_guard_masks_talent_exception(self):
+        c, r = self.c, self.r
+        rules = [
+            r("upper-general", 1, "Synthetic Builder", [c("stacks", "eq", 0)]),
+            r("lower-talent", 6, "Synthetic Finisher", [
+                c("stacks", "eq", 0), c("special_talent", "eq", True)
+            ]),
+            r("filler", 7, "Synthetic Filler"),
+        ]
+        audit = self.audit(rules)
+        self.assertEqual(audit["different_action_shadowed_view_ranks"], [2])
+        self.assertTrue(audit["priority_shadow_review_required"])
+        self.assertFalse(audit["source_meaning_verified"])
+        self.assertFalse(audit["automatic_publish_allowed"])
+        self.assertNotIn("Synthetic Finisher", json.dumps(audit))
+
+    def test_valid_mutually_exclusive_proc_paths_are_not_flagged(self):
+        c, r = self.c, self.r
+        audit = self.audit([
+            r("proc", 1, "Synthetic Spend", [c("proc", "eq", True)]),
+            r("no-proc", 2, "Synthetic Build", [c("proc", "eq", False)]),
+        ])
+        self.assertEqual(audit["provably_shadowed_view_ranks"], [])
+
+    def test_numeric_threshold_implication_is_one_directional(self):
+        c, r = self.c, self.r
+        audit = self.audit([
+            r("range", 1, "Synthetic Range", [c("stacks", "lt", 3)]),
+            r("zero", 2, "Synthetic Zero", [c("stacks", "eq", 0)]),
+        ])
+        self.assertEqual(audit["different_action_shadowed_view_ranks"], [2])
+        audit = self.audit([
+            r("zero", 1, "Synthetic Zero", [c("stacks", "eq", 0)]),
+            r("range", 2, "Synthetic Range", [c("stacks", "lt", 3)]),
+        ])
+        self.assertEqual(audit["provably_shadowed_view_ranks"], [])
+
+    def test_source_or_clause_preserved_in_implication(self):
+        c, r = self.c, self.r
+        a = r("upper", 1, "Synthetic Arcane One")
+        a.pop("when")
+        a["when_any"] = [[c("charges", "gte", 3)],
+                         [c("talent", "eq", True)]]
+        b = r("lower", 2, "Synthetic Arcane Two",
+              [c("charges", "gte", 4)])
+        self.assertEqual(
+            self.audit([a, b])["different_action_shadowed_view_ranks"], [2]
+        )
+
+    def test_unmodeled_upper_exception_must_not_claim_proof(self):
+        c, r = self.c, self.r
+        upper = r("upper", 1, "Synthetic Command", [c("stacks", "eq", 0)])
+        upper["exceptions"] = ["In a specific unmodeled phase, skip this"]
+        lower = r("lower", 2, "Synthetic Spend", [c("stacks", "eq", 0)])
+        self.assertEqual(
+            self.audit([upper, lower])["provably_shadowed_view_ranks"], []
+        )
+
+    def test_target_view_and_other_hero_do_not_produce_false_alert(self):
+        c, r = self.c, self.r
+        rules = [
+            r("aoe-only", 1, "Synthetic AOE",
+              [c("target_count", "gte", 3)]),
+            r("single", 2, "Synthetic Single"),
+            r("other-hero", 1, "Synthetic Other", hero="B"),
+        ]
+        result = self.audit(rules)
+        self.assertEqual(result["view_row_count"], 1)
+        self.assertEqual(result["provably_shadowed_view_ranks"], [])
+
+    def test_same_action_is_redundancy_not_different_action(self):
+        c, r = self.c, self.r
+        audit = self.audit([
+            r("first", 1, "Synthetic Action", [c("stacks", "gte", 2)]),
+            r("second", 2, "Synthetic Action", [c("stacks", "gte", 3)]),
+        ])
+        self.assertEqual(audit["same_action_shadowed_view_ranks"], [2])
+        self.assertEqual(audit["different_action_shadowed_view_ranks"], [])
+        self.assertFalse(audit["priority_shadow_review_required"])
+
+    def test_same_action_guard_prevents_false_different_action_claim(self):
+        r = self.r
+        audit = self.audit([
+            r("first", 1, "Synthetic A"),
+            r("second", 2, "Synthetic B"),
+            r("third", 3, "Synthetic A"),
+        ])
+        self.assertIn(3, audit["same_action_shadowed_view_ranks"])
+        self.assertNotIn(3, audit["different_action_shadowed_view_ranks"])
+
+
 if __name__ == "__main__":
     unittest.main()
