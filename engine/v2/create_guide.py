@@ -54,6 +54,53 @@ def _replace_once(text: str, old: str, new: str, description: str) -> str:
     return text.replace(old, new, 1)
 
 
+def project_canonical_arcane_draft(doc: dict) -> dict:
+    """Populate actual CREATE rows from one reviewed canonical priority list.
+
+    Existing legacy drafts without canonical_priority_rules are unchanged.
+    This does not verify the source's gameplay semantics or release the draft.
+    """
+    if "canonical_priority_rules" not in doc:
+        return doc
+    from copy import deepcopy
+    from ..gameplay_decision_qa import project_priority_view, audit_priority_view
+
+    source_rules = doc["canonical_priority_rules"]
+    if not isinstance(source_rules, list) or not source_rules:
+        raise ValueError("Nonempty canonical priority rules required")
+    projected_doc = deepcopy(doc)
+    for group in projected_doc["rotation_groups"]:
+        hero, mode = group["hero"], group["mode"]
+        low, high = (1, 1) if mode == "single" else (2, None)
+        view_context = {"hero": hero}
+        canonical_rows = project_priority_view(
+            source_rules, view_context=view_context,
+            min_targets=low, max_targets=high,
+        )
+        check = audit_priority_view(
+            source_rules, canonical_rows, view_context=view_context,
+            min_targets=low, max_targets=high,
+        )
+        if not check["projection_preserved"] or not canonical_rows:
+            raise ValueError("Canonical source projection incomplete")
+        group["rows"] = [
+            {
+                "id": f'{group["id"]}:row-{i}', "order": i,
+                "spell": row["action"],
+                "condition": row["condition_text"],
+                "comment": row["reason"],
+                "review": "needs_manual_gameplay_review",
+                "source_rule_id": row["source_rule_id"],
+                "source_rank": row["source_rank"],
+                "source_when": deepcopy(row.get("when", [])),
+                "source_when_any": deepcopy(row.get("when_any")),
+                "source_evidence": deepcopy(row.get("evidence")),
+            }
+            for i, row in enumerate(canonical_rows, 1)
+        ]
+    return projected_doc
+
+
 def validate_draft(doc: dict) -> dict:
     if not isinstance(doc, dict) or doc.get("schema_version") != "new-v11-guide-v1":
         raise ValueError("Unsupported new-guide schema")
@@ -212,12 +259,25 @@ def _aside(title: str, body: str, *, caution: bool = False) -> str:
 def _priority(group: dict, spells: dict, number: str, note_for=None) -> str:
     rows = []
     for row in group["rows"]:
+        canonical = "source_rule_id" in row
+        source_attrs = (
+            ' data-canonical-id="' + _e(row["source_rule_id"]) + '"'
+            + ' data-source-rank="' + str(row["source_rank"]) + '"'
+            if canonical else ""
+        )
+        rationale = (
+            '<div class="muted"><strong>이유</strong> '
+            + _e(row["comment"]) + '</div>'
+            if canonical else
+            (note_for("rule", row["id"]) if note_for else "")
+            + '<div class="muted">' + _e(row["comment"]) + '</div>'
+        )
         rows.append(
-            '<tr data-rule-id="' + _e(row["id"]) + '"><td>' + str(row["order"])
+            '<tr data-rule-id="' + _e(row["id"]) + '"' + source_attrs
+            + '><td>' + str(row["order"])
             + '</td><td>' + _spell(spells[row["spell"]])
             + '</td><td><b>' + _e(row["condition"])
-            + '</b> ' + (note_for("rule", row["id"]) if note_for else "") + '<div class="muted">' + _e(row["comment"])
-            + '</div></td></tr>'
+            + '</b> ' + rationale + '</td></tr>'
         )
     return (
         '<h3>' + _e(number + " " + group["target_label"]) + '</h3>'
@@ -247,6 +307,7 @@ def _section(section_id: str, heading: str, body: str, *, number: int = 0,
 
 
 def render_arcane(doc: dict) -> dict:
+    doc = project_canonical_arcane_draft(doc)
     meta = validate_draft(doc)
     spellmap = meta["spells"]
     spells_by_key = {spell["key"]: spell for spell in doc["spells"]}
@@ -396,7 +457,8 @@ def render_arcane(doc: dict) -> dict:
     ) + '</ul>'
     notice = _aside(
         '검토 전 초안',
-        '현재 비전의 34개 우선순위 행과 10개 고급 팁은 게임플레이 검토 중입니다. '
+        f'현재 비전의 {meta["row_count"]}개 표시 우선순위 행과 '
+        '고급 팁은 게임플레이 검토 중입니다. '
         '최종 승인 전에는 세부 수치를 확정 가이드로 취급하지 마세요.',
         caution=True,
     )
