@@ -6,6 +6,14 @@
 > **이 문서는 새 채팅 복원 진입점**이다. **최상위 운영 정책은 [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md)**, 구체적 품질 게이트는 [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), 집필 절차는 [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)을 정본으로 삼으며 중복 복제하지 않는다. **과거 사례로 범용화 가치/오탐을 검증하는 후향적 사례집은 [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md) 참조.**
 
 
+## 0.10 실제 제품 실증 — 생존 사냥꾼 제로베이스, 오래된 외부 기준도 차단 (2026-11-13)
+
+- **실제 개인 단일 HTML:** `wow_rotation_v11_survival_zero_base_1215_REVIEW.html` **999,807B**, SHA256 **`d8632b21f92453c4aa14ef66eaf0c893cf1cfe80a61222f3b33711c0d870b36d`**. 과거 생존 V1~V3·기존 고양 교본의 게임 내용을 정본으로 재사용하지 않고 **최신 12.1.5 출처에서 재집필**. 표현은 사용자 긍정 평가된 V11/비전의 공통 시각 문법만 사용.
+- **출처 라벨 자체가 틀릴 수 있음:** [Method 12.1.5 검색 색인](https://www.method.gg/guides/survival-hunter/playstyle-and-rotation)에 삭제된 `Flamefang Pitch`가 남았음. [Blizzard 12.1 공식 패치 노트](https://worldofwarcraft.blizzard.com/en-us/news/24293281)에서 해당 기술 삭제를 확인해 **신규 사용 우선순위에서 배제**. Wowhead 12.1.5 색인과 직접 열린 12.0.7 페이지 충돌이 있어 이 둘을 섞지 않음. [Icy Veins 12.1.5 / 2026-10-12](https://www.icy-veins.com/wow/survival-hunter-pve-dps-rotation-cooldowns-abilities) 검색 색인의 구체적 조건을 **예외적 단일 편집 기준**으로 채택하되 실제 선택형 원시 HTML 전수 검증은 못 했으므로 **Q0/Q1 REVIEW**.
+- **제품 구조/검사:** V11 기존 **7개 manual-view 원시 시작/종료 span 7/7 바이트 동일**, 신규 생존 1개(총 8), **무리의 지도자 ST9/AoE10 + 파수꾼 ST10/AoE11 = 4표/40행**, 4개 시간순 오프너 **편집 예시/선택 분기 REVIEW**, 8개 상태→다음 행동, 2개 영웅별 요약표, 공개 이유/고급 `?` 3개/기술 glossary. 영웅별 UI·GCD/창끝/Twin Fangs/폭탄 표식 직접 표시. 게임 사실을 기존 생존 V3에서 복사하지 않았음.
+- **Chromium PC 1365×880 / 모바일 390×844:** 생존 기본 선택, 메뉴 사냥꾼→생존 펼침, 영웅 전환, 기존 화염 복귀, 기술 팁, 목차 해시, 가로 overflow 0 / JS 오류 0 **Q4 PASS**. PC 요약/첫 표 약 732/572px, 모바일 910/826px. **사용자 Q3 가독성 평가는 미실시**, 최신 선택형 원문 전수 미확보로 게임 Q0/Q1 최종 미승인.
+- **제품·근본 원인 상세:** [SURVIVAL_ZERO_BASE_REPRODUCTION_20261113](SURVIVAL_ZERO_BASE_REPRODUCTION_20261113.md). 새 미세 검사기나 독립 엔진을 개발하지 않았고 **실제 하나의 교본 제품과 최신 원문 선택 오류**에 집중. 다음 우선순위는 실제 12.1.5 선택형 원문 전수 확보로 Q0/Q1 리뷰 사유를 줄이는 것. 이 개인 HTML은 공개 GitHub에 업로드/승격하지 않음; PR #20 Draft 유지.
+
 ## 0.9 사용자 핵심 진단 → 기준본 선택 규칙 및 CREATE 실행 기본값 수정 (2026-11-13)
 
 **최신 사용자 평가:** 고양 제로베이스 V11형 HTML에 “훨씬 낫다”, 그리고 **“잘못된 기준을 답습해서 그렇지 뭐. 당연한 거야”**라고 지적. 제로베이스 결과에 대한 **상대적 디자인/가독성 긍정**이지 게임 Q0/Q1 정확성 또는 모든 기종 Q3 최종 승인으로 과장하지 않는다. 근본 원인은 HTML/CSS 한 건이 아니라 **실패한 결과물을 차기 제작의 콘텐츠·시각 기준으로 선택한 것**.
