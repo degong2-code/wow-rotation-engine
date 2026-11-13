@@ -1,0 +1,121 @@
+name: Read-only dynamic DOM probe (synthetic browser fixture)
+
+on:
+  push:
+    branches: [main, 'work/**']
+    paths:
+      - 'engine/live_dom_capture.py'
+      - 'engine/live_dom_bridge.py'
+      - 'engine/source_page_acquire.py'
+      - 'engine/source_acquisition_pipeline.py'
+      - 'tests/test_source_acquisition_pipeline.py'
+      - 'tests/test_source_page_acquire_browser.py'
+      - 'tests/test_live_dom_capture.py'
+      - 'tests/test_live_dom_bridge.py'
+      - 'examples/synthetic-live-dom.html'
+      - '.github/workflows/browser-probe-fixture.yml'
+  pull_request:
+    paths:
+      - 'engine/live_dom_capture.py'
+      - 'engine/live_dom_bridge.py'
+      - 'engine/source_page_acquire.py'
+      - 'engine/source_acquisition_pipeline.py'
+      - 'tests/test_source_acquisition_pipeline.py'
+      - 'tests/test_source_page_acquire_browser.py'
+      - 'tests/test_live_dom_capture.py'
+      - 'tests/test_live_dom_bridge.py'
+      - 'examples/synthetic-live-dom.html'
+      - '.github/workflows/browser-probe-fixture.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-fixture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install optional browser probe dependency
+        run: |
+          python -m pip install "playwright>=1.48,<2"
+          python -m playwright install --with-deps chromium
+      - name: Verify full HTML and MHTML collection in Chromium
+        run: python -m unittest discover -s tests -p 'test_source_page_acquire_browser.py' -v
+      - name: Verify browser HTML passes the common static source pipeline
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          from engine.source_acquisition_pipeline import inspect_and_store
+          fixture=Path('examples/synthetic-source-structure.html').absolute()
+          target=Path('/tmp/synthetic-browser-source')
+          with sync_playwright() as pw:
+              browser=pw.chromium.launch(headless=True)
+              try:
+                  page=browser.new_page()
+                  page.goto(fixture.as_uri())
+                  report=inspect_and_store(dom_html=page.content(), output=target, kind='browser_url')
+                  assert report['guide_body_payloads']==1
+                  assert report['named_tooltip_definition_count']==1
+                  assert not report['real_site_completeness_verified']
+                  assert (target/'analysis.html').exists()
+              finally:
+                  browser.close()
+          PY
+          rm -rf /tmp/synthetic-browser-source
+      - name: Run synthetic dynamic DOM capture regressions
+        run: python -m unittest discover -s tests -p 'test_live_dom_capture.py' -v
+      - name: Verify private capture / public metadata split
+        run: |
+          python -m engine.live_dom_capture \
+            --html examples/synthetic-live-dom.html \
+            --max-states 15 --max-depth 3 \
+            --private-output /tmp/private-capture-fixture.json \
+            --audit-output /tmp/public-capture-audit.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          raw=Path('/tmp/private-capture-fixture.json').read_text()
+          audit=Path('/tmp/public-capture-audit.json').read_text()
+          a=json.loads(audit)
+          assert 'Synthetic Dynamic Rotation' in raw
+          assert 'Synthetic separate referenced tooltip body' in raw
+          assert 'Synthetic separate referenced tooltip body' not in audit
+          assert a['observed_state_count'] >= 5, a['observed_state_count']
+          assert a['full_source_text_in_report'] is False
+          assert a['real_site_completeness_verified'] is False
+          assert a['gameplay_meaning_verified'] is False
+          assert a['automatic_publish_allowed'] is False
+          PY
+          python -m engine.live_dom_bridge \
+            --capture /tmp/private-capture-fixture.json \
+            --specialization "Synthetic Test Specialization" \
+            --patch "synthetic-patch" --revision "fixture-revision" \
+            --private-ledger /tmp/private-source-ledger.json \
+            --audit-output /tmp/public-source-audit.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          private=Path('/tmp/private-source-ledger.json').read_text(encoding='utf-8')
+          public=Path('/tmp/public-source-audit.json').read_text(encoding='utf-8')
+          audit=json.loads(public)
+          assert audit['observation_tip_count'] >= 3
+          assert audit['declared_gap_types']['inventory_not_checked'] >= 1
+          assert not audit['declared_coverage_candidate']
+          assert not audit['real_site_completeness_verified']
+          assert not audit['automatic_publish_allowed']
+          assert 'Synthetic hover-generated additional explanatory rule.' in private
+          assert 'Synthetic hover-generated additional explanatory rule.' not in public
+          assert 'Synthetic separate referenced tooltip body.' in private
+          assert 'Synthetic separate referenced tooltip body.' not in public
+          PY
+          rm -f /tmp/private-source-ledger.json /tmp/public-source-audit.json
+          rm -f /tmp/private-capture-fixture.json /tmp/public-capture-audit.json

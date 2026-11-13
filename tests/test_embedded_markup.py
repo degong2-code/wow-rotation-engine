@@ -1,0 +1,122 @@
+"""Synthetic embedded WHML tests; not a live WoW guide."""
+import json
+import unittest
+from engine.embedded_markup import inspect_embedded_whml
+from engine.source_structure import inspect_html
+
+
+def fixture(body=None):
+    if body is None:
+        body = ('[tabs][tab]Example[/tab][/tabs][toggler id=panel]'
+                '[tooltip name=first]Synthetic unique hidden explanation.[/tooltip]'
+                '[tooltip name=second]Another synthetic note.[/tooltip]'
+                '[span tooltip=first tooltip2=second]?[/span]')
+    return '<script>WH.markup.printHtml(' + json.dumps(body) + ', "guide-body", false);</script>'
+
+
+class EmbeddedWhmlTests(unittest.TestCase):
+    def test_literal_payload_and_multiple_tooltips(self):
+        data = inspect_embedded_whml(fixture())
+        self.assertEqual((data["literal_call_candidates"], data["decoded_payloads"]), (1, 1))
+        p = data["payloads"][0]
+        self.assertEqual(p["target"], "guide-body")
+        self.assertEqual(p["named_tooltip_definitions"], ["first", "second"])
+        self.assertEqual([x["attribute"] for x in p["tooltip_references"]], ["tooltip", "tooltip2"])
+        self.assertEqual(p["components"]["toggler"], 1)
+        self.assertEqual(p["unresolved_reference_names"], [])
+
+    def test_unresolved_and_duplicate_names(self):
+        data = inspect_embedded_whml(fixture("[span tooltip=missing tooltip2=second]?[/span]"))
+        self.assertEqual(data["payloads"][0]["unresolved_reference_names"], ["missing", "second"])
+        data = inspect_embedded_whml(fixture(
+            "[tooltip name=a]One[/tooltip][tooltip name=a]Two[/tooltip]"))
+        self.assertEqual(data["payloads"][0]["duplicate_definition_names"], ["a"])
+
+    def test_nonliteral_source_never_executes(self):
+        data = inspect_embedded_whml("<script>WH.markup.printHtml(variable, 'guide-body');</script>")
+        self.assertEqual(data["decoded_payloads"], 0)
+        self.assertEqual(data["unsupported_nonliteral_calls"], 1)
+        self.assertFalse(data["javascript_executed"])
+
+    def test_no_copyright_text_in_report(self):
+        payload = "[tooltip name=x]Private synthetic source phrase SHOULD NOT LEAK.[/tooltip]"
+        report = json.dumps(inspect_embedded_whml(fixture(payload)))
+        self.assertNotIn("Private synthetic source phrase", report)
+
+    def test_integrates_with_html_structure_inspector(self):
+        result = inspect_html(fixture())
+        self.assertEqual(result["embedded_whml"]["decoded_payloads"], 1)
+        self.assertTrue(result["static_embedded_whml_decoded"])
+        self.assertFalse(result["live_ui_completeness_verified"])
+
+    def test_separate_sidebar_and_guide(self):
+        data = inspect_embedded_whml(
+            '<script>WH.markup.printHtml("[tooltip name=a]X[/tooltip]", "sidebar");'
+            'WH.markup.printHtml("[span tooltip=b]Y[/span]", "guide-body");</script>')
+        self.assertEqual([p["target"] for p in data["payloads"]], ["sidebar", "guide-body"])
+
+    def test_two_groups_six_tabs_and_distinct_bodies(self):
+        group = ('[tabs name="First Group"]'
+                 + ''.join('[tab name="A-' + str(i) + '"]Synthetic A-' + str(i)
+                           + '[/tab]' for i in range(3)) + '[/tabs]')
+        group += ('[tabs name="Second Group"]'
+                  + ''.join('[tab name="B-' + str(i) + '"]Synthetic B-' + str(i)
+                            + '[/tab]' for i in range(3)) + '[/tabs]')
+        report = inspect_embedded_whml(fixture(group))
+        groups = report["payloads"][0]["tab_groups"]
+        self.assertEqual(len(groups), 2)
+        self.assertEqual([len(x["tabs"]) for x in groups], [3, 3])
+        self.assertTrue(all(x["closed"] for x in groups))
+        self.assertTrue(all(tab["closed"] and tab["body_digest"]["characters"] > 0
+                            for group in groups for tab in group["tabs"]))
+        self.assertNotIn("Synthetic A-0", json.dumps(report))
+
+    def test_unclosed_tab_is_detected_as_missing_body(self):
+        report = inspect_embedded_whml(fixture(
+            '[tabs name="x"][tab name="a"]Synthetic unclosed body'))
+        group = report["payloads"][0]["tab_groups"][0]
+        self.assertFalse(group["closed"])
+        self.assertFalse(group["tabs"][0]["closed"])
+        self.assertIn("unclosed_tab_or_tab_group",
+                      report["payloads"][0]["nested_structure_issues"])
+
+
+    def test_conditional_switches_and_named_tooltip_bodies(self):
+        body = (
+            '[display-option="HeroA" radio="Hero" checked]Hero A[/display-option]'
+            '[display-option="HeroB" radio="Hero"]Hero B[/display-option]'
+            '[display-option="PotA" radio="Potion" checked]Potion A[/display-option]'
+            '[display-option="PotB" radio="Potion"]Potion B[/display-option]'
+            '[tooltip name="Why"]Synthetic detailed source condition.[/tooltip]'
+            '[li display-options="(HeroA)&(PotA)"]First[/li]'
+            '[li display-options="(HeroA)&!PotA"]Second[/li]'
+            '[span class=tip tooltip=Why]?</span>'
+        )
+        report = inspect_embedded_whml(fixture(body))["payloads"][0]
+        switches = report["display_switches"]
+        self.assertEqual(len(switches["option_definitions"]), 4)
+        self.assertEqual(switches["radio_groups"]["Potion"], ["PotA", "PotB"])
+        self.assertEqual(switches["conditional_occurrences"], 2)
+        self.assertEqual(switches["unknown_conditional_option_ids"], [])
+        self.assertEqual(len(report["named_tooltip_bodies"]), 1)
+        self.assertTrue(report["named_tooltip_bodies"][0]["body_digest"]["characters"] > 0)
+        import json
+        output = json.dumps(report)
+        self.assertNotIn("Synthetic detailed source condition", output)
+        self.assertNotIn("Hero A", output)
+
+    def test_undefined_conditional_reference_reported(self):
+        body = ('[display-option="Choice" radio="Main"]X[/display-option]'
+                '[li display-options="Choice|Missing"]Explanation[/li]')
+        switches = inspect_embedded_whml(fixture(body))["payloads"][0]["display_switches"]
+        self.assertEqual(switches["unknown_conditional_option_ids"], ["Missing"])
+
+    def test_escaped_quoted_attribute(self):
+        payload = '[tooltip name="tip"]"Escaped" content[/tooltip][span tooltip=tip]?[/span]'
+        p = inspect_embedded_whml(fixture(payload))["payloads"][0]
+        self.assertEqual(p["named_tooltip_definitions"], ["tip"])
+        self.assertEqual(p["unresolved_reference_names"], [])
+
+
+if __name__ == "__main__":
+    unittest.main()

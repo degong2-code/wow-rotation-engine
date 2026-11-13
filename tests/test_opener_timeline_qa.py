@@ -1,0 +1,387 @@
+"""Synthetic normal/negative controls for generic opener transition QA.
+
+These are illustrative event models, NEVER copied source or gameplay proof.
+The 12-context fixture tests cardinality and branch isolation, not the full
+real Enhancement Shaman opener sequence.
+"""
+import json
+from hashlib import sha256
+import unittest
+
+from engine.opener_timeline_qa import SCHEMA, assess_opener_timeline
+
+SOURCE = ("[li][spell=101]Fictional attack[/li]\n"
+          "[li][spell=102]Fictional potion[/li]\n"
+          "[li][spell=103]Fictional prepull[/li]\n"
+          "[li][spell=104]Fictional proc spender[/li]\n")
+DIGEST = sha256(SOURCE.encode()).hexdigest()
+PACKET = {
+    "schema_version": "source-editorial-evidence-private-v1",
+    "payloads": [{"original_whml": SOURCE, "sha256": DIGEST}],
+}
+
+
+def event(ident, action, marker, beat, phase, lane, *, when=None,
+          set_state=None, time_ms=None, time_anchor=None,
+          within_beat_order=None):
+    begin = SOURCE.index(marker)
+    entry = {
+        "id": ident, "action": action, "beat": beat, "phase": phase,
+        "lane": lane, "when": when or [], "set_state": set_state or {},
+        "evidence": [{
+            "payload_sha256": DIGEST, "start": begin, "end": begin + len(marker)
+        }],
+        "action_source_marker": marker,
+    }
+    if time_ms is not None:
+        entry.update(time_ms=time_ms, time_anchor=time_anchor)
+    if within_beat_order is not None:
+        entry["within_beat_order"] = within_beat_order
+    return entry
+
+
+def expected(e):
+    return {k: e[k] for k in ("action", "beat", "phase", "lane",
+                              "time_ms", "time_anchor", "within_beat_order")
+            if k in e}
+
+
+def branch(context, events):
+    return {"context": context, "events": events}
+
+
+def case(ident, context, events, state=None):
+    return {"id": ident, "context": context, "initial_state": state or {},
+            "expected_events": [expected(e) for e in events]}
+
+
+def run(branches, cases, packet=PACKET):
+    return assess_opener_timeline(packet, {
+        "schema_version": SCHEMA, "source_sha256": DIGEST,
+        "branches": branches, "cases": cases,
+    })
+
+
+class OpenerTimelineTests(unittest.TestCase):
+    def test_twelve_nested_choice_contexts_are_distinct(self):
+        """Synthetic 2 x 2 x 3 matrix; only one known timing contrast modeled."""
+        branches, cases = [], []
+        for hero in ("storm", "totem"):
+            for targets in ("single", "aoe"):
+                for potion in ("luster", "recklessness", "potential"):
+                    context = {"hero": hero, "targets": targets,
+                               "potion": potion}
+                    # Illustrative proxy for historical Storm AoE timing change.
+                    early = (hero, targets, potion) == (
+                        "storm", "aoe", "recklessness")
+                    move = event("attack", "Fictional attack", "[spell=101]",
+                                 0 if early else 1,
+                                 "prepull" if early else "pull", "gcd",
+                                 time_ms=-1000 if early else 0,
+                                 time_anchor="start")
+                    items = [move]
+                    branches.append(branch(context, items))
+                    cases.append(case("-".join((hero, targets, potion)), context, items))
+        report = run(branches, cases)
+        self.assertEqual(report["branch_count"], 12)
+        self.assertEqual(report["case_outcome_counts"], {"matched": 12})
+        self.assertTrue(report["all_declared_cases_matched"])
+        self.assertFalse(report["timing_and_gcd_game_mechanics_verified"])
+
+    def test_potion_choice_does_not_merge_exclusive_sequences(self):
+        ca = {"potion": "A"}
+        cb = {"potion": "B"}
+        before = event("a", "Fictional potion", "[spell=102]",
+                       0, "prepull", "off_gcd", time_ms=-12000,
+                       time_anchor="use")
+        at_pull = event("b", "Fictional potion", "[spell=102]",
+                        1, "pull", "off_gcd", time_ms=0, time_anchor="use")
+        result = run([branch(ca, [before]), branch(cb, [at_pull])],
+                     [case("A", ca, [before]), case("B", cb, [at_pull])])
+        self.assertTrue(result["all_declared_cases_matched"])
+
+    def test_optional_cast_changes_next_beat(self):
+        ctx = {"hero": "sample"}
+        flag = {"field": "ready", "op": "eq", "value": True}
+        prep = event("optional", "Fictional prepull", "[spell=103]",
+                     0, "prepull", "gcd", when=[flag],
+                     set_state={"proc": True})
+        spend = event("spender", "Fictional proc spender", "[spell=104]",
+                      1, "combat", "gcd",
+                      when=[{"field": "proc", "op": "eq", "value": True}])
+        result = run([branch(ctx, [prep, spend])], [
+            case("proc", ctx, [prep, spend], {"ready": True, "proc": False}),
+            case("not-ready", ctx, [], {"ready": False, "proc": False}),
+        ])
+        self.assertEqual(result["case_outcome_counts"], {"matched": 2})
+        self.assertEqual(result["unexercised_event_count"], 0)
+
+    def test_missing_guard_state_is_not_assumed_false(self):
+        ctx = {"hero": "sample"}
+        optional = event("optional", "Fictional prepull", "[spell=103]",
+                         0, "prepull", "gcd",
+                         when=[{"field": "ready", "op": "eq", "value": True}])
+        result = run([branch(ctx, [optional])],
+                     [case("unknown", ctx, [], {})])
+        self.assertEqual(result["case_results"][0]["result"], "underdetermined")
+
+    def test_gcd_and_off_gcd_can_share_beat(self):
+        ctx = {"hero": "sample"}
+        attack = event("attack", "Fictional attack", "[spell=101]",
+                       1, "combat", "gcd")
+        potion = event("potion", "Fictional potion", "[spell=102]",
+                       1, "combat", "off_gcd")
+        result = run([branch(ctx, [attack, potion])],
+                     [case("concurrent", ctx, [potion, attack])])
+        self.assertTrue(result["all_declared_cases_matched"])
+
+    def test_explicit_same_gcd_order_detects_reversed_buff_activation(self):
+        ctx = {"spec": "unrelated-example"}
+        buff = event("buff", "Fictional potion", "[spell=102]",
+                     1, "combat", "off_gcd", within_beat_order=0)
+        hit = event("hit", "Fictional attack", "[spell=101]",
+                    1, "combat", "gcd", within_beat_order=1)
+        actual = [buff, hit]
+        good = run([branch(ctx, actual)],
+                   [case("correct", ctx, actual)])
+        self.assertTrue(good["all_declared_cases_matched"])
+        reversed_expectations = [dict(expected(buff), within_beat_order=1),
+                                 dict(expected(hit), within_beat_order=0)]
+        bad = run([branch(ctx, actual)], [{
+            "id": "reversed", "context": ctx,
+            "initial_state": {}, "expected_events": reversed_expectations,
+        }])
+        self.assertEqual(bad["case_results"][0]["result"], "mismatch")
+
+    def test_explicit_final_state_assertion_passes(self):
+        ctx = {"spec": "fictional"}
+        buff = event("buff", "Fictional potion", "[spell=102]",
+                     0, "combat", "off_gcd", set_state={"seeded": True})
+        row = case("post", ctx, [buff], {"seeded": False})
+        row["expected_final_state"] = {"seeded": True}
+        result = run([branch(ctx, [buff])], [row])
+        self.assertTrue(result["all_declared_cases_matched"])
+
+    def test_missing_effect_cannot_pass_declared_postcondition(self):
+        ctx = {"spec": "fictional"}
+        buff = event("buff", "Fictional potion", "[spell=102]",
+                     0, "combat", "off_gcd")
+        row = case("post", ctx, [buff], {"seeded": False})
+        row["expected_final_state"] = {"seeded": True}
+        result = run([branch(ctx, [buff])], [row])
+        self.assertEqual(result["case_results"][0]["result"], "mismatch")
+
+    def test_unobserved_final_field_cannot_be_assumed(self):
+        ctx = {"spec": "fictional"}
+        action = event("act", "Fictional attack", "[spell=101]",
+                       0, "combat", "gcd")
+        row = case("unknown", ctx, [action])
+        row["expected_final_state"] = {"seeded": False}
+        result = run([branch(ctx, [action])], [row])
+        self.assertEqual(result["case_results"][0]["result"], "mismatch")
+
+    def test_final_state_comparison_is_type_strict(self):
+        ctx = {"spec": "fictional"}
+        action = event("act", "Fictional attack", "[spell=101]",
+                       0, "combat", "gcd", set_state={"resource": 1})
+        row = case("typed", ctx, [action])
+        row["expected_final_state"] = {"resource": True}
+        result = run([branch(ctx, [action])], [row])
+        self.assertEqual(result["case_results"][0]["result"], "mismatch")
+
+    def test_final_state_not_exposed_in_public_results(self):
+        ctx = {"spec": "fictional"}
+        action = event("act", "Fictional potion", "[spell=102]",
+                       0, "combat", "off_gcd", set_state={"secret_token": "sensitive"})
+        row = case("secret", ctx, [action])
+        row["expected_final_state"] = {"secret_token": "sensitive"}
+        report = run([branch(ctx, [action])], [row])
+        self.assertTrue(report["all_declared_cases_matched"])
+        self.assertNotIn("sensitive", json.dumps(report))
+        self.assertNotIn("secret_token", json.dumps(report))
+
+    def test_explicit_intra_beat_effect_enables_following_hit(self):
+        ctx = {"spec": "different-hero-specialization"}
+        buff = event("buff", "Fictional potion", "[spell=102]",
+                     1, "combat", "off_gcd", within_beat_order=0,
+                     set_state={"powered": True})
+        hit = event("hit", "Fictional attack", "[spell=101]",
+                    1, "combat", "gcd", within_beat_order=1,
+                    when=[{"field": "powered", "op": "eq", "value": True}])
+        report = run([branch(ctx, [buff, hit])],
+                     [case("active-before-hit", ctx, [buff, hit],
+                           {"powered": False})])
+        self.assertTrue(report["all_declared_cases_matched"])
+
+    def test_reversed_intra_beat_effect_cannot_empower_earlier_hit(self):
+        ctx = {"spec": "different-hero-specialization"}
+        buff = event("buff", "Fictional potion", "[spell=102]",
+                     1, "combat", "off_gcd", within_beat_order=1,
+                     set_state={"powered": True})
+        hit = event("hit", "Fictional attack", "[spell=101]",
+                    1, "combat", "gcd", within_beat_order=0,
+                    when=[{"field": "powered", "op": "eq", "value": True}])
+        report = run([branch(ctx, [buff, hit])],
+                     [case("cannot-act-first", ctx, [buff, hit],
+                           {"powered": False})])
+        self.assertEqual(report["case_results"][0]["result"], "mismatch")
+
+    def test_unordered_events_cannot_read_uncommitted_same_beat_effect(self):
+        ctx = {"spec": "different-hero-specialization"}
+        buff = event("buff", "Fictional potion", "[spell=102]",
+                     1, "combat", "off_gcd", set_state={"powered": True})
+        hit = event("hit", "Fictional attack", "[spell=101]",
+                    1, "combat", "gcd",
+                    when=[{"field": "powered", "op": "eq", "value": True}])
+        report = run([branch(ctx, [buff, hit])],
+                     [case("unordered", ctx, [buff, hit],
+                           {"powered": False})])
+        self.assertEqual(report["case_results"][0]["result"], "mismatch")
+
+    def test_partially_declared_order_does_not_pass(self):
+        ctx = {"spec": "unrelated-example"}
+        before = event("buff", "Fictional potion", "[spell=102]",
+                       1, "combat", "off_gcd", within_beat_order=0)
+        after = event("hit", "Fictional attack", "[spell=101]",
+                      1, "combat", "gcd")
+        report = run([branch(ctx, [before, after])],
+                     [case("partial", ctx, [before, after])])
+        self.assertEqual(report["case_results"][0]["result"], "underdetermined")
+
+    def test_duplicate_explicit_order_is_ambiguous(self):
+        ctx = {"spec": "unrelated-example"}
+        buff = event("buff", "Fictional potion", "[spell=102]",
+                     1, "combat", "off_gcd", within_beat_order=0)
+        hit = event("hit", "Fictional attack", "[spell=101]",
+                    1, "combat", "gcd", within_beat_order=0)
+        report = run([branch(ctx, [buff, hit])],
+                     [case("duplicate", ctx, [buff, hit])])
+        self.assertEqual(report["case_results"][0]["result"], "ambiguous")
+
+    def test_two_gcd_actions_in_same_beat_are_ambiguous(self):
+        ctx = {"hero": "sample"}
+        attack = event("attack", "Fictional attack", "[spell=101]",
+                       1, "combat", "gcd")
+        other = event("other", "Fictional prepull", "[spell=103]",
+                      1, "combat", "gcd")
+        result = run([branch(ctx, [attack, other])],
+                     [case("conflict", ctx, [attack, other])])
+        self.assertEqual(result["case_results"][0]["result"], "ambiguous")
+
+    def test_two_concurrent_events_cannot_write_conflicting_states(self):
+        ctx = {"hero": "sample"}
+        attack = event("attack", "Fictional attack", "[spell=101]",
+                       1, "combat", "gcd", set_state={"proc": True})
+        item = event("item", "Fictional potion", "[spell=102]",
+                     1, "combat", "off_gcd", set_state={"proc": False})
+        result = run([branch(ctx, [attack, item])],
+                     [case("conflict", ctx, [])])
+        self.assertEqual(result["case_results"][0]["result"], "ambiguous")
+
+    def test_state_in_one_beat_is_not_visible_within_same_beat(self):
+        ctx = {"hero": "sample"}
+        attack = event("attack", "Fictional attack", "[spell=101]",
+                       1, "combat", "gcd", set_state={"proc": True})
+        item = event("item", "Fictional potion", "[spell=102]",
+                     1, "combat", "off_gcd",
+                     when=[{"field": "proc", "op": "eq", "value": True}])
+        result = run([branch(ctx, [attack, item])],
+                     [case("prebeat", ctx, [attack], {"proc": False})])
+        self.assertFalse(result["all_declared_cases_matched"])
+        # Unexecuted conditional branch remains unreviewed, not PASS.
+        self.assertIn("unexercised_timeline_events", result["blocker_codes"])
+
+    def test_incorrect_explicit_prepull_timing_is_detected(self):
+        ctx = {"hero": "sample"}
+        early = event("potion", "Fictional potion", "[spell=102]",
+                      0, "prepull", "off_gcd",
+                      time_ms=-12000, time_anchor="use")
+        late = dict(expected(early), time_ms=-1000)
+        result = run([branch(ctx, [early])],
+                     [{"id": "bad", "context": ctx, "initial_state": {},
+                       "expected_events": [late]}])
+        self.assertEqual(result["case_results"][0]["result"], "mismatch")
+
+    def test_time_anchor_must_be_explicit_and_phase_consistent(self):
+        ctx = {"hero": "sample"}
+        malformed = event("potion", "Fictional potion", "[spell=102]",
+                          0, "prepull", "off_gcd",
+                          time_ms=1000, time_anchor="use")
+        with self.assertRaisesRegex(ValueError, "contradicts phase"):
+            run([branch(ctx, [malformed])],
+                [case("bad", ctx, [malformed])])
+
+    def test_uncovered_choice_is_a_blocker(self):
+        a = {"potion": "A"}
+        b = {"potion": "B"}
+        ea = event("a", "Fictional attack", "[spell=101]",
+                   1, "combat", "gcd")
+        eb = event("b", "Fictional potion", "[spell=102]",
+                   0, "prepull", "off_gcd")
+        result = run([branch(a, [ea]), branch(b, [eb])],
+                     [case("A", a, [ea])])
+        self.assertEqual(result["unreviewed_branch_count"], 1)
+        self.assertIn("unreviewed_branch_contexts", result["blocker_codes"])
+
+    def test_later_beat_cannot_return_to_prepull(self):
+        ctx = {"hero": "sample"}
+        at_pull = event("onpull", "Fictional attack", "[spell=101]",
+                        0, "pull", "gcd")
+        prep = event("pre", "Fictional prepull", "[spell=103]",
+                     1, "prepull", "gcd")
+        report = run([branch(ctx, [at_pull, prep])],
+                     [case("bad-phase", ctx, [at_pull, prep])])
+        self.assertEqual(report["case_results"][0]["result"], "ambiguous")
+
+    def test_explicit_start_times_cannot_go_backwards(self):
+        ctx = {"hero": "sample"}
+        early = event("early", "Fictional attack", "[spell=101]",
+                      0, "combat", "gcd", time_ms=2000, time_anchor="start")
+        late = event("late", "Fictional potion", "[spell=102]",
+                     1, "combat", "off_gcd", time_ms=1000, time_anchor="use")
+        report = run([branch(ctx, [early, late])],
+                     [case("bad-time", ctx, [early, late])])
+        self.assertEqual(report["case_results"][0]["result"], "ambiguous")
+
+    def test_source_marker_must_be_in_first_citation(self):
+        ctx = {"hero": "sample"}
+        bad = event("bad", "Fictional potion", "[spell=102]",
+                    1, "combat", "off_gcd")
+        bad["action_source_marker"] = "[spell=104]"
+        report = run([branch(ctx, [bad])], [case("bad", ctx, [bad])])
+        self.assertIn("action_not_in_cited_source_span", report["blocker_codes"])
+
+    def test_source_revision_lock_rejects_mismatch(self):
+        ctx = {"hero": "sample"}
+        item = event("item", "Fictional attack", "[spell=101]",
+                     1, "combat", "gcd")
+        with self.assertRaisesRegex(ValueError, "lock exactly one"):
+            assess_opener_timeline(PACKET, {
+                "schema_version": SCHEMA, "source_sha256": "0" * 64,
+                "branches": [branch(ctx, [item])],
+                "cases": [case("x", ctx, [item])],
+            })
+
+    def test_duplicate_case_ids_are_rejected(self):
+        ctx = {"hero": "sample"}
+        item = event("item", "Fictional attack", "[spell=101]",
+                     1, "combat", "gcd")
+        with self.assertRaisesRegex(ValueError, "Duplicate case id"):
+            run([branch(ctx, [item])], [case("same", ctx, [item]),
+                                        case("same", ctx, [item])])
+
+    def test_same_schema_for_unrelated_spec_and_no_source_text_leak(self):
+        ctx = {"spec": "other", "build": "unrelated"}
+        item = event("item", "Copyrighted private ability", "[spell=101]",
+                     1, "combat", "gcd")
+        report = run([branch(ctx, [item])],
+                     [case("private secret case", ctx, [item])])
+        serialized = json.dumps(report)
+        self.assertTrue(report["all_declared_cases_matched"])
+        self.assertNotIn("Copyrighted private ability", serialized)
+        self.assertNotIn("private secret case", serialized)
+        self.assertFalse(report["automatic_publish_allowed"])
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -7,3 +7,10 @@ __pycache__/
 dist/
 .pytest_cache/
 .DS_Store
+
+# Keep captured web pages and their resource folders out of PUBLIC GitHub.
+private_sources/
+saved_pages/
+*_files/
+*.mhtml
+*.mht

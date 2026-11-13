@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Synthetic Dynamic Guide</title>
+<style>[hidden]{display:none} .tip{display:none;position:absolute;top:30px;left:50px;background:white;border:1px solid gray;padding:8px}button:hover + .tip{display:block}</style>
+<main>
+<h1>Synthetic Dynamic Rotation</h1>
+<nav id="heroes"><button id="heroA" aria-controls="a" aria-expanded="false">Hero Alpha</button><button id="heroB" aria-controls="b" aria-expanded="false">Hero Beta</button></nav>
+<div id="a" hidden>
+  <button id="a-single" role="tab" aria-controls="a-st" aria-selected="false">Single</button>
+  <button id="a-aoe" role="tab" aria-controls="a-aoe-body" aria-selected="false">AoE</button>
+  <article id="a-st" hidden><h2>Alpha Single</h2><p>Rule alpha single, stacks at 10.</p>
+    <table><tr id="st-row"><td>Example action <button type="button" id="tipbutton" title="Synthetic trigger tooltip" aria-describedby="tiptext">?</button>
+    <span id="tiptext" hidden>Synthetic separate referenced tooltip body.</span>
+    </td></tr></table>
+  </article>
+  <article id="a-aoe-body" hidden><h2>Alpha Area</h2><p>Rule alpha AoE, stacks at 9.</p></article>
+</div>
+<div id="b" hidden>
+  <p>Beta initial rule. <span class="bare-question">?</span></p>
+  <select id="betaMode" aria-label="Beta additional choice"><option value="normal">Normal</option><option value="alternate">Alternate</option></select>
+  <section id="beta-extra" hidden><h2>Beta Special</h2><p>Conditional hidden rule visible only after selected option.</p></section>
+  <details><summary>Further detail</summary><p>Expanded synthetic advanced note.</p></details>
+  <label><input type="checkbox" id="betaSwitch">Extra switch</label>
+</div>
+</main>
+<script>
+const heroes=['a','b'];
+function hero(which){for(const id of heroes){const panel=document.getElementById(id), button=document.getElementById('hero'+id.toUpperCase());
+ const active=id===which;panel.hidden=!active;button.setAttribute('aria-expanded',String(active));}
+}
+for(const id of heroes){document.getElementById('hero'+id.toUpperCase()).addEventListener('click',()=>hero(id));}
+for(const id of ['a-st','a-aoe-body']){const button=document.querySelector('[aria-controls="'+id+'"]');
+ button.addEventListener('click',()=>{for(const other of ['a-st','a-aoe-body'])document.getElementById(other).hidden=other!==id;
+ for(const el of document.querySelectorAll('#a [role="tab"]'))el.setAttribute('aria-selected',String(el===button));});}
+const bareQuestion=document.querySelector('.bare-question');
+bareQuestion.addEventListener('mouseenter',()=>{
+ const tip=document.createElement('div');
+ tip.id='synthetic-bare-tip';
+ tip.setAttribute('role','tooltip');
+ tip.textContent='Synthetic tooltip only available from a bare question mark.';
+ document.body.appendChild(tip);
+});
+bareQuestion.addEventListener('mouseleave',()=>document.getElementById('synthetic-bare-tip')?.remove());
+const tipButton=document.getElementById('tipbutton');
+tipButton.addEventListener('mouseenter',()=>{
+ const tip=document.createElement('div');
+ tip.setAttribute('role','tooltip');
+ tip.id='runtime-synthetic-overlay';
+ tip.textContent='Synthetic hover-generated additional explanatory rule.';
+ document.body.appendChild(tip);
+});
+tipButton.addEventListener('mouseleave',()=>{
+ document.getElementById('runtime-synthetic-overlay')?.remove();
+});
+document.getElementById('betaMode').addEventListener('change',e=>{
+ document.getElementById('beta-extra').hidden=e.target.value!=='alternate';});
+</script></html>

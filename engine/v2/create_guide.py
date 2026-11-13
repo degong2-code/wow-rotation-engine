@@ -54,6 +54,64 @@ def _replace_once(text: str, old: str, new: str, description: str) -> str:
     return text.replace(old, new, 1)
 
 
+def project_canonical_arcane_draft(doc: dict) -> dict:
+    """Populate actual CREATE rows from one reviewed canonical priority list.
+
+    Existing legacy drafts without canonical_priority_rules are unchanged.
+    This does not verify the source's gameplay semantics or release the draft.
+    """
+    if "canonical_priority_rules" not in doc:
+        return doc
+    from copy import deepcopy
+    from ..gameplay_decision_qa import project_priority_view, audit_priority_view
+
+    source_rules = doc["canonical_priority_rules"]
+    if not isinstance(source_rules, list) or not source_rules:
+        raise ValueError("Nonempty canonical priority rules required")
+    projected_doc = deepcopy(doc)
+    for group in projected_doc["rotation_groups"]:
+        hero, mode = group["hero"], group["mode"]
+        low, high = (1, 1) if mode == "single" else (2, None)
+        view_context = {"hero": hero}
+        canonical_rows = project_priority_view(
+            source_rules, view_context=view_context,
+            min_targets=low, max_targets=high,
+        )
+        check = audit_priority_view(
+            source_rules, canonical_rows, view_context=view_context,
+            min_targets=low, max_targets=high,
+        )
+        if not check["projection_preserved"] or not canonical_rows:
+            raise ValueError("Canonical source projection incomplete")
+        group["rows"] = [
+            {
+                "id": f'{group["id"]}:row-{i}', "order": i,
+                "spell": row["action"],
+                "condition": row["condition_text"],
+                "comment": row["reason"],
+                "review": "needs_manual_gameplay_review",
+                "source_rule_id": row["source_rule_id"],
+                "source_rank": row["source_rank"],
+                "source_when": deepcopy(row.get("when", [])),
+                "source_when_any": deepcopy(row.get("when_any")),
+                "source_evidence": deepcopy(row.get("evidence")),
+                "source_note": row.get("note", ""),
+            }
+            for i, row in enumerate(canonical_rows, 1)
+        ]
+    # Legacy annotation IDs were attached to hand-authored view-row numbers.
+    # Their meanings are NOT transferable after canonical source projection.
+    # Keep only existing mechanism notes; rule-specific advanced notes must be
+    # explicitly re-grounded to the new source rule IDs before reintroduction.
+    annotations = projected_doc.get("editorial", {}).get("annotations", {})
+    if isinstance(annotations, dict) and isinstance(annotations.get("notes"), list):
+        annotations["notes"] = [
+            note for note in annotations["notes"]
+            if note.get("target_type") != "rule"
+        ]
+    return projected_doc
+
+
 def validate_draft(doc: dict) -> dict:
     if not isinstance(doc, dict) or doc.get("schema_version") != "new-v11-guide-v1":
         raise ValueError("Unsupported new-guide schema")
@@ -71,8 +129,8 @@ def validate_draft(doc: dict) -> dict:
         raise ValueError("Arcane default hero must be declared")
 
     sources = doc["sources"]
-    if len(sources) < 2:
-        raise ValueError("Require at least two source references")
+    if not isinstance(sources, list) or not sources:
+        raise ValueError("At least one baseline source reference is required")
     for src in sources:
         parsed = urlsplit(src["url"])
         if parsed.scheme != "https" or parsed.hostname not in SOURCE_HOSTS:
@@ -212,12 +270,30 @@ def _aside(title: str, body: str, *, caution: bool = False) -> str:
 def _priority(group: dict, spells: dict, number: str, note_for=None) -> str:
     rows = []
     for row in group["rows"]:
+        canonical = "source_rule_id" in row
+        source_attrs = (
+            ' data-canonical-id="' + _e(row["source_rule_id"]) + '"'
+            + ' data-source-rank="' + str(row["source_rank"]) + '"'
+            if canonical else ""
+        )
+        rationale = (
+            '<div class="muted"><strong>이유</strong> '
+            + _e(row["comment"]) + '</div>'
+            + (
+                '<div class="muted"><strong>참고</strong> '
+                + _e(row["source_note"]) + '</div>'
+                if row.get("source_note") else ""
+            )
+            if canonical else
+            (note_for("rule", row["id"]) if note_for else "")
+            + '<div class="muted">' + _e(row["comment"]) + '</div>'
+        )
         rows.append(
-            '<tr data-rule-id="' + _e(row["id"]) + '"><td>' + str(row["order"])
+            '<tr data-rule-id="' + _e(row["id"]) + '"' + source_attrs
+            + '><td>' + str(row["order"])
             + '</td><td>' + _spell(spells[row["spell"]])
             + '</td><td><b>' + _e(row["condition"])
-            + '</b> ' + (note_for("rule", row["id"]) if note_for else "") + '<div class="muted">' + _e(row["comment"])
-            + '</div></td></tr>'
+            + '</b> ' + rationale + '</td></tr>'
         )
     return (
         '<h3>' + _e(number + " " + group["target_label"]) + '</h3>'
@@ -247,6 +323,7 @@ def _section(section_id: str, heading: str, body: str, *, number: int = 0,
 
 
 def render_arcane(doc: dict) -> dict:
+    doc = project_canonical_arcane_draft(doc)
     meta = validate_draft(doc)
     spellmap = meta["spells"]
     spells_by_key = {spell["key"]: spell for spell in doc["spells"]}
@@ -396,7 +473,8 @@ def render_arcane(doc: dict) -> dict:
     ) + '</ul>'
     notice = _aside(
         '검토 전 초안',
-        '현재 비전의 34개 우선순위 행과 10개 고급 팁은 게임플레이 검토 중입니다. '
+        f'현재 비전의 {meta["row_count"]}개 표시 우선순위 행과 '
+        '고급 팁은 게임플레이 검토 중입니다. '
         '최종 승인 전에는 세부 수치를 확정 가이드로 취급하지 마세요.',
         caution=True,
     )
@@ -568,7 +646,13 @@ def create_arcane(source: bytes, draft: dict) -> tuple[bytes, dict]:
 
 
 def create_private_preview(source_path: Path, draft_path: Path,
-                           output_path: Path, *, evidence_path: Path | None = None) -> dict:
+                           output_path: Path, *, evidence_path: Path | None = None,
+                           allow_legacy_review: bool = False) -> dict:
+    """Private CREATE: canonical source rules by default, legacy only by opt-in.
+
+    A past unapproved guide must never silently become the next production
+    baseline. Legacy opt-in is for historical comparison, not product approval.
+    """
     target = Path(output_path).resolve()
     root = ROOT.resolve()
     if target == root or target.is_relative_to(root):
@@ -578,15 +662,44 @@ def create_private_preview(source_path: Path, draft_path: Path,
     if target.exists():
         raise FileExistsError("Refusing to overwrite existing Arcane preview")
     draft = json.loads(Path(draft_path).read_text(encoding="utf-8"))
+    has_canonical = isinstance(draft.get("canonical_priority_rules"), list) and bool(
+        draft["canonical_priority_rules"]
+    )
+    if not has_canonical and not allow_legacy_review:
+        raise ValueError(
+            "Legacy handwritten draft is not a valid CREATE baseline. "
+            "Re-extract patch-aligned source decisions and provide canonical_priority_rules; "
+            "use --legacy-review-only solely to reproduce historical unapproved previews."
+        )
     evidence_file = (
         Path(evidence_path) if evidence_path is not None
         else ROOT / "content" / "new_guides" / "arcane_rule_source_audit.json"
     )
-    source_audit = audit_rule_sources(
-        draft, json.loads(evidence_file.read_text(encoding="utf-8"))
-    )
+    if "canonical_priority_rules" in draft:
+        # The old per-handwritten-row audit cannot certify a new canonical
+        # source mapping. Never reuse its 34-row evidence IDs for these views.
+        # This path produces a private REVIEW artifact; source completeness
+        # still requires independent WHML and dynamic-option verification.
+        source_audit = {
+            "status": "REVIEW",
+            "source_rule_count": len(draft["canonical_priority_rules"]),
+            "reason_code": "canonical_source_meaning_and_exact_spans_not_certified",
+            "full_condition_verified": False,
+            "gameplay_approved": False,
+            "automatic_publish_allowed": False,
+        }
+    else:
+        source_audit = audit_rule_sources(
+            draft, json.loads(evidence_file.read_text(encoding="utf-8"))
+        )
     full, report = create_arcane(Path(source_path).read_bytes(), draft)
     report["source_audit"] = source_audit
+    report["content_basis"] = (
+        "canonical_source_rules_review_required" if has_canonical
+        else "historical_legacy_comparison_only"
+    )
+    report["approved_visual_baseline_verified"] = False
+    report["gameplay_accuracy_verified"] = False
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_bytes(full)
     return report
@@ -595,7 +708,14 @@ def create_private_preview(source_path: Path, draft_path: Path,
 def main() -> int:
     parser = argparse.ArgumentParser(description="Add review-pending Arcane to private V11")
     parser.add_argument("source", type=Path)
-    parser.add_argument("--draft", type=Path, default=ROOT / "content" / "new_guides" / "arcane.json")
+    parser.add_argument(
+        "--draft", type=Path, required=True,
+        help="Explicit source-first draft with canonical_priority_rules; no silent legacy default.",
+    )
+    parser.add_argument(
+        "--legacy-review-only", action="store_true",
+        help="Explicitly reproduce an unapproved historical handwritten draft for comparison only.",
+    )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument(
         "--evidence", type=Path,
@@ -603,7 +723,8 @@ def main() -> int:
     )
     args = parser.parse_args()
     report = create_private_preview(
-        args.source, args.draft, args.output, evidence_path=args.evidence
+        args.source, args.draft, args.output, evidence_path=args.evidence,
+        allow_legacy_review=args.legacy_review_only,
     )
     print(json.dumps(report, ensure_ascii=False, indent=2))
     return 0

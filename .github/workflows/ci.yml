@@ -24,6 +24,107 @@ jobs:
         run: python -m pip install -r requirements-v2.txt
       - name: Compile source
         run: python -m compileall -q engine tests
+      - name: Verify synthetic source coverage never becomes publish-ready
+        run: |
+          python -m engine.source_coverage --input examples/synthetic-source-coverage.json --output dist/source-coverage-audit.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result=json.loads(Path("dist/source-coverage-audit.json").read_text(encoding="utf-8"))
+          assert result["declared_coverage_candidate"] is False
+          assert result["real_site_completeness_verified"] is False
+          assert result["gameplay_meaning_verified"] is False
+          assert result["automatic_publish_allowed"] is False
+          assert result["source_text_in_report"] is False
+          assert "unvisited_choice" in {g["type"] for g in result["gaps"]}
+          PY
+      - name: Verify synthetic static HTML and embedded WHML
+        run: |
+          python -m engine.source_structure --input examples/synthetic-source-structure.html --output dist/html-structure-audit.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path('dist/html-structure-audit.json').read_text(encoding='utf8'))
+          assert len(report['hidden_region_candidates']) >= 3
+          assert len(report['tooltip_trigger_candidates']) >= 1
+          assert report['embedded_whml']['decoded_payloads'] == 1
+          assert report['embedded_whml']['payloads'][0]['target'] == 'guide-body'
+          assert report['source_text_in_report'] is False
+          assert report['live_ui_completeness_verified'] is False
+          assert report['automatic_publish_allowed'] is False
+          PY
+      - name: Reconcile synthetic HTML candidates with incomplete source capture
+        run: |
+          python -m engine.source_reconcile --structure dist/html-structure-audit.json --observations examples/synthetic-source-coverage.json --output dist/source-reconcile-audit.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path("dist/source-reconcile-audit.json").read_text(encoding="utf-8"))
+          assert report["structure_candidate_count"] > 0
+          assert report["unmapped_candidates"]
+          assert report["declared_observation_gaps"]
+          assert report["candidate_comparison_complete"] is False
+          assert report["real_site_completeness_verified"] is False
+          assert report["gameplay_meaning_verified"] is False
+          assert report["source_text_in_report"] is False
+          assert report["automatic_publish_allowed"] is False
+          PY
+      - name: Smoke-test two pinned historical Wowhead HTML fixtures (not current guides)
+        run: |
+          set -euo pipefail
+          base=https://raw.githubusercontent.com/aurokin/warcraft_cli/376f5aec0aad29b4cf4e290b2879ec3e91870fde/tests/fixtures/wowhead
+          curl -fsSL --retry 2 --max-time 30 "$base/guide_283_page.html" -o /tmp/historical-tabs.html
+          curl -fsSL --retry 2 --max-time 30 "$base/guide_3087_page.html" -o /tmp/historical-notabs.html
+          python -m engine.source_structure --input /tmp/historical-tabs.html --output /tmp/historical-tabs-audit.json
+          python -m engine.source_structure --input /tmp/historical-notabs.html --output /tmp/historical-notabs-audit.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path('/tmp/historical-tabs-audit.json').read_text(encoding='utf8'))
+          b=json.loads(Path('/tmp/historical-notabs-audit.json').read_text(encoding='utf8'))
+          aa=[p for p in a['embedded_whml']['payloads'] if p['target']=='guide-body']
+          bb=[p for p in b['embedded_whml']['payloads'] if p['target']=='guide-body']
+          assert len(aa)==len(bb)==1
+          assert a['embedded_whml']['unsupported_nonliteral_calls']==1
+          assert b['embedded_whml']['unsupported_nonliteral_calls']==1
+          groups=aa[0]['tab_groups']
+          assert len(groups)==2 and [len(g['tabs']) for g in groups]==[3,3]
+          assert all(tab['closed'] and tab['body_digest']['characters']>0 for g in groups for tab in g['tabs'])
+          assert bb[0]['tab_groups']==[]
+          assert a['source_text_in_report'] is False and b['source_text_in_report'] is False
+          assert not a['live_ui_completeness_verified'] and not b['live_ui_completeness_verified']
+          assert not a['automatic_publish_allowed'] and not b['automatic_publish_allowed']
+          print('REAL HISTORICAL HTML: two groups/six tab bodies versus no tab groups; not current-guide verification')
+          PY
+          rm -f /tmp/historical-tabs.html /tmp/historical-notabs.html /tmp/historical-tabs-audit.json /tmp/historical-notabs-audit.json
+      - name: Run one-command synthetic acquisition to WHML audit
+        run: |
+          python -m engine.source_acquisition_pipeline --saved-html examples/synthetic-source-structure.html --output /tmp/rotation-source-pipeline
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('/tmp/rotation-source-pipeline')
+          report=json.loads((root/'pipeline-audit.json').read_text(encoding='utf-8'))
+          assert report['guide_body_payloads'] == 1
+          assert report['named_tooltip_definition_count'] == 1
+          assert report['tooltip_reference_count'] == 1
+          assert (root/'analysis.html').exists()
+          private=json.loads((root/'editorial-evidence-private.json').read_text(encoding='utf-8'))
+          assert private['source_text_in_file'] is True
+          assert private['source_text_may_be_public'] is False
+          assert report['private_editorial_packet_written'] is True
+          assert 'original_whml' in private['payloads'][0]
+          scoped=json.loads((root/'scoped-audit.json').read_text(encoding='utf-8'))
+          assert scoped['source_text_in_report'] is False
+          assert scoped['gameplay_action_interpreted'] is False
+          assert report['private_scoped_evidence_written'] is True
+          assert (root/'structure-audit.json').exists()
+          assert report['source_patch_verified'] is False
+          assert report['real_site_completeness_verified'] is False
+          assert report['automatic_publish_allowed'] is False
+          assert report['source_text_in_report'] is False
+          PY
+          rm -rf /tmp/rotation-source-pipeline
       - name: Run offline tests
         run: python -m unittest discover -s tests -p 'test_*.py' -v
       - name: Validate synthetic fixture

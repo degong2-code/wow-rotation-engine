@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head><title>Entirely synthetic nested UI fixture</title></head>
+<body>
+  <h1>Unrelated synthetic test specialization</h1>
+  <button aria-controls="hero-one" aria-expanded="false">Hero option</button>
+  <section id="hero-one" hidden>
+    <button role="tab" aria-controls="single-panel">Single</button>
+    <button role="tab" aria-controls="multi-panel">AoE</button>
+    <section id="single-panel" hidden>
+      <h2>Synthetic Priority</h2>
+      <table><tr id="fake-r1"><td>Example action <span aria-describedby="fake-tip">?</span></td></tr></table>
+      <aside id="fake-tip" hidden>Private-looking synthetic explanation for testing.</aside>
+    </section>
+    <section id="multi-panel" hidden>
+      <details><summary>Further details</summary><p>Synthetic hidden note</p></details>
+    </section>
+  </section>
+<script>WH.markup.printHtml("[tooltip name=example]Synthetic safe detail[/tooltip][span tooltip=example]?[/span]", "guide-body", false);</script>
+</body>
+</html>
