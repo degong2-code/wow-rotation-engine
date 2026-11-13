@@ -97,6 +97,25 @@ jobs:
                       print("opener_rt_step_count="+str(len(steps)))
                       print("opener_step_ids_first_80="+",".join(
                           str(x[1]) for x in steps[:80]))
+                      # Source ordering is key: branches are grouped by
+                      # declared build radio choice, not by spell ID/hero name.
+                      for ci, option in enumerate(choices):
+                          lo=option["position"]
+                          hi=choices[ci+1]["position"] if ci+1<len(choices) else end
+                          actions=[(m.group(1).lower(),int(m.group(2)),m.group(0))
+                                   for m in marker.finditer(raw,lo,hi)
+                                   if m.group(1).lower().startswith("rt-step")]
+                          print("branch_"+str(ci+1)+"_choice_id="+option["id"])
+                          print("branch_"+str(ci+1)+"_events="+str(len(actions)))
+                          print("branch_"+str(ci+1)+"_tagged_actions="+
+                                "|".join(kind+":"+str(ident) for kind,ident,_ in actions))
+                          print("branch_"+str(ci+1)+"_attr_keys="+
+                                json.dumps(sorted(set(
+                                    k for _,_,token in actions
+                                    for k in _attrs(token.split(str(ident),1)[-1] if False else
+                                                    token[token.find(str(_),0)+len(str(_)):] if False else
+                                                    token[token.find(" ",1)+1:]).keys()))))
+                      # Position/order evidence only; no natural-language notes.
                       print("full_dynamic_ui_verified=false")
                       print("opener_gameplay_verified=false")
           except (SourceAccessError, ValueError, KeyError) as e:
