@@ -355,6 +355,29 @@ def check_mutations(packet: dict, authored: dict) -> dict:
     }
 
 
+def potion_source_marker_inventory(packet: dict) -> dict:
+    """Diagnostic technical counts only, not a potion effect assertion."""
+    raw = packet["payloads"][0]["original_whml"]
+    opening = raw.index("Best Enhancement Shaman Opener")
+    ending = raw.index("Pre-Combat Check", opening)
+    section = raw[opening:ending]
+    result = {}
+    for ident, label in (
+        (1295132, "Liquid Luster"),
+        (1236994, "Potion of Recklessness"),
+        (1236616, "Light's Potential"),
+    ):
+        result[str(ident)] = {
+            "direct_step_tags": len(re.findall(
+                rf"\[rt-step(?:-group)?\s*=\s*{ident}\b", section)),
+            "direct_spell_tags": section.count("[spell=" + str(ident) + "]"),
+            "item_tags": len(re.findall(
+                rf"\[item\s*=\s*{ident}\b", section)),
+            "named_mentions": len(re.findall(re.escape(label), section, re.I)),
+        }
+    return result
+
+
 def review(packet: dict) -> dict:
     annotations = build_partial_annotations(packet)
     result = assess_opener_timeline(packet, annotations)
@@ -364,6 +387,7 @@ def review(packet: dict) -> dict:
     negative = check_mutations(packet, annotations)
     return {
         **negative,
+        "potion_source_marker_inventory": potion_source_marker_inventory(packet),
         "source_sha_locked": True,
         "partial_opener_contexts_reviewed": result["branch_count"],
         "partial_state_cases_consistent": result["case_count"],
