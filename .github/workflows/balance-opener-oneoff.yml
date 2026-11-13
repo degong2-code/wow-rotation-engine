@@ -109,12 +109,12 @@ jobs:
                           print("branch_"+str(ci+1)+"_events="+str(len(actions)))
                           print("branch_"+str(ci+1)+"_tagged_actions="+
                                 "|".join(kind+":"+str(ident) for kind,ident,_ in actions))
-                          print("branch_"+str(ci+1)+"_attr_keys="+
-                                json.dumps(sorted(set(
-                                    k for _,_,token in actions
-                                    for k in _attrs(token.split(str(ident),1)[-1] if False else
-                                                    token[token.find(str(_),0)+len(str(_)):] if False else
-                                                    token[token.find(" ",1)+1:]).keys()))))
+                          attrs=[
+                              _attrs(re.sub(r"^\[rt-step(?:-group)?\s*=\s*\d+", "",token,re.I).rstrip("]"))
+                              for _,_,token in actions
+                          ]
+                          print("branch_"+str(ci+1)+"_attribute_names="+json.dumps(
+                              sorted({key for a in attrs for key in a})))
                       # Position/order evidence only; no natural-language notes.
                       print("full_dynamic_ui_verified=false")
                       print("opener_gameplay_verified=false")
