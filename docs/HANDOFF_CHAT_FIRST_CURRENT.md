@@ -6,6 +6,13 @@
 > **이 문서는 새 채팅 복원 진입점**이다. **최상위 운영 정책은 [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md)**, 구체적 품질 게이트는 [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), 집필 절차는 [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)을 정본으로 삼으며 중복 복제하지 않는다. **과거 사례로 범용화 가치/오탐을 검증하는 후향적 사례집은 [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md) 참조.**
 
 
+## 0.11 실제 최신 원문 수집 기능의 실사이트 검증과 접근 제약 대응 (2026-11-13)
+
+- **작업 PR:** [#21](https://github.com/degong2-code/wow-rotation-engine/pull/21)은 범용 priority shadow 검토 (Draft), [#22](https://github.com/degong2-code/wow-rotation-engine/pull/22)는 그 위의 **HTTP-first 전문화명 원문→선택형 UI 보강** (Draft). 둘 다 main 미병합. 개인 HTML/공략 원문은 커밋하지 않음.
+- **실제 WoWhead HTTP:** [2026-11-13 CI](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43435619340)에서 **생존 사냥꾼 12.1.5/2026-10-13** 실제 원문 확보, WHML 1개·툴팁 정의 39·선택 항목 8, **미선언 선택형 조건과 ordered 행동 후보 연결 REVIEW**. 웹 검색 색인과 별도 직접 열람에서 12.0.7이 나오는 불일치 때문에 하나의 버전으로 혼합 금지.
+- **실제 브라우저:** [Chromium 실사이트 검사](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43435836835)에서 접근 차단. [HTTP-first 통합 실증](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43436834292)은 **원문 보존=true, UI 상태 0, browser_access_denied, ui_known_capture_gaps=true, publish_allowed=false**. 원문은 실제로 보존하지만 선택형 UI 전수 확보는 아님.
+- **근본 개선:** 기존 --capture-ui는 브라우저부터 열다가 막히면 12.1.5 원문도 못 남겼음. PR #22에서 기존 합법 HTTP GET/패치 검증·WHML 패킷을 먼저 저장하고 Chromium 보강은 **guide-body SHA와 수정일 일치 시에만** 병합. 차단·버전 충돌 시 실제 UI 내용을 추측하지 않고 REVIEW. one-off CI 실사이트 진단 코드는 종료 후 제거.
+- **현재 제품:** 생존 사냥꾼 최신 개인 V11 REVIEW의 4표·39행은 실제 동적 선택 모두에 대한 승인 자료가 아님. 새 게임 우선순위를 임의로 추가하지 않음. 우선과제는 현재 유효한 선택형 원문 표시/조건을 직접 검증하고 **실제 교본 Q0/Q1 검토 사유를 제거**하는 것. 새 소규모 검사기 증설을 최우선으로 하지 않음.
 ## 0.10 실제 제품 실증 — 생존 사냥꾼 제로베이스, 오래된 외부 기준도 차단 (2026-11-13)
 
 - **실제 개인 단일 HTML:** `wow_rotation_v11_survival_zero_base_1215_REVIEW.html` **999,807B**, SHA256 **`d8632b21f92453c4aa14ef66eaf0c893cf1cfe80a61222f3b33711c0d870b36d`**. 과거 생존 V1~V3·기존 고양 교본의 게임 내용을 정본으로 재사용하지 않고 **최신 12.1.5 출처에서 재집필**. 표현은 사용자 긍정 평가된 V11/비전의 공통 시각 문법만 사용.
