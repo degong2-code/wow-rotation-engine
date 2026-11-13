@@ -6,6 +6,17 @@
 > **이 문서는 새 채팅 복원 진입점**이다. **최상위 운영 정책은 [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md)**, 구체적 품질 게이트는 [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), 집필 절차는 [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)을 정본으로 삼으며 중복 복제하지 않는다. **과거 사례로 범용화 가치/오탐을 검증하는 후향적 사례집은 [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md) 참조.**
 
 
+## 0.7 다전문화 V11 표현 계약의 2번째 실제 제품 실증 — 고양 (2026-11-13)
+
+**사용자 지시 '진행'의 우선 해석:** 비전의 19개 canonical/36행 자체를 계속 다듬는 대신, **다른 전문화에 실제로 반복 적용해 전체 교본 품질이 유지되는지** 평가한다.
+
+- **실제 비공개 결과:** `wow_rotation_v11_enhancement_cross_spec_v11_REVIEW.html` **1,020,922B**, SHA256 `8cefb375a9a41061bb8797069cf6e33c7b4e3021502017e6e9baca1cf129b6f8`. 기존 7 V11 `manual-view` **7/7 내용·바이트 보존**. 영웅별 V11 2열 요약표 2개(4행씩), 3열 우선순위표 4개/43행, 판단 이유 조건 아래 공개. 고양 기존 오프너 12개 물약 분기, 준비/기초/오프너/쿨기/심화/용어집 6개 장 내용 동일.
+- **기준/검증:** 기존 개인 고양 V3.13의 43개 행을 canonical-like source record로 1회 추출하고 **같은 기록에서 표/요약을 렌더**. Wowhead [고양 12.1.5, 2026-10-13](https://www.wowhead.com/guide/classes/shaman/enhancement/rotation-cooldowns-pve-dps) 공개 인덱스와 **영웅·대상별 기술 사용 행 9/10/12/12의 순서·이름 43/43 대조 일치**. 기존 조건 문구·행 순서·기술명 실제 렌더 **43/43 동일**. **하지만 원시 WHML 모든 툴팁/조건을 직접 새로 추출한 결과는 아니므로 Q0/Q1 전체 정확성 REVIEW**.
+- **브라우저:** Chromium PC 1365×880 / 모바일 390×844 영웅 전환, 43행·2요약표, 12개 물약 `details` 및 배타 선택, 기술 팁/Escape, hash 복원, JS 오류 0, 문서 가로 넘침 없음 PASS.
+- **중요한 Q3 트레이드오프:** V11 모바일 `priority` 레이아웃은 조건·이유를 넓게 노출하기 때문에 기존 고양 모바일 가로 스크롤 620px 표보다 훨씬 길어짐(첫 표 **477→1,244px**). 한눈에 보기 전체 높이 모바일 **1,275→1,503px**. 가로 스크롤이 사라진 장점과 스크롤 길이 증가의 **가독성 실제 사용자 승인 REVIEW**. 표 길이가 늘었다고 미관 향상을 PASS 처리하지 말 것.
+- **문서:** [CROSS_SPEC_ENHANCEMENT_V11_PILOT_20261113](CROSS_SPEC_ENHANCEMENT_V11_PILOT_20261113.md).
+- **다음 우선순위:** 2개 전문화에서 재현된 **판단 조건 보존 + V11 표 역할 일관성**을 유지하면서, 새 전문화의 원문 **원시 선택형 정보·툴팁까지** 확보하는 실제 CREATE를 수행할 것. 고양 고유 UI에 맞춘 새 거대 렌더러·테스트 증식은 불필요. GitHub Arcane CREATE가 모든 전문화를 자동 생성한다고 이미 주장하지 말 것.
+
 ## 0.6 실제 정본 규칙 19개 → 비전 8전문화 HTML 생성 · CREATE 경로 연결 (2026-11-13)
 
 - **최신 실제 교본:** 사용자 채팅의 **비공개 단일 HTML `wow_rotation_v11_arcane_canonical_projection_REVIEW.html`** (992,996B; SHA256 **`573eb666e38d8ff74776790f93ba7ef7677babbeb5b08d729cbab9aab6b82f65`**). Wowhead 12.1.5·2026-10-16 공개 우선순위 색인으로부터 **원문 영웅 통합 규칙 성난태양 10개/주문술사 9개**를 한 번만 정규화, 2영웅×단일/광역에 **9/10/8/9 = 36개 표시 행** 직접 투영. 지난 버전 35행과 달리 원문 하위 중복 후보 행을 근거 없이 삭제하지 않음. HTML `arcane-canonical-1215` JSON에 19개 원문-규칙 정규화 자료를 포함하여 UPDATE 시 ID·source rank·OR 분기 재사용 가능.
