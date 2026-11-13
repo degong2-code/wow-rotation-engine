@@ -89,6 +89,18 @@ class ArcaneCreateTests(unittest.TestCase):
         self.assertEqual(len(self.draft["spells"]), 12)
         self.assertFalse(self.draft["publication"]["automatic_publish_allowed"])
 
+    def test_one_patch_aligned_baseline_source_suffices(self):
+        draft = deepcopy(self.draft)
+        draft["sources"] = draft["sources"][:1]
+        counts = validate_draft(draft)
+        self.assertEqual(counts["row_count"], 34)
+
+    def test_no_baseline_source_is_rejected(self):
+        draft = deepcopy(self.draft)
+        draft["sources"] = []
+        with self.assertRaisesRegex(ValueError, "baseline source"):
+            validate_draft(draft)
+
     def test_adds_eighth_guide_and_preserves_seven_original_views_exactly(self):
         data, report = self.create()
         updated = data.decode("utf-8")
