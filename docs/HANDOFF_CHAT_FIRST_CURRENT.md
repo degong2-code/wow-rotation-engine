@@ -6,6 +6,17 @@
 > **이 문서는 새 채팅 복원 진입점**이다. **최상위 운영 정책은 [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md)**, 구체적 품질 게이트는 [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), 집필 절차는 [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)을 정본으로 삼으며 중복 복제하지 않는다. **과거 사례로 범용화 가치/오탐을 검증하는 후향적 사례집은 [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md) 참조.**
 
 
+## 0.6 실제 정본 규칙 19개 → 비전 8전문화 HTML 생성 · CREATE 경로 연결 (2026-11-13)
+
+- **최신 실제 교본:** 사용자 채팅의 **비공개 단일 HTML `wow_rotation_v11_arcane_canonical_projection_REVIEW.html`** (992,996B; SHA256 **`573eb666e38d8ff74776790f93ba7ef7677babbeb5b08d729cbab9aab6b82f65`**). Wowhead 12.1.5·2026-10-16 공개 우선순위 색인으로부터 **원문 영웅 통합 규칙 성난태양 10개/주문술사 9개**를 한 번만 정규화, 2영웅×단일/광역에 **9/10/8/9 = 36개 표시 행** 직접 투영. 지난 버전 35행과 달리 원문 하위 중복 후보 행을 근거 없이 삭제하지 않음. HTML `arcane-canonical-1215` JSON에 19개 원문-규칙 정규화 자료를 포함하여 UPDATE 시 ID·source rank·OR 분기 재사용 가능.
+- **기존 제품 보호·실물 QA:** 원본 V11 7개 `manual-view` 바이트 **7/7 동일**, 비전 실제 행의 ID/원래 순위/조건·이유=정본 데이터 검증, 독립적으로 선택한 **12개 상태→다음 행동** 사례 PASS, 7단계 오프너 유지. 데스크톱 1365×880 / 모바일 390×844 headless Chromium에서 영웅 전환·기존 냉기 복귀·툴팁·해시 복원·화면 전체 가로 넘침 없음·JS 예외 0. 로컬 `file://` 열람 환경 전수 확인이 아닌 `page.set_content` 검증.
+- **GitHub 실제 코드 경로:** `engine/gameplay_decision_qa.py`는 AND 목록(`when`) 외 **OR of AND(`when_any`)**를 보존하여 분리 투영. `engine/v2/create_guide.py`가 새 **선택적 `canonical_priority_rules`를 실제 `rotation_groups` 행으로 변환한 뒤 HTML에 렌더링**, 구 수기 초안 조건은 신규 경로에서 무시. canonical 규칙 ID/원문 순위가 DOM에 나타나며 기본 판단 이유 직접 표시, 사전 수기 행 번호에 묶인 구 `?` 주석은 자동 상속하지 않음. `engine/v2/annotations.py`의 개수 할당량 제거. `tests/test_v11_arcane_create.py` 합성 V11로 **기존 수기 조건보다 정본 조건이 실제 렌더되었음을 검증**.
+- **공개 CI:** [423 테스트, 421 통과·2 skip](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43380009806), 합성 CREATE·OR·문서 회귀 통과. private V11/외부 원문/고양·비전 실제 HTML GitHub 미게시. PR #20은 Draft, `main` 미병합.
+- **정확한 한계:** 실제 원문은 검색 색인의 12.1.5 우선순위를 기준으로 재해석한 것이며 원시 WHML 모든 동적 옵션·숨김 툴팁·개별 기술 아이콘 7개와 원문 바이트 지문 **전수 확정 아님**. 사이트 URL 열람에서 12.0.7이 나오는 버전 충돌도 지속. Q0/Q1·최종 사용자 승인 **REVIEW**. 로컬 사용자 HTML 빌더와 GitHub CREATE의 선택적 canonical 경로는 **서로 동등한 데이터 변환 계약을 구현하고 각자 검증**했으나, **동일 19개 사적 규칙을 GitHub CI에서 실제 실행해 동일 바이트를 재생성한 것은 아니다.** 현재 CREATE는 여전히 Arcane 시범용이며 다른 전문화의 영웅·표 개수는 범용 규격으로 고정하지 말 것.
+- **다음 우선순위:** 원시 12.1.5 WOWhead 본문과 조건·툴팁/오프너 의미의 독립 Q0/Q1 근거 완성 → 동일 정본 19개를 기존 CREATE에 **실데이터로 재주입한 재현성 검사** 또는 다른 전문화 1개 실제 CREATE/UPDATE에서 **독립 재현**. 더 많은 도구·세부 검사기 제작에 매몰되지 말 것.
+
+**상세 근거:** [SOURCE_TO_GUIDE_PROJECTION_CONTRACT_20261113](SOURCE_TO_GUIDE_PROJECTION_CONTRACT_20261113.md) §0; [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md) §B.1.1.
+
 ## 0.5 비전 오류의 원인 단계 구조 수정 — 원문 규칙→표 투영 계약 (2026-11-13)
 
 사용자 상위 지시: **비전의 한 행을 수정하는 것이 우선이 아니라, 같은 누락·조건 축약·중복·순서 오류가 다른 전문화에서 발생하지 않도록 실제 제작 설계를 먼저 바꾼다.**
