@@ -37,6 +37,7 @@ def _event_signature(event: dict) -> tuple:
     return (
         event["beat"], event["phase"], event["lane"], event["action"],
         event.get("time_ms"), event.get("time_anchor"),
+        event.get("within_beat_order"),
     )
 
 
@@ -70,6 +71,9 @@ def _check_event(event: Any) -> None:
     if event.get("phase") not in PHASES or event.get("lane") not in LANES:
         raise ValueError("phase/lane must be explicit")
     _check_time(event)
+    order = event.get("within_beat_order")
+    if order is not None and (type(order) is not int or not 0 <= order <= 20):
+        raise ValueError("within_beat_order must be an integer 0..20")
     _check_predicates(event.get("when", []))
     _check_context(event.get("set_state", {}), "event set_state")
     marker = event.get("action_source_marker")
@@ -83,7 +87,7 @@ def _check_expected(events: Any) -> None:
         if not isinstance(event, dict):
             raise ValueError("Expected event must be an object")
         if set(event) - {"action", "beat", "phase", "lane",
-                         "time_ms", "time_anchor"}:
+                         "time_ms", "time_anchor", "within_beat_order"}:
             raise ValueError("Unsupported expected event field")
         _valid_name(event.get("action"), "expected action")
         if type(event.get("beat")) is not int or not 0 <= event["beat"] <= 200:
@@ -91,6 +95,9 @@ def _check_expected(events: Any) -> None:
         if event.get("phase") not in PHASES or event.get("lane") not in LANES:
             raise ValueError("Invalid expected phase/lane")
         _check_time(event)
+        order = event.get("within_beat_order")
+        if order is not None and (type(order) is not int or not 0 <= order <= 20):
+            raise ValueError("Expected within_beat_order must be 0..20")
 
 
 def _guard(event: dict, state: dict) -> bool | None:
@@ -129,6 +136,14 @@ def _simulate(events: list[dict], initial_state: dict) -> tuple[str, list, set]:
             return "underdetermined", [], set()
         if sum(e["lane"] == "gcd" for e in certain) > 1:
             return "ambiguous", [], set()
+        if any(e.get("within_beat_order") is not None for e in certain):
+            # When explicit intra-beat order is declared, cover every
+            # simultaneously active action or fail closed.
+            orders = [e.get("within_beat_order") for e in certain]
+            if any(o is None for o in orders):
+                return "underdetermined", [], set()
+            if len(set(orders)) != len(orders):
+                return "ambiguous", [], set()
         # A later decision point cannot return to a previous pull phase.
         if certain and min(phase_order[e["phase"]] for e in certain) < last_phase:
             return "ambiguous", [], set()
