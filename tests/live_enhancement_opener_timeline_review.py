@@ -399,7 +399,11 @@ def potion_source_marker_inventory(packet: dict) -> dict:
                     continue
                 enclosing = [x for x in scopes
                              if x["start"] < pos < x["end"]]
+                # Distinguish ordered opener action rows from unordered
+                # explanation notes that repeat the potion's spell ID.
                 if not any(x["tag"] == "li" for x in enclosing):
+                    continue
+                if not any(x["tag"] == "ol" for x in enclosing):
                     continue
                 expr = [x["attributes"]["display-options"] for x in enclosing
                         if "display-options" in x["attributes"]]
@@ -415,7 +419,7 @@ def potion_source_marker_inventory(packet: dict) -> dict:
                         source_scopes_visible(expr, {choice, hero, fight}, declared) is True):
                     valid.append(pos)
             source_action_candidates[choice] = {
-                "choice_gated_list_action_markers": len(valid),
+                "choice_gated_ordered_action_markers": len(valid),
                 "list_action_marker_positions": valid[:5],
             }
     return {
