@@ -6,6 +6,13 @@
 > **이 문서는 새 채팅 복원 진입점**이다. **최상위 운영 정책은 [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md)**, 구체적 품질 게이트는 [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), 집필 절차는 [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)을 정본으로 삼으며 중복 복제하지 않는다. **과거 사례로 범용화 가치/오탐을 검증하는 후향적 사례집은 [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md) 참조.**
 
 
+## 0.12 실제 3전문화 공통 HTML 조립 실증 — 콘텐츠 생성과 구분 (2026-11-13)
+
+- **[PR #23 Draft](https://github.com/degong2-code/wow-rotation-engine/pull/23)** (`work/chat-first-generic-html-assembly-20261113`, #22 위 stacked): 기존 Arcane 전용 JS 메뉴/영웅 등록 하드코딩과 V11 shell 조립을 분리해 **독립 집필된 V11+ 신규 전문화 콘텐츠를 바이트 그대로 포장**하는 `engine/v2/generic_v11_assembly.py` 추가. 원본 V11 SHA 고정, 7개 원본 guide subtree 바이트 보존, 신규 ID/영웅 수/우선순위 표 개수 하드코딩 없음.
+- **실물 증거:** 비전·고양·생존 독립 집필 REVIEW HTML 각각을 동일 공통 조립층으로 재생성(3개 모두 7/7 기존 본문 보존·신규 전문화 본문 바이트 동일). 각 제품 PC 1365px/모바일 390px에서 신규 메뉴·영웅 전환·기존 냉기/암살 영웅 전환·툴팁/ESC·JS 예외 없음·가로 overflow 0. 세 파일은 ChatGPT 비공개 아티팩트이며 GitHub에 올리지 않음. [재현 기록](GENERIC_V11_ASSEMBLY_REVIEW_20261113.md).
+- **검증:** [CI](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43441968879) 453 tests / 451 pass / 2 skipped; 합성 1·3영웅, 잘못된 기존 V11 수정/중복 ID/비정상 기준 SHA 반례. 브라우저는 로컬 Python의 page.set_content 방식.
+- **반드시 구분:** 범용 **HTML 조립(기존 독립 집필물 재생성)**은 증명됐지만, **임의 신규 전문화 원문→상태·판단·오프너 집필→완성 HTML을 전자동 생성**하는 기능이 증명된 것은 아님. 내용 Q0/Q1 승인 없음. 모든 표/오프너를 비전식 4표·2영웅으로 고정하지 말 것. 기존 8+ UPDATE 범용화 미실증.
+- **다음 우선 과제:** 원문 완전성·적용 조건을 확보한 다른 전문화를 실제 ChatGPT에서 **독립 집필**하고 이 공통 조립층을 통해 단일 HTML 생성→내용·UX Q0–Q4 평가. 이미 있는 검사기/규격 증식은 후순위. 두 번째/세 번째 기존 집필 REVIEW를 재포장하는 일만 반복하지 말 것.
 ## 0.11 실제 최신 원문 수집 기능의 실사이트 검증과 접근 제약 대응 (2026-11-13)
 
 - **작업 PR:** [#21](https://github.com/degong2-code/wow-rotation-engine/pull/21)은 범용 priority shadow 검토 (Draft), [#22](https://github.com/degong2-code/wow-rotation-engine/pull/22)는 그 위의 **HTTP-first 전문화명 원문→선택형 UI 보강** (Draft). 둘 다 main 미병합. 개인 HTML/공략 원문은 커밋하지 않음.
