@@ -22,7 +22,8 @@ PACKET = {
 
 
 def event(ident, action, marker, beat, phase, lane, *, when=None,
-          set_state=None, time_ms=None, time_anchor=None):
+          set_state=None, time_ms=None, time_anchor=None,
+          within_beat_order=None):
     begin = SOURCE.index(marker)
     entry = {
         "id": ident, "action": action, "beat": beat, "phase": phase,
@@ -34,12 +35,15 @@ def event(ident, action, marker, beat, phase, lane, *, when=None,
     }
     if time_ms is not None:
         entry.update(time_ms=time_ms, time_anchor=time_anchor)
+    if within_beat_order is not None:
+        entry["within_beat_order"] = within_beat_order
     return entry
 
 
 def expected(e):
     return {k: e[k] for k in ("action", "beat", "phase", "lane",
-                              "time_ms", "time_anchor") if k in e}
+                              "time_ms", "time_anchor", "within_beat_order")
+            if k in e}
 
 
 def branch(context, events):
@@ -130,6 +134,44 @@ class OpenerTimelineTests(unittest.TestCase):
         result = run([branch(ctx, [attack, potion])],
                      [case("concurrent", ctx, [potion, attack])])
         self.assertTrue(result["all_declared_cases_matched"])
+
+    def test_explicit_same_gcd_order_detects_reversed_buff_activation(self):
+        ctx = {"spec": "unrelated-example"}
+        buff = event("buff", "Fictional potion", "[spell=102]",
+                     1, "combat", "off_gcd", within_beat_order=0)
+        hit = event("hit", "Fictional attack", "[spell=101]",
+                    1, "combat", "gcd", within_beat_order=1)
+        actual = [buff, hit]
+        good = run([branch(ctx, actual)],
+                   [case("correct", ctx, actual)])
+        self.assertTrue(good["all_declared_cases_matched"])
+        reversed_expectations = [dict(expected(buff), within_beat_order=1),
+                                 dict(expected(hit), within_beat_order=0)]
+        bad = run([branch(ctx, actual)], [{
+            "id": "reversed", "context": ctx,
+            "initial_state": {}, "expected_events": reversed_expectations,
+        }])
+        self.assertEqual(bad["case_results"][0]["result"], "mismatch")
+
+    def test_partially_declared_order_does_not_pass(self):
+        ctx = {"spec": "unrelated-example"}
+        before = event("buff", "Fictional potion", "[spell=102]",
+                       1, "combat", "off_gcd", within_beat_order=0)
+        after = event("hit", "Fictional attack", "[spell=101]",
+                      1, "combat", "gcd")
+        report = run([branch(ctx, [before, after])],
+                     [case("partial", ctx, [before, after])])
+        self.assertEqual(report["case_results"][0]["result"], "underdetermined")
+
+    def test_duplicate_explicit_order_is_ambiguous(self):
+        ctx = {"spec": "unrelated-example"}
+        buff = event("buff", "Fictional potion", "[spell=102]",
+                     1, "combat", "off_gcd", within_beat_order=0)
+        hit = event("hit", "Fictional attack", "[spell=101]",
+                    1, "combat", "gcd", within_beat_order=0)
+        report = run([branch(ctx, [buff, hit])],
+                     [case("duplicate", ctx, [buff, hit])])
+        self.assertEqual(report["case_results"][0]["result"], "ambiguous")
 
     def test_two_gcd_actions_in_same_beat_are_ambiguous(self):
         ctx = {"hero": "sample"}
