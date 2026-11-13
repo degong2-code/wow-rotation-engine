@@ -193,6 +193,43 @@ class SourcePipelineTests(TestCase):
             self.assertNotIn('"missing"', json.dumps(audit))
 
 
+    def test_pipeline_unbound_action_selector_is_review_not_success(self):
+        import json
+        whml = ('[ol][li display-options=MissingBuild]'
+                '[spell=101]Source action[/li][/ol]')
+        html = ('<!doctype html><html><script>WH.markup.printHtml('
+                + json.dumps(whml) + ',"guide-body",false);'
+                '</script></html>')
+        with TemporaryDirectory() as tmp:
+            report = inspect_and_store(
+                dom_html=html, output=Path(tmp), kind="saved_html")
+        self.assertEqual(
+            report["source_selector_impact"]["unbound_selector_ordered_row_candidates"], 1)
+        self.assertFalse(report["source_selector_references_resolved"])
+        self.assertTrue(report["source_selector_action_review_required"])
+        self.assertIn("conditional_option_without_definition", report["issue_types"])
+        self.assertIn("unbound_selector_ordered_action_candidate", report["issue_types"])
+        self.assertFalse(report["gameplay_meaning_verified"])
+        self.assertFalse(report["automatic_publish_allowed"])
+        self.assertNotIn("MissingBuild", json.dumps(report))
+        self.assertNotIn("Source action", json.dumps(report))
+
+    def test_pipeline_declared_action_control_remains_valid(self):
+        import json
+        whml = ('[display-option=BuildA radio=build checked]Build[/display-option]'
+                '[ol][li display-options=BuildA]'
+                '[spell=101]Source action[/li][/ol]')
+        html = ('<!doctype html><html><script>WH.markup.printHtml('
+                + json.dumps(whml) + ',"guide-body",false);'
+                '</script></html>')
+        with TemporaryDirectory() as tmp:
+            report = inspect_and_store(
+                dom_html=html, output=Path(tmp), kind="saved_html")
+        self.assertTrue(report["source_selector_references_resolved"])
+        self.assertFalse(report["source_selector_action_review_required"])
+        self.assertNotIn("unbound_selector_ordered_action_candidate", report["issue_types"])
+
+
     def test_cli_http_first_reaches_whml_audit_without_browser(self):
         from unittest.mock import patch
         from engine.source_acquisition_pipeline import main
