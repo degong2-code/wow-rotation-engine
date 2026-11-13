@@ -6,6 +6,8 @@
 > **이 문서는 새 채팅 복원 진입점**이다. **최상위 운영 정책은 [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md)**, 구체적 품질 게이트는 [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), 집필 절차는 [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)을 정본으로 삼으며 중복 복제하지 않는다. **과거 사례로 범용화 가치/오탐을 검증하는 후향적 사례집은 [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md) 참조.**
 
 ## 0. 사용자 최신 피드백 — 디자인 회귀는 특정 전문화 문제가 아니라 제작 설계 문제 (2026-11-13)
+**최신 후속 편집 실증(2026-11-13):** 모든 `이유`를 바로 보여 주는 1차 수정에서도 실제 이유 아닌 **조건 반복·주의사항을 `이유`로 오분류**한 문제가 드러남. 판단 텍스트를 **조건 / 목적·인과 / 참고·주의 / 선택적 심화 `?`**로 분리하는 **범용 시각·의미 계약**을 [V11_FIDELITY](V11_FIDELITY.md)에 갱신했다. 별도 비공개 교본 `wow_rotation_v11_arcane_rationale_refined_REVIEW.html` 973,444B, SHA256 `792d6ee8d86f77dc5b8bb8be1e2d6d51fb612e003c2eb1e3853e7053ecdc3754` 생성: 비전 34개 우선순위의 행동·조건 그대로, 34개 목적 문장 정제, 4개 참고 직접 노출, 선택적 심화 `?` 2개. 기존 V11 7/7 바이트 보존, PC·모바일 Chromium 전환·툴팁·hash·overflow·JS PASS. **비전 게임 사실 Q0/Q1 검토본 유지**, HTML은 비공개, PR Draft 유지. 다음 제작에서도 문장 역할만 제대로 분리하고 조건·수치는 임의로 축약하지 않는다.
+
 
 **후속 사용자 UI 피드백(2026-11-13):** 비전 시각 계약 파일은 과거 고양 카드형보다 디자인/UI/가독성이 크게 개선됐다고 직접 평가. 다만 우선순위 34개 행의 **기본 판단 이유를 일괄 `?`에 숨기는 방식은 잘못**이며, `?`는 특수 상황·심화 팁·추가 예외에만 사용해야 한다고 명확히 지정. [V11_FIDELITY — 판단 이유 공개·선택적 심화 툴팁](V11_FIDELITY.md)과 [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)에 **모든 전문화용 정보 역할**로 반영. 실물 개선 개인 HTML `wow_rotation_v11_arcane_visible_reasons_REVIEW.html` **970,652B**, SHA256 `e59f40242bc21134db8d83927dad9df98dda7205e6a39882522823774ac8544f`. 34행 이유를 표에 상시 노출하고 특수 `?` **2개만 유지**, 기존 7전문화 바이트 동일, PC/모바일 UI 동작 PASS. **비전 게임 내용 Q0/Q1은 여전히 미승인.** 사용자 승인 없이 정본/공개 GitHub HTML 변경 없음.
 
