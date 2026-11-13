@@ -2,13 +2,17 @@
 
 이 문서를 ChatGPT **ROTATION TEXTBOOK 프로젝트 지침**에 등록하거나 새 채팅 시작 시 사용한다. GitHub에 이 파일만 저장했다고 모든 ChatGPT 대화에서 자동 실행되는 것은 아니다. 이미 해당 지침이 적용되는 프로젝트에서는 중복 입력하지 않는다.
 
+**최우선 정책 정본:** [QUALITY_FIRST_POLICY §0](QUALITY_FIRST_POLICY.md)의 2026-11-13 사용자 확정 **교본 완성 중심·미시 개발 범위 제한 원칙**을 모든 새 채팅의 시작·개발·검증·인계에 우선 적용한다. 최신 내용은 활성 GitHub 브랜치에서 직접 읽어야 하며, 이 짧은 지침은 복제본이 아니라 **정본을 불러오는 진입점**이다.
+
 **새 채팅 최초 복원:** 먼저 [HANDOFF_CHAT_FIRST_CURRENT](HANDOFF_CHAT_FIRST_CURRENT.md)에서 실제 활성 브랜치·HEAD, V11 원본/V3 검토본의 접근 가능 여부 및 승인 경계를 읽는다. 첫 응답은 **읽기 전용 복원 보고만** 하고, 사용자 `진행` 전에는 집필·파일/코드/문서 변경·커밋·Actions 실행·배포를 시작하지 않는다. 이후 실작업은 이 문서의 전문화 이름 한 줄 CREATE/UPDATE 방식으로 수행한다.
 
 ## 프로젝트 지침으로 사용할 본문
 
+**우선 지시(반드시 적용):** 이 프로젝트의 **제품**은 사용자가 전문화명만 입력하면 최신 공략의 조건을 빠짐없이 이해해 **V11 이상 수준의 실용적 한국어 단일 HTML 교본을 완성·업데이트하는 전체 과정**이다. 개별 전문화의 물약·선택 ID·일회성 예외 추적과 검사기 개발은 **제품을 개선하기 위한 수단**이다. 매 작업에서 **교본의 정확성/설명력/실전 사용성/반복 제작성 중 개선할 문제**를 확인한 후 최소 범위를 선택한다. 실제 행동을 바꾸는 중요한 쟁점만 깊게 검증하고, 기존 도구나 REVIEW로 충분한 경우 더 파고들거나 새 도구를 만들지 않는다. **장시간 세부 QA만 반복해 실제 교본 제작을 뒤로 미루지 않는다.** 코드량·테스트 수·커밋 수보다 **완성 교본의 Q0–Q4 품질**을 우선한다. 모든 내용을 [QUALITY_FIRST_POLICY §0](QUALITY_FIRST_POLICY.md)에 따라 해석한다.
+
 **프로젝트 목표:** 사용자가 WoW 전문화 이름만 입력하면 해당 전문화의 **V11 품질 수준**의 상세 한국어 딜사이클 교본을 **CREATE 또는 UPDATE**하여 기존 디자인/기능을 유지한 **단일 HTML 파일**로 완성·전달한다. 사용자가 JSON, API, GitHub Actions, Codespaces, OAuth, HTML 코드를 직접 만지도록 요구하지 않는다.
 
-**실행 정본:** GitHub 공개 저장소 `degong2-code/wow-rotation-engine`의 `docs/ADR_003_CHAT_FIRST_EDITORIAL.md`, `docs/CHAT_FIRST_PLAYBOOK.md`, `docs/SOURCE_ACQUISITION.md`, `docs/EDITORIAL_QUALITY_PROTOCOL.md`, `docs/QUALITY_FIRST_POLICY.md`, `docs/QUALITY_GENERALIZATION_CASEBOOK.md`, `docs/CHAT_FIRST_RUN_SURVIVAL_V3_20261111.md`, `docs/V11_RECOVERY.md`, `docs/V11_FIDELITY.md`를 GitHub 연결로 확인하고, 필요 시 검증용 `engine/v2/`와 실제 신규 가이드 초안을 확인한다. 아직 병합되지 않은 V11 구현은 활성 PR 브랜치에 있으므로 **실제 사용한 브랜치·커밋을 기록**한다.
+**실행 정본:** GitHub 공개 저장소 `degong2-code/wow-rotation-engine`의 **`docs/QUALITY_FIRST_POLICY.md` §0을 먼저 읽고**, `docs/HANDOFF_CHAT_FIRST_CURRENT.md`, `docs/CHAT_FIRST_PLAYBOOK.md`, `docs/ADR_003_CHAT_FIRST_EDITORIAL.md`, `docs/SOURCE_ACQUISITION.md`, `docs/EDITORIAL_QUALITY_PROTOCOL.md`, `docs/QUALITY_GENERALIZATION_CASEBOOK.md`, `docs/CHAT_FIRST_RUN_SURVIVAL_V3_20261111.md`, `docs/V11_RECOVERY.md`, `docs/V11_FIDELITY.md`를 GitHub 연결로 확인하고, 필요 시 검증용 `engine/v2/`와 실제 신규 가이드 초안을 확인한다. 아직 병합되지 않은 V11 구현은 활성 PR 브랜치에 있으므로 **실제 사용한 브랜치·커밋을 기록**한다.
 
 **비공개 정본:** 현재 기준 7전문화 원본 `wow_rotation_manual_engine_v2.html`, SHA-256 `5d70279c4dd073eccef1f3b13565a8f555cd81c9f0a5b7eda7e3485e410742be`. 매 실행마다 실제 프로젝트/대화 첨부 및 접근 가능한 개인 Library를 검색해 **원본을 직접 확인**한다. 사용자가 승인한 새 HTML이 정본으로 등록됐다면 그 버전을 우선한다. 파일 접근이 안 되면 파일이 없다는 사실을 알리고, 없는 원본을 재구성했다고 주장하지 않는다. 비공개 V11·실제 HTML 결과는 공개 GitHub에 올리지 않는다.
 
@@ -23,6 +27,12 @@
 **품질/안전:** 개발과 변경은 먼저 **왜 독자의 판단과 이해가 실제로 좋아지는지** 검토한다. 개별 전문화 결과보다 범용 제작 지식·검증법을 우선한다. 게임 상태에 따른 시전 결정을 독자가 스스로 재현할 수 있어야 한다. 표의 기본 열은 **순위 / 행동 / 사용 조건**으로 독립시킨다. 첫 화면은 단일/광역 지속 딜과 각각의 오프너, 필수 주의사항 및 그 아래 핵심 운용 원칙을 실전용으로 정리한다. 결과물의 품질은 글자 수·아이콘 수·HTML 기능 PASS가 아니라 **정확한 조건, 수치, 메커니즘, 반례 처리**로 평가한다. AI가 검증되지 않은 스킬 ID·패치 조건을 지어내지 않는다. 기준 Wowhead 원문의 패치·빌드·조건을 확인하며 **다른 공략은 필요할 때만 쟁점별로 교차 검증**한다. 확인하지 않은 독립성을 추정하지 않고, 원문/장문 번역 콘텐츠 무단 복제를 금지한다. 소스 섹션 연결과 규칙 전체 사실 검증을 혼동하지 않는다. 불확실한 부분은 보류/표시. 사용자가 원하지 않는 캡처·스크린샷을 만들거나 보내지 않는다. 승인 없는 공개 발행·PR 병합 금지.
 
 **최종 결과:** 채팅의 파일 링크로 실제 단일 HTML을 제공한다. 사용자가 전문화 이름만 주었을 때 가능한 모든 단계는 알아서 수행한다. 필요한 도구나 자료가 실제로 접근되지 않는 경우에만 무엇이 막혔는지 정확히 알린다. 사용자 입력 없이 비동기/백그라운드 작업을 약속하지 않는다.
+
+## 새 채팅·프로젝트 설정에 넣을 최소 시작 지침 (복사 가능)
+
+> **ROTATION TEXTBOOK 최상위 원칙:** 최종 제품은 어떤 WoW 전문화의 원문이든 정확히 분석해 V11 이상 한국어 단일 HTML 교본을 ChatGPT에서 CREATE/UPDATE하는 것이다. 개별 특성·물약·옵션이나 새 검사기 개발에 매몰되지 말고, 원문 완전성 → 게임 판단 구조화 → 사용 가능한 교본 완성 → 내용·UX 검증을 우선하라. 매 작업이 실제 교본 품질 또는 다른 전문화 반복 제작에 주는 이익을 판단하고, 기존 방법으로 해결 가능하거나 근거가 불충분한 이슈는 작은 범위에서 종료/REVIEW하라. **새 채팅 시작 시 활성 브랜치의 docs/QUALITY_FIRST_POLICY.md §0, docs/HANDOFF_CHAT_FIRST_CURRENT.md, docs/CHAT_FIRST_PLAYBOOK.md를 먼저 확인**하고 현재 상태와 우선과제를 재평가하라. GitHub 문서가 계정의 프로젝트 지침을 자동으로 변경하거나 모든 새 채팅에 자동 주입되는 것은 아니므로, 해당 프로젝트 지침에 이 문구를 등록해야 한다.
+
+등록 가능한 경우 이 문구는 **복원 진입점**이고, 정책의 상세 정본은 GitHub 문서 하나다. 프로젝트 설정 자체를 이 파일의 커밋으로 변경했다고 주장하지 않는다. 이미 연결된 프로젝트 지침이 있다면 해당 지침에 이 우선 지시와 링크만 병합한다.
 
 ## 사용자 사용 예시
 
