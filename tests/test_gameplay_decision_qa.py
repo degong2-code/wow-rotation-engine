@@ -312,5 +312,161 @@ class GameplayDecisionQATests(unittest.TestCase):
         self.assertFalse(result["source_meaning_independently_verified"])
 
 
+
+class SourceProjectionContractTests(unittest.TestCase):
+    """One source decision list, multiple view tables: regression and controls."""
+
+    @staticmethod
+    def canonical(ident, rank, action, when=None, *, hero="A"):
+        return {
+            "id": ident, "kind": "priority", "rank": rank,
+            "action": action, "context": {"hero": hero},
+            "when": when or [], "condition_text": "Original condition for " + ident,
+            "reason": "Original purpose for " + ident, "exceptions": [],
+            "evidence": [{"payload_sha256": DIGEST, "start": 0, "end": 12}],
+        }
+
+    @staticmethod
+    def condition(field, op, value):
+        return {"field": field, "op": op, "value": value}
+
+    def arcane_example(self):
+        c = self.condition
+        return [
+            self.canonical("orb", 1, "Synthetic Orb", [c("charges", "lt", 3)]),
+            self.canonical("pulse", 2, "Synthetic Pulse", [
+                c("charges", "lt", 3), c("pulse_talent", "eq", True),
+            ]),
+            self.canonical("five-target", 3, "Synthetic Barrage", [
+                c("target_count", "gte", 5), c("stacks", "gte", 12),
+                c("orb_ready", "eq", True),
+            ]),
+            self.canonical("filler", 4, "Synthetic Filler"),
+        ]
+
+    def test_same_source_projects_to_st_and_aoe_without_rewriting(self):
+        from engine.gameplay_decision_qa import project_priority_view, audit_priority_view
+        original = self.arcane_example()
+        st = project_priority_view(
+            original, view_context={"hero": "A"}, min_targets=1, max_targets=1
+        )
+        aoe = project_priority_view(
+            original, view_context={"hero": "A"}, min_targets=3
+        )
+        self.assertEqual([r["source_rule_id"] for r in st],
+                         ["orb", "pulse", "filler"])
+        self.assertEqual([r["source_rule_id"] for r in aoe],
+                         ["orb", "pulse", "five-target", "filler"])
+        self.assertEqual(st[0]["when"][0],
+                         {"field": "charges", "op": "lt", "value": 3})
+        self.assertEqual(aoe[2]["when"][0],
+                         {"field": "target_count", "op": "gte", "value": 5})
+        self.assertTrue(audit_priority_view(
+            original, st, view_context={"hero": "A"},
+            min_targets=1, max_targets=1,
+        )["projection_preserved"])
+        self.assertTrue(audit_priority_view(
+            original, aoe, view_context={"hero": "A"}, min_targets=3
+        )["projection_preserved"])
+
+    def test_threshold_narrowing_from_under_three_to_zero_fails(self):
+        from copy import deepcopy
+        from engine.gameplay_decision_qa import project_priority_view, audit_priority_view
+        original = self.arcane_example()
+        st = project_priority_view(
+            original, view_context={"hero": "A"}, min_targets=1, max_targets=1
+        )
+        bad = deepcopy(st)
+        bad[0]["when"] = [{"field": "charges", "op": "eq", "value": 0}]
+        bad[0]["condition_text"] = "No charges"
+        result = audit_priority_view(
+            original, bad, view_context={"hero": "A"},
+            min_targets=1, max_targets=1,
+        )
+        self.assertFalse(result["projection_preserved"])
+        self.assertIn("source_rule_changed_during_projection", result["blocker_codes"])
+        self.assertFalse(result["gameplay_meaning_verified"])
+
+    def test_omitted_conditional_and_extra_row_are_both_rejected(self):
+        from engine.gameplay_decision_qa import project_priority_view, audit_priority_view
+        original = self.arcane_example()
+        aoe = project_priority_view(
+            original, view_context={"hero": "A"}, min_targets=3
+        )
+        without_pulse = [r for r in aoe if r["source_rule_id"] != "pulse"]
+        missing = audit_priority_view(
+            original, without_pulse, view_context={"hero": "A"}, min_targets=3,
+        )
+        self.assertEqual(missing["missing_source_rule_count"], 1)
+        extra = audit_priority_view(
+            original, aoe + [aoe[0]], view_context={"hero": "A"}, min_targets=3,
+        )
+        self.assertEqual(extra["extra_source_rule_count"], 1)
+        self.assertFalse(extra["projection_preserved"])
+
+    def test_reordering_or_silent_reason_changes_are_rejected(self):
+        from copy import deepcopy
+        from engine.gameplay_decision_qa import project_priority_view, audit_priority_view
+        original = self.arcane_example()
+        rows = project_priority_view(
+            original, view_context={"hero": "A"}, min_targets=3,
+        )
+        reordered = [rows[1], rows[0], *rows[2:]]
+        order = audit_priority_view(
+            original, reordered, view_context={"hero": "A"}, min_targets=3,
+        )
+        self.assertTrue(order["source_order_changed"])
+        altered = deepcopy(rows)
+        altered[0]["reason"] = "Different and ungrounded claim"
+        changed = audit_priority_view(
+            original, altered, view_context={"hero": "A"}, min_targets=3,
+        )
+        self.assertIn("source_rule_changed_during_projection", changed["blocker_codes"])
+        self.assertNotIn("Synthetic Orb", json.dumps(changed))
+
+    def test_other_hero_or_unrelated_spec_not_incorrectly_imported(self):
+        from engine.gameplay_decision_qa import project_priority_view
+        c = self.condition
+        rules = [
+            self.canonical("a-stacks", 1, "Synthetic Lightning", [
+                c("stacks", "gte", 10),
+            ], hero="A"),
+            self.canonical("a-targets", 2, "Synthetic Chain", [
+                c("target_count", "gte", 3), c("stacks", "gte", 9),
+            ], hero="A"),
+            self.canonical("b-unique", 1, "Synthetic Totem", hero="B"),
+        ]
+        single = project_priority_view(
+            rules, view_context={"hero": "A"},
+            min_targets=1, max_targets=1,
+        )
+        aoe = project_priority_view(
+            rules, view_context={"hero": "A"}, min_targets=3,
+        )
+        b = project_priority_view(
+            rules, view_context={"hero": "B"}, min_targets=1,
+        )
+        self.assertEqual([x["source_rule_id"] for x in single], ["a-stacks"])
+        self.assertEqual([x["source_rule_id"] for x in aoe],
+                         ["a-stacks", "a-targets"])
+        self.assertEqual([x["source_rule_id"] for x in b], ["b-unique"])
+
+    def test_unknown_view_context_and_complex_unmodeled_condition_fail_closed(self):
+        from engine.gameplay_decision_qa import project_priority_view
+        with self.assertRaisesRegex(ValueError, "lacks required source context"):
+            project_priority_view(
+                self.arcane_example(), view_context={}, min_targets=1,
+            )
+        with self.assertRaisesRegex(ValueError, "bounded list"):
+            source = self.arcane_example()
+            source[0]["when"] = {"OR": [
+                {"field": "charges", "op": "lt", "value": 3},
+                {"field": "stacks", "op": "gte", "value": 20},
+            ]}
+            project_priority_view(
+                source, view_context={"hero": "A"}, min_targets=1,
+            )
+
+
 if __name__ == "__main__":
     unittest.main()
