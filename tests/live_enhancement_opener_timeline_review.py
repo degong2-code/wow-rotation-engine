@@ -21,7 +21,7 @@ from engine.source_acquisition_pipeline import run_specialization
 from engine.source_choice_visibility import source_scopes_visible
 from engine.source_page_acquire import SourceAccessError
 from engine.source_scoped_evidence import _nested_scopes
-from tests.live_enhancement_opener_review import (
+from live_enhancement_opener_review import (
     BASELINE, EXPECTED_GROUPS, inspect_original_opener_choices,
 )
 
