@@ -221,7 +221,7 @@ def _hover(page, max_tips: int) -> list[dict]:
 
 
 def capture(page, max_states: int = 24, max_depth: int = 3,
-            max_tooltips_per_state: int = 30) -> dict:
+            max_tooltips_per_state: int = 30, validate_state=None) -> dict:
     if max_states < 1 or max_states > 150 or max_depth < 0 or max_depth > 8 or max_tooltips_per_state < 0 or max_tooltips_per_state > 150:
         raise ValueError("Out-of-range capture limits")
     html = page.content()
@@ -249,6 +249,12 @@ def capture(page, max_states: int = 24, max_depth: int = 3,
                 _perform(page, step)
                 if page.url != result["source_url"]:
                     raise RuntimeError("Controlled element navigated away from the authorized source")
+            # Optional caller-supplied guide identity/patch check. This runs
+            # BEFORE a state's body or tooltip text enters private evidence.
+            # Invalid states are recorded as capture errors, not mixed into
+            # an otherwise valid source packet.
+            if validate_state is not None:
+                validate_state(page)
             observation = page.evaluate(OBSERVE)
             hovers = _hover(page, max_tooltips_per_state)
             observation["body"] = observation["body"][:MAX_TEXT]

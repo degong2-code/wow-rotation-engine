@@ -23,7 +23,7 @@ from .source_page_acquire import (
 )
 from .source_structure import inspect_html
 from .http_source_fetch import get_html
-from .spec_source_resolver import resolve_specialization
+from .spec_source_resolver import Specialization, resolve_specialization
 from .guide_identity import inspect_identity
 from .source_editorial_packet import packet_from_html
 from .source_scoped_evidence import scoped_from_packet, scoped_metadata, unbound_selector_impact
@@ -206,7 +206,16 @@ def require_authorized_navigation(url: str, expected_host: str) -> None:
 def run_browser(url: str, output: Path, *, capture_mhtml: bool = False,
                 capture_ui: bool = False, max_states: int = 24,
                 max_depth: int = 3,
-                expected_guide_sha256: str | None = None) -> dict:
+                expected_guide_sha256: str | None = None,
+                specialization: Specialization | None = None,
+                expected_patch: str | None = None,
+                min_updated: str | None = None) -> dict:
+    """Authorized browser acquisition; optionally bind identity to a spec.
+
+    Patch identity is checked on the ACTUAL returned source before private
+    source material is persisted. This never assumes that an indexed search
+    result and the directly opened page serve the same guide revision.
+    """
     _validate_remote_url(url)
     try:
         from playwright.sync_api import sync_playwright
@@ -232,13 +241,63 @@ def run_browser(url: str, output: Path, *, capture_mhtml: bool = False,
                 page, response, required_markers=("WH.markup.printHtml",),
                 capture_mhtml=capture_mhtml,
             )
+            identity = None
+            if specialization is not None:
+                # The user sees the rendered DOM. Validate it independently,
+                # not just the richer raw WHML response that may be stale.
+                identity = inspect_identity(
+                    dom, specialization,
+                    expected_patch=expected_patch, min_updated=min_updated,
+                )
+                if raw is not None:
+                    response_identity = inspect_identity(
+                        raw, specialization,
+                        expected_patch=expected_patch, min_updated=min_updated,
+                    )
+                    if (
+                        identity["visible_patch_candidates"]
+                        and response_identity["visible_patch_candidates"]
+                        and not (
+                            set(identity["visible_patch_candidates"])
+                            & set(response_identity["visible_patch_candidates"])
+                        )
+                    ) or (
+                        identity["observed_guide_update_date"] is not None
+                        and response_identity["observed_guide_update_date"] is not None
+                        and identity["observed_guide_update_date"]
+                        != response_identity["observed_guide_update_date"]
+                    ):
+                        raise SourceAccessError(
+                            "Browser DOM and network response disagree on guide revision"
+                        )
             report = inspect_and_store(
                 dom_html=dom, raw_html=raw, mhtml=mhtml, output=output,
-                kind="browser_url", expected_guide_sha256=expected_guide_sha256,
+                kind="specialization_browser" if specialization else "browser_url",
+                expected_guide_sha256=expected_guide_sha256,
             )
+            if identity is not None:
+                report.update(identity)
+                report["resolved_guide_url"] = specialization.guide_url
+                report["editorial_review_required"] = True
+                # A visible patch/date is a necessary gate, never an independent
+                # confirmation that all hidden guide choices are current.
+                report["source_patch_verified"] = False
             if capture_ui:
                 from .live_dom_capture import capture, summarize
-                evidence = capture(page, max_states=max_states, max_depth=max_depth)
+                # Each state reloading the page must still identify the
+                # requested guide revision. Do not mix a current initial WHML
+                # packet with a stale dynamic option state after reload.
+                def validate_captured_state(current_page):
+                    if specialization is not None:
+                        inspect_identity(
+                            current_page.content(), specialization,
+                            expected_patch=expected_patch,
+                            min_updated=min_updated,
+                        )
+                evidence = capture(
+                    page, max_states=max_states, max_depth=max_depth,
+                    validate_state=validate_captured_state if specialization else None,
+                )
                 (output / "private-ui-capture.json").write_text(
                     json.dumps(evidence, ensure_ascii=False, indent=2) + "\n",
                     encoding="utf-8",
@@ -250,13 +309,109 @@ def run_browser(url: str, output: Path, *, capture_mhtml: bool = False,
                 )
                 report["ui_states_observed"] = ui_report["observed_state_count"]
                 report["ui_known_capture_gaps"] = ui_report["known_capture_gaps"]
-                (output / "pipeline-audit.json").write_text(
-                    json.dumps(report, ensure_ascii=False, indent=2) + "\n",
-                    encoding="utf-8",
-                )
+                report["ui_capture_report_written"] = True
+            # Keep acquisition, identity and UI coverage in ONE final report.
+            (output / "pipeline-audit.json").write_text(
+                json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
             return report
         finally:
             browser.close()
+
+
+
+def run_specialization_with_ui(query: str, output: Path, *,
+                               capture_ui: bool = True,
+                               capture_mhtml: bool = False,
+                               max_states: int = 24, max_depth: int = 3,
+                               expected_patch: str | None = None,
+                               min_updated: str | None = None,
+                               expected_guide_sha256: str | None = None) -> dict:
+    """HTTP-first evidence, optional *revision-matched* browser enrichment.
+
+    The guide source is obtained once via a normal HTTPS GET, before any
+    browser navigation. A blocked browser must not destroy an accessible,
+    version-checked source; conversely, a stale/mismatched browser may never
+    supply guide conditions or UI observations to that source.
+    """
+    from tempfile import TemporaryDirectory
+    from shutil import copyfile
+
+    spec = resolve_specialization(query)
+    report = run_specialization(
+        query, output, expected_patch=expected_patch,
+        min_updated=min_updated,
+        expected_guide_sha256=expected_guide_sha256,
+    )
+    report["ui_capture_status"] = "not_observed"
+    report["ui_known_capture_gaps"] = True
+    report["ui_states_observed"] = 0
+    report["browser_enrichment_attempted"] = bool(capture_ui or capture_mhtml)
+    report["browser_enrichment_accepted"] = False
+    report["real_site_completeness_verified"] = False
+    report["gameplay_meaning_verified"] = False
+    report["automatic_publish_allowed"] = False
+
+    if capture_ui or capture_mhtml:
+        with TemporaryDirectory(prefix="rotation-browser-") as tmp:
+            try:
+                browser = run_browser(
+                    spec.guide_url, Path(tmp), capture_ui=capture_ui,
+                    capture_mhtml=capture_mhtml, max_states=max_states,
+                    max_depth=max_depth,
+                    expected_guide_sha256=expected_guide_sha256,
+                    specialization=spec, expected_patch=expected_patch,
+                    min_updated=min_updated,
+                )
+            except SourceAccessError as exc:
+                # Never echo site text, actual URL query strings, or source.
+                reason = str(exc).lower()
+                if "403" in reason or "429" in reason or "denied" in reason:
+                    category = "browser_access_denied"
+                elif "patch" in reason or "older" in reason or "revision" in reason:
+                    category = "browser_source_version_mismatch"
+                elif "heading" in reason or "page title" in reason:
+                    category = "browser_guide_identity_mismatch"
+                elif "unavailable" in reason:
+                    category = "browser_unavailable"
+                else:
+                    category = "browser_source_unavailable"
+                report["ui_capture_status"] = category
+            else:
+                # Matching title/date alone cannot prove identical ordered
+                # source rules. Compare exact guide-body digests before merging
+                # *any* browser UI evidence into HTTP source's private packet.
+                if (
+                    browser.get("guide_body_sha256s") != report["guide_body_sha256s"]
+                    or browser.get("observed_guide_update_date")
+                    != report.get("observed_guide_update_date")
+                ):
+                    report["ui_capture_status"] = "browser_source_body_mismatch"
+                else:
+                    report["browser_enrichment_accepted"] = True
+                    if capture_mhtml and (Path(tmp) / "page.mhtml").is_file():
+                        copyfile(Path(tmp) / "page.mhtml", output / "page.mhtml")
+                    if capture_ui:
+                        for name in ("private-ui-capture.json", "ui-audit.json"):
+                            if (Path(tmp) / name).is_file():
+                                copyfile(Path(tmp) / name, output / name)
+                        report["ui_states_observed"] = browser.get("ui_states_observed", 0)
+                        report["ui_known_capture_gaps"] = bool(
+                            browser.get("ui_known_capture_gaps", True)
+                        )
+                        report["ui_capture_status"] = (
+                            "observed_partial" if report["ui_states_observed"]
+                            else "not_observed"
+                        )
+                    else:
+                        report["ui_capture_status"] = "mhtml_only"
+
+    (output / "pipeline-audit.json").write_text(
+        json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return report
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -282,14 +437,22 @@ def main(argv: list[str] | None = None) -> int:
     if args.specialization:
         if not args.allow_remote:
             parser.error("Specialization mode requires --allow-remote")
-        if args.mhtml or args.capture_ui:
-            parser.error("Dynamic UI/MHTML are not available in HTTP-first spec mode")
-        result = run_specialization(
-            args.specialization, args.output,
-            expected_patch=args.expected_patch,
-            min_updated=args.min_updated,
-            expected_guide_sha256=args.expected_guide_sha256,
-        )
+        if args.capture_ui or args.mhtml:
+            result = run_specialization_with_ui(
+                args.specialization, args.output,
+                capture_ui=args.capture_ui, capture_mhtml=args.mhtml,
+                max_states=args.max_states, max_depth=args.max_depth,
+                expected_guide_sha256=args.expected_guide_sha256,
+                expected_patch=args.expected_patch,
+                min_updated=args.min_updated,
+            )
+        else:
+            result = run_specialization(
+                args.specialization, args.output,
+                expected_patch=args.expected_patch,
+                min_updated=args.min_updated,
+                expected_guide_sha256=args.expected_guide_sha256,
+            )
     elif args.http_url:
         if not args.allow_remote:
             parser.error("Direct HTTP mode requires --allow-remote")
