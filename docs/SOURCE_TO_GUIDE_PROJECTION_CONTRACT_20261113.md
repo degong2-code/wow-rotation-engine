@@ -24,7 +24,7 @@
 `engine/gameplay_decision_qa.py`에 기존 상태 비교·근거 QA와 공존하는 **두 함수만** 추가했다.
 
 - `project_priority_view(source_rules, view_context, min_targets, max_targets)`: **정본(source) → 표시용 행** 생성. 각 행에 `source_rule_id`·`source_rank`·`view_rank`·`when`·`condition_text`·`reason`·`exceptions`·`evidence`를 유지. 선택 맥락 미정·정규화되지 않은 OR/조건 자료는 자동 통과시키지 않음. 대상 수의 명백히 불가능한 조건만 보수적으로 제외.
-- `audit_priority_view(source_rules, rendered_rows, view_context, min_targets, max_targets)`: **실제 표에 전달된 행 목록**을 정본에서 재생성한 뷰와 비교. 원문 ID·순서·조건 임계값·행동·기본 이유·인용 변경 및 누락·중복을 탐지. 공개용 보고에는 **개수/이슈 코드만** 기록하며 사적 원문·주문명·상태 ID를 출력하지 않는다. 부정/의미 불명 분기가 남아 있으면 REVEW. 원본 판단의 실게임 정확성을 자동 보증하지 않으며 게시 허용 값은 항상 false.
+- `audit_priority_view(source_rules, rendered_rows, view_context, min_targets, max_targets)`: **실제 표에 전달된 행 목록**을 정본에서 재생성한 뷰와 비교. 원문 ID·순서·조건 임계값·행동·기본 이유·인용 변경 및 누락·중복을 탐지. 공개용 보고에는 **개수/이슈 코드만** 기록하며 사적 원문·주문명·상태 ID를 출력하지 않는다. 부정/의미 불명 분기가 남아 있으면 REVIEW. 원본 판단의 실게임 정확성을 자동 보증하지 않으며 게시 허용 값은 항상 false.
 
 **안전 경계:** `when`은 기존 `gameplay_decision_qa`가 지원하는 **AND 조건들의 명시적 목록**만 유효하다. 실제 원문에 OR/상호 배타적 선택·상태 전환이 있다면 **먼저 원문의 참값 조건을 가지별로 정확히 분해**하고 각각의 근거를 확인해야 한다. 자동으로 OR를 AND로 해석하거나, 본 함수가 모든 게임 로직의 SAT 검증기라고 주장하지 않는다. 이 함수가 **조건식 자체를 원문에서 자동 추출하는 엔진은 아니다.**
 
@@ -47,6 +47,9 @@
 검증 기준: 브랜치 `work/chat-first-v11-20261111`, GitHub Actions [공개 bootstrap CI](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43376409713) **418 tests, 416 pass, 2 skipped**. 테스트는 합성 자료의 **변환 회귀**만 증명하며 사용자 개인 HTML/원문은 CI에 올리지 않았다.
 
 ## 5. 통합 전제와 미완료 범위
+
+**기존 CREATE 설계의 추가 불일치 제거:** `engine/v2/create_guide.py`가 Arcane 초안 검증에서 **최소 두 출처**를 강제하는 구 규약을 발견하여, 현재 사용자 확정 **단일 Wowhead 기준 출처 우선** 정책에 맞게 **기준 출처 1개 이상**으로 변경했다. 단일 기준 원문 하나를 제공하는 정상 초안은 통과하고 출처 0개는 거부하는 두 테스트를 기존 `tests/test_v11_arcane_create.py`에 추가했다. 이것이 다수 출처를 금지한다는 뜻은 아니며, 다른 출처는 **실제 불일치 검증이 필요할 때만** 추가한다. 이 변화는 기존 초안 34개 행의 게임 근거를 자동 승인하지 않는다.
+
 
 - **완료:** 기존 판단 QA에 재사용 가능한 **정본 우선순위 → 뷰 투영/보존 검사**를 추가했고, 실제 비전 실패 패턴 및 다른 영웅 정상 상태를 합성 자료로 재현했다. 과거 `engine/v2/create_guide.py`의 비전 초안은 여전히 **조건 문장을 직접 작성한 legacy draft**로, 여기에 정본 원문 근거 35행을 연결하는 단계는 미완료다.
 - **통합 목표:** 다음 CREATE/UPDATE는 **실제 12.1.5 원문에서 검토된 canonical source rules**를 만들고 이 함수를 사용해 ST/AoE 출력 행을 **직접 생성**해야 한다. 단순히 자동 검사 함수만 호출하고 기존 수기 표를 그대로 렌더링하면 **설계 문제가 해결된 것이 아니다**. `rendered_rows`는 실질적으로 화면에 출력하는 동일한 자료여야 한다. 그렇지 않다면 Q1은 REVIEW로 유지한다.
