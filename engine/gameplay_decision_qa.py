@@ -312,7 +312,19 @@ def project_priority_view(
         _valid_name(rule.get("reason"), "source reason")
         _valid_name(rule.get("condition_text"), "source condition text")
         _check_context(rule.get("context"), "source context")
-        _check_predicates(rule.get("when"))
+        if "when_any" in rule:
+            # DNF: every clause is AND; the clauses are OR. Never flatten
+            # this into a single AND list, which would change the decision.
+            branches = rule["when_any"]
+            if (not isinstance(branches, list) or not branches or
+                    len(branches) > 20):
+                raise ValueError("when_any must be a bounded nonempty OR list")
+            for clause in branches:
+                _check_predicates(clause)
+            if rule.get("when") not in (None, []):
+                raise ValueError("Provide when or when_any, never both")
+        else:
+            _check_predicates(rule.get("when"))
         exceptions = rule.get("exceptions")
         if not isinstance(exceptions, list) or any(
             not isinstance(x, str) or not x.strip() for x in exceptions
@@ -323,8 +335,10 @@ def project_priority_view(
             raise ValueError("View lacks required source context; cannot choose branch")
         if any(not _equals(view_context[k], v) for k, v in rule["context"].items()):
             continue
-        if any(not _target_predicate_possible(c, min_targets, max_targets)
-               for c in rule["when"]):
+        clauses = rule.get("when_any", [rule.get("when", [])])
+        # A rule can be omitted only if EVERY OR alternative is impossible.
+        if not any(all(_target_predicate_possible(c, min_targets, max_targets)
+                       for c in clause) for clause in clauses):
             continue
         selected.append(rule)
 
@@ -337,7 +351,9 @@ def project_priority_view(
             "source_rank": rule["rank"],
             "view_rank": idx,
             "action": rule["action"],
-            "when": deepcopy(rule["when"]),
+            "when": deepcopy(rule.get("when", [])),
+            **({"when_any": deepcopy(rule["when_any"])}
+               if "when_any" in rule else {}),
             "condition_text": rule["condition_text"],
             "reason": rule["reason"],
             "exceptions": deepcopy(rule["exceptions"]),
@@ -383,8 +399,9 @@ def audit_priority_view(
     expected_by_id = {row["source_rule_id"]: row for row in expected}
     altered = sum(
         isinstance(row, dict) and row.get("source_rule_id") in expected_by_id and
-        any(row.get(field) != expected_by_id[row["source_rule_id"]][field]
-            for field in keys)
+        (any(row.get(field) != expected_by_id[row["source_rule_id"]][field]
+             for field in keys) or
+         row.get("when_any") != expected_by_id[row["source_rule_id"]].get("when_any"))
         for row in rendered_rows
     )
     order_changed = (
