@@ -115,7 +115,7 @@ def _guard(event: dict, state: dict) -> bool | None:
     return None if unknown else True
 
 
-def _simulate(events: list[dict], initial_state: dict) -> tuple[str, list, set]:
+def _simulate(events: list[dict], initial_state: dict) -> tuple[str, list, set, dict]:
     """Replay only author-declared guards and effects, never inferred mechanics.
 
     Unordered events in a beat read the SAME initial state and commit together.
@@ -137,20 +137,20 @@ def _simulate(events: list[dict], initial_state: dict) -> tuple[str, list, set]:
             # Do not silently evaluate an unsequenced conditional against the
             # wrong intra-beat state. This is a review, not a guessed order.
             if any(e.get("within_beat_order") is None for e in group):
-                return "underdetermined", [], set()
+                return "underdetermined", [], set(), dict(state)
             for event in sorted(group, key=lambda e: e["within_beat_order"]):
                 status = _guard(event, state)
                 if status is None:
-                    return "underdetermined", [], set()
+                    return "underdetermined", [], set(), dict(state)
                 if status is False:
                     continue
                 if (event["lane"] == "gcd" and
                         any(e["lane"] == "gcd" for e in certain)):
-                    return "ambiguous", [], set()
+                    return "ambiguous", [], set(), dict(state)
                 if (certain and
                         event["within_beat_order"] ==
                         certain[-1]["within_beat_order"]):
-                    return "ambiguous", [], set()
+                    return "ambiguous", [], set(), dict(state)
                 certain.append(event)
                 # Explicitly ordered effects are visible to *later* actions
                 # in the same decision beat, never to earlier actions.
@@ -164,14 +164,14 @@ def _simulate(events: list[dict], initial_state: dict) -> tuple[str, list, set]:
                 elif status is None:
                     uncertain.append(event)
             if uncertain:
-                return "underdetermined", [], set()
+                return "underdetermined", [], set(), dict(state)
             if sum(e["lane"] == "gcd" for e in certain) > 1:
-                return "ambiguous", [], set()
+                return "ambiguous", [], set(), dict(state)
             changes = {}
             for event in certain:
                 for field, value in event.get("set_state", {}).items():
                     if field in changes and not _equals(changes[field], value):
-                        return "ambiguous", [], set()
+                        return "ambiguous", [], set(), dict(state)
                     changes[field] = value
             # Without declared order, changes are NOT visible within a beat.
             state.update(changes)
@@ -182,11 +182,11 @@ def _simulate(events: list[dict], initial_state: dict) -> tuple[str, list, set]:
         if ordered:
             for current in phase_sequence:
                 if current < last_phase:
-                    return "ambiguous", [], set()
+                    return "ambiguous", [], set(), dict(state)
                 last_phase = current
         elif phase_sequence:
             if min(phase_sequence) < last_phase:
-                return "ambiguous", [], set()
+                return "ambiguous", [], set(), dict(state)
             last_phase = max(phase_sequence)
         observed = [e["time_ms"] for e in certain
                     if e.get("time_ms") is not None
@@ -194,15 +194,15 @@ def _simulate(events: list[dict], initial_state: dict) -> tuple[str, list, set]:
         if ordered:
             for instant in observed:
                 if last_start_ms is not None and instant < last_start_ms:
-                    return "ambiguous", [], set()
+                    return "ambiguous", [], set(), dict(state)
                 last_start_ms = instant
         elif observed:
             if last_start_ms is not None and min(observed) < last_start_ms:
-                return "ambiguous", [], set()
+                return "ambiguous", [], set(), dict(state)
             last_start_ms = max(observed)
         selected.extend(_event_signature(event) for event in certain)
         exercised.update(e["id"] for e in certain)
-    return "ready", sorted(selected), exercised
+    return "ready", sorted(selected), exercised, dict(state)
 
 
 def assess_opener_timeline(packet: dict, annotations: dict) -> dict:
@@ -258,17 +258,26 @@ def assess_opener_timeline(packet: dict, annotations: dict) -> dict:
         case_ids.add(ident)
         _check_context(case.get("context"), "case context")
         _check_context(case.get("initial_state"), "case initial state")
+        if "expected_final_state" in case:
+            _check_context(case["expected_final_state"], "case expected final state")
         _check_expected(case.get("expected_events"))
         key = _key(case["context"])
         if key not in contexts:
             result = "no_branch"
         else:
             covered.add(key)
-            result, got, winners = _simulate(contexts[key], case["initial_state"])
+            result, got, winners, final_state = _simulate(
+                contexts[key], case["initial_state"])
             if result == "ready":
                 expected = sorted(_event_signature(event)
                                   for event in case["expected_events"])
-                result = "matched" if got == expected else "mismatch"
+                # A declared postcondition asserts only specific, independently
+                # justified state facts; omission is not treated as false.
+                postconditions_match = all(
+                    field in final_state and _equals(final_state[field], value)
+                    for field, value in case.get("expected_final_state", {}).items()
+                )
+                result = "matched" if got == expected and postconditions_match else "mismatch"
                 exercised.update((key, winner) for winner in winners)
         results.append({"case_index": len(results) + 1, "result": result})
 
