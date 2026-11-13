@@ -541,6 +541,10 @@ def render_arcane(doc: dict) -> dict:
                 len(g["priority_shadow_audit"]["same_action_shadowed_view_ranks"])
                 for g in doc["rotation_groups"] if "priority_shadow_audit" in g
             ),
+            "mixed_action_shadowed_rows": sum(
+                len(g["priority_shadow_audit"]["mixed_action_shadowed_view_ranks"])
+                for g in doc["rotation_groups"] if "priority_shadow_audit" in g
+            ),
             "requires_editorial_review": any(
                 g["priority_shadow_audit"]["priority_shadow_review_required"]
                 for g in doc["rotation_groups"] if "priority_shadow_audit" in g
