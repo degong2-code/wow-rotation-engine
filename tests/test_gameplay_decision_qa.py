@@ -605,12 +605,23 @@ class PriorityShadowGeneralizationTests(unittest.TestCase):
         self.assertEqual(audit["different_action_shadowed_view_ranks"], [])
         self.assertFalse(audit["priority_shadow_review_required"])
 
-    def test_same_action_guard_prevents_false_different_action_claim(self):
-        r = self.r
+    def test_empty_unmodeled_source_condition_is_not_unconditional(self):
+        c, r = self.c, self.r
+        # In a real guide, readiness may still be in condition_text only.
         audit = self.audit([
-            r("first", 1, "Synthetic A"),
-            r("second", 2, "Synthetic B"),
-            r("third", 3, "Synthetic A"),
+            r("unmodeled-ready", 1, "Synthetic Cooldown"),
+            r("talent-exception", 2, "Synthetic Finisher", [
+                c("special_talent", "eq", True)
+            ]),
+        ])
+        self.assertEqual(audit["provably_shadowed_view_ranks"], [])
+
+    def test_same_action_guard_prevents_false_different_action_claim(self):
+        c, r = self.c, self.r
+        audit = self.audit([
+            r("first", 1, "Synthetic A", [c("stacks", "gte", 0)]),
+            r("second", 2, "Synthetic B", [c("stacks", "gte", 1)]),
+            r("third", 3, "Synthetic A", [c("stacks", "gte", 2)]),
         ])
         self.assertIn(3, audit["same_action_shadowed_view_ranks"])
         self.assertNotIn(3, audit["different_action_shadowed_view_ranks"])
