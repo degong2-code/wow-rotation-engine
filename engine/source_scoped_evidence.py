@@ -230,6 +230,58 @@ def scoped_from_packet(packet: dict) -> dict:
     }
 
 
+def unbound_selector_impact(packet: dict, scoped: dict) -> dict:
+    """Identify unresolved *source visibility* that could hide action rows.
+
+    This is an editorial REVIEW gate, not a proof of gameplay error.
+    Does not reveal source prose, unknown IDs or expression strings in reports.
+    """
+    if (packet.get("schema_version") != "source-editorial-evidence-private-v1"
+            or len(packet.get("payloads", [])) != len(scoped.get("payloads", []))):
+        raise SourceAccessError("Unmatched private source and scoped evidence")
+    token = re.compile(r"[A-Za-z][A-Za-z0-9_-]*")
+    ability = re.compile(r"\[(?:spell|rt-step|rt-step-group)\s*=\s*\d+", re.I)
+    all_expressions = critical_rows = ability_rows = potential_steps = 0
+    unique_unbound = set()
+    for source, scope in zip(packet["payloads"], scoped["payloads"]):
+        if source["sha256"] != scope["guide_body_sha256"]:
+            raise SourceAccessError("Mismatched source and scoped body SHA")
+        declared = {o["id"] for o in source.get("option_definitions", [])}
+        for condition in source.get("conditional_expressions", []):
+            missing = set(token.findall(condition["expression"])) - declared
+            if missing:
+                all_expressions += 1
+                unique_unbound.update(missing)
+                if condition["tag"] in {"rt-step", "rt-step-group"}:
+                    potential_steps += 1
+        for row in scope["source_list_rows"]:
+            owner = row.get("containing_list")
+            if (not owner or owner.get("tag") != "ol"
+                    or row.get("inside_tooltip_definition")):
+                continue
+            expressions = (
+                [x["expression"] for x in row["active_display_scopes"]] +
+                [x["expression"] for x in row["nested_display_fragments"]] +
+                [x["expression"] for x in row["standalone_condition_markers_inside_row"]]
+            )
+            if not any(set(token.findall(expr)) - declared for expr in expressions):
+                continue
+            critical_rows += 1
+            if ability.search(row["original_whml_fragment"]):
+                ability_rows += 1
+    return {
+        "unbound_selector_expression_occurrences": all_expressions,
+        "unbound_selector_identifier_count": len(unique_unbound),
+        "unbound_selector_ordered_row_candidates": critical_rows,
+        "unbound_selector_ordered_ability_row_candidates": ability_rows,
+        "unbound_selector_standalone_step_candidates": potential_steps,
+        "source_selector_references_resolved": all_expressions == 0,
+        "ordered_action_review_required": bool(critical_rows or potential_steps),
+        "gameplay_action_meaning_proven": False,
+        "source_text_in_report": False,
+    }
+
+
 def scoped_metadata(scoped: dict) -> dict:
     """Public-safe counts only: do not emit source fragments or expressions."""
     rows = [row for source in scoped["payloads"] for row in source["source_list_rows"]]
