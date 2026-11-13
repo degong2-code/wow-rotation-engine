@@ -109,6 +109,7 @@ class RuleSourceAuditTests(unittest.TestCase):
                     ROOT / "content" / "new_guides" / "arcane.json",
                     target / "generated.html",
                     evidence_path=invalid_file,
+                    allow_legacy_review=True,  # Explicit historical audit test only.
                 )
             self.assertFalse((target / "generated.html").exists())
 
