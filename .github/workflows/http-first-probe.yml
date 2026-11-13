@@ -10,6 +10,7 @@ on:
       - 'engine/source_acquisition_pipeline.py'
       - 'engine/gameplay_decision_qa.py'
       - 'engine/source_scoped_evidence.py'
+      - 'engine/source_choice_visibility.py'
       - 'tests/test_source_scoped_evidence.py'
       - 'tests/live_enhancement_decision_review.py'
       - 'tests/live_enhancement_opener_review.py'
