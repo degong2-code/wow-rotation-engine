@@ -153,6 +153,53 @@ class OpenerTimelineTests(unittest.TestCase):
         }])
         self.assertEqual(bad["case_results"][0]["result"], "mismatch")
 
+    def test_explicit_final_state_assertion_passes(self):
+        ctx = {"spec": "fictional"}
+        buff = event("buff", "Fictional potion", "[spell=102]",
+                     0, "combat", "off_gcd", set_state={"seeded": True})
+        row = case("post", ctx, [buff], {"seeded": False})
+        row["expected_final_state"] = {"seeded": True}
+        result = run([branch(ctx, [buff])], [row])
+        self.assertTrue(result["all_declared_cases_matched"])
+
+    def test_missing_effect_cannot_pass_declared_postcondition(self):
+        ctx = {"spec": "fictional"}
+        buff = event("buff", "Fictional potion", "[spell=102]",
+                     0, "combat", "off_gcd")
+        row = case("post", ctx, [buff], {"seeded": False})
+        row["expected_final_state"] = {"seeded": True}
+        result = run([branch(ctx, [buff])], [row])
+        self.assertEqual(result["case_results"][0]["result"], "mismatch")
+
+    def test_unobserved_final_field_cannot_be_assumed(self):
+        ctx = {"spec": "fictional"}
+        action = event("act", "Fictional attack", "[spell=101]",
+                       0, "combat", "gcd")
+        row = case("unknown", ctx, [action])
+        row["expected_final_state"] = {"seeded": False}
+        result = run([branch(ctx, [action])], [row])
+        self.assertEqual(result["case_results"][0]["result"], "mismatch")
+
+    def test_final_state_comparison_is_type_strict(self):
+        ctx = {"spec": "fictional"}
+        action = event("act", "Fictional attack", "[spell=101]",
+                       0, "combat", "gcd", set_state={"resource": 1})
+        row = case("typed", ctx, [action])
+        row["expected_final_state"] = {"resource": True}
+        result = run([branch(ctx, [action])], [row])
+        self.assertEqual(result["case_results"][0]["result"], "mismatch")
+
+    def test_final_state_not_exposed_in_public_results(self):
+        ctx = {"spec": "fictional"}
+        action = event("act", "Fictional potion", "[spell=102]",
+                       0, "combat", "off_gcd", set_state={"secret_token": "sensitive"})
+        row = case("secret", ctx, [action])
+        row["expected_final_state"] = {"secret_token": "sensitive"}
+        report = run([branch(ctx, [action])], [row])
+        self.assertTrue(report["all_declared_cases_matched"])
+        self.assertNotIn("sensitive", json.dumps(report))
+        self.assertNotIn("secret_token", json.dumps(report))
+
     def test_explicit_intra_beat_effect_enables_following_hit(self):
         ctx = {"spec": "different-hero-specialization"}
         buff = event("buff", "Fictional potion", "[spell=102]",
