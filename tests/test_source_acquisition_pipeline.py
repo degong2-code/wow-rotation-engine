@@ -376,6 +376,37 @@ class SourcePipelineTests(TestCase):
                 )
             self.assertFalse(output.exists())
 
+
+    def test_spec_browser_rejects_dom_response_revision_conflict(self):
+        from engine.source_acquisition_pipeline import run_browser
+        from unittest.mock import patch
+        spec = resolve_specialization("생존 사냥꾼")
+        live = self._synthetic_guide_version("12.1.5", "2026/10/13")
+        stale = self._synthetic_guide_version("12.0.7", "2026/05/03")
+        module_stub, _ = self._browser_stub(spec.guide_url, live)
+        with TemporaryDirectory() as tmp, module_stub:
+            output = Path(tmp) / "private"
+            with patch("engine.source_acquisition_pipeline.capture_loaded_page",
+                       return_value=(live, stale, None)):
+                with self.assertRaisesRegex(SourceAccessError,
+                                           "disagree on guide revision"):
+                    run_browser(spec.guide_url, output, specialization=spec)
+            self.assertFalse(output.exists())
+
+    def test_ui_state_identity_validator_rejects_stale_reload(self):
+        from engine.live_dom_capture import capture, summarize
+        from unittest.mock import MagicMock
+        page = MagicMock()
+        page.url = "https://www.wowhead.com/guide/synthetic"
+        page.content.return_value = "<!doctype html><html></html>"
+        def reject(_):
+            raise SourceAccessError("Stale UI revision after reload")
+        result = capture(page, max_states=1, validate_state=reject)
+        self.assertEqual(result["states"], [])
+        self.assertEqual(result["errors"][0]["type"], "SourceAccessError")
+        self.assertTrue(summarize(result)["known_capture_gaps"])
+        page.evaluate.assert_not_called()
+
     def test_spec_browser_rejects_another_specialization_before_saving(self):
         from engine.source_acquisition_pipeline import run_browser
         spec = resolve_specialization("생존 사냥꾼")
