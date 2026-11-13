@@ -390,7 +390,7 @@
 ## 2026-11-13 후속: 생존·비전 미선언 선택 참조의 실제 위치 추적 및 범용 검토 게이트
 
 - **새 실제 근거:** [CROSS_SPEC_UNBOUND_SELECTOR_AUDIT_20261113](CROSS_SPEC_UNBOUND_SELECTOR_AUDIT_20261113.md), [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md) C01~C03.
-- 실제 원문 재취득·인덱스: 생존 61개 표시 조건 중 4개가 미선언(T​​rick-Op 1, pack-leader-ffp 2, sentinel-ffp 1), **그 중 3개는 주문 마커가 있는 ordered 행**. 비전 5개 조건 중 SSOrb 2곳 미선언, 두 곳은 div 영역이며 ordered 주문 행 0개 확인. 숨겨진 게임 규칙의 자동 누락 방지가 목적이다.
+- 실제 원문 재취득·인덱스: 생존 61개 표시 조건 중 4개가 미선언(Trick-Op 1, pack-leader-ffp 2, sentinel-ffp 1), **그 중 3개는 주문 마커가 있는 ordered 행**. 비전 5개 조건 중 SSOrb 2곳 미선언, 두 곳은 div 영역이며 ordered 주문 행 0개 확인. 숨겨진 게임 규칙의 자동 누락 방지가 목적이다.
 - 원문 WHML의 선언 선택지뿐 아니라 **원시 페이지에서 해당 WHML JSON 리터럴을 제외한 영역의 선택 ID 직접 텍스트 출현**까지 확인했으나 두 전문화의 미선언 ID를 발견하지 못했다. 정적 직접 참조 0 ≠ 원격 공통 JS/렌더러의 간접 옵션 정의 없음. 정확한 UI 적용 의미는 계속 REVIEW.
 - **일반화 구현:** engine/source_scoped_evidence.py의 unbound_selector_impact + engine/source_acquisition_pipeline.py 공통 소스 게이트. 원문 지문 일치/조건식 수집/선택지 참조 해석/ordered 행 역할을 구분하며, 출처 정보만 있을 때 gameplay FAIL이라고 단정하지 않는다. 추가 10개 합성 정상·실패 검증으로 declared 옵션, nested spans, tooltip, unordered notes, standalone steps, 실제 저장 데이터 비공개를 대조. 기존 conditional_option_without_definition 경고는 유지하며 새 unbound_selector_ordered_action_candidate는 **실제 게임 행동 오류가 아닌 추가 검토 후보**.
 - **현재 판정:** 생존 ordered 행동 후보 3행 REVIEW, 비전 미선언 div 2건 REVIEW, 고양 실제 소스 선택/타임라인의 앞선 12/12 및 30/30 상태는 변경 없음. 개인 V11/V3.11 콘텐츠 미수정, PR #20 Draft/미병합 유지.
