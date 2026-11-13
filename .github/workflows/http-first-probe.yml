@@ -2,7 +2,7 @@ name: HTTP-first Wowhead access diagnostic (no bypass)
 
 on:
   push:
-    branches: ['work/chat-first-v11-20261111', 'work/chat-first-spec-ui-acquisition-20261113']
+    branches: ['work/chat-first-v11-20261111']
     paths:
       - 'engine/http_source_fetch.py'
       - 'engine/spec_source_resolver.py'
@@ -104,43 +104,6 @@ jobs:
                         "source_or_identity_unavailable")
                   print(label+"_status="+code)
                   print(label+"_current_patch_verified=false")
-          PY
-
-      - name: Current 12.1.5 Survival source identity and bounded source completeness (one HTTPS GET)
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          from tempfile import TemporaryDirectory
-          from engine.source_acquisition_pipeline import run_specialization
-          from engine.source_page_acquire import SourceAccessError
-          from engine.spec_source_resolver import resolve_specialization
-
-          spec = resolve_specialization('생존 사냥꾼')
-          with TemporaryDirectory() as temp:
-              try:
-                  report = run_specialization(
-                      '생존 사냥꾼', Path(temp),
-                      expected_patch='12.1.5',
-                      min_updated='2026-10-13',
-                  )
-              except SourceAccessError as exc:
-                  msg = str(exc)
-                  reason = ('access_denied' if '403' in msg or '429' in msg
-                            else 'stale_or_inconsistent_source')
-                  print('survival_live_source_gate=REVIEW')
-                  print('survival_live_source_issue=' + reason)
-              else:
-                  print('survival_live_source_gate=IDENTITY_ONLY')
-                  print('survival_live_source_whml_payload_count=' +
-                        str(report['guide_body_payloads']))
-                  print('survival_live_source_tooltip_definition_count=' +
-                        str(report['named_tooltip_definition_count']))
-                  print('survival_live_source_option_definition_count=' +
-                        str(report['option_definition_count']))
-                  print('survival_live_source_undeclared_action_selector_review=' +
-                        str(report['source_selector_action_review_required']).lower())
-                  print('survival_live_source_dynamic_ui_verified=false')
-                  print('survival_live_source_gameplay_verified=false')
           PY
 
       - name: Check source-locked 12.1.5 gameplay decision cases without publishing HTML
