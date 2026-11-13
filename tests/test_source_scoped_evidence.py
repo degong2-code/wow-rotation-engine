@@ -3,13 +3,82 @@ import json
 import unittest
 
 from engine.source_editorial_packet import packet_from_html
-from engine.source_scoped_evidence import scoped_from_packet, scoped_metadata
+from engine.source_scoped_evidence import scoped_from_packet, scoped_metadata, unbound_selector_impact
 
 
 def capture(whml):
     html = ("<!doctype html><html><script>WH.markup.printHtml(" +
             json.dumps(whml) + ',"guide-body",false);</script></html>')
     return scoped_from_packet(packet_from_html(html))
+
+
+class UnboundSelectorImpactTests(unittest.TestCase):
+    def impact(self, whml):
+        html = ('<!doctype html><html><script>WH.markup.printHtml('
+                + json.dumps(whml) + ',"guide-body",false);</script></html>')
+        packet = packet_from_html(html)
+        scoped = scoped_from_packet(packet)
+        return unbound_selector_impact(packet, scoped)
+
+    def test_declared_options_in_real_ordered_steps_do_not_trigger_review(self):
+        result = self.impact(
+            '[display-option=Hero-A radio=hero checked]Option[/display-option]'
+            '[ol][li display-options="Hero-A"][spell=101]Attack[/li][/ol]')
+        self.assertEqual(result["unbound_selector_expression_occurrences"], 0)
+        self.assertTrue(result["source_selector_references_resolved"])
+        self.assertFalse(result["ordered_action_review_required"])
+
+    def test_undeclared_option_on_ordered_spell_row_needs_review(self):
+        result = self.impact(
+            '[ol][li display-options=UnlistedHero][spell=101]Attack[/li][/ol]')
+        self.assertEqual(result["unbound_selector_ordered_row_candidates"], 1)
+        self.assertEqual(result["unbound_selector_ordered_ability_row_candidates"], 1)
+        self.assertTrue(result["ordered_action_review_required"])
+        self.assertFalse(result["gameplay_action_meaning_proven"])
+
+    def test_unknown_explanatory_list_is_not_automatic_gameplay_failure(self):
+        result = self.impact(
+            '[ul][li display-options=NotesOnly][spell=101]Example[/li][/ul]')
+        self.assertEqual(result["unbound_selector_expression_occurrences"], 1)
+        self.assertEqual(result["unbound_selector_ordered_row_candidates"], 0)
+        self.assertFalse(result["ordered_action_review_required"])
+        self.assertFalse(result["source_selector_references_resolved"])
+
+    def test_unknown_nested_span_within_ordered_row_is_detected(self):
+        result = self.impact(
+            '[ol][li]Start [span display-options=HiddenProc]'
+            '[spell=101]Conditional[/span][/li][/ol]')
+        self.assertEqual(result["unbound_selector_ordered_row_candidates"], 1)
+        self.assertEqual(result["unbound_selector_ordered_ability_row_candidates"], 1)
+
+    def test_standalone_unknown_step_requires_review(self):
+        result = self.impact(
+            '[rt-step=101 display-options=UnlistedStep]')
+        self.assertEqual(result["unbound_selector_standalone_step_candidates"], 1)
+        self.assertTrue(result["ordered_action_review_required"])
+
+    def test_tooltip_ol_technique_explanation_is_not_execution_row(self):
+        result = self.impact(
+            '[tooltip name=T][ol][li display-options=Unlisted]'
+            '[spell=101]Explanation[/li][/ol][/tooltip]')
+        self.assertEqual(result["unbound_selector_ordered_row_candidates"], 0)
+        self.assertFalse(result["ordered_action_review_required"])
+
+    def test_unknown_ordered_plain_text_remains_review_without_spell_marker(self):
+        result = self.impact(
+            '[ol][li display-options=Unlisted]Use this action first[/li][/ol]')
+        self.assertEqual(result["unbound_selector_ordered_row_candidates"], 1)
+        self.assertEqual(result["unbound_selector_ordered_ability_row_candidates"], 0)
+        self.assertTrue(result["ordered_action_review_required"])
+
+    def test_safe_report_omits_original_text_and_selector_id(self):
+        result = self.impact(
+            '[ol][li display-options=PrivateTechnicalChoice]'
+            '[spell=101]Protected text[/li][/ol]')
+        public = json.dumps(result)
+        self.assertNotIn("Protected text", public)
+        self.assertNotIn("PrivateTechnicalChoice", public)
+        self.assertFalse(result["source_text_in_report"])
 
 
 class ScopeEvidenceTests(unittest.TestCase):
