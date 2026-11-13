@@ -269,6 +269,129 @@ class SourcePipelineTests(TestCase):
                         main()
             self.assertFalse(output.exists())
 
+
+    def test_spec_cli_capture_ui_reuses_authorized_browser_path(self):
+        from unittest.mock import patch
+        from engine.source_acquisition_pipeline import main
+        from contextlib import redirect_stdout
+        from io import StringIO
+        with TemporaryDirectory() as tmp:
+            output = Path(tmp) / "source"
+            with patch("engine.source_acquisition_pipeline.run_browser",
+                       return_value={"gameplay_meaning_verified": False}) as browse:
+                with patch("sys.argv", [
+                    "pipeline", "--specialization", "생존 사냥꾼",
+                    "--allow-remote", "--capture-ui", "--max-states", "12",
+                    "--max-depth", "2", "--expected-patch", "12.1.5",
+                    "--min-updated", "2026-10-13", "--output", str(output),
+                ]):
+                    with redirect_stdout(StringIO()):
+                        self.assertEqual(main(), 0)
+            args, kwargs = browse.call_args
+            self.assertEqual(args[0], resolve_specialization("생존 사냥꾼").guide_url)
+            self.assertIs(kwargs["specialization"],
+                          resolve_specialization("생존 사냥꾼"))
+            self.assertEqual(kwargs["max_states"], 12)
+            self.assertEqual(kwargs["max_depth"], 2)
+            self.assertTrue(kwargs["capture_ui"])
+            self.assertEqual(kwargs["expected_patch"], "12.1.5")
+            self.assertEqual(kwargs["min_updated"], "2026-10-13")
+
+    @staticmethod
+    def _synthetic_guide_version(patch, updated, *, name="Survival Hunter"):
+        return (
+            '<!doctype html><html><head><title>' + name +
+            ' Rotation Guide - Wowhead</title></head><body>'
+            '<h1>' + name + ' Rotation Guide</h1>'
+            '<main>Patch ' + patch + ' Updated: ' + updated + '</main>'
+            '<script>WH.markup.printHtml('
+            '"[ol][li]Synthetic actionable source[/li][/ol]",'
+            '"guide-body",false);</script></body></html>'
+        )
+
+    def _browser_stub(self, url, html):
+        """Synthetic Playwright stub: no live site, no browser binary."""
+        import sys
+        from types import ModuleType
+        from unittest.mock import MagicMock, patch
+        browser_module = ModuleType("playwright")
+        sync_api = ModuleType("playwright.sync_api")
+        driver = MagicMock()
+        page = driver.chromium.launch.return_value.new_page.return_value
+        page.url = url
+        page.goto.return_value.status = 200
+        sync = MagicMock()
+        sync.return_value.__enter__.return_value = driver
+        sync_api.sync_playwright = sync
+        return (
+            patch.dict(sys.modules, {
+                "playwright": browser_module, "playwright.sync_api": sync_api
+            }),
+            patch("engine.source_acquisition_pipeline.capture_loaded_page",
+                  return_value=(html, html, None)),
+        )
+
+    def test_spec_browser_persists_ui_and_identity_in_one_private_report(self):
+        from engine.source_acquisition_pipeline import run_browser
+        from unittest.mock import patch
+        spec = resolve_specialization("생존 사냥꾼")
+        html = self._synthetic_guide_version("12.1.5", "2026/10/13")
+        module_stub, html_stub = self._browser_stub(spec.guide_url, html)
+        evidence = {
+            "source_url": spec.guide_url, "source_sha256": "synthetic",
+            "states": [], "errors": [], "pending_state_count": 0,
+            "depth_limited_state_count": 0,
+        }
+        with TemporaryDirectory() as tmp, module_stub, html_stub:
+            output = Path(tmp) / "private"
+            with patch("engine.live_dom_capture.capture", return_value=evidence):
+                result = run_browser(
+                    spec.guide_url, output, capture_ui=True, specialization=spec,
+                    expected_patch="12.1.5", min_updated="2026-10-13",
+                )
+            self.assertEqual(result["acquisition_kind"], "specialization_browser")
+            self.assertTrue(result["guide_identity_matched"])
+            self.assertEqual(result["observed_guide_update_date"], "2026-10-13")
+            self.assertTrue(result["ui_capture_report_written"])
+            self.assertEqual(result["ui_states_observed"], 0)
+            self.assertTrue((output / "private-ui-capture.json").exists())
+            self.assertTrue((output / "editorial-evidence-private.json").exists())
+            stored = json.loads((output / "pipeline-audit.json").read_text())
+            self.assertEqual(stored["resolved_guide_url"], spec.guide_url)
+            self.assertEqual(stored["ui_states_observed"], 0)
+            self.assertFalse(stored["real_site_completeness_verified"])
+            self.assertFalse(stored["automatic_publish_allowed"])
+
+    def test_spec_browser_rejects_stale_page_before_any_private_snapshot(self):
+        from engine.source_acquisition_pipeline import run_browser
+        spec = resolve_specialization("생존 사냥꾼")
+        html = self._synthetic_guide_version("12.0.7", "2026/05/03")
+        module_stub, html_stub = self._browser_stub(spec.guide_url, html)
+        with TemporaryDirectory() as tmp, module_stub, html_stub:
+            output = Path(tmp) / "private"
+            with self.assertRaisesRegex(SourceAccessError, "Requested patch"):
+                run_browser(
+                    spec.guide_url, output, capture_ui=True, specialization=spec,
+                    expected_patch="12.1.5", min_updated="2026-10-13",
+                )
+            self.assertFalse(output.exists())
+
+    def test_spec_browser_rejects_another_specialization_before_saving(self):
+        from engine.source_acquisition_pipeline import run_browser
+        spec = resolve_specialization("생존 사냥꾼")
+        html = self._synthetic_guide_version(
+            "12.1.5", "2026/10/13", name="Arcane Mage"
+        )
+        module_stub, html_stub = self._browser_stub(spec.guide_url, html)
+        with TemporaryDirectory() as tmp, module_stub, html_stub:
+            output = Path(tmp) / "private"
+            with self.assertRaisesRegex(SourceAccessError, "Guide heading"):
+                run_browser(
+                    spec.guide_url, output, capture_ui=True, specialization=spec,
+                    expected_patch="12.1.5",
+                )
+            self.assertFalse(output.exists())
+
     def test_private_zip_not_required_to_extract_assets(self):
         with TemporaryDirectory() as temp:
             zip_path = Path(temp) / "full_page.zip"
