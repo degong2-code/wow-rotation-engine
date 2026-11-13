@@ -6,6 +6,12 @@
 > **이 문서는 새 채팅 복원 진입점**이다. **최상위 운영 정책은 [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md)**, 구체적 품질 게이트는 [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), 집필 절차는 [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)을 정본으로 삼으며 중복 복제하지 않는다. **과거 사례로 범용화 가치/오탐을 검증하는 후향적 사례집은 [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md) 참조.**
 
 
+## 0.14 조화 드루이드 V2 — 서로 배타적인 쿨다운 분기 혼합 오류 교정 (2026-11-14)
+
+- [교정 근거·재현](BALANCE_ZERO_BASE_CREATE_REVIEW_20261113.md): 12.1.5 Wowhead의 **단일 FoN→일월식**과 **광역 FoN→화신** 선택 분기를 한 줄의 광역 오프너로 합치면서 '자연의 군대 → 화신 → 일월식'이라는 시전 불가능한 시퀀스가 첫 화면에 나타난 문제 확인. **천체의 정렬/화신 활성 중 일반 일월식 시전 불가**라는 실제 배타 상태가 원인. 새 검사기 제작 없이 첫 화면·오프너·표·실전 예제의 모드/활성 상태 조건을 함께 교정.
+- **개인 비공개 결과:** `wow_rotation_v11_balance_1215_eclipse_branch_v2_REVIEW.html`, 987,095B, SHA-256 `688f2cc56dff23f61f046553fa1d73c785d95b5f3b40cef7ec0265409d8e5402`. 40/40 정본-표 조건 일치, 예제 16개, V11 기존 7개 subtree 7/7 원본 바이트 보존. Chromium PC/모바일 2환경에서 메뉴·영웅·툴팁·넘침/JS 오류 0으로 Q4 PASS.
+- **원문 근거 심화:** 꿈의 통제 선택 시 최대 15초 재사용 대기시간 보정, 숲의 수호자 자연의 군대 활성 12% 피해 강화, 영혼 소집 직전 천공의 힘 과충전 방지. 빌드 선택을 명시하지 않은 무조건적 버튼 순서로 승격하지 않음.
+- **남은 제품 과제:** 12.1.5 영웅/Incarnation/Convoke/Mythic+ **동적 오프너 실제 순서·툴팁 전수 원문 확보**와 적용 빌드 Q0/Q1 검증. 다른 12.0.7 버전에서 기술 순서를 빌려와 미확인 단계 채우지 않음. 개인 HTML을 공개 GitHub에 올리지 않음; `main` 미변경.
 ## 0.13 신규 전문화 실제 CREATE — 조화 드루이드 (2026-11-13)
 
 - 독립 원문 분석으로 **조화 드루이드 V11 REVIEW 단일 HTML** 최초 CREATE. 12.1.5 / 2026-10-13 Wowhead 검색 색인 기준 숲의 수호자/엘룬의 대행자(블리자드 공식 한국어 이름) 단일/광역 8개 단계별 표 40행, 상태별 다음 행동 12개, 기존 V11 7개 원시 본문 7/7 보존. 최신 빌드 동적 오프너 순서는 미확인으로 REVIEW. **과거 12.0.7 직접 HTML과 12.1.5 색인을 혼합하지 않음.**
