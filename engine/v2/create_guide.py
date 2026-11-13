@@ -654,9 +654,23 @@ def create_private_preview(source_path: Path, draft_path: Path,
         Path(evidence_path) if evidence_path is not None
         else ROOT / "content" / "new_guides" / "arcane_rule_source_audit.json"
     )
-    source_audit = audit_rule_sources(
-        draft, json.loads(evidence_file.read_text(encoding="utf-8"))
-    )
+    if "canonical_priority_rules" in draft:
+        # The old per-handwritten-row audit cannot certify a new canonical
+        # source mapping. Never reuse its 34-row evidence IDs for these views.
+        # This path produces a private REVIEW artifact; source completeness
+        # still requires independent WHML and dynamic-option verification.
+        source_audit = {
+            "status": "REVIEW",
+            "source_rule_count": len(draft["canonical_priority_rules"]),
+            "reason_code": "canonical_source_meaning_and_exact_spans_not_certified",
+            "full_condition_verified": False,
+            "gameplay_approved": False,
+            "automatic_publish_allowed": False,
+        }
+    else:
+        source_audit = audit_rule_sources(
+            draft, json.loads(evidence_file.read_text(encoding="utf-8"))
+        )
     full, report = create_arcane(Path(source_path).read_bytes(), draft)
     report["source_audit"] = source_audit
     target.parent.mkdir(parents=True, exist_ok=True)
