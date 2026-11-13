@@ -1,0 +1,105 @@
+name: One-off Balance 12.1.5 WHML opener structural check
+
+on:
+  push:
+    branches: ['work/balance-opener-source-audit-20261114']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-metadata-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Read actual 12.1.5 guide opener via existing HTTP-first packet
+        run: |
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          from tempfile import TemporaryDirectory
+          from collections import Counter
+          from engine.source_acquisition_pipeline import run_specialization
+          from engine.source_scoped_evidence import _nested_scopes
+          from engine.embedded_markup import _attrs
+          from engine.source_page_acquire import SourceAccessError
+
+          # Log structural/technical IDs only. NEVER emit source WHML, its
+          # text passages, full tooltip text, user HTML or private snapshots.
+          try:
+              with TemporaryDirectory() as t:
+                  dest=Path(t)
+                  audit=run_specialization(
+                      "조화 드루이드", dest,
+                      expected_patch="12.1.5", min_updated="2026-10-13")
+                  packet=json.loads((dest/"editorial-evidence-private.json").read_text())
+                  p=packet["payloads"][0]
+                  raw=p["original_whml"]
+                  m=re.search(r"Best Balance Druid Opener",raw,re.I)
+                  ending=(re.search(r"Pre-Combat Check",raw[m.end():],re.I)
+                          if m else None)
+                  if not (m and ending):
+                      print("opener_scope=not_found; review_required=true")
+                  else:
+                      start=m.start()
+                      end=m.end()+ending.start()
+                      segment=raw[start:end]
+                      print("source_patch_visible="+",".join(audit["visible_patch_candidates"]))
+                      print("source_guide_body_sha256="+p["sha256"])
+                      print("source_patch_verified=false")
+                      print("opener_scope_characters="+str(len(segment)))
+                      choices=[o for o in p["option_definitions"]
+                               if start<=o["position"]<end]
+                      print("opener_choice_count="+str(len(choices)))
+                      print("opener_choice_technical_ids="+json.dumps([
+                          (x["id"],x["radio_group"],x["default_checked"])
+                          for x in choices]))
+                      print("opener_choice_groups="+str(dict(Counter(
+                          o["radio_group"] for o in choices))))
+                      terms = ["rt-step","rt-step-group","spell","ol","li","table","tr","display-options"]
+                      for term in terms:
+                          print("opener_tag_"+term+"="+str(len(
+                              re.findall(r"\["+re.escape(term)+r"(?:[\s=]|\])",segment,re.I))))
+                      scopes,issues=_nested_scopes(raw)
+                      print("source_scope_issues="+str(issues))
+                      rows=[s for s in scopes if s["tag"]=="li"
+                            and start<=s["start"]<end
+                            and any(x["tag"]=="ol" and x["start"]<s["start"]<x["end"]
+                                    for x in scopes)]
+                      marker=re.compile(
+                          r"\[(rt-step(?:-group)?|spell)\s*=\s*(\d+)[^\]]*\]",re.I)
+                      print("ordered_opener_li_candidates="+str(len(rows)))
+                      for n,row in enumerate(rows[:36],1):
+                          frag=raw[row["body_start"]:row["body_end"]]
+                          tokens=[f"{m.group(1).lower()}:{m.group(2)}"
+                                  for m in marker.finditer(frag)][:12]
+                          parents=[x for x in scopes
+                                   if x["start"]<row["start"]<x["end"]]
+                          conditions=[x["attributes"]["display-options"]
+                                      for x in parents
+                                      if "display-options" in x["attributes"]]
+                          if "display-options" in row["attributes"]:
+                              conditions.append(row["attributes"]["display-options"])
+                          print("ordered_row_"+
+                                str(n)+"_action_marker_ids="+",".join(tokens)+
+                                ";conditional_scope_count="+str(len(conditions))+
+                                ";condition_identifiers="+",".join(sorted(set(
+                                  k for expr in conditions for k in
+                                  re.findall(r"[A-Za-z][\w-]*",expr)))))
+                      steps=[(m.start()+start,int(m.group(2)),m.group(1).lower())
+                             for m in marker.finditer(segment)
+                             if m.group(1).lower().startswith("rt-step")]
+                      print("opener_rt_step_count="+str(len(steps)))
+                      print("opener_step_ids_first_80="+",".join(
+                          str(x[1]) for x in steps[:80]))
+                      print("full_dynamic_ui_verified=false")
+                      print("opener_gameplay_verified=false")
+          except (SourceAccessError, ValueError, KeyError) as e:
+              print("source_acquisition_status=REVIEW")
+              print("failure_category="+type(e).__name__)
+          PY
