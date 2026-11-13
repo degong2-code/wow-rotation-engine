@@ -23,8 +23,8 @@ def validate_notes(draft: dict) -> dict:
     if annotations["schema_version"] != "v11-notes-v1":
         raise ValueError("Unknown V11 annotation schema")
     notes = annotations["notes"]
-    if not isinstance(notes, list) or not 4 <= len(notes) <= 24:
-        raise ValueError("Expected 4-24 review-gated V11 note annotations")
+    if not isinstance(notes, list) or len(notes) > 24:
+        raise ValueError("Expected at most 24 source-relevant V11 note annotations")
     rules = {
         r["id"] for group in draft["rotation_groups"] for r in group["rows"]
     }
@@ -71,10 +71,9 @@ def validate_notes(draft: dict) -> dict:
             raise ValueError("Critical marker must explain a concrete caution")
         count[note["marker"]] += 1
         by_target[(kind, target_id)] = note
-    if count["?"] < 2 or count["!"] < 2:
-        raise ValueError("Need both detailed ? explanations and critical ! cautions")
-    if not any(x["target_type"] == "mechanic" for x in notes):
-        raise ValueError("Mechanism comparison/flow note required")
+    # The user-facing contract reserves '?' for *actual* advanced cases, not
+    # an artificial count; don't fabricate tips to satisfy a numeric quota.
+    # Review warnings may live in the visible text instead of '!' notes.
     return by_target
 
 
@@ -98,7 +97,7 @@ def render_legend() -> str:
     """Use existing V11 note-key visual language; avoid additional custom CSS."""
     return (
         '<p class="tiny-rule">'
-        '<span class="note-key">?</span> 상세 판단 설명 · '
+        '<span class="note-key">?</span> 특수 상황·고급 운용 · '
         '<span class="note-key important">!</span> 중요한 예외·검토 주의 · '
         '마우스를 올리면 설명, 클릭하면 설명 고정 · 자세히 읽기로 해당 장 이동'
         '</p>'
