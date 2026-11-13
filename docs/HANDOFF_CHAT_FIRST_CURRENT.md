@@ -385,3 +385,13 @@
 - **실제 다른 전문화로 재검증:** 생존 사냥꾼 원문 조건식 61 중 57 해석/4 REVIEW(미선언 기술 선택 참조 3종), 비전 마법사 5 중 3 해석/2 REVIEW(미선언 참조 1종). 언급된 기술 참조가 원문 선택지 정의인지 또는 외부 JS/UI의 동적 선택인지는 아직 검증되지 않음. 엔진 기존 conditional_option_without_definition 검토 플래그를 재사용하고 절대 미선언 조건을 삭제·자동 통과시키지 않는다.
 - **검증 한계:** 물약 효과·GCD/공유 쿨다운 독립 사실, 전체 12개 오프너 실전 정확성, 다른 전문화 실제 게임 판단과 정상 V11 반복 제작까지 통과한 것은 아니다. PR #20 Draft, 개인 교본 승인/정본·main 변경 없음.
 - **즉시 다음 단계:** 생존/비전 미선언 선택 ID의 UI/스크립트 정의 출처 확인 → 고양 물약 실제 효과/자원 수치의 공식·출처 근거 보완 → 다른 정상 V11 실제 원문 반례 및 개인 V3.11 Q4 독립 검증. 결과 확인 후에만 방법론 정책 승격.
+
+
+## 2026-11-13 후속: 생존·비전 미선언 선택 참조의 실제 위치 추적 및 범용 검토 게이트
+
+- **새 실제 근거:** [CROSS_SPEC_UNBOUND_SELECTOR_AUDIT_20261113](CROSS_SPEC_UNBOUND_SELECTOR_AUDIT_20261113.md), [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md) C01~C03.
+- 실제 원문 재취득·인덱스: 생존 61개 표시 조건 중 4개가 미선언(T​​rick-Op 1, pack-leader-ffp 2, sentinel-ffp 1), **그 중 3개는 주문 마커가 있는 ordered 행**. 비전 5개 조건 중 SSOrb 2곳 미선언, 두 곳은 div 영역이며 ordered 주문 행 0개 확인. 숨겨진 게임 규칙의 자동 누락 방지가 목적이다.
+- 원문 WHML의 선언 선택지뿐 아니라 **원시 페이지에서 해당 WHML JSON 리터럴을 제외한 영역의 선택 ID 직접 텍스트 출현**까지 확인했으나 두 전문화의 미선언 ID를 발견하지 못했다. 정적 직접 참조 0 ≠ 원격 공통 JS/렌더러의 간접 옵션 정의 없음. 정확한 UI 적용 의미는 계속 REVIEW.
+- **일반화 구현:** engine/source_scoped_evidence.py의 unbound_selector_impact + engine/source_acquisition_pipeline.py 공통 소스 게이트. 원문 지문 일치/조건식 수집/선택지 참조 해석/ordered 행 역할을 구분하며, 출처 정보만 있을 때 gameplay FAIL이라고 단정하지 않는다. 추가 10개 합성 정상·실패 검증으로 declared 옵션, nested spans, tooltip, unordered notes, standalone steps, 실제 저장 데이터 비공개를 대조. 기존 conditional_option_without_definition 경고는 유지하며 새 unbound_selector_ordered_action_candidate는 **실제 게임 행동 오류가 아닌 추가 검토 후보**.
+- **현재 판정:** 생존 ordered 행동 후보 3행 REVIEW, 비전 미선언 div 2건 REVIEW, 고양 실제 소스 선택/타임라인의 앞선 12/12 및 30/30 상태는 변경 없음. 개인 V11/V3.11 콘텐츠 미수정, PR #20 Draft/미병합 유지.
+- **다음 실제 작업:** 생존의 pack-leader-ffp·sentinel-ffp 조건이 표시하는 기술과 어떤 실제 특성 선택에 연결되는지 UI/스크립트 또는 원문 독립 증거로 확인; 비전 SSOrb의 div 내용이 사용 행동인지 참고인지 분류. *그 전에는* 조건부 행을 숨기거나 없어진 기술로 단정하거나 새 교본에 확정 작성하지 않는다.
