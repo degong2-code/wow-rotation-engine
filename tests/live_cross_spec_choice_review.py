@@ -29,6 +29,7 @@ def review_source(packet: dict) -> dict:
     decisions = 0
     unknown = 0
     unknown_kinds = Counter()
+    undeclared_option_ids = set()
     for expression in expressions:
         # Empty selection checks that the expression is syntactically and
         # semantically interpretable for the declared options, not whether
@@ -43,6 +44,8 @@ def review_source(packet: dict) -> dict:
             elif any(t not in declared for t in tokens
                      if t not in {"(", ")", "!", "&", "|"}):
                 unknown_kinds["undeclared_option_reference"] += 1
+                undeclared_option_ids.update(t for t in tokens
+                    if t not in {"(", ")", "!", "&", "|"} and t not in declared)
             else:
                 unknown_kinds["malformed_supported_grammar"] += 1
         else:
@@ -55,6 +58,7 @@ def review_source(packet: dict) -> dict:
         "recognized_visibility_expressions": recognized,
         "unrecognized_visibility_expressions_review": unknown,
         "unrecognized_reason_counts": dict(sorted(unknown_kinds.items())),
+        "undeclared_technical_option_identifiers": sorted(undeclared_option_ids)[:12],
         "grammar_decisions_consistent": recognized + unknown == len(expressions),
         "hero_and_fight_contexts_verified": False,
         "gameplay_meaning_verified": False,
