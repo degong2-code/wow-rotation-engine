@@ -95,6 +95,7 @@ def project_canonical_arcane_draft(doc: dict) -> dict:
                 "source_when": deepcopy(row.get("when", [])),
                 "source_when_any": deepcopy(row.get("when_any")),
                 "source_evidence": deepcopy(row.get("evidence")),
+                "source_note": row.get("note", ""),
             }
             for i, row in enumerate(canonical_rows, 1)
         ]
@@ -278,6 +279,11 @@ def _priority(group: dict, spells: dict, number: str, note_for=None) -> str:
         rationale = (
             '<div class="muted"><strong>이유</strong> '
             + _e(row["comment"]) + '</div>'
+            + (
+                '<div class="muted"><strong>참고</strong> '
+                + _e(row["source_note"]) + '</div>'
+                if row.get("source_note") else ""
+            )
             if canonical else
             (note_for("rule", row["id"]) if note_for else "")
             + '<div class="muted">' + _e(row["comment"]) + '</div>'
