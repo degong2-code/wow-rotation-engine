@@ -112,6 +112,10 @@ def inspect_original_opener_choices(packet: dict) -> dict:
 
     # Compact technical trace for source-shape investigation only.
     # Markup tags that have multiple or nontrivial predicates as REVIEW.
+    all_potion_choices = {c for options in EXPECTED_GROUPS.values() for c in options}
+    non_potion_scopes = sorted({p for t in step_tags
+                                for p in t["parents"]
+                                if p not in all_potion_choices})
     trace = {}
     for group, group_choices in EXPECTED_GROUPS.items():
         for choice in group_choices:
@@ -121,13 +125,14 @@ def inspect_original_opener_choices(packet: dict) -> dict:
                 if t["group"] != group:
                     continue
                 predicates = ([t["condition"]] if t["condition"] else []) + t["parents"]
-                other = set(predicates) - {choice}
-                if other:
-                    # A tag gated by other choices is excluded; compound
-                    # expressions are not silently treated as plain IDs.
-                    if any(x not in {c for choices in EXPECTED_GROUPS.values()
-                                     for c in choices} for x in other):
-                        ambiguous += 1
+                conflicting_potions = (set(predicates) & all_potion_choices) - {choice}
+                if conflicting_potions:
+                    continue
+                # Hero/fight selectors are structural parents: group membership
+                # provides context, but unfamiliar expressions stay REVIEW.
+                if any("||" in p or "&&" in p or "!" in p
+                       for p in predicates):
+                    ambiguous += 1
                     continue
                 resolved.append([t["kind"], t["spell"],
                                  "pre" if t["has_prepull"] else
@@ -138,6 +143,7 @@ def inspect_original_opener_choices(packet: dict) -> dict:
     return {
         "source_locked": True,
         "source_shape_trace": trace,
+        "non_potion_scopes_observed": non_potion_scopes,
         "choice_groups": len(groups),
         "branch_count": len(choices),
         "distinct_choices_with_source_conditions": len(choices - source_choices_missing),
