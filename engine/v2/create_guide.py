@@ -98,6 +98,16 @@ def project_canonical_arcane_draft(doc: dict) -> dict:
             }
             for i, row in enumerate(canonical_rows, 1)
         ]
+    # Legacy annotation IDs were attached to hand-authored view-row numbers.
+    # Their meanings are NOT transferable after canonical source projection.
+    # Keep only existing mechanism notes; rule-specific advanced notes must be
+    # explicitly re-grounded to the new source rule IDs before reintroduction.
+    annotations = projected_doc.get("editorial", {}).get("annotations", {})
+    if isinstance(annotations, dict) and isinstance(annotations.get("notes"), list):
+        annotations["notes"] = [
+            note for note in annotations["notes"]
+            if note.get("target_type") != "rule"
+        ]
     return projected_doc
 
 
