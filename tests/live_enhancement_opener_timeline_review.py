@@ -110,14 +110,21 @@ def _event(source: str, steps: list, spell: int, ident: str,
     return e
 
 
-def _doom_event(raw: str, ident: str, beat: int) -> dict:
-    """Cite explicit opener Doom Winds action note, not a tooltip-only hit."""
+def _doom_event(raw: str, ident: str, beat: int, partner: int) -> dict:
+    """Cite an opener action note identifying off-GCD and the paired spell."""
     start = raw.index("Best Enhancement Shaman Opener")
     stop = raw.index("Pre-Combat Check", start)
     marker = "[spell=384352]"
-    loc = raw.find(marker, start, stop)
+    loc = -1
+    for candidate in re.finditer(re.escape(marker), raw[start:stop]):
+        at = start + candidate.start()
+        nearby = raw[max(start, at - 100):min(stop, at + 700)]
+        if (f"[spell={partner}]" in nearby
+                and re.search(r"off.{0,100}gcd", nearby, re.I | re.S)):
+            loc = at
+            break
     if loc < 0:
-        raise SourceAccessError("Opener Doom Winds action citation absent")
+        raise SourceAccessError("Specific opener off-GCD + partner evidence not linked")
     return {
         "id": ident, "action": "spell:384352", "beat": beat,
         "phase": "combat", "lane": "off_gcd",
@@ -211,7 +218,7 @@ def build_partial_annotations(packet: dict) -> dict:
                 else:
                     pair_beat = beat_base + 2
                     partner = 187874
-                events.append(_doom_event(raw, "doom-winds", pair_beat))
+                events.append(_doom_event(raw, "doom-winds", pair_beat, partner))
                 events.append(_event(raw, source_steps, partner, "paired-gcd",
                                      pair_beat, "combat", within_beat_order=1))
                 events.append(_event(raw, source_steps, 60103, "followup-lava",
