@@ -28,6 +28,23 @@ EXPECTED_GROUPS = {
     "Opener-Pot-T-AOE": ("T-OP-AOE-LL", "T-OP-AOE-Reck", "T-OP-AOE-LP"),
 }
 EXPECTED_DEFAULTS = {values[1] for values in EXPECTED_GROUPS.values()}
+# Source-locked technical regression fingerprint, not a rotation template.
+# (effective visible step count, first technical spell ID, precast count)
+EXPECTED_PATH_SUMMARY = {
+    "SB-OP-ST-LL": (8, 1295132, 2),
+    "SB-OP-ST-Reck": (7, 187874, 1),
+    "SB-OP-ST-LP": (7, 187874, 1),
+    "SB-OP-AOE-LL": (7, 187874, 0),
+    "SB-OP-AOE-Reck": (7, 187874, 1),
+    "SB-OP-AOE-LP": (7, 187874, 0),
+    "T-OP-ST-LL": (8, 187874, 1),
+    "T-OP-ST-Reck": (8, 187874, 1),
+    "T-OP-ST-LP": (8, 187874, 1),
+    "T-OP-AOE-LL": (11, 470057, 0),
+    "T-OP-AOE-Reck": (12, 1236994, 1),
+    "T-OP-AOE-LP": (11, 470057, 0),
+}
+
 TAG = re.compile(r"\[([a-z][\w-]*)\b([^\]]*)\]", re.I)
 SPELL = re.compile(r"^\s*=\s*(\d+)\b")
 TYPES = {"rt-step", "rt-step-group"}
@@ -149,10 +166,33 @@ def inspect_original_opener_choices(packet: dict) -> dict:
                                 for p in t["parents"]
                                 if p not in choices})
 
+    # Check ALL 12 actual conditional step paths, including alternate
+    # branch and prepull differences. The source itself may change; this is
+    # an explicit revision-locked regression, not auto-adapted gameplay logic.
+    for choice, expected in EXPECTED_PATH_SUMMARY.items():
+        item = trace[choice]
+        if item["uninterpreted_scope_count"]:
+            raise SourceAccessError("Unresolved source visibility expressions")
+        steps = item["technical_step_trace"]
+        observed = (
+            len(steps),
+            steps[0][1] if steps else None,
+            sum(step[2] == "pre" for step in steps),
+        )
+        if observed != expected:
+            raise SourceAccessError("Actual source choice path changed")
+    path_summaries = {
+        choice: {"step_count": len(info["technical_step_trace"]),
+                 "prepull_marker_count": sum(
+                     step[2] == "pre" for step in info["technical_step_trace"])}
+        for choice, info in trace.items()
+    }
+
     return {
         "source_locked": True,
-        "source_shape_trace": trace,
-        "non_potion_scopes_observed": non_potion_scopes,
+        "source_scoped_paths_matched": len(EXPECTED_PATH_SUMMARY),
+        "source_scoped_paths_metadata": path_summaries,
+        "non_potion_scope_count": len(non_potion_scopes),
         "choice_groups": len(groups),
         "branch_count": len(choices),
         "distinct_choices_with_source_conditions": len(choices - source_choices_missing),
