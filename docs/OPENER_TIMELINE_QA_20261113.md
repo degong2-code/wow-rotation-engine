@@ -25,9 +25,10 @@
 - branch: 유효한 context(영웅/단일·광역/실제 행동을 바꾸는 선택)와 events.
 - event: id, action, beat, phase, lane, when, set_state, evidence, action_source_marker. action_source_marker는 **첫 번째 실제 행동 근거 span** 안에 있어야 하며, 설명 툴팁에만 등장하는 기술명으로 통과할 수 없다.
 - beat: 게임 초나 GCD 횟수가 아닌 논리적 판단 단계. **같은 beat의 GCD 행동은 최대 하나**, off_gcd 사건은 함께 올 수 있다.
+- within_beat_order: 원문이 같은 GCD 안의 **선후관계**(예: 강화 활성화 후 타격)를 명시한 경우에만 0, 1처럼 사용. 하나의 beat에 순서가 선언되면 모든 해당 이벤트의 순서를 명시해야 한다. 역순·중복 순서는 검증 불일치/모호함으로 차단한다.
 - phase: prepull / pull / combat. 정확한 근거가 있는 경우에만 pull 상대 time_ms와 time_anchor(start/finish/impact/use)를 함께 입력한다. 선시전 시작과 적중 시점은 구분한다.
 - when: 명시적 AND 술어. 필요한 상태가 빠지면 underdetermined, 무조건 false가 아니다.
-- set_state: **확인된 사실로 편집자가 적은** 효과만 다음 beat에 적용. 동일 beat의 모든 행동은 동일한 시작 상태를 읽는다. 같은 beat에서 같은 필드가 서로 다르게 변경되면 ambiguous.
+- set_state: **확인된 사실로 편집자가 적은** 효과만 적용한다. 순서 미지정 이벤트는 동일 beat의 시작 상태를 함께 읽고 변경을 마지막에 병합한다(상충 시 ambiguous). **within_beat_order를 명시한 이벤트는 앞선 기술의 효과를 즉시 반영하므로 같은 GCD의 뒤따르는 행동이 강화 버프를 조건으로 확인할 수 있다.** 순서가 불명확한데 임의 순차 실행해 통과시키지 않는다.
 - case: context, initial_state, independently derived expected_events. 각 선언된 유효 분기와 선택적 시전의 양쪽 결과를 확인한다.
 - 결과: matched/mismatch/underdetermined/ambiguous/no_branch 및 원문 근거 실패, 미시험 분기, 미시험 이벤트 blocker. 공개 출력은 코드·개수·사례 순번으로 한정한다.
 
@@ -44,7 +45,7 @@
 
 **다음 실제 검증:** 동일 지문의 비공개 원문을 확보 → 12개의 전체 이벤트와 근거·상태를 작성 → 독립 예상 사건 목록을 추출 → 선시전, GCD 밖 동시 사용, 조건부 시전 양방향, 다음 상태, 물약 상호 배타성과 지속 딜 접속 확인 → V3.11 요약·오프너·심화와 대조. 우선순위 9중첩 극단 및 조기 소비 상충, 툴팁 원문 불일치는 별도 검토.
 
-이번 추가 테스트의 **12가지 문맥은 합성 모델**이다. 원문 12개 전체의 실제 전이/최적화 검증과 혼동하지 않는다. Library의 실물 등록은 확인했으나 이번 실행에서는 ZIP·V3.11의 원본 바이트를 다시 확보하지 못했으며, Q0/Q1 PASS를 선언하지 않는다.
+**2026-11-13 실제 원문 부분 상태 전이 검증:** [고양 오프너 상태 QA](ENHANCEMENT_OPENER_STATE_QA_20261113.md)에서 사용자 저장본과 동일한 원문 지문의 **12개 실제 선택 문맥**에 대해 *30개 선언된 상태별 다음 행동*, *78개 원문 근거 연결 이벤트*를 확인했다. 별도 6개 의도적 잘못된 상태/시점/GCD/순서 반례도 검출했다. 그 전의 **합성 12문맥 테스트와 구분**하며, 원문 전체 타임라인/물약 효과 및 게임플레이 Q0/Q1 전체 PASS는 여전히 보류한다. V3.11 원본 바이트 재확인은 수행하지 않았다.
 
 ## 4. 정상/실패 대조 및 정책 승격 게이트
 
@@ -54,4 +55,4 @@
 
 all_declared_cases_matched=true의 의미는 **주석과 선언된 기대 행동의 내부 재현**이다. original_source_meaning_independently_verified=false, timing_and_gcd_game_mechanics_verified=false, automatic_publish_allowed=false를 유지한다.
 
-**변경 판단:** 현재는 검증 도구 및 반례 구조까지만 완료. 실제 고양 12개 사례와 다른 전문화의 정상·실패 역검증을 통해 유의미한 품질 개선이 확인되기 전에는 최상위 품질 정책을 개정하지 않는다.
+**변경 판단:** 원문 기반 고양 부분 상태 전이 30개와 실패 반례 6개 및 다른 전문화에도 사용할 수 있는 합성 정상/실패 검증까지는 완료. 그러나 다른 전문화 **실제 원문에서의 독립 재현**, 물약 행동 전체 모델링, 게임 내 성능 검증이 미완료이므로 최상위 품질 정책 승격은 하지 않는다.
