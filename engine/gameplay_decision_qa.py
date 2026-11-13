@@ -458,12 +458,17 @@ def audit_priority_shadowing(
         if all(any(_clause_entails(lower_clause, prior_clause)
                    for _, prior_clause in prior)
                for lower_clause in lower_clauses):
-            different_action = any(
-                upper["action"] != lower["action"] and
-                any(_clause_entails(branch, prior_clause)
-                    for prior_upper, prior_clause in prior
-                    if prior_upper is upper)
-                for branch in lower_clauses for upper, _ in prior
+            # Call it a different-action conflict only if each lower branch
+            # is covered by a DIFFERENT action and is not also covered by a
+            # same-action higher rule. This favors false negatives to false
+            # positive gameplay-error claims.
+            different_action = all(
+                any(upper["action"] != lower["action"] and
+                    _clause_entails(branch, clause) for upper, clause in prior)
+                and not any(upper["action"] == lower["action"] and
+                            _clause_entails(branch, clause)
+                            for upper, clause in prior)
+                for branch in lower_clauses
             )
             shadowed.append({
                 "view_rank": row["view_rank"],
