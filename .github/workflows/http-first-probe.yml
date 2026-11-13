@@ -14,6 +14,7 @@ on:
       - 'tests/test_source_scoped_evidence.py'
       - 'tests/live_enhancement_decision_review.py'
       - 'tests/live_enhancement_opener_review.py'
+      - 'tests/live_enhancement_opener_timeline_review.py'
       - '.github/workflows/http-first-probe.yml'
   workflow_dispatch:
 
@@ -110,3 +111,7 @@ jobs:
       - name: Check source-locked Enhancement opener choices (no raw WHML in output)
         run: |
           PYTHONPATH=. python tests/live_enhancement_opener_review.py
+
+      - name: Review source-locked partial 12-branch opener state/next-action decisions
+        run: |
+          PYTHONPATH=. python tests/live_enhancement_opener_timeline_review.py
