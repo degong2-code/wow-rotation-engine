@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 import re
+from copy import deepcopy
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -245,13 +246,81 @@ def build_partial_annotations(packet: dict) -> dict:
     }
 
 
+def check_mutations(packet: dict, authored: dict) -> dict:
+    """Known failures must be detected without leaking source or case text."""
+    checks = []
+
+    def one(choice: str, state_case_suffix: str) -> dict:
+        fixture = deepcopy(authored)
+        fixture["branches"] = [
+            x for x in fixture["branches"] if x["context"]["potion"] == choice
+        ]
+        fixture["cases"] = [
+            x for x in fixture["cases"]
+            if x["id"] == choice + state_case_suffix
+        ]
+        if len(fixture["branches"]) != 1 or len(fixture["cases"]) != 1:
+            raise AssertionError("Known counterexample anchor missing")
+        return fixture
+
+    def expect(fixture: dict, expected: str) -> None:
+        report = assess_opener_timeline(packet, fixture)
+        result = report["case_results"][0]["result"]
+        if result != expected or report["all_declared_cases_matched"]:
+            raise AssertionError("Known incorrect opener was not rejected")
+        checks.append(expected)
+
+    # Historical failure: a different potion moves Crash Lightning to pull.
+    wrong_time = one("SB-OP-AOE-LL", "-strike0-crash0")
+    first = wrong_time["branches"][0]["events"][0]
+    first["phase"] = "prepull"
+    first["time_ms"] = -1000
+    expect(wrong_time, "mismatch")
+
+    # Optional early Stormstrike is not an unconditional or ignorable filler.
+    missing_strike = one("SB-OP-ST-LL", "-strike1-crash1")
+    missing_strike["branches"][0]["events"] = [
+        x for x in missing_strike["branches"][0]["events"]
+        if x["id"] != "optional-strike"
+    ]
+    expect(missing_strike, "mismatch")
+
+    # Missing readiness cannot be presumed false (fallback bias).
+    readiness_unknown = one("SB-OP-ST-Reck", "-strike0-crash1")
+    readiness_unknown["cases"][0]["initial_state"].pop("crash_ready")
+    expect(readiness_unknown, "underdetermined")
+
+    # Doom Winds is off-GCD and must share the action beat with the paired hit.
+    wrong_gcd = one("T-OP-ST-LL", "-doom-paired")
+    doom = next(x for x in wrong_gcd["branches"][0]["events"]
+                if x["id"] == "doom-winds")
+    doom["lane"] = "gcd"
+    expect(wrong_gcd, "ambiguous")
+
+    # It activates a cooldown state used to decide the next Lava Lash.
+    missing_effect = one("T-OP-AOE-Reck", "-doom-paired")
+    doom = next(x for x in missing_effect["branches"][0]["events"]
+                if x["id"] == "doom-winds")
+    doom["set_state"]["doom_winds_active"] = False
+    expect(missing_effect, "mismatch")
+
+    return {
+        "deliberately_wrong_cases_rejected": len(checks),
+        "detected_outcome_counts": {
+            value: checks.count(value) for value in sorted(set(checks))
+        },
+    }
+
+
 def review(packet: dict) -> dict:
     annotations = build_partial_annotations(packet)
     result = assess_opener_timeline(packet, annotations)
     if not result["all_declared_cases_matched"]:
         raise AssertionError("Partial state decisions differ: " +
                              str(result["blocker_codes"]))
+    negative = check_mutations(packet, annotations)
     return {
+        **negative,
         "source_sha_locked": True,
         "partial_opener_contexts_reviewed": result["branch_count"],
         "partial_state_cases_consistent": result["case_count"],
