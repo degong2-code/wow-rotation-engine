@@ -220,7 +220,8 @@ def build_partial_annotations(packet: dict) -> dict:
                     partner = 187874
                 events.append(_doom_event(raw, "doom-winds", pair_beat, partner))
                 events.append(_event(raw, source_steps, partner, "paired-gcd",
-                                     pair_beat, "combat", within_beat_order=1))
+                                     pair_beat, "combat", within_beat_order=1,
+                                     when=_pred("doom_winds_active", True)))
                 events.append(_event(raw, source_steps, 60103, "followup-lava",
                                      pair_beat + 1, "combat",
                                      occurrence=1 if context["targets"] == "single" else 0,
