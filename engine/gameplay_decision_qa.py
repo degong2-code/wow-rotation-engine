@@ -243,6 +243,182 @@ def _evaluate_case(case: dict, rules: list[dict]) -> dict:
             "competing_rule_count": 0}
 
 
+
+def _target_predicate_possible(predicate: dict, low: int, high: int | None) -> bool:
+    """Conservatively discard only a target-count guard impossible in the view.
+
+    Unknown/other predicates stay intact, including talents, stacks and procs.
+    This is NOT a gameplay inference or a general SAT solver.
+    """
+    if predicate["field"] != "target_count":
+        return True
+    op, value = predicate["op"], predicate["value"]
+    if type(value) not in (int, float):
+        return True
+    if op == "eq":
+        return low <= value and (high is None or value <= high)
+    if op == "neq":
+        return not (high == low == value)
+    if op == "lt":
+        return low < value
+    if op == "lte":
+        return low <= value
+    if op == "gt":
+        return high is None or high > value
+    if op == "gte":
+        return high is None or high >= value
+    return True
+
+
+def project_priority_view(
+    source_rules: list[dict], *, view_context: dict,
+    min_targets: int, max_targets: int | None = None,
+) -> list[dict]:
+    """Create display rows by REFERENCE to a single source decision list.
+
+    The editorial source rules must first be grounded to exact source spans
+    using assess_annotations and separately checked for gameplay meaning.
+    Projection NEVER rewrites an operator/threshold, action, explanation, or
+    source condition text. It only removes a rule when the view makes it
+    provably inapplicable. Complex OR clauses must be preserved as independently
+    authored branches; never reinterpret opaque prose to filter a rule.
+
+    The returned dictionaries are safe to use as the actual HTML table inputs.
+    Existing legacy Arcane drafts are NOT implicitly validated by this function.
+    """
+    from copy import deepcopy
+
+    _check_context(view_context, "view context")
+    if type(min_targets) is not int or min_targets < 1:
+        raise ValueError("min_targets must be a positive integer")
+    if max_targets is not None and (
+        type(max_targets) is not int or max_targets < min_targets
+    ):
+        raise ValueError("max_targets must be >= min_targets")
+    if not isinstance(source_rules, list) or not 0 < len(source_rules) <= MAX_RULES:
+        raise ValueError("Bounded canonical source rules required")
+    seen = set()
+    selected = []
+    for rule in source_rules:
+        if not isinstance(rule, dict) or rule.get("kind") != "priority":
+            raise ValueError("Priority projection only accepts source priority rules")
+        ident = _valid_name(rule.get("id"), "canonical source rule ID")
+        if ident in seen:
+            raise ValueError("Duplicate canonical source rule ID")
+        seen.add(ident)
+        if type(rule.get("rank")) is not int or rule["rank"] < 1:
+            raise ValueError("Canonical source priority must be positive")
+        _valid_name(rule.get("action"), "source action")
+        _valid_name(rule.get("reason"), "source reason")
+        _valid_name(rule.get("condition_text"), "source condition text")
+        _check_context(rule.get("context"), "source context")
+        _check_predicates(rule.get("when"))
+        exceptions = rule.get("exceptions")
+        if not isinstance(exceptions, list) or any(
+            not isinstance(x, str) or not x.strip() for x in exceptions
+        ):
+            raise ValueError("Source exceptions must remain explicit")
+        missing = set(rule["context"]) - set(view_context)
+        if missing:
+            raise ValueError("View lacks required source context; cannot choose branch")
+        if any(not _equals(view_context[k], v) for k, v in rule["context"].items()):
+            continue
+        if any(not _target_predicate_possible(c, min_targets, max_targets)
+               for c in rule["when"]):
+            continue
+        selected.append(rule)
+
+    # Retain source ordering, not author-restated ST/AoE priority numbers.
+    selected.sort(key=lambda rule: rule["rank"])
+    rows = []
+    for idx, rule in enumerate(selected, 1):
+        rows.append({
+            "source_rule_id": rule["id"],
+            "source_rank": rule["rank"],
+            "view_rank": idx,
+            "action": rule["action"],
+            "when": deepcopy(rule["when"]),
+            "condition_text": rule["condition_text"],
+            "reason": rule["reason"],
+            "exceptions": deepcopy(rule["exceptions"]),
+            "evidence": deepcopy(rule.get("evidence")),
+        })
+    return rows
+
+
+def audit_priority_view(
+    source_rules: list[dict], rendered_rows: list[dict], *,
+    view_context: dict, min_targets: int, max_targets: int | None = None,
+) -> dict:
+    """Fail closed if rendered rows differ from the canonical projection.
+
+    The caller must pass the ACTUAL output-table row records, not a second
+    independently edited expectation list. Only issue counts leave the private
+    source packet; public reports never echo the source or spell labels.
+    """
+    from collections import Counter
+
+    expected = project_priority_view(
+        source_rules, view_context=view_context,
+        min_targets=min_targets, max_targets=max_targets,
+    )
+    if not isinstance(rendered_rows, list) or len(rendered_rows) > MAX_RULES:
+        raise ValueError("Rendered projection rows must be a bounded list")
+    keys = (
+        "source_rule_id", "source_rank", "view_rank", "action",
+        "when", "condition_text", "reason", "exceptions", "evidence",
+    )
+    expected_ids = Counter(row["source_rule_id"] for row in expected)
+    actual_ids = Counter(
+        row.get("source_rule_id") for row in rendered_rows
+        if isinstance(row, dict) and isinstance(row.get("source_rule_id"), str)
+    )
+    missing = sum((expected_ids - actual_ids).values())
+    extra = sum((actual_ids - expected_ids).values())
+    malformed = sum(
+        not isinstance(row, dict) or
+        any(field not in row for field in keys)
+        for row in rendered_rows
+    )
+    expected_by_id = {row["source_rule_id"]: row for row in expected}
+    altered = sum(
+        isinstance(row, dict) and row.get("source_rule_id") in expected_by_id and
+        any(row.get(field) != expected_by_id[row["source_rule_id"]][field]
+            for field in keys)
+        for row in rendered_rows
+    )
+    order_changed = (
+        [row.get("source_rule_id") if isinstance(row, dict) else None
+         for row in rendered_rows]
+        != [row["source_rule_id"] for row in expected]
+    )
+    blockers = []
+    if missing:
+        blockers.append("source_rule_missing_from_view")
+    if extra or malformed:
+        blockers.append("unmapped_or_malformed_view_rule")
+    if altered:
+        blockers.append("source_rule_changed_during_projection")
+    if order_changed:
+        blockers.append("source_order_changed_during_projection")
+    return {
+        "source_rule_count": len(source_rules),
+        "expected_view_row_count": len(expected),
+        "actual_view_row_count": len(rendered_rows),
+        "missing_source_rule_count": missing,
+        "extra_source_rule_count": extra,
+        "changed_source_rule_count": altered,
+        "malformed_view_row_count": malformed,
+        "source_order_changed": order_changed,
+        "blocker_codes": blockers,
+        "projection_preserved": not blockers,
+        "source_meaning_independently_verified": False,
+        "gameplay_meaning_verified": False,
+        "automatic_publish_allowed": False,
+        "source_text_in_report": False,
+    }
+
+
 def assess_annotations(packet: dict, annotations: dict) -> dict:
     """Compare authored rules with evidence and synthetic/editorial combat cases.
 
