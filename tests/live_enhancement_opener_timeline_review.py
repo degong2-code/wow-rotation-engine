@@ -356,17 +356,19 @@ def check_mutations(packet: dict, authored: dict) -> dict:
 
 
 def potion_source_marker_inventory(packet: dict) -> dict:
-    """Diagnostic technical counts only, not a potion effect assertion."""
-    raw = packet["payloads"][0]["original_whml"]
+    """Audit action tokens without printing WHML or mistaking notes for casts."""
+    source = packet["payloads"][0]
+    raw = source["original_whml"]
     opening = raw.index("Best Enhancement Shaman Opener")
     ending = raw.index("Pre-Combat Check", opening)
     section = raw[opening:ending]
+    potions = {
+        "LL": (1295132, "Liquid Luster"),
+        "Reck": (1236994, "Potion of Recklessness"),
+        "LP": (1236616, "Light's Potential"),
+    }
     result = {}
-    for ident, label in (
-        (1295132, "Liquid Luster"),
-        (1236994, "Potion of Recklessness"),
-        (1236616, "Light's Potential"),
-    ):
+    for kind, (ident, label) in potions.items():
         result[str(ident)] = {
             "direct_step_tags": len(re.findall(
                 rf"\[rt-step(?:-group)?\s*=\s*{ident}\b", section)),
@@ -375,7 +377,43 @@ def potion_source_marker_inventory(packet: dict) -> dict:
                 rf"\[item\s*=\s*{ident}\b", section)),
             "named_mentions": len(re.findall(re.escape(label), section, re.I)),
         }
-    return result
+
+    options = source["option_definitions"]
+    declared = {o["id"] for o in options}
+    positions = sorted((o["position"], o["radio_group"]) for o in options
+                       if o["radio_group"] in EXPECTED_GROUPS)
+    scopes, _ = _nested_scopes(raw)
+    source_action_candidates = {}
+    for group, choices in EXPECTED_GROUPS.items():
+        hero = "SB-Master" if "-SB-" in group else "T-Master"
+        fight = "Op-AoE" if group.endswith("-AOE") else "Op-ST"
+        for choice in choices:
+            potion = choice.split("-")[-1]
+            ident = potions[potion][0]
+            valid = []
+            for m in re.finditer(rf"\[spell\s*=\s*{ident}\]", raw[opening:ending]):
+                pos = opening + m.start()
+                preceding = next((g for off, g in reversed(positions)
+                                  if off < pos), None)
+                if preceding != group:
+                    continue
+                enclosing = [x for x in scopes
+                             if x["start"] < pos < x["end"]]
+                if not any(x["tag"] == "li" for x in enclosing):
+                    continue
+                expr = [x["attributes"]["display-options"] for x in enclosing
+                        if "display-options" in x["attributes"]]
+                if source_scopes_visible(expr, {choice, hero, fight}, declared) is True:
+                    valid.append(pos)
+            source_action_candidates[choice] = {
+                "list_spell_markers_visible": len(valid),
+                "list_spell_marker_positions": valid[:5],
+            }
+    return {
+        "potion_token_counts": result,
+        "choice_scoped_list_potion_candidates": source_action_candidates,
+        "all_potion_actions_disambiguated": False,
+    }
 
 
 def review(packet: dict) -> dict:
