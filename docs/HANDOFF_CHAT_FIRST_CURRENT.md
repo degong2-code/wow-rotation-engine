@@ -6,6 +6,11 @@
 > **이 문서는 새 채팅 복원 진입점**이다. **최상위 운영 정책은 [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md)**, 구체적 품질 게이트는 [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), 집필 절차는 [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)을 정본으로 삼으며 중복 복제하지 않는다. **과거 사례로 범용화 가치/오탐을 검증하는 후향적 사례집은 [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md) 참조.**
 
 
+## 0.13 신규 전문화 실제 CREATE — 조화 드루이드 (2026-11-13)
+
+- 독립 원문 분석으로 **조화 드루이드 V11 REVIEW 단일 HTML** 최초 CREATE. 12.1.5 / 2026-10-13 Wowhead 검색 색인 기준 숲의 수호자/엘룬의 대행자(블리자드 공식 한국어 이름) 단일/광역 8개 단계별 표 40행, 상태별 다음 행동 12개, 기존 V11 7개 원시 본문 7/7 보존. 최신 빌드 동적 오프너 순서는 미확인으로 REVIEW. **과거 12.0.7 직접 HTML과 12.1.5 색인을 혼합하지 않음.**
+- 동일 PR #23의 `generic_v11_assembly.py`를 수정하지 않고 재사용, 처음 열면 조화 드루이드가 보이도록 구성. PC/모바일 실제 Chromium 메뉴·영웅·툴팁·원본 냉기 복귀·overflow·JS 검증 PASS. [자세한 범위·파일 SHA·품질 판정](BALANCE_ZERO_BASE_CREATE_REVIEW_20261113.md). 개인 HTML은 공개 저장소에 올리지 않음.
+- **향후 우선순위:** 12.1.5 실사이트 동적 오프너·마스터 선택형 원문 내용을 확보해 Q0/Q1 오류 후보를 정리한다. 기능 재구현·버전 숫자 증가보다 실제 교본의 조건 정확도와 사용자 Q3 평가를 우선.
 ## 0.12 실제 3전문화 공통 HTML 조립 실증 — 콘텐츠 생성과 구분 (2026-11-13)
 
 - **[PR #23 Draft](https://github.com/degong2-code/wow-rotation-engine/pull/23)** (`work/chat-first-generic-html-assembly-20261113`, #22 위 stacked): 기존 Arcane 전용 JS 메뉴/영웅 등록 하드코딩과 V11 shell 조립을 분리해 **독립 집필된 V11+ 신규 전문화 콘텐츠를 바이트 그대로 포장**하는 `engine/v2/generic_v11_assembly.py` 추가. 원본 V11 SHA 고정, 7개 원본 guide subtree 바이트 보존, 신규 ID/영웅 수/우선순위 표 개수 하드코딩 없음.
