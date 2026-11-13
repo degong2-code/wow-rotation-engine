@@ -127,6 +127,7 @@ def inspect_original_opener_choices(packet: dict) -> dict:
             selected = {choice, hero, fight}
             resolved = []
             unknown = 0
+            unknown_details = []
             for t in step_tags:
                 if t["group"] != group:
                     continue
@@ -134,6 +135,7 @@ def inspect_original_opener_choices(packet: dict) -> dict:
                 visible = source_scopes_visible(expressions, selected, declared)
                 if visible is None:
                     unknown += 1
+                    unknown_details.append({"spell": t["spell"], "conditions": expressions})
                     continue
                 if not visible:
                     continue
@@ -141,7 +143,8 @@ def inspect_original_opener_choices(packet: dict) -> dict:
                                  "pre" if t["has_prepull"] else
                                  "pull" if t["has_pull"] else "unspecified"])
             trace[choice] = {"technical_step_trace": resolved,
-                             "uninterpreted_scope_count": unknown}
+                             "uninterpreted_scope_count": unknown,
+                             "uninterpreted_scope_signatures": unknown_details[:5]}
     non_potion_scopes = sorted({p for t in step_tags
                                 for p in t["parents"]
                                 if p not in choices})
