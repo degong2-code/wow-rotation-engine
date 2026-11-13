@@ -101,6 +101,58 @@ class ArcaneCreateTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "baseline source"):
             validate_draft(draft)
 
+    def test_canonical_source_rows_override_legacy_handwritten_tables(self):
+        from engine.v2.create_guide import project_canonical_arcane_draft
+        draft = deepcopy(self.draft)
+        original_legacy_condition = draft["rotation_groups"][0]["rows"][0]["condition"]
+        draft["rotation_groups"][0]["rows"][0]["condition"] = "INVALID LEGACY TEXT"
+        canon = []
+        for hero in ("sunfury", "spellslinger"):
+            for rank in range(1, 10):
+                rule = {
+                    "id": f"synthetic-{hero}-{rank}",
+                    "kind": "priority", "rank": rank, "step": None,
+                    "context": {"hero": hero}, "action": "비전 탄막",
+                    "when": (
+                        [{"field": "target_count", "op": "gte", "value": 5}]
+                        if rank == 9 else
+                        [{"field": "arcane_charges", "op": "lt", "value": 3}]
+                        if rank == 1 else []
+                    ),
+                    "condition_text": (
+                        "비전 충전물 3개 미만" if rank == 1
+                        else "합성 출처의 선택 조건"
+                    ),
+                    "reason": "원문 기반 합성 설명",
+                    "exceptions": [],
+                }
+                canon.append(rule)
+        draft["canonical_priority_rules"] = canon
+        projected = project_canonical_arcane_draft(draft)
+        self.assertEqual(
+            [len(g["rows"]) for g in projected["rotation_groups"]],
+            [8, 9, 8, 9]
+        )
+        self.assertEqual(
+            projected["rotation_groups"][0]["rows"][0]["source_rule_id"],
+            "synthetic-sunfury-1"
+        )
+        self.assertEqual(
+            projected["rotation_groups"][0]["rows"][0]["condition"],
+            "비전 충전물 3개 미만"
+        )
+        self.assertNotEqual(
+            projected["rotation_groups"][0]["rows"][0]["condition"],
+            original_legacy_condition
+        )
+        data, report = self.create(draft)
+        result = data.decode("utf-8")
+        self.assertEqual(report["arcane_priority_rows"], 34)
+        self.assertIn('data-canonical-id="synthetic-sunfury-1"', result)
+        self.assertIn('<strong>이유</strong> 원문 기반 합성 설명', result)
+        self.assertNotIn("INVALID LEGACY TEXT", result)
+        self.assertTrue(report["old_seven_byte_identical"])
+
     def test_adds_eighth_guide_and_preserves_seven_original_views_exactly(self):
         data, report = self.create()
         updated = data.decode("utf-8")
