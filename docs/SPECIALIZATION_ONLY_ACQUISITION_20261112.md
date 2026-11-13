@@ -58,7 +58,7 @@ python -m engine.source_acquisition_pipeline \
 
 **반복된 실물 교본 결함:** 생존 사냥꾼 V1~V11 REVIEW 과정에서는 검색 색인에 최신 12.1.5가 표시됐어도 직접 열린 동일 URL에서 12.0.7(2026-05-03) 본문이 확인됐다. 이 상태에서 서로 다른 버전의 우선순위·영웅 특성 선택·툴팁을 섞으면 실제 다음 기술이 바뀐다. 기존 전문화 입력 HTTP 모드는 WHML의 선택 조건을 추출할 수 있었으나 브라우저 UI 실증은 수동 URL 입력을 요구했다.
 
-**기존 공통 기능 연결:** 새로운 크롤러를 만들지 않고 기존 source_acquisition_pipeline의 전문화 해석과 run_browser/live_dom_capture를 결합한다. HTTP 경로는 그대로 유지한다. `--specialization`에 `--capture-ui` 또는 `--mhtml`을 지정하면 해석한 Wowhead 정규 URL을 기존 정상 Chromium 수집 경로로 전달한다. URL 직접 조합·로그인 우회·사이트 차단 회피 없음.
+**기존 공통 기능 연결:** 새로운 크롤러를 만들지 않고 기존 source_acquisition_pipeline의 전문화 해석과 run_browser/live_dom_capture를 결합한다. HTTP 경로는 그대로 유지한다. `--specialization`에 `--capture-ui` 또는 `--mhtml`을 지정해도 **먼저 정상 HTTP 원문·패치·집필 패킷을 확보**한다. 이후 같은 정규 Wowhead URL의 Chromium 수집을 선택적으로 시도하며, **원문 guide-body SHA·수정일이 정확히 일치할 때만** 브라우저 상태를 결합한다. URL 직접 조합·로그인 우회·사이트 차단 회피 없음.
 
 예시(명령을 실행하는 환경에 승인된 Chromium과 정상 사이트 접근이 있을 경우):
 
@@ -70,12 +70,22 @@ python -m engine.source_acquisition_pipeline \
   --output /private/rotation-source-survival
 ```
 
-- 기존 `--specialization`만 지정하면 가벼운 HTTP 원문 수집, `--capture-ui` 추가 시 브라우저에서 선택형 UI·접힘·툴팁 상태 기록. 원문 인덱스 `editorial-evidence-private.json` 및 `scoped-evidence-private.json`과 `private-ui-capture.json`을 **같은 비공개 출력 아래** 보존.
-- **패치 차단:** 실제 브라우저 DOM과 HTTP 응답 각각의 제목·패치 표시·수정일이 요구 조건을 충족해야 하며, 서로 개정이 다르면 기록 저장 전에 실패한다. URL이나 검색 결과의 날짜를 현재 열람한 본문의 날짜로 대체하지 않는다.
+- 기존 `--specialization`만 지정하면 가벼운 HTTP 원문 수집, `--capture-ui` 추가 시 먼저 HTTP 본문을 확정하고 브라우저에서 선택형 UI·접힘·툴팁 보강을 시도. UI가 차단되면 이미 검증한 원문은 유지하되 UI 내용은 미확보 REVIEW로 기록. 원문 인덱스 `editorial-evidence-private.json` 및 `scoped-evidence-private.json`과 `private-ui-capture.json`을 **같은 비공개 출력 아래** 보존.
+- **패치 차단:** 실제 브라우저 DOM과 HTTP 응답 각각의 제목·패치 표시·수정일이 요구 조건을 충족해야 하며, 서로 개정이 다르면 브라우저 상태를 결합하지 않는다. 정상 HTTP 원문의 스냅샷은 보호한다. URL이나 검색 결과의 날짜를 현재 열람한 본문의 날짜로 대체하지 않는다.
 - **상태별 차단:** 동적 선택 상태를 재방문할 때마다 실제 DOM 정체성/패치·수정일을 다시 확인한다. 불일치 상태의 본문/팁은 관측 자료에 포함하지 않고 별도 수집 오류로 기록; `ui_known_capture_gaps=true`이면 수집 완전성 승인 금지.
 - **안전한 의미:** 초기 원문·UI 관측은 별개 자료다. WHML display-options 표시 조건은 게임플레이 조건을 자동 결정하지 않는다. 모든 유효 선택형 상태·툴팁을 방문했는지는 여전히 개별 검토가 필요하며 `real_site_completeness_verified=false`·`gameplay_meaning_verified=false`를 유지한다.
-- 소스가 403/429이거나 Chromium이 없는 환경에서는 정상적으로 중단한다. 검색 색인·과거 교본으로 원문을 대체해 성공 판정을 만들지 않는다. 필요하다면 정당하게 확보한 사용자 저장 HTML/ZIP을 기존 `--saved-html` / `--saved-zip` 경로로 분석한다.
+- 처음 HTTPS GET에서 403/429가 발생하거나 패치가 맞지 않으면 중단한다. **정상 HTTP 원문을 이미 확보한 뒤** Chromium 접근만 거부되면 이를 우회하지 않고 `ui_capture_status=browser_access_denied`로 기록하며 교본 원문은 보존한다. 검색 색인·과거 교본으로 원문을 대체해 성공 판정을 만들지 않는다. 필요하다면 정당하게 확보한 사용자 저장 HTML/ZIP을 기존 `--saved-html` / `--saved-zip` 경로로 분석한다.
 
 **검증 범위:** 합성 HTML에서 전문화 이름→브라우저 경로 선택, 정상 사적 원문·UI 패킷 공동 기록, 오래된 패치/다른 전문화/DOM과 응답 개정 충돌, 동적 상태 재로딩 중 패치 변경 차단을 테스트한다. 실제 Wowhead 선택형 전체 사이트를 지금 접근 가능한 환경에서 성공 수집했다는 주장이 아니며, 실제 12.1.5 복원은 별도 현장 증거가 필요하다.
 
 **전체 최종 제품과의 연결:** 이 기능의 출력은 ChatGPT가 상태·조건·행동·이유·오프너를 독립적으로 집필할 **집필 근거**다. 사용자의 전문화 입력만으로 HTML을 자동 완성했다고 주장하지 않는다. 구버전 혼합을 막고 원문 상태별 자료를 잃지 않는 것이 다음 V11+ 교본 제작에서의 실질적인 품질 기여다.
+
+## 2026-11-13 실사이트 검증과 HTTP-first 수집 보호 (PR #22 후속)
+
+- [실제 Wowhead 재수집](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43435619340): 생존 사냥꾼 12.1.5 / 표시 수정일 2026-10-13, WHML 본문 1개, 툴팁 정의 39개, 선택 항목 8개. 미선언 선택 ID가 ordered 행동 후보에 연결되어 **source_selector_action_review_required=true**. 이 원문 SHA와 상태별 UI 실제 표시를 별도로 검증하기 전에는 Q0/Q1 승인 불가.
+- [동일 실행 환경의 실제 Chromium 검사](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43435836835): 사이트에서 브라우저 접근을 차단함 (survival_live_ui_issue=denied_or_blocked). 원문을 HTTP로 받았다는 이유로 브라우저 상태도 확보했다고 가정하지 않는다.
+- **발견한 제작 경로 결함:** 이전 전문화 --capture-ui 모드는 브라우저부터 열어서, Chromium이 막히면 정상 접근 가능한 12.1.5 WHML까지 산출하지 못했다. 최종 Chat-first 교본은 정본 원문을 최우선 확보해야 하므로 기존 run_specialization을 먼저 실행하고 optional Chromium은 **동일 버전·동일 guide-body SHA로 확인될 때만** 합친다. 성공한 HTTP 원문을 오래된 렌더링 결과로 대체하지 않는다.
+- **실패 판정:** HTTP 패치 검증 실패 → 수집 자체 FAIL, 산출물 없음. HTTP 검증 PASS + Chromium 접근 불가/불일치 → 원문 자료 보존·UI 미확보 REVIEW. UI 일부 상태만 확보 → 관측 기록 보존, ui_known_capture_gaps=true이면 REVIEW. 모든 경우 real_site_completeness_verified=false / gameplay_meaning_verified=false / automatic_publish_allowed=false.
+- 공개 저장소와 GitHub 로그에는 원문·개인 교본·툴팁 장문을 저장하지 않는다. GitHub Actions는 일시적 비공개 디렉터리의 감사 메타데이터만 기록한다.
+
+**실제 제품 판단:** 12.1.5 원문 취득은 가능하지만 현재 모든 선택 상태의 조건 귀속을 재현하지 못했으므로 생존 사냥꾼 검토본 게임 Q0/Q1은 REVIEW를 유지한다. 새 버전 번호나 새로운 우선순위 행을 근거 없이 만들지 않는다.
