@@ -646,7 +646,13 @@ def create_arcane(source: bytes, draft: dict) -> tuple[bytes, dict]:
 
 
 def create_private_preview(source_path: Path, draft_path: Path,
-                           output_path: Path, *, evidence_path: Path | None = None) -> dict:
+                           output_path: Path, *, evidence_path: Path | None = None,
+                           allow_legacy_review: bool = False) -> dict:
+    """Private CREATE: canonical source rules by default, legacy only by opt-in.
+
+    A past unapproved guide must never silently become the next production
+    baseline. Legacy opt-in is for historical comparison, not product approval.
+    """
     target = Path(output_path).resolve()
     root = ROOT.resolve()
     if target == root or target.is_relative_to(root):
@@ -656,6 +662,15 @@ def create_private_preview(source_path: Path, draft_path: Path,
     if target.exists():
         raise FileExistsError("Refusing to overwrite existing Arcane preview")
     draft = json.loads(Path(draft_path).read_text(encoding="utf-8"))
+    has_canonical = isinstance(draft.get("canonical_priority_rules"), list) and bool(
+        draft["canonical_priority_rules"]
+    )
+    if not has_canonical and not allow_legacy_review:
+        raise ValueError(
+            "Legacy handwritten draft is not a valid CREATE baseline. "
+            "Re-extract patch-aligned source decisions and provide canonical_priority_rules; "
+            "use --legacy-review-only solely to reproduce historical unapproved previews."
+        )
     evidence_file = (
         Path(evidence_path) if evidence_path is not None
         else ROOT / "content" / "new_guides" / "arcane_rule_source_audit.json"
@@ -679,6 +694,12 @@ def create_private_preview(source_path: Path, draft_path: Path,
         )
     full, report = create_arcane(Path(source_path).read_bytes(), draft)
     report["source_audit"] = source_audit
+    report["content_basis"] = (
+        "canonical_source_rules_review_required" if has_canonical
+        else "historical_legacy_comparison_only"
+    )
+    report["approved_visual_baseline_verified"] = False
+    report["gameplay_accuracy_verified"] = False
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_bytes(full)
     return report
@@ -687,7 +708,14 @@ def create_private_preview(source_path: Path, draft_path: Path,
 def main() -> int:
     parser = argparse.ArgumentParser(description="Add review-pending Arcane to private V11")
     parser.add_argument("source", type=Path)
-    parser.add_argument("--draft", type=Path, default=ROOT / "content" / "new_guides" / "arcane.json")
+    parser.add_argument(
+        "--draft", type=Path, required=True,
+        help="Explicit source-first draft with canonical_priority_rules; no silent legacy default.",
+    )
+    parser.add_argument(
+        "--legacy-review-only", action="store_true",
+        help="Explicitly reproduce an unapproved historical handwritten draft for comparison only.",
+    )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument(
         "--evidence", type=Path,
@@ -695,7 +723,8 @@ def main() -> int:
     )
     args = parser.parse_args()
     report = create_private_preview(
-        args.source, args.draft, args.output, evidence_path=args.evidence
+        args.source, args.draft, args.output, evidence_path=args.evidence,
+        allow_legacy_review=args.legacy_review_only,
     )
     print(json.dumps(report, ensure_ascii=False, indent=2))
     return 0
