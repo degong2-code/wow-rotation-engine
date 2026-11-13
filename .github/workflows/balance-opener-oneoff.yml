@@ -135,6 +135,18 @@ jobs:
                           print("event_"+str(i)+"="+m.group(1).lower()+":"+m.group(2)+
                                 ";scope="+json.dumps(guards)+
                                 ";attrs="+json.dumps(safe_attrs))
+                      grp=re.compile(r"\[rt-step-group\s*=\s*(\d+)([^\]]*)\](.*?)\[/rt-step-group\]",re.I|re.S)
+                      group_body=grp.findall(segment)
+                      print("rt_group_closed_count="+str(len(group_body)))
+                      for gi,(spell,attributes,body) in enumerate(group_body,1):
+                          at=_attrs(attributes)
+                          sub=re.findall(r"\[rt-sub\s*=\s*(\d+)",body,re.I)
+                          sup=re.findall(r"\[rt-sup\s*=\s*(\d+)",body,re.I)
+                          print("group_"+str(gi)+"_spell="+spell+
+                                ";prepull="+str("prepull" in attributes.lower()).lower()+
+                                ";loop_text_present="+str("loop-text" in attributes.lower()).lower()+
+                                ";numeric_sub="+",".join(sub)+
+                                ";numeric_sup="+",".join(sup))
                       print("full_dynamic_ui_verified=false")
                       print("opener_gameplay_verified=false")
           except (SourceAccessError, ValueError, KeyError) as e:
