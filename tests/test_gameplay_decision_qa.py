@@ -468,5 +468,41 @@ class SourceProjectionContractTests(unittest.TestCase):
             )
 
 
+    def test_or_predicate_held_together_and_target_view_filtered(self):
+        from engine.gameplay_decision_qa import project_priority_view, audit_priority_view
+        c = self.condition
+        rules = [self.canonical("prism", 1, "Synthetic Bolt"), self.canonical("filler", 2, "Synthetic Blast")]
+        # Original: (14+ stacks AND any of 6 power/no proc/no 4pc) OR 2+ targets.
+        rules[0].pop("when")
+        rules[0]["when_any"] = [
+            [c("stacks", "gte", 14), c("power", "gte", 6)],
+            [c("stacks", "gte", 14), c("clearcasting", "eq", False)],
+            [c("stacks", "gte", 14), c("tier4", "eq", False)],
+            [c("target_count", "gte", 2)],
+        ]
+        single = project_priority_view(rules, view_context={"hero":"A"}, min_targets=1, max_targets=1)
+        aoe = project_priority_view(rules, view_context={"hero":"A"}, min_targets=2)
+        self.assertEqual(len(single), 2)
+        self.assertEqual(len(aoe), 2)
+        self.assertEqual(len(single[0]["when_any"]), 4)
+        self.assertTrue(audit_priority_view(rules, single, view_context={"hero":"A"},min_targets=1,max_targets=1)["projection_preserved"])
+        from copy import deepcopy
+        broken=deepcopy(single)
+        broken[0]["when_any"] = [sum(rules[0]["when_any"], [])] # WRONG AND
+        result=audit_priority_view(rules,broken,view_context={"hero":"A"},min_targets=1,max_targets=1)
+        self.assertIn("source_rule_changed_during_projection", result["blocker_codes"])
+
+    def test_or_target_only_rule_drops_out_of_single_not_aoe(self):
+        from engine.gameplay_decision_qa import project_priority_view
+        c=self.condition
+        rule=self.canonical("orb", 1, "Synthetic Orb")
+        rule.pop("when")
+        rule["when_any"] = [
+            [c("target_count","gte",2),c("orb_mastery","eq",True)],
+            [c("target_count","gte",5),c("orb_ready","eq",True)],
+        ]
+        self.assertEqual(project_priority_view([rule],view_context={"hero":"A"},min_targets=1,max_targets=1),[])
+        self.assertEqual(len(project_priority_view([rule],view_context={"hero":"A"},min_targets=2)),1)
+
 if __name__ == "__main__":
     unittest.main()
