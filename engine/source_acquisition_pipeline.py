@@ -243,11 +243,33 @@ def run_browser(url: str, output: Path, *, capture_mhtml: bool = False,
             )
             identity = None
             if specialization is not None:
-                analysis_html, _ = select_analysis_html(dom, raw)
+                # The user sees the rendered DOM. Validate it independently,
+                # not just the richer raw WHML response that may be stale.
                 identity = inspect_identity(
-                    analysis_html, specialization,
+                    dom, specialization,
                     expected_patch=expected_patch, min_updated=min_updated,
                 )
+                if raw is not None:
+                    response_identity = inspect_identity(
+                        raw, specialization,
+                        expected_patch=expected_patch, min_updated=min_updated,
+                    )
+                    if (
+                        identity["visible_patch_candidates"]
+                        and response_identity["visible_patch_candidates"]
+                        and not (
+                            set(identity["visible_patch_candidates"])
+                            & set(response_identity["visible_patch_candidates"])
+                        )
+                    ) or (
+                        identity["observed_guide_update_date"] is not None
+                        and response_identity["observed_guide_update_date"] is not None
+                        and identity["observed_guide_update_date"]
+                        != response_identity["observed_guide_update_date"]
+                    ):
+                        raise SourceAccessError(
+                            "Browser DOM and network response disagree on guide revision"
+                        )
             report = inspect_and_store(
                 dom_html=dom, raw_html=raw, mhtml=mhtml, output=output,
                 kind="specialization_browser" if specialization else "browser_url",
@@ -262,7 +284,20 @@ def run_browser(url: str, output: Path, *, capture_mhtml: bool = False,
                 report["source_patch_verified"] = False
             if capture_ui:
                 from .live_dom_capture import capture, summarize
-                evidence = capture(page, max_states=max_states, max_depth=max_depth)
+                # Each state reloading the page must still identify the
+                # requested guide revision. Do not mix a current initial WHML
+                # packet with a stale dynamic option state after reload.
+                def validate_captured_state(current_page):
+                    if specialization is not None:
+                        inspect_identity(
+                            current_page.content(), specialization,
+                            expected_patch=expected_patch,
+                            min_updated=min_updated,
+                        )
+                evidence = capture(
+                    page, max_states=max_states, max_depth=max_depth,
+                    validate_state=validate_captured_state if specialization else None,
+                )
                 (output / "private-ui-capture.json").write_text(
                     json.dumps(evidence, ensure_ascii=False, indent=2) + "\n",
                     encoding="utf-8",
