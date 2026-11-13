@@ -6,6 +6,30 @@
 > **이 문서는 새 채팅 복원 진입점**이다. **최상위 운영 정책은 [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md)**, 구체적 품질 게이트는 [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), 집필 절차는 [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)을 정본으로 삼으며 중복 복제하지 않는다. **과거 사례로 범용화 가치/오탐을 검증하는 후향적 사례집은 [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md) 참조.**
 
 
+## 0.15 조화 드루이드 V3 — 실제 최신 원문에서 숨겨진 6개 오프너 선택 분기 복원 (2026-11-14)
+
+- **실제 source 원문 복구**: [Wowhead 12.1.5 WHML 증거](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43462279342) guide-body SHA `1b28301de948d116c73be53a84ea43f0799d6a153663347c9d717e1609d7e48c`. 동적 웹 검색 색인은 빈 오프너로 표시됐지만 원본 WHML에는 숲의 수호자(화신/영혼 소집/쐐기)와 엘룬의 대행자(화신/영혼 소집/쐐기) **6선택/58기술·복합 마커/19보조 표식**이 존재. [선택형 분기 위치 증명](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43462734350), [보조 rt-sup 범위 증거](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43463478583). UI 접근 제약을 원문 부재로 오판하지 않으며, 기본 수집기를 그대로 사용.
+- **개인 최종 V3 REVIEW 단일 HTML:** `wow_rotation_v11_balance_1215_six_source_openers_v3_REVIEW.html`, **1,033,035B**, SHA256 `ca9e90c3b7d07acf103838b72b56ba8a5b9d78a45363424d272cbd8476ce0694`. 빌드별 단계 14/9/7 및 11/10/7 원문 순서 반영. 첫 화면/원리의 '일월식→화신' 의도된 선사용 vs '화신→일월식' 불가 구분; 물약 Light's Potential(`rt-sup=1236616`)은 영혼 소집 경로의 **특정 복합 단계 동시 표식**, `rt-step=330323`은 구형 아이템 장착을 뜻하지 않는 **사용 장신구 자리**로 해석. 7/7 원본 전문화 본문 보존, PC/모바일 두 화면 Q4 PASS.
+- **한계:** 선택형 WHML 기술 마커와 적용 영웅/빌드 선택은 실제 확보했지만 각 그룹의 보조 효과/툴팁 전체와 실전 최적 판단은 여전히 Q0/Q1 REVIEW. 실제 Wowhead 동적 UI 클릭 PASS를 주장하지 않음. 개인 HTML·공략 장문 공개 GitHub 업로드 금지. [자세한 사례·일반화 방침](BALANCE_ZERO_BASE_CREATE_REVIEW_20261113.md).
+- **다음 우선순위:** 생존/비전/고양에서도 동일 WHML 내 동적 타임라인 복원 능력과 적용 범위를 실제 콘텐츠 제작에 재사용하되 새 검사기 개발보다 **선택형 원문→정확한 교본을 만드는 과정**에 초점. 원문 기술 마커 확보 이후에는 사용자 Q3 및 게임판단 반례로 Q0/Q1 문제를 줄임.
+## 0.14 조화 드루이드 V2 — 서로 배타적인 쿨다운 분기 혼합 오류 교정 (2026-11-14)
+
+- [교정 근거·재현](BALANCE_ZERO_BASE_CREATE_REVIEW_20261113.md): 12.1.5 Wowhead의 **단일 FoN→일월식**과 **광역 FoN→화신** 선택 분기를 한 줄의 광역 오프너로 합치면서 '자연의 군대 → 화신 → 일월식'이라는 시전 불가능한 시퀀스가 첫 화면에 나타난 문제 확인. **천체의 정렬/화신 활성 중 일반 일월식 시전 불가**라는 실제 배타 상태가 원인. 새 검사기 제작 없이 첫 화면·오프너·표·실전 예제의 모드/활성 상태 조건을 함께 교정.
+- **개인 비공개 결과:** `wow_rotation_v11_balance_1215_eclipse_branch_v2_REVIEW.html`, 987,095B, SHA-256 `688f2cc56dff23f61f046553fa1d73c785d95b5f3b40cef7ec0265409d8e5402`. 40/40 정본-표 조건 일치, 예제 16개, V11 기존 7개 subtree 7/7 원본 바이트 보존. Chromium PC/모바일 2환경에서 메뉴·영웅·툴팁·넘침/JS 오류 0으로 Q4 PASS.
+- **원문 근거 심화:** 꿈의 통제 선택 시 최대 15초 재사용 대기시간 보정, 숲의 수호자 자연의 군대 활성 12% 피해 강화, 영혼 소집 직전 천공의 힘 과충전 방지. 빌드 선택을 명시하지 않은 무조건적 버튼 순서로 승격하지 않음.
+- **남은 제품 과제:** 12.1.5 영웅/Incarnation/Convoke/Mythic+ **동적 오프너 실제 순서·툴팁 전수 원문 확보**와 적용 빌드 Q0/Q1 검증. 다른 12.0.7 버전에서 기술 순서를 빌려와 미확인 단계 채우지 않음. 개인 HTML을 공개 GitHub에 올리지 않음; `main` 미변경.
+## 0.13 신규 전문화 실제 CREATE — 조화 드루이드 (2026-11-13)
+
+- 독립 원문 분석으로 **조화 드루이드 V11 REVIEW 단일 HTML** 최초 CREATE. 12.1.5 / 2026-10-13 Wowhead 검색 색인 기준 숲의 수호자/엘룬의 대행자(블리자드 공식 한국어 이름) 단일/광역 8개 단계별 표 40행, 상태별 다음 행동 12개, 기존 V11 7개 원시 본문 7/7 보존. 최신 빌드 동적 오프너 순서는 미확인으로 REVIEW. **과거 12.0.7 직접 HTML과 12.1.5 색인을 혼합하지 않음.**
+- 동일 PR #23의 `generic_v11_assembly.py`를 수정하지 않고 재사용, 처음 열면 조화 드루이드가 보이도록 구성. PC/모바일 실제 Chromium 메뉴·영웅·툴팁·원본 냉기 복귀·overflow·JS 검증 PASS. [자세한 범위·파일 SHA·품질 판정](BALANCE_ZERO_BASE_CREATE_REVIEW_20261113.md). 개인 HTML은 공개 저장소에 올리지 않음.
+- **향후 우선순위:** 12.1.5 실사이트 동적 오프너·마스터 선택형 원문 내용을 확보해 Q0/Q1 오류 후보를 정리한다. 기능 재구현·버전 숫자 증가보다 실제 교본의 조건 정확도와 사용자 Q3 평가를 우선.
+## 0.12 실제 3전문화 공통 HTML 조립 실증 — 콘텐츠 생성과 구분 (2026-11-13)
+
+- **[PR #23 Draft](https://github.com/degong2-code/wow-rotation-engine/pull/23)** (`work/chat-first-generic-html-assembly-20261113`, #22 위 stacked): 기존 Arcane 전용 JS 메뉴/영웅 등록 하드코딩과 V11 shell 조립을 분리해 **독립 집필된 V11+ 신규 전문화 콘텐츠를 바이트 그대로 포장**하는 `engine/v2/generic_v11_assembly.py` 추가. 원본 V11 SHA 고정, 7개 원본 guide subtree 바이트 보존, 신규 ID/영웅 수/우선순위 표 개수 하드코딩 없음.
+- **실물 증거:** 비전·고양·생존 독립 집필 REVIEW HTML 각각을 동일 공통 조립층으로 재생성(3개 모두 7/7 기존 본문 보존·신규 전문화 본문 바이트 동일). 각 제품 PC 1365px/모바일 390px에서 신규 메뉴·영웅 전환·기존 냉기/암살 영웅 전환·툴팁/ESC·JS 예외 없음·가로 overflow 0. 세 파일은 ChatGPT 비공개 아티팩트이며 GitHub에 올리지 않음. [재현 기록](GENERIC_V11_ASSEMBLY_REVIEW_20261113.md).
+- **검증:** [CI](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43441968879) 453 tests / 451 pass / 2 skipped; 합성 1·3영웅, 잘못된 기존 V11 수정/중복 ID/비정상 기준 SHA 반례. 브라우저는 로컬 Python의 page.set_content 방식.
+- **반드시 구분:** 범용 **HTML 조립(기존 독립 집필물 재생성)**은 증명됐지만, **임의 신규 전문화 원문→상태·판단·오프너 집필→완성 HTML을 전자동 생성**하는 기능이 증명된 것은 아님. 내용 Q0/Q1 승인 없음. 모든 표/오프너를 비전식 4표·2영웅으로 고정하지 말 것. 기존 8+ UPDATE 범용화 미실증.
+- **다음 우선 과제:** 원문 완전성·적용 조건을 확보한 다른 전문화를 실제 ChatGPT에서 **독립 집필**하고 이 공통 조립층을 통해 단일 HTML 생성→내용·UX Q0–Q4 평가. 이미 있는 검사기/규격 증식은 후순위. 두 번째/세 번째 기존 집필 REVIEW를 재포장하는 일만 반복하지 말 것.
 ## 0.11 실제 최신 원문 수집 기능의 실사이트 검증과 접근 제약 대응 (2026-11-13)
 
 - **작업 PR:** [#21](https://github.com/degong2-code/wow-rotation-engine/pull/21)은 범용 priority shadow 검토 (Draft), [#22](https://github.com/degong2-code/wow-rotation-engine/pull/22)는 그 위의 **HTTP-first 전문화명 원문→선택형 UI 보강** (Draft). 둘 다 main 미병합. 개인 HTML/공략 원문은 커밋하지 않음.
