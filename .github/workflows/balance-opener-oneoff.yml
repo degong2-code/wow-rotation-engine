@@ -116,6 +116,25 @@ jobs:
                           print("branch_"+str(ci+1)+"_attribute_names="+json.dumps(
                               sorted({key for a in attrs for key in a})))
                       # Position/order evidence only; no natural-language notes.
+                      # The six choices may all be declared BEFORE multiple
+                      # conditional timeline bodies. Use actual enclosing
+                      # WHML display predicates, not nearest preceding option.
+                      for i, m in enumerate(marker.finditer(segment),1):
+                          if not m.group(1).lower().startswith("rt-step"):
+                              continue
+                          pos=start+m.start()
+                          parents=[x for x in scopes if x["start"]<=pos<x["end"]]
+                          guards=[x["attributes"]["display-options"]
+                                  for x in parents
+                                  if "display-options" in x["attributes"]]
+                          attr=_attrs(re.sub(
+                              r"^\[rt-step(?:-group)?\s*=\s*\d+", "",m.group(0),flags=re.I
+                          ).rstrip("]"))
+                          safe_attrs={k:v for k,v in attr.items()
+                                      if k in {"time","duration","count","repeat","gcd","delay"}}
+                          print("event_"+str(i)+"="+m.group(1).lower()+":"+m.group(2)+
+                                ";scope="+json.dumps(guards)+
+                                ";attrs="+json.dumps(safe_attrs))
                       print("full_dynamic_ui_verified=false")
                       print("opener_gameplay_verified=false")
           except (SourceAccessError, ValueError, KeyError) as e:
