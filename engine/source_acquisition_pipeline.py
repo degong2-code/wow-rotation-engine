@@ -320,6 +320,100 @@ def run_browser(url: str, output: Path, *, capture_mhtml: bool = False,
             browser.close()
 
 
+
+def run_specialization_with_ui(query: str, output: Path, *,
+                               capture_ui: bool = True,
+                               capture_mhtml: bool = False,
+                               max_states: int = 24, max_depth: int = 3,
+                               expected_patch: str | None = None,
+                               min_updated: str | None = None,
+                               expected_guide_sha256: str | None = None) -> dict:
+    """HTTP-first evidence, optional *revision-matched* browser enrichment.
+
+    The guide source is obtained once via a normal HTTPS GET, before any
+    browser navigation. A blocked browser must not destroy an accessible,
+    version-checked source; conversely, a stale/mismatched browser may never
+    supply guide conditions or UI observations to that source.
+    """
+    from tempfile import TemporaryDirectory
+    from shutil import copyfile
+
+    spec = resolve_specialization(query)
+    report = run_specialization(
+        query, output, expected_patch=expected_patch,
+        min_updated=min_updated,
+        expected_guide_sha256=expected_guide_sha256,
+    )
+    report["ui_capture_status"] = "not_observed"
+    report["ui_known_capture_gaps"] = True
+    report["ui_states_observed"] = 0
+    report["browser_enrichment_attempted"] = bool(capture_ui or capture_mhtml)
+    report["browser_enrichment_accepted"] = False
+    report["real_site_completeness_verified"] = False
+    report["gameplay_meaning_verified"] = False
+    report["automatic_publish_allowed"] = False
+
+    if capture_ui or capture_mhtml:
+        with TemporaryDirectory(prefix="rotation-browser-") as tmp:
+            try:
+                browser = run_browser(
+                    spec.guide_url, Path(tmp), capture_ui=capture_ui,
+                    capture_mhtml=capture_mhtml, max_states=max_states,
+                    max_depth=max_depth,
+                    expected_guide_sha256=expected_guide_sha256,
+                    specialization=spec, expected_patch=expected_patch,
+                    min_updated=min_updated,
+                )
+            except SourceAccessError as exc:
+                # Never echo site text, actual URL query strings, or source.
+                reason = str(exc).lower()
+                if "403" in reason or "429" in reason or "denied" in reason:
+                    category = "browser_access_denied"
+                elif "patch" in reason or "older" in reason or "revision" in reason:
+                    category = "browser_source_version_mismatch"
+                elif "heading" in reason or "page title" in reason:
+                    category = "browser_guide_identity_mismatch"
+                elif "unavailable" in reason:
+                    category = "browser_unavailable"
+                else:
+                    category = "browser_source_unavailable"
+                report["ui_capture_status"] = category
+            else:
+                # Matching title/date alone cannot prove identical ordered
+                # source rules. Compare exact guide-body digests before merging
+                # *any* browser UI evidence into HTTP source's private packet.
+                if (
+                    browser.get("guide_body_sha256s") != report["guide_body_sha256s"]
+                    or browser.get("observed_guide_update_date")
+                    != report.get("observed_guide_update_date")
+                ):
+                    report["ui_capture_status"] = "browser_source_body_mismatch"
+                else:
+                    report["browser_enrichment_accepted"] = True
+                    if capture_mhtml and (Path(tmp) / "page.mhtml").is_file():
+                        copyfile(Path(tmp) / "page.mhtml", output / "page.mhtml")
+                    if capture_ui:
+                        for name in ("private-ui-capture.json", "ui-audit.json"):
+                            if (Path(tmp) / name).is_file():
+                                copyfile(Path(tmp) / name, output / name)
+                        report["ui_states_observed"] = browser.get("ui_states_observed", 0)
+                        report["ui_known_capture_gaps"] = bool(
+                            browser.get("ui_known_capture_gaps", True)
+                        )
+                        report["ui_capture_status"] = (
+                            "observed_partial" if report["ui_states_observed"]
+                            else "not_observed"
+                        )
+                    else:
+                        report["ui_capture_status"] = "mhtml_only"
+
+    (output / "pipeline-audit.json").write_text(
+        json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return report
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     src = parser.add_mutually_exclusive_group(required=True)
@@ -344,13 +438,11 @@ def main(argv: list[str] | None = None) -> int:
         if not args.allow_remote:
             parser.error("Specialization mode requires --allow-remote")
         if args.capture_ui or args.mhtml:
-            spec = resolve_specialization(args.specialization)
-            result = run_browser(
-                spec.guide_url, args.output, capture_ui=args.capture_ui,
-                capture_mhtml=args.mhtml, max_states=args.max_states,
-                max_depth=args.max_depth,
+            result = run_specialization_with_ui(
+                args.specialization, args.output,
+                capture_ui=args.capture_ui, capture_mhtml=args.mhtml,
+                max_states=args.max_states, max_depth=args.max_depth,
                 expected_guide_sha256=args.expected_guide_sha256,
-                specialization=spec,
                 expected_patch=args.expected_patch,
                 min_updated=args.min_updated,
             )
