@@ -63,7 +63,9 @@ def project_canonical_arcane_draft(doc: dict) -> dict:
     if "canonical_priority_rules" not in doc:
         return doc
     from copy import deepcopy
-    from ..gameplay_decision_qa import project_priority_view, audit_priority_view
+    from ..gameplay_decision_qa import (
+        project_priority_view, audit_priority_view, audit_priority_shadowing,
+    )
 
     source_rules = doc["canonical_priority_rules"]
     if not isinstance(source_rules, list) or not source_rules:
@@ -83,6 +85,12 @@ def project_canonical_arcane_draft(doc: dict) -> dict:
         )
         if not check["projection_preserved"] or not canonical_rows:
             raise ValueError("Canonical source projection incomplete")
+        # Cross-spec structural review: keep source rows intact, never delete
+        # a suspected fallback or claim semantic correctness from this audit.
+        group["priority_shadow_audit"] = audit_priority_shadowing(
+            source_rules, view_context=view_context,
+            min_targets=low, max_targets=high,
+        )
         group["rows"] = [
             {
                 "id": f'{group["id"]}:row-{i}', "order": i,
@@ -523,6 +531,26 @@ def render_arcane(doc: dict) -> dict:
         "rows": meta["row_count"],
         "tips": meta["tip_count"],
         "fidelity": audit,
+        "priority_shadow_audit": {
+            "views_checked": len(doc["rotation_groups"]) if "canonical_priority_rules" in doc else 0,
+            "different_action_shadowed_rows": sum(
+                len(g["priority_shadow_audit"]["different_action_shadowed_view_ranks"])
+                for g in doc["rotation_groups"] if "priority_shadow_audit" in g
+            ),
+            "same_action_shadowed_rows": sum(
+                len(g["priority_shadow_audit"]["same_action_shadowed_view_ranks"])
+                for g in doc["rotation_groups"] if "priority_shadow_audit" in g
+            ),
+            "mixed_action_shadowed_rows": sum(
+                len(g["priority_shadow_audit"]["mixed_action_shadowed_view_ranks"])
+                for g in doc["rotation_groups"] if "priority_shadow_audit" in g
+            ),
+            "requires_editorial_review": any(
+                g["priority_shadow_audit"]["priority_shadow_review_required"]
+                for g in doc["rotation_groups"] if "priority_shadow_audit" in g
+            ),
+            "gameplay_meaning_verified": False,
+        },
     }
 
 
@@ -641,6 +669,7 @@ def create_arcane(source: bytes, draft: dict) -> tuple[bytes, dict]:
         "fidelity_components_reused": len(view["fidelity"]["reused_v11_components"]),
         "item_evidence_coverage": view["fidelity"]["evidence_coverage"],
         "gameplay_accuracy_verified": False,
+        "priority_shadow_audit": view["priority_shadow_audit"],
     }
     return text.encode("utf-8"), report
 

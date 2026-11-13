@@ -207,6 +207,10 @@ class ArcaneCreateTests(unittest.TestCase):
                 canon.append(rule)
         draft["canonical_priority_rules"] = canon
         projected = project_canonical_arcane_draft(draft)
+        self.assertTrue(all("priority_shadow_audit" in g
+                            for g in projected["rotation_groups"]))
+        self.assertTrue(all(not g["priority_shadow_audit"]["source_meaning_verified"]
+                            for g in projected["rotation_groups"]))
         self.assertEqual(
             [len(g["rows"]) for g in projected["rotation_groups"]],
             [8, 9, 8, 9]
@@ -226,6 +230,8 @@ class ArcaneCreateTests(unittest.TestCase):
         data, report = self.create(draft)
         result = data.decode("utf-8")
         self.assertEqual(report["arcane_priority_rows"], 34)
+        self.assertEqual(report["priority_shadow_audit"]["views_checked"], 4)
+        self.assertFalse(report["priority_shadow_audit"]["gameplay_meaning_verified"])
         self.assertIn('data-canonical-id="synthetic-sunfury-1"', result)
         self.assertIn('<strong>이유</strong> 원문 기반 합성 설명', result)
         self.assertNotIn("INVALID LEGACY TEXT", result)
