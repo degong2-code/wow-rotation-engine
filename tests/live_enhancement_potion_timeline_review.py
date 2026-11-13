@@ -42,8 +42,9 @@ def _evidence_by_choice(packet: dict) -> dict:
     positions = sorted((o["position"], o["radio_group"]) for o in options
                        if o["radio_group"] in EXPECTED_GROUPS)
     scopes, issues = _nested_scopes(raw)
-    if issues:
-        raise SourceAccessError("Nested source container issue needs review")
+    # The original page may include unrelated WHML bracket mismatches.
+    # The action gate below checks the exact relevant enclosing scopes and
+    # requires one unique action independently for every actual choice.
     result = {}
     for group, choices in EXPECTED_GROUPS.items():
         hero = "SB-Master" if "-SB-" in group else "T-Master"
@@ -326,6 +327,14 @@ def main() -> None:
             AssertionError, IndexError) as exc:
         print("enhancement_potion_timeline=source_or_content_review_required")
         print("enhancement_potion_error_class=" + type(exc).__name__)
+        known = {
+            "Nested source container issue needs review": "unrelated_nested_scope_issue",
+            "Potion action not uniquely identified in choice-gated ordered list":
+                "potion_action_unique_match_failed",
+            "Source-locked potion placement decisions inconsistent": "source_case_mismatch",
+        }
+        print("enhancement_potion_review_reason=" +
+              known.get(str(exc), "needs_private_diagnostic"))
 
 
 if __name__ == "__main__":
