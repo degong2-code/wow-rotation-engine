@@ -1,0 +1,139 @@
+"""Source-locked review of 12 *actual* Enhancement opener choice paths.
+
+This is a constrained source-evidence regression, not a live game simulator.
+It uses a private, temporary WHML packet obtained through the existing
+standard HTTPS path. Never expose WHML, tooltip prose or personal HTML in CI.
+"""
+from __future__ import annotations
+
+from collections import Counter
+import json
+import re
+from pathlib import Path
+from tempfile import TemporaryDirectory
+
+from engine.embedded_markup import _attrs
+from engine.source_acquisition_pipeline import run_specialization
+from engine.source_page_acquire import SourceAccessError
+
+BASELINE = "6657591171c36c79797b739b2248e37b9d967094e7d33e8dd799293283bd5dbe"
+# These are observed choice IDs in the user-verified 2026-10-13 original.
+# This expected *evidence fingerprint* must never become a generic template.
+EXPECTED_GROUPS = {
+    "Opener-Pot-SB-ST": ("SB-OP-ST-LL", "SB-OP-ST-Reck", "SB-OP-ST-LP"),
+    "Opener-Pot-SB-AOE": ("SB-OP-AOE-LL", "SB-OP-AOE-Reck", "SB-OP-AOE-LP"),
+    "Opener-Pot-T-ST": ("T-OP-ST-LL", "T-OP-ST-Reck", "T-OP-ST-LP"),
+    "Opener-Pot-T-AOE": ("T-OP-AOE-LL", "T-OP-AOE-Reck", "T-OP-AOE-LP"),
+}
+EXPECTED_DEFAULTS = {values[1] for values in EXPECTED_GROUPS.values()}
+TAG = re.compile(r"\[([a-z][\w-]*)\b([^\]]*)\]", re.I)
+SPELL = re.compile(r"^\s*=\s*(\d+)\b")
+TYPES = {"rt-step", "rt-step-group"}
+
+
+def inspect_original_opener_choices(packet: dict) -> dict:
+    """Validate source-side choice coverage; never return private source text."""
+    payloads = packet.get("payloads", [])
+    if len(payloads) != 1 or payloads[0].get("sha256") != BASELINE:
+        raise SourceAccessError("Original WHML revision differs from verified baseline")
+    source = payloads[0]
+    options = source["option_definitions"]
+    groups = {}
+    defaults = set()
+    for option in options:
+        group = option["radio_group"]
+        if group.startswith("Opener-Pot-"):
+            groups.setdefault(group, []).append(option["id"])
+            if option["default_checked"]:
+                defaults.add(option["id"])
+    if groups != {k: list(v) for k, v in EXPECTED_GROUPS.items()}:
+        raise SourceAccessError("Option group graph differs from user-verified source")
+    if defaults != EXPECTED_DEFAULTS:
+        raise SourceAccessError("An opener potion default changed")
+    choices = {c for values in EXPECTED_GROUPS.values() for c in values}
+    if len(choices) != 12:
+        raise AssertionError("Internal choice audit cardinality is invalid")
+
+    # Source UI conditions alone do not prove a gameplay effect. Record their
+    # occurrence and check exact choice IDs, without trying to infer their
+    # Boolean semantics from arbitrary source text.
+    occurrences = Counter(
+        entry["expression"] for entry in source["conditional_expressions"]
+    )
+    source_choices_missing = choices - set(occurrences)
+    if source_choices_missing:
+        raise SourceAccessError("Some observed potion choices have no conditional evidence")
+
+    step_tags = []
+    raw = source["original_whml"]
+    for tag in TAG.finditer(raw):
+        kind = tag.group(1).lower()
+        if kind not in TYPES:
+            continue
+        attrs = _attrs(tag.group(2))
+        spell = SPELL.match(tag.group(2))
+        step_tags.append({
+            "kind": kind,
+            "spell": int(spell.group(1)) if spell else None,
+            "condition": attrs.get("display-options"),
+            "has_prepull": "prepull" in tag.group(2).lower(),
+            "has_pull": attrs.get("text", "").lower() == "pull",
+            "at": tag.start(),
+        })
+    choice_step_counts = {
+        choice: sum(tag["condition"] == choice for tag in step_tags)
+        for choice in choices
+    }
+
+    # A real *action* change is confirmed for this specific source by
+    # checking the actual tagged ability and prepull versus pull timing.
+    # We avoid translating display-option IDs into generic gameplay logic.
+    storm_aoe = {
+        key: [t for t in step_tags if t["condition"] == key
+              and t["kind"] == "rt-step-group" and t["spell"] == 187874]
+        for key in ("SB-OP-AOE-Reck", "SB-OP-AOE-LL", "SB-OP-AOE-LP")
+    }
+    if not (any(t["has_prepull"] for t in storm_aoe["SB-OP-AOE-Reck"])
+            and all(any(t["has_pull"] for t in storm_aoe[key])
+                    for key in ("SB-OP-AOE-LL", "SB-OP-AOE-LP"))):
+        raise SourceAccessError("Stormbringer AoE potion-dependent action timing changed")
+
+    return {
+        "source_locked": True,
+        "choice_groups": len(groups),
+        "branch_count": len(choices),
+        "distinct_choices_with_source_conditions": len(choices - source_choices_missing),
+        "choices_with_direct_step_markup": sum(v > 0 for v in choice_step_counts.values()),
+        "direct_step_tags": len(step_tags),
+        "direct_conditional_step_tags": sum(bool(t["condition"]) for t in step_tags),
+        "storm_aoe_crash_prepull_vs_pull_confirmed": True,
+        "original_source_meaning_independently_verified": False,
+        "whole_opener_state_transitions_verified": False,
+        "all_twelve_action_sequences_verified": False,
+        "automatic_publish_allowed": False,
+    }
+
+
+def main() -> None:
+    try:
+        with TemporaryDirectory() as tmp:
+            folder = Path(tmp)
+            result = run_specialization(
+                "고양 주술사", folder, expected_guide_sha256=BASELINE
+            )
+            if result.get("matches_known_baseline") is not True:
+                print("opener_review_status=source_changed_review_required")
+                return
+            source = json.loads(
+                (folder / "editorial-evidence-private.json").read_text(encoding="utf-8")
+            )
+            report = inspect_original_opener_choices(source)
+            print("opener_review_status=source_choice_evidence_consistent")
+            for name, value in report.items():
+                print("opener_review_" + name + "=" + str(value).lower())
+    except (SourceAccessError, ValueError, AssertionError):
+        print("opener_review_status=access_or_structure_review_required")
+
+
+if __name__ == "__main__":
+    main()
