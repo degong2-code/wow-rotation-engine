@@ -463,33 +463,35 @@ def audit_priority_shadowing(
         if all(any(_clause_entails(lower_clause, prior_clause)
                    for _, prior_clause in prior)
                for lower_clause in lower_clauses):
-            # Call it a different-action conflict only if each lower branch
-            # is covered by a DIFFERENT action and is not also covered by a
-            # same-action higher rule. This favors false negatives to false
-            # positive gameplay-error claims.
-            different_action = all(
-                any(upper["action"] != lower["action"] and
-                    _clause_entails(branch, clause) for upper, clause in prior)
-                and not any(upper["action"] == lower["action"] and
-                            _clause_entails(branch, clause)
-                            for upper, clause in prior)
-                for branch in lower_clauses
-            )
+            # Full coverage proves shadowing under encoded predicates.
+            # Action attribution must be more cautious: if same/different
+            # higher actions coexist, their actual winning subregions are
+            # not solved here. Classify that case as mixed/REVIEW.
+            higher_actions = {upper["action"] for upper, _ in prior}
+            if higher_actions == {lower["action"]}:
+                classification = "same_action"
+            elif lower["action"] not in higher_actions:
+                classification = "different_action"
+            else:
+                classification = "mixed_action"
             shadowed.append({
                 "view_rank": row["view_rank"],
-                "different_action": different_action,
+                "classification": classification,
             })
     different = [item["view_rank"] for item in shadowed
-                 if item["different_action"]]
+                 if item["classification"] == "different_action"]
     same = [item["view_rank"] for item in shadowed
-            if not item["different_action"]]
+            if item["classification"] == "same_action"]
+    mixed = [item["view_rank"] for item in shadowed
+             if item["classification"] == "mixed_action"]
     return {
         "schema_version": "priority-shadow-audit-v1",
         "view_row_count": len(rows),
         "provably_shadowed_view_ranks": [item["view_rank"] for item in shadowed],
         "different_action_shadowed_view_ranks": different,
         "same_action_shadowed_view_ranks": same,
-        "priority_shadow_review_required": bool(different),
+        "mixed_action_shadowed_view_ranks": mixed,
+        "priority_shadow_review_required": bool(different or mixed),
         "basis": "explicit_predicate_implication_only",
         "all_other_rows_reachable_verified": False,
         "source_meaning_verified": False,
