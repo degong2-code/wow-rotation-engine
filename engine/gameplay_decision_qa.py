@@ -448,6 +448,11 @@ def audit_priority_shadowing(
             if upper["exceptions"]:
                 continue
             for clause in upper.get("when_any", [upper.get("when", [])]):
+                # In an editorial draft, an empty structured guard often means
+                # readiness is still described only in condition_text. Treat
+                # it as UNKNOWN, never as a proven unconditional action.
+                if not clause:
+                    continue
                 if all(_target_predicate_possible(c, min_targets, max_targets)
                        for c in clause):
                     prior.append((upper, clause))
