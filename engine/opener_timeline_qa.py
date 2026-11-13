@@ -176,21 +176,30 @@ def _simulate(events: list[dict], initial_state: dict) -> tuple[str, list, set]:
             # Without declared order, changes are NOT visible within a beat.
             state.update(changes)
 
-        # The sequence of applicable events cannot return to an earlier pull
-        # phase. Ordered events are checked in declared execution order.
-        for event in certain:
-            current_phase = phase_order[event["phase"]]
-            if current_phase < last_phase:
+        # Check source-declared phases/times without inventing the execution
+        # order of an unordered simultaneous event group.
+        phase_sequence = [phase_order[e["phase"]] for e in certain]
+        if ordered:
+            for current in phase_sequence:
+                if current < last_phase:
+                    return "ambiguous", [], set()
+                last_phase = current
+        elif phase_sequence:
+            if min(phase_sequence) < last_phase:
                 return "ambiguous", [], set()
-            last_phase = current_phase
-            # No inference of spell cast durations, projectile arrivals or
-            # GCD lengths: compare only explicit start/use timestamps.
-            if (event.get("time_ms") is not None and
-                    event.get("time_anchor") in {"start", "use"}):
-                instant = event["time_ms"]
+            last_phase = max(phase_sequence)
+        observed = [e["time_ms"] for e in certain
+                    if e.get("time_ms") is not None
+                    and e.get("time_anchor") in {"start", "use"}]
+        if ordered:
+            for instant in observed:
                 if last_start_ms is not None and instant < last_start_ms:
                     return "ambiguous", [], set()
                 last_start_ms = instant
+        elif observed:
+            if last_start_ms is not None and min(observed) < last_start_ms:
+                return "ambiguous", [], set()
+            last_start_ms = max(observed)
         selected.extend(_event_signature(event) for event in certain)
         exercised.update(e["id"] for e in certain)
     return "ready", sorted(selected), exercised
