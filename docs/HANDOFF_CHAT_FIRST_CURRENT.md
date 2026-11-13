@@ -6,6 +6,16 @@
 > **이 문서는 새 채팅 복원 진입점**이다. **최상위 운영 정책은 [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md)**, 구체적 품질 게이트는 [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), 집필 절차는 [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)을 정본으로 삼으며 중복 복제하지 않는다. **과거 사례로 범용화 가치/오탐을 검증하는 후향적 사례집은 [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md) 참조.**
 
 
+## 0.5 비전 오류의 원인 단계 구조 수정 — 원문 규칙→표 투영 계약 (2026-11-13)
+
+사용자 상위 지시: **비전의 한 행을 수정하는 것이 우선이 아니라, 같은 누락·조건 축약·중복·순서 오류가 다른 전문화에서 발생하지 않도록 실제 제작 설계를 먼저 바꾼다.**
+
+- **최신 구현/근거:** [SOURCE_TO_GUIDE_PROJECTION_CONTRACT_20261113](SOURCE_TO_GUIDE_PROJECTION_CONTRACT_20261113.md). 기존 `engine/gameplay_decision_qa.py`에 `project_priority_view`, `audit_priority_view` 추가. 원문에서 검증한 canonical rule에 **고유 ID/원래 순위/영웅·대상 범위/임계값·행동·이유/원문 위치**를 유지하고, ST/AoE·영웅별 행은 원문 규칙을 재작성하지 않고 **정본에서 유도**한다. 보수적 대상 수 불가능 조건만 제외, 그 외 조건은 유지. 조건 축약(3미만→0), 누락, 중복, 순서 역전, 이유 임의 변경, 다른 영웅 정상 제외를 **기존 테스트에 6개 독립 회귀**로 검증. 임계값·원문 의미 자체를 자동 판정한 것은 아님.
+- **추가로 발견한 정책 충돌 개선:** `engine/v2/create_guide.py`의 기존 **최소 2개 출처 강제**를 **최소 1개 기준 출처**로 수정. `tests/test_v11_arcane_create.py`에 1개 출처 허용/0개 출처 거부 두 테스트 추가. 사용자 선호 Wowhead 단일 기준 소스+쟁점별 외부 보조 확인과 일치.
+- **공개 CI:** [418 중 416 통과·2 skip](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43376409713) (투영 함수/6개 테스트), [420 중 418 통과·2 skip](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43376838358) (출처 수 검증 추가). private 원문/개인 HTML 업로드 없음. 테스트는 합성 사례로 게임플레이 Q0/Q1 완전 승인이 아님.
+- **중요한 남은 통합:** 현재 `content/new_guides/arcane.json`과 legacy `engine/v2/create_guide.py`는 아직 **정본 원문 규칙으로 직접 표를 생성하는 구조가 아님**. 따라서 '기능 개발 성공'을 '실제 비전 교본 CREATE 파이프라인의 오류 방지 완료'로 격상해서는 안 된다. 다음 단계는 원문 12.1.5 검증된 규칙을 canonical로 정리하고 **동일한 투영 결과를 실제 표 렌더링에 사용**, 실제 35행 및 오프너를 재작성해 Q0–Q4를 재검증하는 **종단 간 연결**이다. 복잡한 OR/옵션·숨김 팁/오프너 시점은 무리하게 자동 변환하지 않고 REVIEW/기존 timeline QA 유지.
+- **성과 기준:** 반복해서 한 건씩 고친 횟수가 아니라, **원문 판단 조건이 어떤 전문화에서든 원래대로 출력되어 실제 사용 가능한 V11+ 단일 HTML 교본이 되는지**이다. 불필요한 새 검사기·스키마 개발은 하지 않는다.
+
 ## 0.4 비전 12.1.5 실제 원문 QA → 원문 대조 단일 HTML 검토본 (2026-11-13)
 
 **최신 실제 제품 개선 근거:** [ARCANE_WOWHEAD_SOURCE_RECONCILIATION_20261113](ARCANE_WOWHEAD_SOURCE_RECONCILIATION_20261113.md). V11 공통 디자인/조건 아래 공개 이유/`?` 심화 역할을 **그대로 유지**하고, 기존 GitHub 비전 초안 34행을 Wowhead **2026-10-16 / 12.1.5** 원문 공개 검색 색인의 성난태양 10행·주문술사 9행 통합 우선순위와 대조해 재편집했다. HTML의 비전 4개 ST/AoE 표는 **9+10+8+8=35행**(표 분리 과정에서 단일/광역 조건을 보존하고 중복 행은 제거). 원문 직접 열람 12.0.7 / 2026-06-19와 **버전을 혼합하지 않음**.
