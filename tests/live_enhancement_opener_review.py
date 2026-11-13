@@ -16,6 +16,7 @@ from engine.embedded_markup import _attrs
 from engine.source_acquisition_pipeline import run_specialization
 from engine.source_page_acquire import SourceAccessError
 from engine.source_scoped_evidence import _nested_scopes
+from engine.source_choice_visibility import source_scopes_visible
 
 BASELINE = "6657591171c36c79797b739b2248e37b9d967094e7d33e8dd799293283bd5dbe"
 # These are observed choice IDs in the user-verified 2026-10-13 original.
@@ -112,33 +113,33 @@ def inspect_original_opener_choices(packet: dict) -> dict:
 
     # Compact technical trace for source-shape investigation only.
     # Markup tags that have multiple or nontrivial predicates as REVIEW.
-    all_potion_choices = {c for options in EXPECTED_GROUPS.values() for c in options}
-    non_potion_scopes = sorted({p for t in step_tags
-                                for p in t["parents"]
-                                if p not in all_potion_choices})
+    declared = {option["id"] for option in options}
     trace = {}
     for group, group_choices in EXPECTED_GROUPS.items():
+        hero = "SB-Master" if "-SB-" in group else "T-Master"
+        fight = "OP-AOE" if group.endswith("-AOE") else "OP-ST"
         for choice in group_choices:
+            selected = {choice, hero, fight}
             resolved = []
-            ambiguous = 0
+            unknown = 0
             for t in step_tags:
                 if t["group"] != group:
                     continue
-                predicates = ([t["condition"]] if t["condition"] else []) + t["parents"]
-                conflicting_potions = (set(predicates) & all_potion_choices) - {choice}
-                if conflicting_potions:
+                expressions = ([t["condition"]] if t["condition"] else []) + t["parents"]
+                visible = source_scopes_visible(expressions, selected, declared)
+                if visible is None:
+                    unknown += 1
                     continue
-                # Hero/fight selectors are structural parents: group membership
-                # provides context, but unfamiliar expressions stay REVIEW.
-                if any("||" in p or "&&" in p or "!" in p
-                       for p in predicates):
-                    ambiguous += 1
+                if not visible:
                     continue
                 resolved.append([t["kind"], t["spell"],
                                  "pre" if t["has_prepull"] else
                                  "pull" if t["has_pull"] else "unspecified"])
             trace[choice] = {"technical_step_trace": resolved,
-                             "nonliteral_predicates_review": ambiguous}
+                             "uninterpreted_scope_count": unknown}
+    non_potion_scopes = sorted({p for t in step_tags
+                                for p in t["parents"]
+                                if p not in choices})
 
     return {
         "source_locked": True,
