@@ -15,6 +15,7 @@ from tempfile import TemporaryDirectory
 from engine.embedded_markup import _attrs
 from engine.source_acquisition_pipeline import run_specialization
 from engine.source_page_acquire import SourceAccessError
+from engine.source_scoped_evidence import _nested_scopes
 
 BASELINE = "6657591171c36c79797b739b2248e37b9d967094e7d33e8dd799293283bd5dbe"
 # These are observed choice IDs in the user-verified 2026-10-13 original.
@@ -66,14 +67,25 @@ def inspect_original_opener_choices(packet: dict) -> dict:
 
     step_tags = []
     raw = source["original_whml"]
+    scopes, _ = _nested_scopes(raw)
+    group_positions = sorted((o["position"], o["radio_group"])
+                             for o in options
+                             if o["radio_group"] in EXPECTED_GROUPS)
     for tag in TAG.finditer(raw):
         kind = tag.group(1).lower()
         if kind not in TYPES:
             continue
         attrs = _attrs(tag.group(2))
         spell = SPELL.match(tag.group(2))
+        group = next((g for pos, g in reversed(group_positions)
+                      if pos <= tag.start()), None)
+        parents = [x["attributes"]["display-options"] for x in scopes
+                   if x["start"] < tag.start() < x["end"]
+                   and "display-options" in x["attributes"]]
         step_tags.append({
             "kind": kind,
+            "group": group,
+            "parents": parents,
             "spell": int(spell.group(1)) if spell else None,
             "condition": attrs.get("display-options"),
             "has_prepull": "prepull" in tag.group(2).lower(),
@@ -98,8 +110,34 @@ def inspect_original_opener_choices(packet: dict) -> dict:
                     for key in ("SB-OP-AOE-LL", "SB-OP-AOE-LP"))):
         raise SourceAccessError("Stormbringer AoE potion-dependent action timing changed")
 
+    # Compact technical trace for source-shape investigation only.
+    # Markup tags that have multiple or nontrivial predicates as REVIEW.
+    trace = {}
+    for group, group_choices in EXPECTED_GROUPS.items():
+        for choice in group_choices:
+            resolved = []
+            ambiguous = 0
+            for t in step_tags:
+                if t["group"] != group:
+                    continue
+                predicates = ([t["condition"]] if t["condition"] else []) + t["parents"]
+                other = set(predicates) - {choice}
+                if other:
+                    # A tag gated by other choices is excluded; compound
+                    # expressions are not silently treated as plain IDs.
+                    if any(x not in {c for choices in EXPECTED_GROUPS.values()
+                                     for c in choices} for x in other):
+                        ambiguous += 1
+                    continue
+                resolved.append([t["kind"], t["spell"],
+                                 "pre" if t["has_prepull"] else
+                                 "pull" if t["has_pull"] else "unspecified"])
+            trace[choice] = {"technical_step_trace": resolved,
+                             "nonliteral_predicates_review": ambiguous}
+
     return {
         "source_locked": True,
+        "source_shape_trace": trace,
         "choice_groups": len(groups),
         "branch_count": len(choices),
         "distinct_choices_with_source_conditions": len(choices - source_choices_missing),
