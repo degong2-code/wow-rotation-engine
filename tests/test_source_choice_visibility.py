@@ -37,9 +37,22 @@ class SourceVisibilityTests(unittest.TestCase):
         self.assertIsNone(source_option_visible("Pot-A|Unknown",
                                                 {"Pot-A"}, self.declared))
 
+    def test_negated_potion_and_parenthesized_default_scope(self):
+        self.assertTrue(source_option_visible("!Pot-B", {"Pot-A"}, self.declared))
+        self.assertFalse(source_option_visible("!Pot-B", {"Pot-B"}, self.declared))
+        default = "!(Pot-A)&!(Pot-B)&!(Pot-C)"
+        self.assertFalse(source_option_visible(default, {"Pot-C"}, self.declared))
+        self.assertTrue(source_option_visible(default, {"Hero-A"}, self.declared))
+
+    def test_and_or_precedence_and_grouping(self):
+        self.assertTrue(source_option_visible(
+            "Hero-A&(ST|AOE)", {"Hero-A", "AOE"}, self.declared))
+        self.assertFalse(source_option_visible(
+            "Hero-B&(ST|AOE)", {"Hero-A", "AOE"}, self.declared))
+
     def test_unrecognized_logic_is_not_silently_accepted(self):
-        for expression in ("Pot-A & Pot-B", "!Pot-A", "Pot-A,Pot-B",
-                           "Pot-A||Pot-B", "Pot-A | Pot-B", ""):
+        for expression in ("Pot-A,Pot-B", "Pot-A||Pot-B", "",
+                           "Pot-A^Pot-B", "Pot-A&", "!(Pot-A"):
             self.assertIsNone(source_option_visible(
                 expression, {"Pot-A"}, self.declared))
 
