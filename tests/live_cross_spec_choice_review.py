@@ -179,11 +179,19 @@ def main() -> None:
                     page = get_html(url)
                     obtained["html"] = page
                     return page
-                run_specialization(name, root, fetch_html=capture_html)
+                acquisition = run_specialization(
+                    name, root, fetch_html=capture_html)
                 packet = json.loads(
                     (root / "editorial-evidence-private.json").read_text("utf8")
                 )
                 report = review_source(packet, obtained.get("html"))
+                impact = acquisition["source_selector_impact"]
+                if report["unrecognized_visibility_expressions_review"] != impact["unbound_selector_expression_occurrences"]:
+                    raise AssertionError("Cross-spec unbound expression counts disagree")
+                report["ordered_source_row_candidates_with_unbound_options"] = impact["unbound_selector_ordered_row_candidates"]
+                report["ordered_source_ability_row_candidates_with_unbound_options"] = impact["unbound_selector_ordered_ability_row_candidates"]
+                report["standalone_step_candidates_with_unbound_options"] = impact["unbound_selector_standalone_step_candidates"]
+                report["unbound_option_action_review_required"] = impact["ordered_action_review_required"]
                 print("cross_spec_" + label + "_status=source_expression_inspected")
                 for key, value in report.items():
                     print("cross_spec_" + label + "_" + key + "=" +
