@@ -6,6 +6,17 @@
 > **이 문서는 새 채팅 복원 진입점**이다. **최상위 운영 정책은 [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md)**, 구체적 품질 게이트는 [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), 집필 절차는 [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)을 정본으로 삼으며 중복 복제하지 않는다. **과거 사례로 범용화 가치/오탐을 검증하는 후향적 사례집은 [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md) 참조.**
 
 
+## 0.9 사용자 핵심 진단 → 기준본 선택 규칙 및 CREATE 실행 기본값 수정 (2026-11-13)
+
+**최신 사용자 평가:** 고양 제로베이스 V11형 HTML에 “훨씬 낫다”, 그리고 **“잘못된 기준을 답습해서 그렇지 뭐. 당연한 거야”**라고 지적. 제로베이스 결과에 대한 **상대적 디자인/가독성 긍정**이지 게임 Q0/Q1 정확성 또는 모든 기종 Q3 최종 승인으로 과장하지 않는다. 근본 원인은 HTML/CSS 한 건이 아니라 **실패한 결과물을 차기 제작의 콘텐츠·시각 기준으로 선택한 것**.
+
+- **상위 정책 명시:** [QUALITY_FIRST_POLICY §5.1](QUALITY_FIRST_POLICY.md)에서 **내용 기준=패치 일치하는 최신 원문**, **시각 기준=정상 V11·긍정 평가된 비전/고양 제로베이스의 정보 역할**, **실패 고양 V3.x/Cross-spec=부정 사례 및 회귀 비교 전용**을 분리. CREATE/구조 반려 후 재작성은 원문에서 새 출발, **이미 사용자에게 승인된 정상 UPDATE**는 UI/원래 본문을 보호하며 필요한 원문 차이만 반영. 모든 UPDATE를 무조건 제로베이스로 만드는 것이 아님.
+- **실제 코드 변경:** `engine/v2/create_guide.py`의 Arcane **사적 CREATE CLI에서 구형 수기 `arcane.json`을 묵시적 기본 입력으로 사용하던 경로 제거**. `--draft`를 명시하도록 하고, **`canonical_priority_rules` 없는 기존 수기 draft는 기본 실행에서 거부**. 과거 비교가 꼭 필요할 때만 `--legacy-review-only`를 명시하며 생성 보고서에 `historical_legacy_comparison_only` 상태와 게임/시각 미승인을 기록. 정본 조건 목록을 제공한 정상 경로도 **gameplay Q0/Q1/visual approval을 자동 승격하지 않음**. 이 제한은 Arcane 시범 CLI에 적용되는 좁은 실패 방지장치이며, 모든 전문화를 동일 JSON 스키마로 강제하는 규정이 아님.
+- **회귀 시험:** `tests/test_v11_arcane_create.py`에 (1) 구형 수기 초안 자동 사용 거부(출력 미생성), (2) 명시적 역사 비교 복원/비승인, (3) 정본 규칙 제공 시 실제 비공개 V11 HTML 생성 허용·규칙 ID 출력, 세 경우 추가. 기존 `test_v11_rule_source_audit.py`가 테스트하던 구형 행 감사는 명시적 역사 모드로만 수행하여 **기존 검증 목적과 새 기본 정책을 모두 보존**. [GitHub Actions CI](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43390743577) **426 tests, 424 passed, 2 skipped**, synthetic private HTML 검증이지 원문 전체/실전 딜사이클 승인 아님.
+- **집필 기준 문서:** [CHAT_FIRST_PLAYBOOK §E](CHAT_FIRST_PLAYBOOK.md)는 CREATE/UPDATE 재사용 경계를 반영하고, 과거 문서에서 ‘기본 판단 이유를 ?에 넣는다’고 적힌 **상충 지시를 삭제·현재 역할(이유 상시, ? 심화만)로 갱신**. 기존 고양 실패본은 GitHub/개인 저장에서 삭제하지 않고 역사적 근본 원인 증거로 보존.
+- **실제 산출물 범위:** 이번 턴의 성과는 **재발 방지용 제작 기준/CLI 기본 경로 수정**이며, 새로운 게임 교본 HTML을 제작하거나 제로베이스 고양의 Q0/Q1을 재검증한 것은 아님. 사용자 평가가 긍정적이었던 최신 개인 고양 제로베이스 HTML은 계속 REVIEW이고, 공개 repo에 비공개 HTML·외부 가이드 원문 업로드 없음. PR #20 Draft/`main` 미병합 유지.
+- **다음 작업의 제품 우선순위:** 새 전문화 또는 고양 내용 UPDATE 요청을 받으면 이 **출처/시각 기준 분리와 원문→판단 규칙→동일 데이터 HTML→Q0–Q4**을 종단 간 적용하고 실제 결과물로 사용자 검토. 더 많은 미시 검사기·문서 자체를 개발 목표로 삼지 않음.
+
 ## 0.8 사용자 직접 디자인 반려 → 고양 주술사 완전 제로베이스 CREATE (2026-11-13)
 
 **핵심 사용자 피드백:** 앞서 V3.13 기존 고양을 V11형으로 옮긴 실험본은 표 서식이 여전히 나쁘고 비전 교본과 크게 다르며 다른 기존 전문화와도 일관성이 없음. **“기존 고양주술사 만들어놓은걸 기초로 만들지 말고 아예 제로베이스로 해봐.”** 이 지시는 0.7 실험 결과의 승인/확정 해석보다 우선한다.
