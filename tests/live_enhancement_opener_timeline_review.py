@@ -163,8 +163,13 @@ def build_partial_annotations(packet: dict) -> dict:
                 blaze_phase = "pull" if precrash else "combat"
                 events.append(_event(raw, source_steps, 470057, "blaze",
                                      1, blaze_phase))
+                # The source says this optional starter guarantees some
+                # Maelstrom Weapon for Descending Skies; NO stack count is
+                # inferred. This flag means "from this strike", not overall
+                # player Maelstrom, which other actions can also generate.
                 events.append(_event(raw, source_steps, 17364, "optional-strike",
-                                     2, "combat", when=_pred("early_strike", True)))
+                                     2, "combat", when=_pred("early_strike", True),
+                                     effect={"initial_strike_seeded_maelstrom": True}))
                 events.append(_event(raw, source_steps, 114051, "ascendance",
                                      3, "combat"))
                 events.append(_event(raw, source_steps, 187874, "cd-crash",
@@ -192,6 +197,10 @@ def build_partial_annotations(packet: dict) -> dict:
                             "context": context,
                             "initial_state": {
                                 "early_strike": early, "crash_ready": ready,
+                                "initial_strike_seeded_maelstrom": False,
+                            },
+                            "expected_final_state": {
+                                "initial_strike_seeded_maelstrom": early,
                             },
                             "expected_events": actions,
                         })
@@ -301,6 +310,14 @@ def check_mutations(packet: dict, authored: dict) -> dict:
         if x["id"] != "optional-strike"
     ]
     expect(missing_strike, "mismatch")
+
+    # A visible optional attack with no recorded resource effect is not a
+    # complete state transition even when every action name still matches.
+    missed_maelstrom = one("SB-OP-ST-LL", "-strike1-crash0")
+    strike = next(e for e in missed_maelstrom["branches"][0]["events"]
+                  if e["id"] == "optional-strike")
+    strike["set_state"].clear()
+    expect(missed_maelstrom, "mismatch")
 
     # Missing readiness cannot be presumed false (fallback bias).
     readiness_unknown = one("SB-OP-ST-Reck", "-strike0-crash1")
