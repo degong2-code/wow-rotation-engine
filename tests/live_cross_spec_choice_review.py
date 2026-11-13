@@ -7,6 +7,8 @@ counts and booleans, never guide text, expressions, talent names or HTML.
 from __future__ import annotations
 
 import json
+import re
+from collections import Counter
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -26,6 +28,7 @@ def review_source(packet: dict) -> dict:
     recognized = 0
     decisions = 0
     unknown = 0
+    unknown_kinds = Counter()
     for expression in expressions:
         # Empty selection checks that the expression is syntactically and
         # semantically interpretable for the declared options, not whether
@@ -33,6 +36,15 @@ def review_source(packet: dict) -> dict:
         result = source_option_visible(expression, set(), declared)
         if result is None:
             unknown += 1
+            compact = re.sub(r"\s+", "", expression)
+            tokens = re.findall(r"[A-Za-z0-9][A-Za-z0-9_-]*|[()!&|]", compact)
+            if "".join(tokens) != compact:
+                unknown_kinds["unsupported_characters"] += 1
+            elif any(t not in declared for t in tokens
+                     if t not in {"(", ")", "!", "&", "|"}):
+                unknown_kinds["undeclared_option_reference"] += 1
+            else:
+                unknown_kinds["malformed_supported_grammar"] += 1
         else:
             recognized += 1
             decisions += 1
@@ -42,6 +54,7 @@ def review_source(packet: dict) -> dict:
         "declared_option_count": len(declared),
         "recognized_visibility_expressions": recognized,
         "unrecognized_visibility_expressions_review": unknown,
+        "unrecognized_reason_counts": dict(sorted(unknown_kinds.items())),
         "grammar_decisions_consistent": recognized + unknown == len(expressions),
         "hero_and_fight_contexts_verified": False,
         "gameplay_meaning_verified": False,
