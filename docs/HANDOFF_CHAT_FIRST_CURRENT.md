@@ -12,6 +12,14 @@
 - **현재 기준:** PR #24 Draft / `work/chat-first-talent-visibility-spell-media-20261114`, 생성 시 HEAD `ef0a863a8ffa2bff2ca53a9aab7cfaf19f0499a6`, 조화 드루이드 **V7 REVIEW**. [CI 459 테스트·2 건너뜀 성공](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43550973311). 새 HEAD는 다음 채팅에서 재조회할 것.
 - **주의:** 2026-11-14 인계 작성 환경에서는 V7 HTML 파일이 실제 `/mnt/data`에 없음. 크기·SHA는 인계에 **기록된 사실**이며 새 채팅에서 바이트를 직접 검증했다고 주장하면 안 됨. 개인 교본은 첨부/Project/Library에서 실물 접근을 확인하고 공개 GitHub에 업로드하지 않는다.
 - **사용자 명시:** GitHub 파일과 교본 HTML을 일반 ChatGPT에서 수정할 수 있는데 **Work 전환을 필수로 안내하거나 반복 제안하지 말 것**. 다음 새 채팅 첫 응답은 **읽기 전용 상태 독립 복원**으로 끝내고 `진행`을 기다린다.
+## 0.27 조화 드루이드 V15 — V11 공통 태블릿 레이아웃과 접이식 목차 적용 범위 통일 (2026-11-14)
+
+- **현재 최신 비공개 HTML REVIEW:** `wow_rotation_v11_balance_1215_responsive_alignment_v15_REVIEW.html`, **1,134,076바이트**, SHA-256 `8e0f53aa64b7fee81c00f5450b018c0668b5e18d98cfe7effdfcb2e53114c3e2`. 개인 Library **`/ROTATION TEXTBOOK/wow_rotation_v11_balance_1215_responsive_alignment_v15_REVIEW.html`** · `library_file_id=libfile_a12c44088c1881918174739a31a6ba62`에 별도 보관. GitHub 공개 저장소에 HTML 없음. 다음 채팅에서는 실제 개인 파일을 다시 확보해 SHA 확인할 것.
+- **V14→V15 제품 결함/수정:** V11 레이아웃은 880px 이하에서 목차를 본문 위에 두는데 V14 조화 접기 기능은 700px까지만 활성화, **701~880px에서 356px 목차와 단일·광역 전체 표가 반복 노출**됨. V15는 조화 전용 기존 `@media(max-width:700px)` 한 곳을 `880px`로 맞췄고, 나머지 **전체 HTML 바이트가 V14와 동일**함. 701/800px 첫 참조 Y **612→313px**, 880px **613→314px**, 390px 변화 없음(308px), 881px 이상 PC 화면 유지.
+- **실물 Q4:** Chromium 너비 390·700·701·800·880·881·1365px, 각 너비에 **2영웅×3오프너 6조합(총 42 상태)**, 선택한 전투 유형의 요약 표/오프너 1개 노출, 880px 이하 접기/열기·접근성 `aria-expanded`, 881px 이상 PC 단일·광역 함께 표시, 기술 팁/ESC(390·800), JS 오류 0·가로 넘침 0. V11 원래 7개 전문화 본문, 조화 기본 40개 규칙·빠른 40개, 6오프너 58단계·보조 19개·숨겨진 출처 JSON 3개 변경되지 않음.
+- **미해결·우선순위:** **전체 Q0/Q1 실제 게임 판단, 블리자드 공식 한국어 기술명/아이콘 14개, 원문 보조 표식 의미/숨은 팁, 사용자 실물 Q3 최종 승인 REVIEW** 유지. V15는 반응형 범위의 Q4 개선이며 게임 판단을 변경하지 않음. 다음은 V15 본문을 실제 독자가 빠르고 정확하게 이해하는지 평가하고 중요한 게임 행동 오류만 근거로 고칠 것. 기존 원본 7개 화면을 임의로 일괄 수정하거나 새 검사기 개발 금지. [V15 상세](BALANCE_ZERO_BASE_CREATE_REVIEW_20261113.md).
+- **저장소:** `work/chat-first-talent-visibility-spell-media-20261114`, PR #24 Draft, main 미병합. HEAD·CI는 새 채팅에서 실측.
+
 ## 0.26 조화 드루이드 V14 — 모바일 첫 화면 정보 밀도와 진입 거리 개선 (2026-11-14)
 
 - **최신 개인 REVIEW HTML:** `wow_rotation_v11_balance_1215_mobile_focus_v14_REVIEW.html` · **1,134,076B**, SHA-256 `5c660baab61226b0e84b8defa01e4add9bf3b7e925ee17418bfb436f3e7ba7e8`.
