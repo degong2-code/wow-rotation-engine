@@ -5,7 +5,7 @@ from urllib.error import HTTPError
 import unittest
 
 from engine.spell_names import (
-    audit, fetch_snapshot, fetch_spell, inventory, oauth_token,
+    audit, fetch_snapshot, fetch_spell, fetch_spell_media, inventory, oauth_token,
     SNAPSHOT_VERSION, SOURCE, LOCALE,
 )
 
@@ -124,6 +124,70 @@ class NameEvidenceTests(unittest.TestCase):
         self.assertEqual([x["spell_id"] for x in result["observations"]],[133,190319])
         self.assertEqual(result["locale"],"ko_KR")
         self.assertNotIn("fake-token",json.dumps(result))
+
+
+    def test_official_icon_media_url_is_checked_and_provenance_kept(self):
+        seen = []
+        def opener(request, timeout):
+            seen.append(request.full_url)
+            if "/media/spell/" in request.full_url:
+                return io.BytesIO(json.dumps({
+                    "id": 133,
+                    "assets": [{"key": "icon",
+                                "value": "https://render.worldofwarcraft.com/kr/icons/56/spell_fire_fireball02.jpg"}]
+                }).encode("utf8"))
+            return io.BytesIO('{"id":133,"name":"화염구"}'.encode("utf8"))
+        row = fetch_spell_media(133, "fake", opener=opener, sleeper=lambda _: None)
+        self.assertEqual(row["status"], "found")
+        self.assertTrue(row["icon_url"].startswith("https://render.worldofwarcraft.com/"))
+        data = fetch_snapshot([133], "fake", opener=opener,
+                              sleeper=lambda _: None, delay_seconds=0,
+                              include_media=True)
+        record = data["observations"][0]
+        self.assertEqual(record["media"], row)
+        self.assertIn("/data/wow/media/spell/133?", seen[-1])
+        audited = audit(snapshot=data)
+        result = next(x for x in audited["records"] if x["spell_id"] == 133)
+        self.assertEqual(result["icon_review"], "pending")
+        self.assertFalse(audited["publish_ready"])
+        self.assertNotIn("fake", json.dumps(data))
+
+    def test_official_icon_does_not_trust_unapproved_cdn_or_html(self):
+        for url in (
+            "https://example.com/kr/icons/56/example.jpg",
+            "http://render.worldofwarcraft.com/kr/icons/56/example.jpg",
+            "https://render.worldofwarcraft.com/kr/icons/56/example.jpg?token=abc",
+            "javascript:alert(1)",
+        ):
+            def opener(request,timeout):
+                return io.BytesIO(json.dumps({
+                    "id": 133, "assets": [{"key": "icon", "value": url}],
+                }).encode("utf8"))
+            self.assertEqual(
+                fetch_spell_media(133, "fake", opener=opener,
+                                  sleeper=lambda _: None)["status"],
+                "untrusted_icon_url",
+            )
+
+    def test_official_icon_media_unavailable_keeps_name_and_review(self):
+        def opener(request,timeout):
+            if "/media/spell/" in request.full_url:
+                raise HTTPError(request.full_url, 404, "Not Found", {}, None)
+            return io.BytesIO('{"id":133,"name":"화염구"}'.encode("utf8"))
+        data = fetch_snapshot([133], "fake", opener=opener,
+                              sleeper=lambda _: None, delay_seconds=0,
+                              include_media=True)
+        self.assertEqual(data["observations"][0]["status"], "found")
+        self.assertEqual(data["observations"][0]["media"]["status"], "not_found")
+        self.assertFalse(audit(snapshot=data)["publish_ready"])
+
+    def test_untrusted_icon_in_snapshot_rejected_before_audit(self):
+        data=snapshot([{
+            "spell_id": 133, "status": "found", "name_ko": "화염구",
+            "media": {"status": "found", "icon_url": "https://evil.test/icon.jpg"}
+        }])
+        with self.assertRaises(ValueError):
+            audit(snapshot=data)
 
     def test_no_credentials_fails_closed(self):
         with self.assertRaises(ValueError):
