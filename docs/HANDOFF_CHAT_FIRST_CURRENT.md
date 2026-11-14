@@ -12,6 +12,15 @@
 - **현재 기준:** PR #24 Draft / `work/chat-first-talent-visibility-spell-media-20261114`, 생성 시 HEAD `ef0a863a8ffa2bff2ca53a9aab7cfaf19f0499a6`, 조화 드루이드 **V7 REVIEW**. [CI 459 테스트·2 건너뜀 성공](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43550973311). 새 HEAD는 다음 채팅에서 재조회할 것.
 - **주의:** 2026-11-14 인계 작성 환경에서는 V7 HTML 파일이 실제 `/mnt/data`에 없음. 크기·SHA는 인계에 **기록된 사실**이며 새 채팅에서 바이트를 직접 검증했다고 주장하면 안 됨. 개인 교본은 첨부/Project/Library에서 실물 접근을 확인하고 공개 GitHub에 업로드하지 않는다.
 - **사용자 명시:** GitHub 파일과 교본 HTML을 일반 ChatGPT에서 수정할 수 있는데 **Work 전환을 필수로 안내하거나 반복 제안하지 말 것**. 다음 새 채팅 첫 응답은 **읽기 전용 상태 독립 복원**으로 끝내고 `진행`을 기다린다.
+## 0.21 조화 드루이드 V9 — 엘룬의 대행자 삭망월 선택 여부와 엘룬의 분노 사용 분기 (2026-11-14)
+
+- **현재 최신 개인 HTML (REVIEW):** `wow_rotation_v11_balance_1215_elune_lunation_branch_v9_REVIEW.html` · **1,120,548바이트** · SHA-256 `1166f8ada9508f5c2a0cc2890fee7c16f6e25cc53f884d46397317d6ffb23b02`. 공개 GitHub 미첨부. 새 채팅은 Project/Library의 실제 파일을 먼저 확인하고 크기·SHA를 직접 검증.
+- **V8의 Q1 오류:** 엘룬의 대행자 단일 `balance-elune-st-cd-1`에 `data-requires-talent="new_moon"`를 걸어 삭망월 OFF에서 엘룬의 분노를 아예 숨김. ON에서도 다음 GCD 월식 가능을 필수 선결 조건으로 만들어 쿨마다 사용 규칙을 제한. 12.1.5 Wowhead 실제 본문은 **삭망월 ON→엘룬의 분노 쿨마다 사용**, **OFF→월식·화신/천체의 정렬 앞에 연계**, **엘룬의 분노 직후 월식은 준비 가능할 때 별개 후속 행동**으로 나눈다.
+- **실제 V9 수정:** 동일 40개 규칙 ID의 단 한 규칙 조건/이유를 변경; 영웅/특성 선택 시 첫 화면·상세표·조건 아래 이유·쿨 설명·심화 상태 사례 각각 해당 분기만 표시. 선택 특성의 부정 분기는 기존 `data-requires-talent` 해석에 `!` 조건 한 줄만 확장. 영웅/오프너/다른 규칙 구조는 그대로. 심화 반례 2개 추가(총 18).
+- **기능·보존 검증:** V11 기존 7개 `manual-view` 보존, 빠른 참조/상세 40개 연결, 선택형 오프너 6개·58단계/오프너·주문 출처 JSON 불변. Chromium PC 1365×880 및 mobile 390×844에서 삭망월 OFF/ON/OFF 화면 배타적 표시, 6오프너/영웅 전환, 팁·ESC·기존 냉기 왕복, JS 오류 0, 넘침 0 Q4 PASS(로컬 page.set_content 검사; 실사이트 전체 검증 아님).
+- **남은 중요 Q0/Q1 검토:** 원문 Advanced Tips의 **우주의 손길 발동 시 단일 별똥별 사용 이득**은 사용 특성·우선순위 적용 범위를 먼저 재검증할 것. 근거 확인 전 단일 우선순위표에 임의로 추가하지 않는다. 오프너 보조 마커의 게임 의미, 공식 블리자드 14개 koKR 기술명/아이콘 실물 대조, 사용자 Q3 최종 승인은 계속 REVIEW. 새 검사기·독립 엔진 개발은 우선하지 않음. [V9 상세 품질 기록](BALANCE_ZERO_BASE_CREATE_REVIEW_20261113.md).
+- **현재 브랜치:** `work/chat-first-talent-visibility-spell-media-20261114`, PR #24 Draft, main 미병합. 이 문서의 과거 커밋·CI 값보다 새 조회 결과 우선.
+
 ## 0.20 조화 드루이드 V8 — 실제 12.1.5 우선순위 원문 대조 후 판단 조건 손실 교정 (2026-11-14)
 
 - **최신 개인 REVIEW HTML:** `wow_rotation_v11_balance_1215_q1_condition_corrections_v8_REVIEW.html` · **1,119,099B** · SHA-256 `3c5deadda4dc9b0af1ac7210dd25eb3c41566ebd4e96749a03fa357881616f5b`. 개인 Library의 V7 원시 데이터와 기존 V11 원본을 직접 확보해 수정·비교. **이 HTML은 공개 GitHub에 없음.** 새 채팅은 실제 개인 파일을 다시 확보해 해시 검증할 것.
