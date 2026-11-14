@@ -6,6 +6,12 @@
 > **이 문서는 새 채팅 복원 진입점**이다. **최상위 운영 정책은 [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md)**, 구체적 품질 게이트는 [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), 집필 절차는 [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)을 정본으로 삼으며 중복 복제하지 않는다. **과거 사례로 범용화 가치/오탐을 검증하는 후향적 사례집은 [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md) 참조.**
 
 
+## 일반 채팅 새 출발 진입점 — 2026-11-14 최신 확인
+
+- **새 일반 ChatGPT 채팅 독립 복원 전용:** [HANDOFF_GENERAL_CHAT_20261114.md](HANDOFF_GENERAL_CHAT_20261114.md). 이전 2026-11-13 인계문/PR #20 HEAD를 현재 상태로 사용하지 말 것. 우선 저장소 최신 HEAD/PR/Actions와 실제 개인 교본 접근을 확인한다.
+- **현재 기준:** PR #24 Draft / `work/chat-first-talent-visibility-spell-media-20261114`, 생성 시 HEAD `ef0a863a8ffa2bff2ca53a9aab7cfaf19f0499a6`, 조화 드루이드 **V7 REVIEW**. [CI 459 테스트·2 건너뜀 성공](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43550973311). 새 HEAD는 다음 채팅에서 재조회할 것.
+- **주의:** 2026-11-14 인계 작성 환경에서는 V7 HTML 파일이 실제 `/mnt/data`에 없음. 크기·SHA는 인계에 **기록된 사실**이며 새 채팅에서 바이트를 직접 검증했다고 주장하면 안 됨. 개인 교본은 첨부/Project/Library에서 실물 접근을 확인하고 공개 GitHub에 업로드하지 않는다.
+- **사용자 명시:** GitHub 파일과 교본 HTML을 일반 ChatGPT에서 수정할 수 있는데 **Work 전환을 필수로 안내하거나 반복 제안하지 말 것**. 다음 새 채팅 첫 응답은 **읽기 전용 상태 독립 복원**으로 끝내고 `진행`을 기다린다.
 ## 0.19 조화 드루이드 V7 — 한국어 용어·사용자 화면 내부 식별자 제거 (2026-11-14)
 
 - **개인 HTML:** `wow_rotation_v11_balance_1215_korean_terms_v7_REVIEW.html`, 1,117,516 bytes, SHA-256 `93c53b87b149661d3897fec2570cfdeacd5d5de7ab146eaa177d9ef8c3574be5`. 로컬 검토 산출물이며 공개 저장소에 업로드하지 않음.
