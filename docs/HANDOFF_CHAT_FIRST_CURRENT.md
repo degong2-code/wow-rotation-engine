@@ -6,6 +6,13 @@
 > **이 문서는 새 채팅 복원 진입점**이다. **최상위 운영 정책은 [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md)**, 구체적 품질 게이트는 [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), 집필 절차는 [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)을 정본으로 삼으며 중복 복제하지 않는다. **과거 사례로 범용화 가치/오탐을 검증하는 후향적 사례집은 [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md) 참조.**
 
 
+## 0.16 조화 드루이드 V4 — 선택 특성 필터·수리적 우선순위·주문 ID 공식 경로 (2026-11-14)
+
+- **개인 HTML:** wow_rotation_v11_balance_1215_talent_math_icons_v4_REVIEW.html, 1,053,610 bytes, SHA256 2f7474bb1a9b51b7728a142e11dcf4bf6cd37b4c64da24f241ef5f583b58bd0c. **기존 V11 7전문화 본문 7/7 원시 동일**. 40 우선순위 규칙/6 원문 오프너/58 단계/16 실전 상태 사례 보존. 기존 V3의 3개 빌드가 모두 노출되는 UX 문제 해결: 선택한 영웅·오프너 1개만 표시, 특정 선택 특성에 따른 표·예제 필터. PC/모바일 Chromium 기능 Q4 PASS.
+- **수리적 UI:** 조건/수치/판단 목적을 ∧, ∨, ≥, ≤, T/AP/CD 등 간결한 표 문법으로 표시. 표시 우선순위 텍스트 3,324→1,801자(약 46% 감소). 정확한 원문 규칙 및 출처 정보는 내부 JSON에 별도 보존. 다른 전문화에 2영웅·3오프너 구조를 강제하지 않음.
+- **주문 ID·한글·아이콘:** HTML 내 14개 기술의 ID→koKR 명칭→Wowhead 아이콘 참조 매핑(천벌 5176 등 아이콘 오배치 일부 교정). **Blizzard 공식 API/실게임 koKR client를 통한 14개 명칭·아이콘 검증은 아직 수행되지 않았으므로 REVIEW.** 새 Draft 브랜치 work/chat-first-talent-visibility-spell-media-20261114는 이미 구현된 engine/spell_names.py 공식 이름 조회 경로에 선택적 Blizzard Media API 조회·신규 전문화 ID 목록 기능을 최소 확장, 사용자 승인 없는 자동 명칭/이미지 교체를 금지. [설명](SPELL_NAMES.md).
+- **남은 핵심:** 공식 Blizzard 이름·아이콘 출처 관측과 실제 게임 기술 변형 문맥 확인, V4의 동적 특성 적용 범위 Q0/Q1 검토 및 사용자 Q3 가독성 평가. 신규 HTML 원본·공략 장문은 GitHub에 게시하지 않음. 추가 검사기나 새 엔진 증설은 우선하지 않음.
+
 ## 0.15 조화 드루이드 V3 — 실제 최신 원문에서 숨겨진 6개 오프너 선택 분기 복원 (2026-11-14)
 
 - **실제 source 원문 복구**: [Wowhead 12.1.5 WHML 증거](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43462279342) guide-body SHA `1b28301de948d116c73be53a84ea43f0799d6a153663347c9d717e1609d7e48c`. 동적 웹 검색 색인은 빈 오프너로 표시됐지만 원본 WHML에는 숲의 수호자(화신/영혼 소집/쐐기)와 엘룬의 대행자(화신/영혼 소집/쐐기) **6선택/58기술·복합 마커/19보조 표식**이 존재. [선택형 분기 위치 증명](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43462734350), [보조 rt-sup 범위 증거](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43463478583). UI 접근 제약을 원문 부재로 오판하지 않으며, 기본 수집기를 그대로 사용.
