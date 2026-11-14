@@ -12,6 +12,15 @@
 - **현재 기준:** PR #24 Draft / `work/chat-first-talent-visibility-spell-media-20261114`, 생성 시 HEAD `ef0a863a8ffa2bff2ca53a9aab7cfaf19f0499a6`, 조화 드루이드 **V7 REVIEW**. [CI 459 테스트·2 건너뜀 성공](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43550973311). 새 HEAD는 다음 채팅에서 재조회할 것.
 - **주의:** 2026-11-14 인계 작성 환경에서는 V7 HTML 파일이 실제 `/mnt/data`에 없음. 크기·SHA는 인계에 **기록된 사실**이며 새 채팅에서 바이트를 직접 검증했다고 주장하면 안 됨. 개인 교본은 첨부/Project/Library에서 실물 접근을 확인하고 공개 GitHub에 업로드하지 않는다.
 - **사용자 명시:** GitHub 파일과 교본 HTML을 일반 ChatGPT에서 수정할 수 있는데 **Work 전환을 필수로 안내하거나 반복 제안하지 말 것**. 다음 새 채팅 첫 응답은 **읽기 전용 상태 독립 복원**으로 끝내고 `진행`을 기다린다.
+## 0.36 화염 V24 — 와우헤드 12.1.5 원문 조건 복원: 유성의 독립 조건 및 마무리 화염 작렬 (2026-11-14)
+
+- **현재 개인 통합 HTML REVIEW:** wow_rotation_v11_balance_fire_source_conditions_v24_REVIEW.html, **1,256,020B**, SHA-256 **579b626bb49fab5cd8cc3389eda29130deb923d1ee896feb6e2a2b027c013647**. 개인 Library /ROTATION TEXTBOOK/wow_rotation_v11_balance_fire_source_conditions_v24_REVIEW.html, **library_file_id=libfile_122df243a4d08191967c552873883fb6**에 V23과 별도로 보관. 공개 GitHub에 개인 HTML을 올리지 않음. 다음 채팅에서 실물 SHA·크기 다시 확인.
+- **원문·버전 경계:** 기준 [Wowhead 12.1.5 화염 Rotation](https://www.wowhead.com/guide/classes/mage/fire/rotation-cooldowns-pve-dps) 검색 색인에 명시된 Frostfire Priority 원문으로 대조. 같은 URL의 일반 웹 열람이 과거 12.0.7 캐시를 반환하기도 하므로 새 판정을 과거 캐시에서 가져오지 않았음. 원문 전체 동적 옵션·오프너/툴팁의 완전 수집은 아직 Q0 REVIEW.
+- **실제 다음 행동 오류 2유형/상세 3행 교정:** (1) Frostfire 단일 발화 중 유성 첫 행의 원문 **“남은 8초 이하”**와 둘째 **“발화 중 착탄 가능”**을 V23이 첫 행에서 AND 결합한 것을 복원. 발화 4초 남고 착탄 5초 후라면 원문 1행 true/V23 false 반례. (2) Frostfire 단일·광역 발화 외에 **체력 30% 미만 불태우기 시전 중 열기 없이도 화염 작렬로 치명타 연결**이라는 원문 하위 예외가 빠져 있던 문제. V24 **단일 외 5순위·광역 외 8순위** 상세 조건과 첫 화면 연계 조건에 각각 추가. 38개 원문 우선순위 ID/행동/순서/개수와 두 영웅 오프너 그대로, 새로운 게임 정보 추측 없음.
+- **Q4 실제 파일 검사:** V23 대비 상세 조건 3개와 연결된 빠른 참조·출처 메타데이터만 변경. 서리불꽃 38개 상세와 첫 화면 38개 일대일 연결 유지; 성난태양·냉기 등 **비대상 7개 전문화 DOM 원시 내용 동일**, 조화 40개 상세/빠른 연결 그대로. Chromium 320/390/800/1365px 영웅·전문화 전환, 팁/ESC, 38개 항목 셀 밖 침범 0, 페이지 가로 넘침 0, JS 오류 0 **Q4 PASS**. 모바일 320px 초기 조건 표현의 넓이 문제를 짧은 동등 상태 표현으로 해결한 뒤 재시험. 외부 아이콘 HTTP 로딩 차단; 실제 게임 DPS 최적화 증명 아님.
+- **재발 방지:** 원문에서 **동일 주문에 대해 다른 순위의 독립 조건**과 하위 설명의 **버프 없는 상태 예외**가 자유 서술 압축 중 손실될 수 있다. Playbook §0.1에 원문의 조건을 임의 AND 결합하지 말고 상태 반례·별도 조건으로 보존하도록 명시. 새 검사기/스키마/독립 엔진을 만들지 않음. [V24 원인·검증 기록](QUALITY_GENERALIZATION_CASEBOOK.md).
+- **승인 상태:** V23 표현 방식에 대한 사용자 **“좋은데?”** 긍정 피드백은 유지하되, 전체 WoW 게임 판단 Q0/Q1·원문 동적 선택형 완전성·공식 Blizzard 한국어 주문/아이콘 전수 검증 및 V24 사용자 최종 승인은 **REVIEW**. 기존 7개 V11 및 조화 V16 보존. PR #24 Draft·main 미병합, HEAD/CI는 실제 조회.
+
 ## 0.35 화염 V23 — 사용자 긍정 평가 V22의 표현 기준을 서리불꽃 우선순위 38개에 재적용 (2026-11-14)
 
 - **현재 최신 비공개 통합 HTML:** `wow_rotation_v11_balance_fire_frostfire_full_quick_v23_REVIEW.html`, **1,255,808바이트**, SHA-256 `cd79c629de7f349940d4591e081ebe9b8ef428969fc55df5fea7cedcd684d807`. 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_balance_fire_frostfire_full_quick_v23_REVIEW.html`, `library_file_id=libfile_d027ffb321dc8191ae9cb14480b152be`에 **V22와 별도 보관 성공**. 실제 HTML은 공개 GitHub에 업로드하지 않음; 다음 채팅에서 Library 실물 바이트/해시 재검증 필수.
