@@ -12,6 +12,15 @@
 - **현재 기준:** PR #24 Draft / `work/chat-first-talent-visibility-spell-media-20261114`, 생성 시 HEAD `ef0a863a8ffa2bff2ca53a9aab7cfaf19f0499a6`, 조화 드루이드 **V7 REVIEW**. [CI 459 테스트·2 건너뜀 성공](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43550973311). 새 HEAD는 다음 채팅에서 재조회할 것.
 - **주의:** 2026-11-14 인계 작성 환경에서는 V7 HTML 파일이 실제 `/mnt/data`에 없음. 크기·SHA는 인계에 **기록된 사실**이며 새 채팅에서 바이트를 직접 검증했다고 주장하면 안 됨. 개인 교본은 첨부/Project/Library에서 실물 접근을 확인하고 공개 GitHub에 업로드하지 않는다.
 - **사용자 명시:** GitHub 파일과 교본 HTML을 일반 ChatGPT에서 수정할 수 있는데 **Work 전환을 필수로 안내하거나 반복 제안하지 말 것**. 다음 새 채팅 첫 응답은 **읽기 전용 상태 독립 복원**으로 끝내고 `진행`을 기다린다.
+## 0.22 조화 드루이드 V10 — 우주의 손길 × 별재봉사 단일 무료 별똥별 예외 복원 (2026-11-14)
+
+- **현재 최신 개인 REVIEW HTML:** `wow_rotation_v11_balance_1215_touch_cosmos_starweaver_v10_REVIEW.html` · **1,126,302바이트**, SHA-256 `8e6c1f6c5dba7f77c2ee6aa72c289ee6a2d71c2820c6d37355bafe24d5734d98`. 개인 산출물/Library에서 실제 파일을 다시 확보·해시 검증해야 하며 **공개 GitHub에는 HTML 원본 없음**. 이전 V9는 별도 역사적 검토본.
+- **근거와 행동 변화:** Wowhead 조화 12.1.5(2026-10-13) **Advanced Tips**는 단일에서도 우주의 손길 발동을 별똥별로 소비하는 이득과, 덮어쓰기 위험이 없으면 강화 창까지 발동 보존 가능성을 명시한다. 동일 사이트 한글 특성에서 별재봉사는 별똥별→무료 별빛쇄도 40% 연계. Icy Veins는 별재봉사 선택 상태의 이 기전만 교차 확인했으며 *전체 우선순위를 혼합하지 않음*. 광역 전용처럼 취급해 단일 조건을 빠뜨린 V9 누락 교정.
+- **V10 구현:** 두 영웅에 선택 특성 **별재봉사** 토글 1개씩, ON에서만 첫 화면 단일 별똥별 무료 발동 행과 상세의 이유·쿨 진입 전 보존/소모 조건 및 상태→다음 행동 사례 2개 노출. OFF에서는 해당 좁은 예외를 숨김. 실제 40개 `data-rule-id`/40개 빠른 연결의 순위·원문 규칙은 그대로 보존(고정 우선순위 새 순위 번호를 추측하지 않음). 6개 원문 오프너/58단계, 출처 JSON, V11 기존 7개 본문 불변.
+- **실제 기능 Q4:** Chromium 1365×880/390×844, 영웅별 별재봉사 OFF→ON→OFF, 빠른/상세/심화 표시, 삭망월 기존 선택, 6오프너, 툴팁/ESC, 기존 냉기 왕복, JS 오류 0·가로 넘침 0 PASS. 파일 자체는 GitHub CI에 업로드하지 않음.
+- **잔여 REVIEW:** 우주의 손길과 별의 동료 등 미확인 특성 조합, 원문 숨은 팁/복합 보조 표식, 공식 Blizzard 14개 이름/아이콘 대조, 전체 Q0/Q1 및 독자 가독성 Q3·최종 승인은 미완료. **다음 제품 작업은 V10 실물 전달·독자의 Q3 평가와 중요한 미확정 Q0/Q1 판단 검토**. 기존 제작 절차로 해결하므로 새 전용 검사기/생성기 증설 금지. [V10 실물 QA와 근거](BALANCE_ZERO_BASE_CREATE_REVIEW_20261113.md).
+- **현재 브랜치:** `work/chat-first-talent-visibility-spell-media-20261114`, PR #24 Draft. HEAD·CI는 항상 실시간 다시 조회.
+
 ## 0.21 조화 드루이드 V9 — 엘룬의 대행자 삭망월 선택 여부와 엘룬의 분노 사용 분기 (2026-11-14)
 
 - **현재 최신 개인 HTML (REVIEW):** `wow_rotation_v11_balance_1215_elune_lunation_branch_v9_REVIEW.html` · **1,120,548바이트** · SHA-256 `1166f8ada9508f5c2a0cc2890fee7c16f6e25cc53f884d46397317d6ffb23b02`. 공개 GitHub 미첨부. 새 채팅은 Project/Library의 실제 파일을 먼저 확인하고 크기·SHA를 직접 검증.
