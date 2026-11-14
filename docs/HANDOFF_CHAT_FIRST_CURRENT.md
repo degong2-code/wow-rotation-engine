@@ -12,6 +12,16 @@
 - **현재 기준:** PR #24 Draft / `work/chat-first-talent-visibility-spell-media-20261114`, 생성 시 HEAD `ef0a863a8ffa2bff2ca53a9aab7cfaf19f0499a6`, 조화 드루이드 **V7 REVIEW**. [CI 459 테스트·2 건너뜀 성공](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43550973311). 새 HEAD는 다음 채팅에서 재조회할 것.
 - **주의:** 2026-11-14 인계 작성 환경에서는 V7 HTML 파일이 실제 `/mnt/data`에 없음. 크기·SHA는 인계에 **기록된 사실**이며 새 채팅에서 바이트를 직접 검증했다고 주장하면 안 됨. 개인 교본은 첨부/Project/Library에서 실물 접근을 확인하고 공개 GitHub에 업로드하지 않는다.
 - **사용자 명시:** GitHub 파일과 교본 HTML을 일반 ChatGPT에서 수정할 수 있는데 **Work 전환을 필수로 안내하거나 반복 제안하지 말 것**. 다음 새 채팅 첫 응답은 **읽기 전용 상태 독립 복원**으로 끝내고 `진행`을 기다린다.
+## 0.32 V20 — 빠른 참조의 불필요한 ①·② 가짜 그룹 번호 제거 (2026-11-14)
+
+- **개인 최신 HTML REVIEW:** `wow_rotation_v11_balance_fire_priority_flow_v20_REVIEW.html`, **1,231,161바이트**, SHA-256 `ed21cde3044e4212d873ff6be066bfa48f806e9c8e47db28bfe1115dd44e2b86`; 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_balance_fire_priority_flow_v20_REVIEW.html`, `library_file_id=libfile_90cfc5d574648191965d2ac0c70b72f1`. 공개 GitHub에 원본/산출물 HTML 올리지 않음. V19 기존 Library 파일 유지, 실제 V20 다운로드는 Library 또는 채팅 산출물에서 확보 후 SHA 재검증.
+- **사용자 질문·승인:** 첫 화면의 `①` 및 `②`의 의미를 질문하며 **기존 냉기에도 왜 있는지 모르겠다**고 평가. 이 숫자는 실제 전투 분기나 별도 로테이션이 아니라 **한 줄 우선순위를 임의로 두 시각적 블록에 분리한 표시**다. `진행`에 따라 화염/냉기 모두 업데이트하고, 똑같은 표현을 갖고 있던 조화 첫 화면도 일관되게 고침.
+- **실제 V19→V20 최소 수정:** 화염 성난태양 4개 상황: `①` 삭제, `②` 자리에 앞 우선순위 계속됨을 뜻하는 `→` 배치(4+4). 냉기 2영웅×단일·광역(4개 상황): `①` 삭제, `②`를 `→`로 치환(4+4). 조화 2영웅의 광역 연속줄에 있던 `①`·`②` 삭제(2+2), 각 기술 앞에 있던 기존 `→`를 재사용. 실제 오프너의 **시전 단계 번호**와 핵심 운용 원리의 `<ol>`은 유지, 화염의 실전 의미가 있는 `선행` 표식 보존.
+- **변경 범위 엄격 검증:** 원본 V19의 **정확히 위 6종 문자열 치환(총 20개 표식)**만 반영한 결과가 V20 파일과 바이트 일치. 8전문화 모든 기술 `data-spell`·사용자 기술명 순서, 표 행수 및 비대상 전문화 HTML 본문 동일. 화염 상세↔첫 화면 27개 우선순위 조건, 냉기 두 영웅의 첫 화면 판단, 조화 40개 규칙과 6개 원본 오프너는 그대로. 새 게임 판단·기능 추가 없음.
+- **기능 검사:** 실제 Chromium 390·800·1365px마다 12개 전문화/영웅 메뉴 버튼 전환 및 화염·냉기·조화 각 2영웅(총 6 상태), ①·② 화면 잔여 0, 각 전문화 툴팁/ESC, JS 오류 0·가로 넘침 0 **PASS**. 외부 CDN 아이콘 실시간 네트워크 성공은 검사하지 않음. `Q4` 기능 PASS와 `Q0/Q1` 원문/gameplay 검증 및 사용자 최종 Q3 승인은 별개 REVIEW.
+- **범용 제작 원칙:** [CHAT_FIRST_PLAYBOOK §0.1](CHAT_FIRST_PLAYBOOK.md)에 **우선순위는 한 흐름이며, 시각적 줄바꿈을 가짜 ①·② 단계로 만들지 말 것**을 명시. 콘텐츠 순위·행동 조건·영웅 선택·오프너 단계 번호는 절대 임의 축약/변경하지 않으며, 새 검사기/엔진은 불필요. [V19 사용자 REVIEW·빠른 참조 누락 문제](QUALITY_GENERALIZATION_CASEBOOK.md)는 별개로 유지.
+- **개발 상태:** `work/chat-first-talent-visibility-spell-media-20261114`, PR #24 Draft·main 미병합. HEAD·CI는 이후 실제 조회.
+
 ## 0.31 사용자 V18 REVIEW 반영 — 화염 성난태양 전체 우선순위·전구간 아이콘 V19 (2026-11-14)
 
 - **최신 비공개 통합 HTML:** `wow_rotation_v11_balance_fire_full_quick_icons_v19_REVIEW.html`, **1,231,465B**, SHA-256 `2412ce97e9953549ba61f2f41cda8ce55afe367e2580deb463b9f7ab9f2f872f`. 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_balance_fire_full_quick_icons_v19_REVIEW.html`, `library_file_id=libfile_4c7fb40e6ec08191a311825470500ef4`. 기존 V18·조화 V16·V11 원본을 덮어쓰지 않음. 공개 GitHub에 개인 HTML 원본 없음.
