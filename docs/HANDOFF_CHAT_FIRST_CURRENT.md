@@ -6,6 +6,13 @@
 > **이 문서는 새 채팅 복원 진입점**이다. **최상위 운영 정책은 [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md)**, 구체적 품질 게이트는 [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), 집필 절차는 [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)을 정본으로 삼으며 중복 복제하지 않는다. **과거 사례로 범용화 가치/오탐을 검증하는 후향적 사례집은 [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md) 참조.**
 
 
+## 0.17 조화 드루이드 V5 — 기존 V11 디자인 회귀, 불필요 박스/설명 제거 (2026-11-14)
+
+- **사용자 요청:** 기존 V11 7전문화 디자인을 참조해 과도한 설명·내용을 감싼 카드와 테두리 제거. 비전 전용 서식을 재사용하거나 카드형 디자인을 확장하지 말고 기존 V11의 일반 장·조건 표 문법으로 통합.
+- **개인 V5:** `wow_rotation_v11_balance_1215_v11_clean_layout_v5_REVIEW.html`, **1,052,145 bytes**, SHA256 `f878c1013a00ffc205172575349c349cea86a077ca264c67128bfa7f1f6fd208`. 조화 가시 본문 8,981→6,826자(약 24% 감소). 첫 화면 REVIEW 박스 삭제·출처 하단 이관, 선택 특성/오프너의 큰 배경 카드/테두리 제거, 일반 chapter·간결한 소제목 및 V11 표 형태로 정돈.
+- **내용 보존:** V4의 40개 정본 우선순위 행/6오프너 58단계/14개 주문 ID·출처 JSON/5개 특성 체크박스 유지. 기존 V11 7개 전문화 원시 본문 7/7 바이트 동일. 재현 근거는 [조화 CREATE/UPDATE 기록](BALANCE_ZERO_BASE_CREATE_REVIEW_20261113.md)의 V5 항목.
+- **실제 PC/모바일:** Chromium 1365×880 및 390×844에서 영웅·빌드 모든 6개 조합 각각 1오프너만 표시, 선택 특성 필터·원본 냉기 전문화 왕복·기술 툴팁/ESC·overflow=0·JS 오류=0 확인. Q4 해당 범위 PASS; 전체 원문 Q0/Q1·Blizzard 14개 공식 koKR/아이콘 개별 검증은 REVIEW.
+- **범용 원칙:** 메타데이터와 장문의 출처 경고를 첫 화면 여러 박스에서 반복하지 말고 출처 절/정본 데이터로 옮기며, UI는 선택 분기와 게임 상태 판단을 보여주는 최소 구성으로 유지. 별도 신형 UI/검사기 개발 없이 실물 교본 재작성.
 ## 0.16 조화 드루이드 V4 — 선택 특성 필터·수리적 우선순위·주문 ID 공식 경로 (2026-11-14)
 
 - **개인 HTML:** wow_rotation_v11_balance_1215_talent_math_icons_v4_REVIEW.html, 1,053,610 bytes, SHA256 2f7474bb1a9b51b7728a142e11dcf4bf6cd37b4c64da24f241ef5f583b58bd0c. **기존 V11 7전문화 본문 7/7 원시 동일**. 40 우선순위 규칙/6 원문 오프너/58 단계/16 실전 상태 사례 보존. 기존 V3의 3개 빌드가 모두 노출되는 UX 문제 해결: 선택한 영웅·오프너 1개만 표시, 특정 선택 특성에 따른 표·예제 필터. PC/모바일 Chromium 기능 Q4 PASS.
