@@ -12,6 +12,16 @@
 - **현재 기준:** PR #24 Draft / `work/chat-first-talent-visibility-spell-media-20261114`, 생성 시 HEAD `ef0a863a8ffa2bff2ca53a9aab7cfaf19f0499a6`, 조화 드루이드 **V7 REVIEW**. [CI 459 테스트·2 건너뜀 성공](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43550973311). 새 HEAD는 다음 채팅에서 재조회할 것.
 - **주의:** 2026-11-14 인계 작성 환경에서는 V7 HTML 파일이 실제 `/mnt/data`에 없음. 크기·SHA는 인계에 **기록된 사실**이며 새 채팅에서 바이트를 직접 검증했다고 주장하면 안 됨. 개인 교본은 첨부/Project/Library에서 실물 접근을 확인하고 공개 GitHub에 업로드하지 않는다.
 - **사용자 명시:** GitHub 파일과 교본 HTML을 일반 ChatGPT에서 수정할 수 있는데 **Work 전환을 필수로 안내하거나 반복 제안하지 말 것**. 다음 새 채팅 첫 응답은 **읽기 전용 상태 독립 복원**으로 끝내고 `진행`을 기다린다.
+## 0.29 화염 마법사 V17 — 조화 이외 전문화에서 첫 화면 오프너 부분 UPDATE 실증 (2026-11-14)
+
+- **현재 최신 비공개 통합 HTML REVIEW:** `wow_rotation_v11_balance_fire_quick_openers_v17_REVIEW.html` · **1,142,543바이트** · SHA-256 `4203ffe68fc5987e08c98e1a872387401c0d39db72ac692dc5cdfe75d3c1bf86`. 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_balance_fire_quick_openers_v17_REVIEW.html` · `library_file_id=libfile_1139b2eb978481919daac4dd5a800f32`에 별도 보관. **공개 GitHub에 개인 HTML 업로드 금지.** 신규 채팅에서 실제 파일/SHA를 재검증.
+- **왜 화염을 선택했나:** V16 조화의 국소 오류·UI 수정이 계속되는 것을 멈추고, 두 번째 독립 전문화인 기존 **화염 마법사**에서 Chat-first **UPDATE**의 원문→요약→HTML 경로가 일반화되는지 작은 실제 제품 수정으로 대조. Wowhead 기준 원문은 **12.1.5 / Preheat 2026-10-13**. 기존 화염은 성난태양 한정으로 3장 오프너가 상세히 있었지만 첫 화면은 단일/광역 4개 지속 딜 우선순위만 보여 **오프너 조건/실제 순서가 빠져 있었음**.
+- **V17 실제 수정:** `#guide-fire` 내부의 요약 표에 성난태양 **단일·방화광 오프너**, **광역 3명 이상 발화 진입** 2행만 추가하고 기존 기술 아이콘/한글명/팁 14개 구성 요소 재사용. 지속 우선순위 `→`와 시간 순서 오프너 `→`를 설명. 성난태양 전용(서리불꽃 미포함) 명시. 기존 4개 요약 행·3장 오프너 원형 보존. 다른 기존 V11 6개 전문화 및 **조화 V16** 서브트리는 원본 그대로(총 **7개 비대상 본문 보존**), 조화 정본↔빠른 참조 40개 보존.
+- **실제 Q4:** Chromium PC 1365px/태블릿 800px/모바일 390px; 새 2개 빠른 오프너 행, 기술 팁 클릭·ESC 종료, JS 오류 0·문서 가로 넘침 0 통과(외부 아이콘 네트워크 응답은 검사 제외). **이 검증과 화염 첫 화면 개선으로 전체 게임 판단 Q0/Q1/유저 Q3가 승인되는 것은 아님**.
+- **중요한 제품 범위:** 현재 화염 V11 본문은 **성난태양만** 집필돼 있음. Wowhead 12.1.5는 **성난태양/서리불꽃 마스터 선택**과 단일/광역/오프너 선택형 콘텐츠를 제공하지만 일반 웹 텍스트에 일부 선택형 행이 누락되어 **서리불꽃 원문 완전 추출 미완**. 서리불꽃 내용을 기존 성난태양 표에서 이름만 바꾸거나 다른 가이드 우선순위를 짜깁기하여 추가하지 않음. 따라서 V17은 **화염 전체 UPDATE / 다전문화 반복 제작 완료**가 아닌 **부분 UPDATE + 독립 교차 사례**다. 다음엔 실제 서리불꽃 12.1.5 선택형 원문을 확보하고 처음부터 조건·행동·오프너를 검증한 뒤 통합할 것.
+- **기존 조화 상태:** V16의 게임 판단 Q0/Q1·공식 Blizzard koKR 14개 기술명/아이콘·보조 마커 19개·독자 Q3 최종 승인 REVIEW는 변함없음. 새 검사기/독립 생성기 증설 없음. [다전문화 사례의 직접 증거](QUALITY_GENERALIZATION_CASEBOOK.md).
+- **개발 상태:** `work/chat-first-talent-visibility-spell-media-20261114`, PR #24 Draft, `main` 미병합. HEAD/CI는 반드시 현재 GitHub 재조회.
+
 ## 0.28 조화 드루이드 V16 — 심화 사례의 큰 강화 창/일반 일월식 사용 조건 충돌 교정 (2026-11-14)
 
 - **최신 개인 HTML REVIEW:** `wow_rotation_v11_balance_1215_state_consistency_v16_REVIEW.html` · **1,134,152B** · SHA-256 `3acd3bc06e1ae75f34c0dc62e645b3b46896d7d0956b809682a616527dd381c8`. 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_balance_1215_state_consistency_v16_REVIEW.html` / `library_file_id=libfile_de49c9837cb481918f8e4baab7006d3e` 별도 저장 성공. 실제 파일은 공개 GitHub에 없고 다음 채팅에서 Library 실물 파일·SHA를 재검증해야 함.
