@@ -14,13 +14,15 @@ import os
 from pathlib import Path
 import time
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
 from urllib.request import Request, urlopen
 
 from .public_data import BASE, validate as validate_public
 
 TOKEN_URL = "https://oauth.battle.net/token"
 SPELL_ENDPOINT = "https://kr.api.blizzard.com/data/wow/spell/{spell_id}?namespace=static-kr&locale=ko_KR"
+MEDIA_ENDPOINT = "https://kr.api.blizzard.com/data/wow/media/spell/{spell_id}?namespace=static-kr&locale=ko_KR"
+OFFICIAL_MEDIA_HOSTS = frozenset({"render.worldofwarcraft.com"})
 SOURCE = "blizzard-game-data-api"
 LOCALE = "ko_KR"
 REGION = "kr"
@@ -104,15 +106,69 @@ def fetch_spell(spell_id: int, token: str, opener=urlopen, sleeper=time.sleep) -
     raise AssertionError("unreachable")
 
 
+def fetch_spell_media(spell_id: int, token: str, opener=urlopen,
+                      sleeper=time.sleep) -> dict:
+    """Retrieve official Blizzard icon asset as review evidence, not UI approval.
+
+    The URL must be a Blizzard rendering CDN link; no third-party redirect,
+    made-up filename, or guessed icon is admitted as official evidence.
+    """
+    if type(spell_id) is not int or spell_id <= 0:
+        raise ValueError("Invalid spell id")
+    req = Request(
+        MEDIA_ENDPOINT.format(spell_id=spell_id),
+        headers={"Authorization": "Bearer " + token, "Accept": "application/json"},
+    )
+    for attempt in range(3):
+        try:
+            result = _json_response(req, opener=opener)
+            if result.get("id") != spell_id:
+                return {"status": "invalid_response"}
+            assets = result.get("assets")
+            if not isinstance(assets, list):
+                return {"status": "missing_assets"}
+            icons = [a.get("value") for a in assets
+                     if isinstance(a, dict) and a.get("key") == "icon"]
+            if len(icons) != 1 or not isinstance(icons[0], str):
+                return {"status": "missing_icon"}
+            u = urlsplit(icons[0])
+            if (u.scheme != "https" or u.hostname not in OFFICIAL_MEDIA_HOSTS
+                or u.username or u.password or u.query or u.fragment
+                or not u.path.lower().endswith((".jpg", ".png", ".webp"))):
+                return {"status": "untrusted_icon_url"}
+            return {"status": "found", "icon_url": icons[0]}
+        except HTTPError as exc:
+            if exc.code in (401, 403):
+                raise RuntimeError("Blizzard media API authorization failed") from None
+            if exc.code == 404:
+                return {"status": "not_found"}
+            if exc.code in (429, 500, 502, 503, 504) and attempt < 2:
+                sleeper(min(2**attempt, 4))
+                continue
+            return {"status": "request_error"}
+        except (URLError, ValueError, UnicodeError, json.JSONDecodeError):
+            if attempt < 2:
+                sleeper(min(2**attempt, 4))
+                continue
+            return {"status": "request_error"}
+    raise AssertionError("unreachable")
+
+
 def fetch_snapshot(ids: list[int], token: str, opener=urlopen,
-                   sleeper=time.sleep, delay_seconds: float = 0.15) -> dict:
+                   sleeper=time.sleep, delay_seconds: float = 0.15,
+                   include_media: bool = False) -> dict:
     if len(ids) != len(set(ids)) or any(type(x) is not int or x <= 0 for x in ids):
         raise ValueError("Expected unique positive spell IDs")
     observations = []
     for i, sid in enumerate(sorted(ids)):
         if i and delay_seconds:
             sleeper(delay_seconds)
-        observations.append(fetch_spell(sid, token, opener=opener, sleeper=sleeper))
+        observation = fetch_spell(sid, token, opener=opener, sleeper=sleeper)
+        if include_media and observation["status"] == "found":
+            observation["media"] = fetch_spell_media(
+                sid, token, opener=opener, sleeper=sleeper,
+            )
+        observations.append(observation)
     return {
         "schema_version": SNAPSHOT_VERSION,
         "source": SOURCE,
@@ -153,6 +209,21 @@ def _validate_snapshot(snapshot: dict, known_ids: set[int]) -> dict[int, dict]:
             raise ValueError("Found observation must include name_ko")
         if r["status"] != "found" and "name_ko" in r:
             raise ValueError("Non-found observation cannot include a name")
+        media = r.get("media")
+        if media is not None:
+            if not isinstance(media, dict) or media.get("status") not in {
+                "found", "not_found", "request_error", "invalid_response",
+                "missing_assets", "missing_icon", "untrusted_icon_url",
+            }:
+                raise ValueError("Invalid media observation")
+            if media["status"] == "found":
+                u = urlsplit(media.get("icon_url", ""))
+                if (u.scheme != "https" or u.hostname not in OFFICIAL_MEDIA_HOSTS
+                    or u.username or u.password or u.query or u.fragment
+                    or not u.path.lower().endswith((".jpg", ".png", ".webp"))):
+                    raise ValueError("Invalid media URL")
+            elif "icon_url" in media:
+                raise ValueError("Unverified media cannot supply icon URL")
         seen[sid] = r
     return seen
 
@@ -194,6 +265,9 @@ def audit(base: Path = BASE, snapshot: dict | None = None) -> dict:
                "comparison": status, "review": "pending"}
         if observation and observation["status"] == "found":
             rec["observed_name_ko"] = observation["name_ko"]
+            if isinstance(observation.get("media"), dict):
+                rec["official_icon_evidence"] = observation["media"]
+                rec["icon_review"] = "pending"
         records.append(rec)
     return {
         "schema_version": "spell-name-audit-v1",
@@ -230,6 +304,8 @@ def main() -> int:
     fetch.add_argument("--report", default="dist/spell-name-audit.json")
     fetch.add_argument("--max-ids", type=int, default=176)
     fetch.add_argument("--delay-ms", type=int, default=150)
+    fetch.add_argument("--include-media", action="store_true",
+                       help="Also query authenticated Blizzard spell icon media; review-only")
     args = p.parse_args()
 
     try:
@@ -252,7 +328,8 @@ def main() -> int:
         token = oauth_token(os.environ.get("BLIZZARD_CLIENT_ID", ""),
                             os.environ.get("BLIZZARD_CLIENT_SECRET", ""))
         snapshot = fetch_snapshot(ids[:args.max_ids], token,
-                                  delay_seconds=args.delay_ms / 1000)
+                                  delay_seconds=args.delay_ms / 1000,
+                                  include_media=args.include_media)
         _write(args.output, snapshot)
         result = audit(snapshot=snapshot)
         _write(args.report, result)
