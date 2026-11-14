@@ -2,7 +2,7 @@
 
 > 이 문서는 2026-11-13 이전 인계 프롬프트를 **대체하는 최신 진입점**이다. 이전의 브랜치 `work/chat-first-v11-20261111`, PR #20, 생존 제로베이스가 '현재 최신'이라는 기재를 그대로 믿지 말라. 본문 수치도 새 채팅에서 GitHub 최신값과 대조할 것.
 
-> **최신 제품 업데이트(2026-11-14):** 현재 최신 개인 교본은 **조화 드루이드 V9** `wow_rotation_v11_balance_1215_elune_lunation_branch_v9_REVIEW.html` (1,120,548바이트, SHA-256 `1166f8ada9508f5c2a0cc2890fee7c16f6e25cc53f884d46397317d6ffb23b02`)이다. 12.1.5 Wowhead 기준으로 **엘룬의 대행자 단일 엘룬의 분노**의 삭망월 ON/OFF 적용 경계를 교정했다. 조건과 이유·심화 반례도 선택 상태에서만 표시. V11 기존 7개 본문·40개 규칙·6오프너 58단계 보존, PC/모바일 Q4 PASS. **전체 Q0/Q1·공식 14개 주문명/아이콘·사용자 승인 REVIEW**. HTML은 개인 산출물이며 공개 GitHub에 없음. [현재 인계 §0.21](HANDOFF_CHAT_FIRST_CURRENT.md), [V9 상세](BALANCE_ZERO_BASE_CREATE_REVIEW_20261113.md)를 우선 읽고, 아래 V7 기록과 2026-11-14 V8 인계는 과거 사례로 취급한다. 브랜치/CI는 매번 GitHub 실제 최신값 재조회.
+> **최신 제품 업데이트(2026-11-14):** 현재 최신 개인 교본은 **조화 드루이드 V10** `wow_rotation_v11_balance_1215_touch_cosmos_starweaver_v10_REVIEW.html` (1,126,302바이트, SHA-256 `8e6c1f6c5dba7f77c2ee6aa72c289ee6a2d71c2820c6d37355bafe24d5734d98`)이다. 12.1.5 Wowhead Advanced Tips의 **우주의 손길 발동 × 별재봉사 선택 → 단일에서도 별똥별 무료 소모** 예외와, 강화 창까지의 안전한 발동 보존 조건을 V9에 추가했다. 별재봉사 선택 시에만 두 영웅의 빠른 참조·상세·심화에 노출한다. V11 기존 7개 본문, 원래 40개 규칙, 6개 오프너/58단계 보존, PC/모바일 Q4 PASS. **전체 Q0/Q1, 공식 14개 주문명·아이콘 실제 대조, 사용자 Q3·최종 승인은 REVIEW.** HTML은 비공개이고 GitHub에는 기록만 남김. 자세한 내역 [현재 인계 §0.22](HANDOFF_CHAT_FIRST_CURRENT.md) 및 [조화 V10 기록](BALANCE_ZERO_BASE_CREATE_REVIEW_20261113.md). 아래 V7/V9 기록과 커밋·CI 수치는 역사적 값이며 새 채팅에서는 실제 GitHub 최신값을 조회.
 
 ## 1. 새 일반 채팅의 첫 임무 — 읽기 전용 독립 복원
 
