@@ -228,9 +228,15 @@ def _validate_snapshot(snapshot: dict, known_ids: set[int]) -> dict[int, dict]:
     return seen
 
 
-def audit(base: Path = BASE, snapshot: dict | None = None) -> dict:
+def audit(base: Path = BASE, snapshot: dict | None = None,
+          additional_spell_ids: set[int] | None = None) -> dict:
+    """Audit inherited and opt-in new specialization IDs, all review-only."""
     labels = inventory(base)
-    observed = _validate_snapshot(snapshot, set(labels)) if snapshot is not None else {}
+    additional = additional_spell_ids or set()
+    if len(additional) > 100 or any(type(sid) is not int or sid <= 0 for sid in additional):
+        raise ValueError("Invalid additional spell IDs")
+    allowed = set(labels) | additional
+    observed = _validate_snapshot(snapshot, allowed) if snapshot is not None else {}
     counts = {
         "distinct_spell_ids": len(labels),
         "inherited_name_records": len(json.loads((base / "spells.json").read_text(encoding="utf-8"))["spells"]),
@@ -241,9 +247,12 @@ def audit(base: Path = BASE, snapshot: dict | None = None) -> dict:
         "not_checked": 0,
         "conflicting_inherited_names": 0,
         "official_names_auto_approved": 0,
+        "new_spell_ids_without_inherited_label": len(additional - set(labels)),
+        "new_spell_observations": 0,
     }
     records = []
-    for sid, inherited in labels.items():
+    for sid in sorted(allowed):
+        inherited = labels.get(sid, [])
         observation = observed.get(sid)
         if len(inherited) > 1:
             counts["conflicting_inherited_names"] += 1
@@ -251,10 +260,14 @@ def audit(base: Path = BASE, snapshot: dict | None = None) -> dict:
             status = "not_checked"
             counts["not_checked"] += 1
         elif observation["status"] == "found":
-            status = ("name_matches_inherited" if observation["name_ko"] in inherited
-                      else "name_disagrees_with_inherited")
-            counts["observations_found_matching" if status == "name_matches_inherited"
-                   else "observations_found_mismatching"] += 1
+            if not inherited:
+                status = "new_spell_requires_editorial_review"
+                counts["new_spell_observations"] += 1
+            else:
+                status = ("name_matches_inherited" if observation["name_ko"] in inherited
+                          else "name_disagrees_with_inherited")
+                counts["observations_found_matching" if status == "name_matches_inherited"
+                       else "observations_found_mismatching"] += 1
         elif observation["status"] == "not_found":
             status = "not_found_in_api"
             counts["observations_not_found"] += 1
@@ -271,7 +284,7 @@ def audit(base: Path = BASE, snapshot: dict | None = None) -> dict:
         records.append(rec)
     return {
         "schema_version": "spell-name-audit-v1",
-        "source_scope": "V11 inherited labels vs optional Blizzard ko_KR observations",
+        "source_scope": "V11 inherited and opt-in new spell IDs vs optional Blizzard ko_KR observations",
         "snapshot_supplied": snapshot is not None,
         "counts": counts,
         "publish_ready": False,
@@ -292,11 +305,26 @@ def _write(path: str, doc: dict):
                               sort_keys=True) + "\n", encoding="utf-8")
 
 
+def parse_spell_ids(value: str) -> list[int]:
+    """Explicit, bounded numeric IDs for a newly authored specialization."""
+    parts = value.split(",")
+    if not 1 <= len(parts) <= 100 or any(
+        not part.strip().isascii() or not part.strip().isdigit()
+        for part in parts
+    ):
+        raise ValueError("Expected 1..100 comma-separated numeric spell IDs")
+    ids = [int(part.strip()) for part in parts]
+    if any(sid <= 0 or sid > 2147483647 for sid in ids) or len(set(ids)) != len(ids):
+        raise ValueError("Spell IDs must be unique and within positive 32-bit range")
+    return ids
+
+
 def main() -> int:
     p = argparse.ArgumentParser(description="Korean WoW spell-name comparison evidence")
     sub = p.add_subparsers(dest="command", required=True)
     verify = sub.add_parser("audit")
     verify.add_argument("--snapshot")
+    verify.add_argument("--spell-ids", help="Additional opt-in numeric IDs, comma-separated")
     verify.add_argument("--output", default="dist/spell-name-audit.json")
     verify.add_argument("--require-all-matched", action="store_true")
     fetch = sub.add_parser("fetch")
@@ -304,6 +332,7 @@ def main() -> int:
     fetch.add_argument("--report", default="dist/spell-name-audit.json")
     fetch.add_argument("--max-ids", type=int, default=176)
     fetch.add_argument("--delay-ms", type=int, default=150)
+    fetch.add_argument("--spell-ids", help="Query only these 1..100 numeric IDs for a new spec")
     fetch.add_argument("--include-media", action="store_true",
                        help="Also query authenticated Blizzard spell icon media; review-only")
     args = p.parse_args()
@@ -312,7 +341,9 @@ def main() -> int:
         if args.command == "audit":
             snapshot = (json.loads(Path(args.snapshot).read_text(encoding="utf-8"))
                         if args.snapshot else None)
-            result = audit(snapshot=snapshot)
+            result = audit(snapshot=snapshot,
+                           additional_spell_ids=set(parse_spell_ids(args.spell_ids))
+                           if args.spell_ids else None)
             _write(args.output, result)
             print("Spell audit:", result["counts"])
             if args.require_all_matched:
@@ -322,16 +353,18 @@ def main() -> int:
                              and not c["conflicting_inherited_names"]) else 1
             return 0
 
-        ids = list(inventory())
-        if not (1 <= args.max_ids <= len(ids)) or not (0 <= args.delay_ms <= 5000):
+        ids = parse_spell_ids(args.spell_ids) if args.spell_ids else list(inventory())
+        if not (1 <= args.max_ids <= 176) or not (0 <= args.delay_ms <= 5000):
             raise ValueError("Invalid max-ids or delay-ms")
+        if not args.spell_ids:
+            ids = ids[:args.max_ids]
         token = oauth_token(os.environ.get("BLIZZARD_CLIENT_ID", ""),
                             os.environ.get("BLIZZARD_CLIENT_SECRET", ""))
-        snapshot = fetch_snapshot(ids[:args.max_ids], token,
+        snapshot = fetch_snapshot(ids, token,
                                   delay_seconds=args.delay_ms / 1000,
                                   include_media=args.include_media)
         _write(args.output, snapshot)
-        result = audit(snapshot=snapshot)
+        result = audit(snapshot=snapshot, additional_spell_ids=set(ids))
         _write(args.report, result)
         print("Spell fetch results:", result["counts"])
         return 0
