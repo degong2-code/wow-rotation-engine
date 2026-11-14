@@ -12,6 +12,16 @@
 - **현재 기준:** PR #24 Draft / `work/chat-first-talent-visibility-spell-media-20261114`, 생성 시 HEAD `ef0a863a8ffa2bff2ca53a9aab7cfaf19f0499a6`, 조화 드루이드 **V7 REVIEW**. [CI 459 테스트·2 건너뜀 성공](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43550973311). 새 HEAD는 다음 채팅에서 재조회할 것.
 - **주의:** 2026-11-14 인계 작성 환경에서는 V7 HTML 파일이 실제 `/mnt/data`에 없음. 크기·SHA는 인계에 **기록된 사실**이며 새 채팅에서 바이트를 직접 검증했다고 주장하면 안 됨. 개인 교본은 첨부/Project/Library에서 실물 접근을 확인하고 공개 GitHub에 업로드하지 않는다.
 - **사용자 명시:** GitHub 파일과 교본 HTML을 일반 ChatGPT에서 수정할 수 있는데 **Work 전환을 필수로 안내하거나 반복 제안하지 말 것**. 다음 새 채팅 첫 응답은 **읽기 전용 상태 독립 복원**으로 끝내고 `진행`을 기다린다.
+## 0.31 사용자 V18 REVIEW 반영 — 화염 성난태양 전체 우선순위·전구간 아이콘 V19 (2026-11-14)
+
+- **최신 비공개 통합 HTML:** `wow_rotation_v11_balance_fire_full_quick_icons_v19_REVIEW.html`, **1,231,465B**, SHA-256 `2412ce97e9953549ba61f2f41cda8ce55afe367e2580deb463b9f7ab9f2f872f`. 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_balance_fire_full_quick_icons_v19_REVIEW.html`, `library_file_id=libfile_4c7fb40e6ec08191a311825470500ef4`. 기존 V18·조화 V16·V11 원본을 덮어쓰지 않음. 공개 GitHub에 개인 HTML 원본 없음.
+- **사용자 실제 REVIEW 피드백:** (1) 위치와 무관하게 트래킹 가능한 **스킬·버프명 등에 아이콘 필수**, (2) 성난태양 한눈에 보는 딜사이클이 냉기 V11에 비해 **전체 우선순위를 담지 못함**, (3) 현재 가독성은 크게 좋아졌고 추가 압축을 희망하나 (4) **오프너는 아주 좋으므로 보존**할 것.
+- **V19 실제 수정:** 화염 성난태양 첫 화면 4개 상세 전투상황(단일/광역 × 발화 중/외)의 **정본 상세 6/8/6/7=27개 행동 전부**를 같은 기술 순서·조건으로 첫 화면에 반영. 유성, 연속 불덩이·불기둥, 발화 임박 진입, 화염 파열 일반 시전, 일렁이는 열기, 체력 30% 아래 불태우기, 기본 생성기를 복원. 소모기만 나열한 V18 요약 축약 오류 수정. 첫 화면 중복 설명을 줄이고 기존 냉기 V11의 ①/② 우선순위 흐름 표현을 활용. **기존 오프너 2개 행·상세 우선순위·성난태양/서리불꽃 분기·조화 V16 게임 내용은 미수정**.
+- **아이콘 일관성:** 이미 해당 전문화에 아이콘·툴팁이 존재하는 **확인된 명칭**만 작은 아이콘으로 본문·조건·제목·원리·심화·툴팁까지 자동 연결. 닮은 스킬명을 추정하거나 없는 효과/아이콘을 생성하지 않음. 모든 8전문화의 원본 HTML 하위 트리 중 **화염 이외 7개는 V18과 소스 동일**, 다만 브라우저에서는 새 런타임 아이콘이 표시됨. 별도 Blizzard API 공식 14개 아이콘/이름 확인은 REVIEW.
+- **실물 QA:** Fire 상세 4표 행동명 순서와 빠른 4행 **6/8/6/7 정확히 일치**, 오프너·서리불꽃·조화 보존. Playwright Chromium 390·800·1365px 각각 12개 영웅/전문화 선택 버튼(총 36 상태), 화염 영웅 ON/OFF, 인라인 기술 팁/ESC, JS 오류 0·가로 넘침 0 **Q4 PASS**(외부 이미지 CDN 응답 실제 검증 제외). 화면 길이는 390px 화염 성난태양 요약 **V18 약 1,621→V19 약 2,006px**로 증가. 이는 27개 우선순위 전수 복원의 비용이며 추가 압축은 의미 손실 없이 수행해야 함.
+- **근본 원인 및 다음 우선순위:** 요약을 자유 서술로 축약하면서 **정본 상세의 하위 행동·조건을 누락**하는 오류는 조화 V16 상태 반례와 화염 V18 사용자 REVIEW 모두에서 나타남. 실제 사용자는 냉기처럼 **첫 화면만으로 모든 우선순위를 파악**할 수 있어야 한다. [최상위 정책 §0.1](QUALITY_FIRST_POLICY.md)와 [Playbook §0.1](CHAT_FIRST_PLAYBOOK.md)에 아이콘 전수 연결/빠른 참조 행동 완전성을 구체화. 새 검사기/스키마 증설 없음. V19 사용자 Q3 재검토·전체 Q0/Q1 및 미확정 동적 오프너/툴팁·게임 내 공식 이름/아이콘 REVIEW 유지. [사용자 REVIEW와 V19 사례](QUALITY_GENERALIZATION_CASEBOOK.md).
+- **개발 상태:** `work/chat-first-talent-visibility-spell-media-20261114`, PR #24 Draft, `main` 미병합. 최신 SHA/CI는 GitHub 실제 조회.
+
 ## 0.30 화염 마법사 V18 — 성난태양/서리불꽃 독립 영웅 선택·실전 우선순위 통합 (2026-11-14)
 
 - **현재 최신 비공개 통합 HTML REVIEW:** `wow_rotation_v11_balance_fire_frostfire_v18_REVIEW.html` · **1,218,110바이트**, SHA-256 `39697e4931af34cb36a5992bed520b3ff5b483971fcc7a3c82a25e6484519ada`. 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_balance_fire_frostfire_v18_REVIEW.html` / `library_file_id=libfile_6e6fce8539508191a82ce0c761e136e9` 별도 저장 성공. 공개 GitHub에 HTML 없음. 새 채팅 시작 시 파일을 실제 확보해 바이트·해시 재검증.
