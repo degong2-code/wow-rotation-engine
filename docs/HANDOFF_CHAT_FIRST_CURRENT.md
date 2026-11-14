@@ -6,6 +6,15 @@
 > **이 문서는 새 채팅 복원 진입점**이다. **최상위 운영 정책은 [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md)**, 구체적 품질 게이트는 [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), 집필 절차는 [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)을 정본으로 삼으며 중복 복제하지 않는다. **과거 사례로 범용화 가치/오탐을 검증하는 후향적 사례집은 [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md) 참조.**
 
 
+## 0.19 조화 드루이드 V7 — 한국어 용어·사용자 화면 내부 식별자 제거 (2026-11-14)
+
+- **개인 HTML:** `wow_rotation_v11_balance_1215_korean_terms_v7_REVIEW.html`, 1,117,516 bytes, SHA-256 `93c53b87b149661d3897fec2570cfdeacd5d5de7ab146eaa177d9ef8c3574be5`. 로컬 검토 산출물이며 공개 저장소에 업로드하지 않음.
+- **사용자 요구 반영:** `balance-keeper-st-in-2` 같은 내부 규칙 키·아이콘 파일명·숫자형 원문 식별 번호·영문 주문 별칭은 사용자 화면에서 제거. 빠른 참조, 우선순위표, 오프너, 핵심 원리, 심화 사례, 툴팁, 접근성 텍스트, 출처/검토 설명을 한국어로 통일. 영문 원문 기술명과 원본 식별자는 숨겨진 출처 JSON 및 내부 data-* 속성에 보존.
+- **한국어 축약어:** 첫 화면에서 `대상 수: 공격 가능한 적 수 · 천힘: 천공의 힘 · 쿨: 재사용 대기시간 · 전역 쿨: 전역 재사용 대기시간`을 먼저 정의. 이후 조건·툴팁에서 대상 수/천힘/쿨/전역 쿨/지속 피해/단일/광역 사용. 수치와 `≥`, `≤`, `∧`, `∨` 연산자는 유지. 의미가 모호하면 축약하지 않음. `풀`, `필러`, `타이머`, `빌드`, `쿨다운` 등 어색한 화면 표현도 자연스러운 한국어로 교정.
+- **전체 화면 문자열 검사:** 조화 교본의 표시 텍스트 노드 및 title/aria-label/툴팁 속성 **영문 잔여 0**, 내부 `balance-*` 키·영문 아이콘 파일명·기계식 키 노출 0. 글로벌 브라우저 제목/설명도 한국어로 변경. 기존 V11 7개 전문화의 영역은 원본 파일에서 Balance 루트 앞뒤 바이트 그대로 보존(메타 제목/설명만 한국어화).
+- **데이터 보존:** 정본 우선순위 40개, 빠른 참조와 상세 표 연결 40개, 6개 오프너의 14/9/7/11/10/7단계, 원문 출처·기술 ID·아이콘 provenance JSON 3개 모두 V6와 바이트/값 동일. 공식 한국어 기술명과 블리자드 아이콘 대조가 아직 확인 중이라는 사실은 한국어로 표시.
+- **실제 브라우저 기능 검사:** Playwright Chromium 데스크톱 1365×880 및 모바일 390×844에서 6개 오프너 각각 단일 표시, 영웅/특성 필터, 아이콘 기술 설명 툴팁 표시, 화면 가로 넘침 0, JavaScript 오류 0. 기존 V11 7개 본문 바이트 보존 확인. Q4 기능 범위 PASS; Q0/Q1 게임 판단 정확성 및 공식 Blizzard 기술 데이터 대조는 여전히 REVIEW.
+- **범용 지침:** [QUALITY_FIRST_POLICY §0.1](QUALITY_FIRST_POLICY.md)와 [CHAT_FIRST_PLAYBOOK §0.2](CHAT_FIRST_PLAYBOOK.md)에 한국어 UI 표준 기록. 새 전문화와 UPDATE의 모든 사용자 표시 영역에 적용하되 기존 V11 본문은 별도 UPDATE 요청 없이 일괄 변경하지 않음. 새 검사기/엔진 추가 없음.
 ## 0.18 조화 드루이드 V6 — V11 빠른 참조 우선순위·기술 링크·핵심 번호 (2026-11-14)
 
 - **실물 파일:** `wow_rotation_v11_balance_1215_v11_quick_priority_v6_REVIEW.html`, **1,115,045 bytes**, SHA256 `0124f4cd897289d8627f30f8a16d69392ae9c4087ab1425dc0393afd1c4ea223`, 개인 비공개 HTML. 기존 V11 7개 전문화 subtree 7/7 바이트 보존.
