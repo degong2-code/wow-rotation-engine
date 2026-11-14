@@ -12,6 +12,15 @@
 - **현재 기준:** PR #24 Draft / `work/chat-first-talent-visibility-spell-media-20261114`, 생성 시 HEAD `ef0a863a8ffa2bff2ca53a9aab7cfaf19f0499a6`, 조화 드루이드 **V7 REVIEW**. [CI 459 테스트·2 건너뜀 성공](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43550973311). 새 HEAD는 다음 채팅에서 재조회할 것.
 - **주의:** 2026-11-14 인계 작성 환경에서는 V7 HTML 파일이 실제 `/mnt/data`에 없음. 크기·SHA는 인계에 **기록된 사실**이며 새 채팅에서 바이트를 직접 검증했다고 주장하면 안 됨. 개인 교본은 첨부/Project/Library에서 실물 접근을 확인하고 공개 GitHub에 업로드하지 않는다.
 - **사용자 명시:** GitHub 파일과 교본 HTML을 일반 ChatGPT에서 수정할 수 있는데 **Work 전환을 필수로 안내하거나 반복 제안하지 말 것**. 다음 새 채팅 첫 응답은 **읽기 전용 상태 독립 복원**으로 끝내고 `진행`을 기다린다.
+## 0.37 화염 V25 — 첫 발화의 방화광 90%·30초 예외를 처음부터 판단 가능하게 교정 (2026-11-14)
+
+- **현재 최신 비공개 통합 REVIEW HTML:** `wow_rotation_v11_balance_fire_first_combustion_v25_REVIEW.html`, **1,258,371B**, SHA-256 `aec08194f8b8b22256fd34d037ea1c70e4c7b75b9282f50d2c05b8b3b43f41bf`. 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_balance_fire_first_combustion_v25_REVIEW.html`, `library_file_id=libfile_a7b3524b3ee08191803e7388af302535`. V24 보존, 공개 GitHub HTML 업로드 금지, 후속 채팅에서 실물·SHA 재확인.
+- **12.1.5 Wowhead 원문과의 차이:** 발화 첫 사용은 **방화광 선택 시 대상 체력 90%까지 보류**, 그러나 **90% 초과 상태가 30초 넘게 지속될 전망이면 전투 시작에 사용**. 방화광 미선택 시 약 **8~10초 지연**. V24 심화 섹션에 기록돼 있었지만 첫 화면·성난태양/서리불꽃 상세 발화 진입 행에서 판단 조건을 빠뜨렸다. V25는 첫 화면 한 줄(기존 아이콘·툴팁 재사용)과 두 영웅의 상세 발화 진입 조건에 복원. 기존 오프너 시전 순서와 반복 발화/기술 우선순위 자체는 바꾸지 않음.
+- **또 다른 의미 보존 가독성 수정:** 성난태양 광역 발화 외 화염 작렬의 두 독립 트리거 `화염구 중 열기`와 `불기둥 치명타 비행`을 한 길고 모호한 괄호 대신 **화염 작렬 2개 독립 표시**로 분리. 같은 기술을 쓸지 검사하는 조건 분리일 뿐 추가 순서/쿨다운 행동 아님. 320px에서 V24 가로 넘침 77→V25 **7px**, 390px에서는 V24 7→V25 **0px**.
+- **실물 내용·Q4:** 개인 V24·V25 전체 문서 직접 비교로 화염 외 **7개 전문화 원시 DOM 동일**, 서리불꽃 상세 38행·원래 오프너, 성난태양 오프너 및 조화 규칙 보존. Playwright 시스템 Chromium(320·390·800·1365px)의 성난태양↔서리불꽃 전환·공통 첫 발화 메모 표시·첫 조건 툴팁/ESC·JS 예외 0. 390/800/1365px 양 영웅 가로 넘침 0, 320px 서리불꽃 0/성난태양 **잔존 7px**은 UI REVIEW로 투명 보고. 아이콘 CDN의 실제 HTTP 성공 미검증.
+- **근본 원인:** 심화 내용에 있던 **첫 사용의 장기 지연 예외**를 다음 행동을 위한 첫 화면/실행 우선순위로 옮길 때 생략. 원문→상세→빠른 참조에 시간적 범위(첫 사용·재사용·전투 전)를 일관되게 유지. [V25 상세](QUALITY_GENERALIZATION_CASEBOOK.md). 전체 동적 원문·게임 Q0/Q1·Blizzard 공식 koKR 명칭/아이콘·사용자 V25 Q3는 REVIEW, 추가 도구/검사기 개발 없음.
+- **저장소 상태:** `work/chat-first-talent-visibility-spell-media-20261114`, PR #24 Draft, main 미병합. 최신 HEAD·CI는 재조회.
+
 ## 0.36 화염 V24 — 와우헤드 12.1.5 원문 조건 복원: 유성의 독립 조건 및 마무리 화염 작렬 (2026-11-14)
 
 - **현재 개인 통합 HTML REVIEW:** wow_rotation_v11_balance_fire_source_conditions_v24_REVIEW.html, **1,256,020B**, SHA-256 **579b626bb49fab5cd8cc3389eda29130deb923d1ee896feb6e2a2b027c013647**. 개인 Library /ROTATION TEXTBOOK/wow_rotation_v11_balance_fire_source_conditions_v24_REVIEW.html, **library_file_id=libfile_122df243a4d08191967c552873883fb6**에 V23과 별도로 보관. 공개 GitHub에 개인 HTML을 올리지 않음. 다음 채팅에서 실물 SHA·크기 다시 확인.
