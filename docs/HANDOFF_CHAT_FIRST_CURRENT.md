@@ -12,6 +12,16 @@
 - **현재 기준:** PR #24 Draft / `work/chat-first-talent-visibility-spell-media-20261114`, 생성 시 HEAD `ef0a863a8ffa2bff2ca53a9aab7cfaf19f0499a6`, 조화 드루이드 **V7 REVIEW**. [CI 459 테스트·2 건너뜀 성공](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43550973311). 새 HEAD는 다음 채팅에서 재조회할 것.
 - **주의:** 2026-11-14 인계 작성 환경에서는 V7 HTML 파일이 실제 `/mnt/data`에 없음. 크기·SHA는 인계에 **기록된 사실**이며 새 채팅에서 바이트를 직접 검증했다고 주장하면 안 됨. 개인 교본은 첨부/Project/Library에서 실물 접근을 확인하고 공개 GitHub에 업로드하지 않는다.
 - **사용자 명시:** GitHub 파일과 교본 HTML을 일반 ChatGPT에서 수정할 수 있는데 **Work 전환을 필수로 안내하거나 반복 제안하지 말 것**. 다음 새 채팅 첫 응답은 **읽기 전용 상태 독립 복원**으로 끝내고 `진행`을 기다린다.
+## 0.33 화염 V21 — 첫 화면 기술·조건 줄바꿈 결함 및 글 길이 개선 (2026-11-14)
+
+- **최신 개인 HTML REVIEW:** `wow_rotation_v11_balance_fire_quick_wrap_v21_REVIEW.html` · **1,232,760바이트** · SHA-256 `f445c50857f93ffc3564020515b152c3ee06cfd9b533361ee17e01dee7b3010f`. 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_balance_fire_quick_wrap_v21_REVIEW.html`, `library_file_id=libfile_a3bc6b3aadb88191a691ac9e503c3731`로 **V20과 별도 보관**. 실제 HTML은 공개 GitHub에 업로드하지 않음.
+- **사용자 실제 캡처/피드백:** 화염 첫 화면의 조건 마지막 단어 `발동)`·`생성)`만 다음 줄로 밀려 내용이 끊어지고, 냉기보다 화염의 설명이 길고 밀도가 높음. 요구는 **조건·행동 생략 없이 자연스러운 줄바꿈과 압축**.
+- **원인:** V20 성난태양 4개 요약 흐름의 각 행동은 `.spell`과 `.fire-q-when`이 형제 요소라 브라우저가 기술 이름·사용 조건 사이, 심지어 괄호 내부에서도 줄바꿈 가능. 기존 `.fire-complete-line` 2~3줄 인위적 분리와 긴 문구도 화면을 키움.
+- **V21 수정:** 기존 화염 성난태양 4개 행의 **27개 기술/조건 조합을 `.fire-q-unit` 인라인 플렉스 묶음**으로 재조합. 앞의 `→`도 해당 행동에 포함하되, 전 행동 묶음 사이에서는 줄바꿈 허용; `white-space:nowrap`은 전체 표가 아닌 한 행동에만 적용. 6개 길거나 중복된 조건 표현을 의미 보존 범위에서 간결화(예: `시전 완료와 맞춘 연속 발동`→`시전 종료 시 연속 발동`, `그 외 생성`→`그 외 기본기`). 같은 27개 주문 ID/행동 순서, 4개 상세표·서리불꽃·오프너 순서/스텝·화염 외 7개 전문화 하위 HTML을 원본과 비교 보존. 냉기 첫 화면은 현재 이미 기술명+조건이 별도 단어로 끊기는 동일 문제가 없어 **내용/DOM 미변경**.
+- **실측 Chromium:** 390·800·1365px에서 실제 렌더링·외부 이미지 요청 차단; 27개 전부 기술명/조건 같은 높이, 행동 묶음 전체가 셀 오른쪽을 침범하지 않음, JavaScript 오류 0·페이지 전체 가로 넘침 0. 화염 성난태양 4개 행 셀 높이 합계 **390px: 547→498(약 9% 감소)**, **800px: 519→384(약 26%)**, **1365px: 449→353(약 21%)**. 영웅 성난태양↔서리불꽃 전환, 화염 툴팁 클릭/ESC, 냉기 전문화 왕복, 전 전문화의 기존 자동 인라인 아이콘 992개 렌더링 확인. 외부 아이콘 HTTP 제공/정확한 게임 스킬 효과 검증과는 별개.
+- **제작 원칙:** [CHAT_FIRST_PLAYBOOK §0.1](CHAT_FIRST_PLAYBOOK.md)에 **기술/아이콘/괄호 속 조건/앞 화살표를 의미 단위로 묶고 각 행동 사이에서만 줄바꿈**, 설명 압축은 원본 게임 상태·행동 보존 조건을 추가. 새 검사기/스키마/엔진 없음.
+- **남은 검토:** 사용자 V21 가독성/글 압축 최종 평가, 전체 12.1.5 Q0/Q1·동적 오프너 하위 선택/게임 공식 이름/아이콘은 REVIEW 유지. PR #24 Draft·main 미병합. 최신 브랜치 HEAD/CI는 새 채팅에서 조회.
+
 ## 0.32 V20 — 빠른 참조의 불필요한 ①·② 가짜 그룹 번호 제거 (2026-11-14)
 
 - **개인 최신 HTML REVIEW:** `wow_rotation_v11_balance_fire_priority_flow_v20_REVIEW.html`, **1,231,161바이트**, SHA-256 `ed21cde3044e4212d873ff6be066bfa48f806e9c8e47db28bfe1115dd44e2b86`; 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_balance_fire_priority_flow_v20_REVIEW.html`, `library_file_id=libfile_90cfc5d574648191965d2ac0c70b72f1`. 공개 GitHub에 원본/산출물 HTML 올리지 않음. V19 기존 Library 파일 유지, 실제 V20 다운로드는 Library 또는 채팅 산출물에서 확보 후 SHA 재검증.
