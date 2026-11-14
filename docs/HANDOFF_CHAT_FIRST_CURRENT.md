@@ -12,6 +12,16 @@
 - **현재 기준:** PR #24 Draft / `work/chat-first-talent-visibility-spell-media-20261114`, 생성 시 HEAD `ef0a863a8ffa2bff2ca53a9aab7cfaf19f0499a6`, 조화 드루이드 **V7 REVIEW**. [CI 459 테스트·2 건너뜀 성공](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43550973311). 새 HEAD는 다음 채팅에서 재조회할 것.
 - **주의:** 2026-11-14 인계 작성 환경에서는 V7 HTML 파일이 실제 `/mnt/data`에 없음. 크기·SHA는 인계에 **기록된 사실**이며 새 채팅에서 바이트를 직접 검증했다고 주장하면 안 됨. 개인 교본은 첨부/Project/Library에서 실물 접근을 확인하고 공개 GitHub에 업로드하지 않는다.
 - **사용자 명시:** GitHub 파일과 교본 HTML을 일반 ChatGPT에서 수정할 수 있는데 **Work 전환을 필수로 안내하거나 반복 제안하지 말 것**. 다음 새 채팅 첫 응답은 **읽기 전용 상태 독립 복원**으로 끝내고 `진행`을 기다린다.
+## 0.38 화염 V26 — 성난태양 미발동/미선택 진입 오프너 복원 (2026-11-15)
+
+- **최신 개인 통합 HTML REVIEW:** `wow_rotation_v11_balance_fire_opener_fallback_v26_REVIEW.html`, **1,261,253바이트**, SHA-256 `7b2ed1505ef8e15944dccde398caf7dfc335b53aa9e23b75db262c8d5b046864`. 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_balance_fire_opener_fallback_v26_REVIEW.html`, `library_file_id=libfile_79eefd806f1481919520c47185743c5a`. V25 기존 파일 별도 보관, **공개 GitHub에 HTML 업로드 금지**.
+- **사용자 확인 요구 없음:** 사용자는 “진행. 내가 확인해줘야하나?”라고 질문. 원문 전체·선택지·게임 판단 근거 검증은 **ChatGPT가 수행**, 사용자에게는 필요할 때만 읽기 쉬움/실게임에서 이상한 점 등 체감 REVIEW 요청. 수동 Wowhead 파일 Ctrl+S나 원문 대조를 완료 전제조건으로 떠넘기지 않는다.
+- **이번 확인된 실제 실행 차이:** Wowhead 12.1.5 Fire Rotation에서 성난태양 발화 진입 시 **화염 파열 보유**라면 불덩이 작렬 일반 시전 종료 직전 발화, **미보유·특성 미선택**이라면 불태우기(사용 가능 시) 또는 화염구로 진입한다. 원문 선택형 오프너의 평탄화된 텍스트만으로 전체 숨은 가지를 완료했다고 보지 않으며, 동일 URL의 오래된 12.0.7 일반 open 캐시는 소스로 사용하지 않음.
+- **V25의 내용 문제:** 3.3 오프너 실행 단계는 화염 파열이 없는 상태라도 화염 파열 불덩이 작렬 일반 시전을 진행하는 단일 경로. V25 첫 화면 광역 및 한 기술 툴팁에는 대체 진입 언급이 있지만, **단일 첫 화면과 상세 실행 단계에서 빠짐**. V26은 이 실행 불가능 분기를 바로잡고, 유성으로 화염 파열 확보 가능한 특성 조건도 제한하며 불태우기 시 시전 시작 직후 화염 작렬을 명시. **오프너 11개 단계 개수 및 서리불꽃/성난태양 기존 상세 4표 우선순위는 그대로**.
+- **검증:** V25→V26 원시 DOM 비교에서 **화염 외 7개 전문화 전체 동일**, 서리불꽃 오프너·상세·심화/화염 상세 4표 동일, 전체 JS 11개·CSS 8개 블록 동일. Chromium에서 JS 비활성화 상태의 320/390/800/1365px 정적 화면: 새 조건 표시, 문서 가로 넘침 0. **이번 JS 활성화 전체 기능 테스트는 정상 완료되지 않았으므로 Q4 전부 PASS 아님**. V25 당시 320px 잔여 7px 보고를 이번 결과로 덮어쓰지 말 것. 게임 콘텐츠 전체 Q0/Q1·숨은 선택형 원문 완전성·Blizzard koKR 아이콘·사용자 V26 Q3 최종 승인은 REVIEW.
+- **근본 원인:** 원문에 있는 부정 전제(특성 미선택/강화 미발동)가 상세 시간순 오프너로 복사되지 않고 단일 경로로 굳어짐. *전제 미충족 상태→대체 시전*을 빠른 참조와 오프너 모두에 연결하는 기존 조건 추출 절차로 해결. 신규 검사기/엔진 없음. [근거 및 반례](QUALITY_GENERALIZATION_CASEBOOK.md). **다음은 12.1.5 미확인 선택형 경로 중 실제 오프너 행동이 바뀌는 것만 확인**, 증거 부족이면 REVIEW로 종료하고 제품 제작으로 복귀.
+- **GitHub:** `work/chat-first-talent-visibility-spell-media-20261114`, PR #24 Draft·main 미병합. HEAD/CI는 후속 조회.
+
 ## 0.37 화염 V25 — 첫 발화의 방화광 90%·30초 예외를 처음부터 판단 가능하게 교정 (2026-11-14)
 
 - **현재 최신 비공개 통합 REVIEW HTML:** `wow_rotation_v11_balance_fire_first_combustion_v25_REVIEW.html`, **1,258,371B**, SHA-256 `aec08194f8b8b22256fd34d037ea1c70e4c7b75b9282f50d2c05b8b3b43f41bf`. 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_balance_fire_first_combustion_v25_REVIEW.html`, `library_file_id=libfile_a7b3524b3ee08191803e7388af302535`. V24 보존, 공개 GitHub HTML 업로드 금지, 후속 채팅에서 실물·SHA 재확인.
