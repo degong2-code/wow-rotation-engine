@@ -102,5 +102,6 @@
 - **정적 표시 감사:** Balance 루트 안의 모든 표시 텍스트 노드 및 `alt/title/aria-label/data-hint-title/data-hint-body` **영문 문자열 0**, 내부 키 `balance-*` 노출 0. `T/AP/CD/GCD/DoT/ST/AoE`, `REVIEW/PASS`, `API/UI`, `Q0/Q1/Q4`, `#330323`, icon filename 등의 금지 문자열 각각 0건. `data-from-rule` 40개, canonical rules 40개, 원문 오프너 6개 14/9/7/11/10/7단계 유지. 원문 오프너·정본 규칙·기술 ID/아이콘 JSON 3개 값은 V6와 동일.
 - **V11 원본 보존:** Balance 루트의 앞뒤 파일 구간을 기준 V6와 대조; 기존 7개 V11 전문화 본문 및 공통 내비게이션/스타일 바이트 동일. 브라우저 title/description만 한국어화.
 - **Playwright Chromium:** 데스크톱 1365×880 및 모바일 390×844에서 영웅 특성 2종×오프너 3종=6개 선택을 각각 전환, 선택된 오프너 1개만 노출, 야생 버섯 선택 특성 필터, 기술 아이콘 hover 시 한국어 제목/본문 툴팁 표시, 가로 넘침 0, JS 오류 0. Q4 해당 UI 범위 PASS.
+- **CI:** [최신 PR 회귀 실행](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43550862474) PASS, 459개 테스트 실행·2개 건너뜀. 개인 V7 HTML의 Chromium 화면 검증은 별도 실행.
 - **미검증 경계:** 한국어 UI 표기는 해결했으나, 원문 보조 표식의 게임 의미와 일부 실제 우선순위의 최신 패치 정확성 Q0/Q1, 14개 주문의 Blizzard 공식 한국어/아이콘 개별 응답 대조는 여전히 확인 중. V7은 REVIEW이며 사용자 승인 전 정본 승격 금지.
 - **범용 재발 방지:** [QUALITY_FIRST_POLICY §0.1](QUALITY_FIRST_POLICY.md), [CHAT_FIRST_PLAYBOOK §0.2](CHAT_FIRST_PLAYBOOK.md)에 규칙을 일반화. 기존 7개 본문을 임의로 대량 번역하지 않고, 이후 새로 작성·수정하는 전문화 UI부터 이 표준을 적용한다. 추가 검사기·엔진 개발 없음.
