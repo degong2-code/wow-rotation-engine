@@ -12,6 +12,16 @@
 - **현재 기준:** PR #24 Draft / `work/chat-first-talent-visibility-spell-media-20261114`, 생성 시 HEAD `ef0a863a8ffa2bff2ca53a9aab7cfaf19f0499a6`, 조화 드루이드 **V7 REVIEW**. [CI 459 테스트·2 건너뜀 성공](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43550973311). 새 HEAD는 다음 채팅에서 재조회할 것.
 - **주의:** 2026-11-14 인계 작성 환경에서는 V7 HTML 파일이 실제 `/mnt/data`에 없음. 크기·SHA는 인계에 **기록된 사실**이며 새 채팅에서 바이트를 직접 검증했다고 주장하면 안 됨. 개인 교본은 첨부/Project/Library에서 실물 접근을 확인하고 공개 GitHub에 업로드하지 않는다.
 - **사용자 명시:** GitHub 파일과 교본 HTML을 일반 ChatGPT에서 수정할 수 있는데 **Work 전환을 필수로 안내하거나 반복 제안하지 말 것**. 다음 새 채팅 첫 응답은 **읽기 전용 상태 독립 복원**으로 끝내고 `진행`을 기다린다.
+## 0.30 화염 마법사 V18 — 성난태양/서리불꽃 독립 영웅 선택·실전 우선순위 통합 (2026-11-14)
+
+- **현재 최신 비공개 통합 HTML REVIEW:** `wow_rotation_v11_balance_fire_frostfire_v18_REVIEW.html` · **1,218,110바이트**, SHA-256 `39697e4931af34cb36a5992bed520b3ff5b483971fcc7a3c82a25e6484519ada`. 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_balance_fire_frostfire_v18_REVIEW.html` / `library_file_id=libfile_6e6fce8539508191a82ce0c761e136e9` 별도 저장 성공. 공개 GitHub에 HTML 없음. 새 채팅 시작 시 파일을 실제 확보해 바이트·해시 재검증.
+- **단일 원문:** Wowhead Fire Mage Rotation 12.1.5 / Preheat 2026-10-13. 동일 원문의 서리불꽃 단일/광역 발화 중·외 4개 우선순위, 방화광 진입과 화염 파열 보유/미보유 발화 시전 진입, 고급 쿨다운·마무리 설명을 대상 상태별로 분석. **성난태양의 3명 이상 불기둥 vs 서리불꽃 4명 이상**, 얼음불꽃 화살(주문 431044)·서리불꽃 강화(431176)·유성 발동, 발화 전 화염 파열 비축, 발화 종료 후 이상 고열 없음 등을 명시. 11.2.7의 오래된 영웅 특성 설명은 게임 판단에 섞지 않았음.
+- **V17→V18 실물 기능:** 화염의 왼쪽 전문화 메뉴/첫 화면에 **성난태양 ↔ 서리불꽃** 선택 구현, 선택하지 않은 영웅의 우선순위·심화·원리·오프너는 숨김. 서리불꽃에 4개 상세 우선순위표 **10/8/9/11=38행**, 첫 화면 6행(단일/광역 지속·오프너), 공통 전투 전 준비, 독립 오프너·원리·심화, **8개 상태→다음 행동** 예시, 출처/기술 툴팁 및 영웅별 별도 목차 제공. 원래 성난태양 본문은 유지(가시성 스위치만 추가). V17의 **비대상 V11 6개 전문화와 조화 V16**, 총 7개 `manual-view` 부분은 원시 HTML 문자열 그대로. 조화 40개 상세 규칙/빠른 연결 보존.
+- **실제 Q4:** Chromium PC 1365·태블릿 800·모바일 390px, 원래 성난태양와 서리불꽃의 본문 배타적 노출, 각 우선순위표 4개, 새 서리불꽃 38행·빠른 6행·영웅별 목차, 기술 툴팁 클릭/ESC, 조화 왕복, JavaScript 오류 0·가로 넘침 0 PASS(외부 아이콘 HTTP 응답은 검사 제외). 새 기술 이름/아이콘은 Wowhead 한국어 주문 페이지 확인; **블리자드 공식 미디어 API 직접 인증 PASS라고 주장하지 않음**.
+- **남은 게이트:** 원문 와우헤드의 **선택형 오프너 모든 하위 옵션·물약/타임라인·보조 마커/툴팁** 원시 WHML 또는 실제 렌더 UI 전체 확인 미완. 현재 V18의 광역 오프너는 확인된 공통 행동·4명 이상 변경만 기록했으며 알 수 없는 보조 시전 기술은 추가하지 않음. 전체 Q0/Q1 실제 게임 판단 및 사용자 Q3 최종 승인 **REVIEW**. 조화 V16의 앞선 블리자드 14개 기술명·아이콘 및 19개 보조 표식도 REVIEW 유지.
+- **다음 고부가가치 과제:** 실제 V18을 사용자가 검토해 두 영웅 교본의 독해·오프너 표시를 평가하고, **원문 선택형 하위 경로 중 실제 다음 기술 순서에 영향을 주는 항목**만 본문 증거로 마무리. 개별 마커/새 도구 개발로 회귀하지 말 것. [이번 범용 UPDATE 증거](QUALITY_GENERALIZATION_CASEBOOK.md).
+- **GitHub:** `work/chat-first-talent-visibility-spell-media-20261114`, PR #24 Draft·main 미병합. 실제 SHA/CI는 새 채팅에서 다시 조회.
+
 ## 0.29 화염 마법사 V17 — 조화 이외 전문화에서 첫 화면 오프너 부분 UPDATE 실증 (2026-11-14)
 
 - **현재 최신 비공개 통합 HTML REVIEW:** `wow_rotation_v11_balance_fire_quick_openers_v17_REVIEW.html` · **1,142,543바이트** · SHA-256 `4203ffe68fc5987e08c98e1a872387401c0d39db72ac692dc5cdfe75d3c1bf86`. 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_balance_fire_quick_openers_v17_REVIEW.html` · `library_file_id=libfile_1139b2eb978481919daac4dd5a800f32`에 별도 보관. **공개 GitHub에 개인 HTML 업로드 금지.** 신규 채팅에서 실제 파일/SHA를 재검증.
