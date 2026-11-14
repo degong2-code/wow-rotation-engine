@@ -1,12 +1,22 @@
-name: Collect Blizzard ko_KR spell names (manual; evidence only)
+name: Collect Blizzard ko_KR spell names and icons (manual; review evidence only)
 
 on:
   workflow_dispatch:
     inputs:
       max_ids:
-        description: "Spell IDs to query, max 176. API may return 404 for unsupported spells."
+        description: "V11 spell IDs to query, max 176 (ignored when spell_ids specified)"
         required: true
         default: '176'
+      spell_ids:
+        description: "Optional comma-separated spell IDs for a new specialization (1..100)"
+        required: false
+        default: ''
+        type: string
+      include_media:
+        description: "Query official spell icon media in addition to Korean names"
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -28,22 +38,31 @@ jobs:
           BLIZZARD_CLIENT_ID: ${{ secrets.BLIZZARD_CLIENT_ID }}
           BLIZZARD_CLIENT_SECRET: ${{ secrets.BLIZZARD_CLIENT_SECRET }}
           MAX_IDS: ${{ inputs.max_ids }}
+          SPELL_IDS: ${{ inputs.spell_ids }}
         run: |
           test -n "$BLIZZARD_CLIENT_ID" && test -n "$BLIZZARD_CLIENT_SECRET" || { echo "Missing Blizzard GitHub Secrets"; exit 1; }
           [[ "$MAX_IDS" =~ ^[0-9]+$ ]] && (( MAX_IDS >= 1 && MAX_IDS <= 176 )) || { echo "max_ids must be 1..176"; exit 1; }
-      - name: Query official Korean spell data (no automatic approval)
+          if [[ -n "$SPELL_IDS" ]]; then
+            python -c 'import os; from engine.spell_names import parse_spell_ids; parse_spell_ids(os.environ["SPELL_IDS"])'
+          fi
+      - name: Query official Korean spell name and optional icon evidence
+        shell: bash
         env:
           BLIZZARD_CLIENT_ID: ${{ secrets.BLIZZARD_CLIENT_ID }}
           BLIZZARD_CLIENT_SECRET: ${{ secrets.BLIZZARD_CLIENT_SECRET }}
           MAX_IDS: ${{ inputs.max_ids }}
+          SPELL_IDS: ${{ inputs.spell_ids }}
+          INCLUDE_MEDIA: ${{ inputs.include_media }}
         run: |
-          python -m engine.spell_names fetch --max-ids "$MAX_IDS" \
-            --output dist/spell-name-snapshot.json \
-            --report dist/spell-name-audit.json
-      - name: Upload comparison evidence only
+          opts=(--max-ids "$MAX_IDS" --output dist/spell-name-snapshot.json
+                --report dist/spell-name-audit.json)
+          if [[ -n "$SPELL_IDS" ]]; then opts+=(--spell-ids "$SPELL_IDS"); fi
+          if [[ "$INCLUDE_MEDIA" == "true" ]]; then opts+=(--include-media); fi
+          python -m engine.spell_names fetch "${opts[@]}"
+      - name: Upload review evidence only
         uses: actions/upload-artifact@v4
         with:
-          name: ko-kr-spell-name-evidence
+          name: ko-kr-spell-and-icon-evidence
           path: |
             dist/spell-name-snapshot.json
             dist/spell-name-audit.json
