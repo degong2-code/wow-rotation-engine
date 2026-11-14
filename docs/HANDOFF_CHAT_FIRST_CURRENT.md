@@ -12,6 +12,15 @@
 - **현재 기준:** PR #24 Draft / `work/chat-first-talent-visibility-spell-media-20261114`, 생성 시 HEAD `ef0a863a8ffa2bff2ca53a9aab7cfaf19f0499a6`, 조화 드루이드 **V7 REVIEW**. [CI 459 테스트·2 건너뜀 성공](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43550973311). 새 HEAD는 다음 채팅에서 재조회할 것.
 - **주의:** 2026-11-14 인계 작성 환경에서는 V7 HTML 파일이 실제 `/mnt/data`에 없음. 크기·SHA는 인계에 **기록된 사실**이며 새 채팅에서 바이트를 직접 검증했다고 주장하면 안 됨. 개인 교본은 첨부/Project/Library에서 실물 접근을 확인하고 공개 GitHub에 업로드하지 않는다.
 - **사용자 명시:** GitHub 파일과 교본 HTML을 일반 ChatGPT에서 수정할 수 있는데 **Work 전환을 필수로 안내하거나 반복 제안하지 말 것**. 다음 새 채팅 첫 응답은 **읽기 전용 상태 독립 복원**으로 끝내고 `진행`을 기다린다.
+## 0.28 조화 드루이드 V16 — 심화 사례의 큰 강화 창/일반 일월식 사용 조건 충돌 교정 (2026-11-14)
+
+- **최신 개인 HTML REVIEW:** `wow_rotation_v11_balance_1215_state_consistency_v16_REVIEW.html` · **1,134,152B** · SHA-256 `3acd3bc06e1ae75f34c0dc62e645b3b46896d7d0956b809682a616527dd381c8`. 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_balance_1215_state_consistency_v16_REVIEW.html` / `library_file_id=libfile_de49c9837cb481918f8e4baab7006d3e` 별도 저장 성공. 실제 파일은 공개 GitHub에 없고 다음 채팅에서 Library 실물 파일·SHA를 재검증해야 함.
+- **V15→V16 수정 2곳:** 기준 Wowhead 12.1.5는 큰 강화 창의 **화신·천체의 정렬**과 일반 **일월식·월식** 진입을 구분하나 V15 심화 사례 2개는 ‘큰 강화 기술을 이 창에 사용하지 않음’ 전제를 누락했다. 숲의 수호자 **자연의 군대 직후 → 일월식** 사례, 엘룬의 대행자 **엘룬의 분노 직후 → 월식** 사례에 해당 배타적 전제와 일월식/월식 준비를 명시. 원래 존재하던 화신/천체의 정렬 우선 사용 사례는 변경하지 않았고 원문 우선순위도 변경하지 않음.
+- **보존·기능:** V15 파일과 UTF-8 문구 2곳 외 바이트 동일. V11 기존 7개 `manual-view`, 조화 40개 정본·40개 빠른 연결, 6오프너/58단계, 19 보조 출처 메타데이터/JSON 3종 불변. Playwright Chromium 390·800·1365px×2영웅×3오프너=18 상태에서 영웅 전환/오프너 표시/수정 사례 표시/JS 오류 0·가로 넘침 0 Q4 PASS(외부 이미지 요청 차단). 전체 Q0/Q1 검증이나 사용자 승인은 아님.
+- **원인과 범용 대응:** 상세 판단에 남은 부정 전제가 심화 ‘상태→다음 행동’ 예제에서 삭제되며 **동일 게임 상태에 두 가지 상충하는 지시**를 만들었다. 원문→상세→빠른 참조→심화 사례의 ‘큰 강화 기술 사용 여부’를 일관되게 유지할 것. 기존 Q1 반례 절차로 해결 가능; 새 검사기/스키마 필요 없음. [V16 상세](BALANCE_ZERO_BASE_CREATE_REVIEW_20261113.md).
+- **계속 REVIEW:** 공식 블리자드 koKR 기술명·아이콘 14종 직접 검증, 동적 원문 선택/툴팁·19개 보조 표시의 게임 의미, 교본 전체 Q0/Q1·독자 Q3 최종 승인 미완. 지금은 미시 기능 추가보다 **완성 교본의 사용자 읽기·실전 판단 확인**이 우선.
+- **개발 상황:** `work/chat-first-talent-visibility-spell-media-20261114` / PR #24 Draft, main 미병합. HEAD·CI는 반드시 현재 GitHub 조회로 확인할 것.
+
 ## 0.27 조화 드루이드 V15 — V11 공통 태블릿 레이아웃과 접이식 목차 적용 범위 통일 (2026-11-14)
 
 - **현재 최신 비공개 HTML REVIEW:** `wow_rotation_v11_balance_1215_responsive_alignment_v15_REVIEW.html`, **1,134,076바이트**, SHA-256 `8e0f53aa64b7fee81c00f5450b018c0668b5e18d98cfe7effdfcb2e53114c3e2`. 개인 Library **`/ROTATION TEXTBOOK/wow_rotation_v11_balance_1215_responsive_alignment_v15_REVIEW.html`** · `library_file_id=libfile_a12c44088c1881918174739a31a6ba62`에 별도 보관. GitHub 공개 저장소에 HTML 없음. 다음 채팅에서는 실제 개인 파일을 다시 확보해 SHA 확인할 것.
