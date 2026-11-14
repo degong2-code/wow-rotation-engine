@@ -12,6 +12,16 @@
 - **현재 기준:** PR #24 Draft / `work/chat-first-talent-visibility-spell-media-20261114`, 생성 시 HEAD `ef0a863a8ffa2bff2ca53a9aab7cfaf19f0499a6`, 조화 드루이드 **V7 REVIEW**. [CI 459 테스트·2 건너뜀 성공](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43550973311). 새 HEAD는 다음 채팅에서 재조회할 것.
 - **주의:** 2026-11-14 인계 작성 환경에서는 V7 HTML 파일이 실제 `/mnt/data`에 없음. 크기·SHA는 인계에 **기록된 사실**이며 새 채팅에서 바이트를 직접 검증했다고 주장하면 안 됨. 개인 교본은 첨부/Project/Library에서 실물 접근을 확인하고 공개 GitHub에 업로드하지 않는다.
 - **사용자 명시:** GitHub 파일과 교본 HTML을 일반 ChatGPT에서 수정할 수 있는데 **Work 전환을 필수로 안내하거나 반복 제안하지 말 것**. 다음 새 채팅 첫 응답은 **읽기 전용 상태 독립 복원**으로 끝내고 `진행`을 기다린다.
+## 0.39 화염 V27 — 성난태양 단일 유성의 독립 쿨 조건 및 비불태우기 연속 시전 복원 (2026-11-15)
+
+- **최신 개인 통합 HTML REVIEW:** wow_rotation_v11_balance_fire_sunfury_priority_v27_REVIEW.html, **1,262,656바이트**, SHA-256 **0857b52d4aed5b44204fbb4d4a02efd2d1b33c479fcacc0b3393985a2598e305**. 개인 Library /ROTATION TEXTBOOK/ 의 library_file_id=**libfile_9e168e56f3408191bee53a09dd4c66e0**. V26은 이전 파일로 보존. 공개 GitHub에 HTML 원본 업로드 금지.
+- **원문:** 12.1.5 Preheat 와우헤드 Fire Mage Rotation에서 성난태양 단일 발화 외 **유성: 다음 발화 약 30초 전**과 **발화 재사용 쿨 <12초**는 **서로 다른 순위**. 단일 발화 중 연속 불덩이 작렬은 불태우기(해당 선택 특성)뿐 아니라 **화염구 또는 일반 시전 불덩이 작렬 완료**도 선행 조건이 될 수 있음. V26은 유성의 12초 경로와 화염구 경로 누락. 실제 최신 색인에서 확인된 조건만 복원; 동일 URL 직접 열람이 403인 경우와 나머지 동적 선택형 원문은 REVIEW.
+- **V27 실제 수정:** 성난태양 단일 발화 외 상세 4.2의 유성 3순위 아래 **유성 4순위(발화 쿨 12초 미만)** 추가, 아래 4~7순위를 5~8로 변경; 첫 화면에도 새 유성 아이콘과 조건을 같은 위치에 배치. 단일 발화 중 상세 3순위의 연속 불덩이 작렬 선행 주문에 **불태우기(선택 시)·화염구·일반 불덩이 작렬** 명시, 첫 화면 같은 행의 일반 보조 설명에도 연결. 성난태양 상세 4표는 **6/8/6/7 = 28개**, 빠른 참조 네 행 행동 수 **6/8/6/7 = 28개**. 다른 주문 순서·스킬 ID·원문 기술명 임의 변경 없음.
+- **비대상 보존:** V26과 직접 비교해 오직 **화염 성난태양 상세 2표와 빠른 참조 2행의 네 HTML 조각**만 변경. 서리불꽃 38개 상세/오프너, 성난태양 기존 오프너, 조화 V16 및 V11 다른 6개 전문화의 본문 소스, JS/CSS 원시 문자열 동일.
+- **실제 기능 검증:** 시스템 Chromium을 로컬 file:// 대신 **JavaScript 활성 page.set_content**로 열어 동적 메뉴 상태 검증 문제 해결. 320·360·390·800·1365px 두 영웅 전환, 기술 팁 열기 및 ESC의 aria-hidden 변경, JS 예외 0. 390px 기존 12개 전문화/영웅 메뉴 전환 **12/12 PASS**. 360px 이상 문서 가로 넘침 0; 320px 성난태양 **기존 7px 넘침 유지(미수정 REVIEW)**, 서리불꽃 정상. CDN 이미지 실시간 접근 검사하지 않음. 화면 기능 검증은 전체 게임 판단 정확도 증명 아님.
+- **원인·미결:** 특성 선택에 따라 바뀌는 일반 시전과 같은 기술의 독립 쿨 임계값을 단순화 과정에서 생략했다. Playbook §0.1 기존 수동 원문→상세→빠른 조건 동등성 검사를 적용했고 추가 검사기/엔진 불필요. 다른 원문 옵션·툴팁·한글 공식 기술/아이콘 100% 완전성 및 전체 Q0/Q1·사용자 V27 최종 Q3는 REVIEW. [V27 반례 및 출처](QUALITY_GENERALIZATION_CASEBOOK.md).
+- **GitHub:** work/chat-first-talent-visibility-spell-media-20261114, PR #24 Draft·main 미병합. 이후 HEAD/CI 실조회.
+
 ## 0.38 화염 V26 — 성난태양 미발동/미선택 진입 오프너 복원 (2026-11-15)
 
 - **최신 개인 통합 HTML REVIEW:** `wow_rotation_v11_balance_fire_opener_fallback_v26_REVIEW.html`, **1,261,253바이트**, SHA-256 `7b2ed1505ef8e15944dccde398caf7dfc335b53aa9e23b75db262c8d5b046864`. 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_balance_fire_opener_fallback_v26_REVIEW.html`, `library_file_id=libfile_79eefd806f1481919520c47185743c5a`. V25 기존 파일 별도 보관, **공개 GitHub에 HTML 업로드 금지**.
