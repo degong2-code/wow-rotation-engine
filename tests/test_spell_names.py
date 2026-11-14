@@ -5,7 +5,7 @@ from urllib.error import HTTPError
 import unittest
 
 from engine.spell_names import (
-    audit, fetch_snapshot, fetch_spell, fetch_spell_media, inventory, oauth_token,
+    audit, fetch_snapshot, fetch_spell, fetch_spell_media, parse_spell_ids, inventory, oauth_token,
     SNAPSHOT_VERSION, SOURCE, LOCALE,
 )
 
@@ -188,6 +188,33 @@ class NameEvidenceTests(unittest.TestCase):
         }])
         with self.assertRaises(ValueError):
             audit(snapshot=data)
+
+
+    def test_new_specialization_ids_can_be_verified_without_v11_inventory(self):
+        unknown=1234567
+        data=snapshot([{
+            "spell_id":unknown, "status":"found", "name_ko":"신규 전문화 주문",
+            "media":{"status":"found","icon_url":
+                     "https://render.worldofwarcraft.com/kr/icons/56/spell_test.jpg"},
+        }])
+        with self.assertRaises(ValueError):
+            audit(snapshot=data)
+        result=audit(snapshot=data,additional_spell_ids={unknown})
+        row=next(x for x in result["records"] if x["spell_id"]==unknown)
+        self.assertEqual(row["comparison"],"new_spell_requires_editorial_review")
+        self.assertEqual(row["inherited_names_ko"],[])
+        self.assertEqual(row["official_icon_evidence"]["status"],"found")
+        self.assertEqual(result["counts"]["new_spell_ids_without_inherited_label"],1)
+        self.assertEqual(result["counts"]["new_spell_observations"],1)
+        self.assertEqual(result["counts"]["official_names_auto_approved"],0)
+        self.assertFalse(result["publish_ready"])
+
+    def test_comma_separated_new_spell_ids_are_bounded_exact_and_unique(self):
+        self.assertEqual(parse_spell_ids("5176,93402, 205636"),[5176,93402,205636])
+        for value in ("", "123,", "abc", "1,1", "-3", "1;2", "0", "2147483648",
+                      ",".join(str(x) for x in range(1,103))):
+            with self.assertRaises(ValueError):
+                parse_spell_ids(value)
 
     def test_no_credentials_fails_closed(self):
         with self.assertRaises(ValueError):
