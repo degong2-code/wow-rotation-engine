@@ -12,6 +12,15 @@
 - **현재 기준:** PR #24 Draft / `work/chat-first-talent-visibility-spell-media-20261114`, 생성 시 HEAD `ef0a863a8ffa2bff2ca53a9aab7cfaf19f0499a6`, 조화 드루이드 **V7 REVIEW**. [CI 459 테스트·2 건너뜀 성공](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43550973311). 새 HEAD는 다음 채팅에서 재조회할 것.
 - **주의:** 2026-11-14 인계 작성 환경에서는 V7 HTML 파일이 실제 `/mnt/data`에 없음. 크기·SHA는 인계에 **기록된 사실**이며 새 채팅에서 바이트를 직접 검증했다고 주장하면 안 됨. 개인 교본은 첨부/Project/Library에서 실물 접근을 확인하고 공개 GitHub에 업로드하지 않는다.
 - **사용자 명시:** GitHub 파일과 교본 HTML을 일반 ChatGPT에서 수정할 수 있는데 **Work 전환을 필수로 안내하거나 반복 제안하지 말 것**. 다음 새 채팅 첫 응답은 **읽기 전용 상태 독립 복원**으로 끝내고 `진행`을 기다린다.
+## 0.40 화염 V28 — 320px 가로 넘침 근본 원인 확인 및 기술명 표 모바일 CSS 수정 (2026-11-15)
+
+- **최신 개인 통합 HTML REVIEW:** `wow_rotation_v11_balance_fire_mobile_glossary_v28_REVIEW.html`, **1,262,998바이트**, SHA-256 `76d3297ccaf97def2a6f831187522226410b7c70e7d77efe7b0f79b4005de16a`. 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_balance_fire_mobile_glossary_v28_REVIEW.html`, `library_file_id=libfile_59a16a81d0d081919bd12ec577f263d4`. 이전 V27 파일 별도 유지. 개인 HTML은 공개 GitHub 업로드 금지.
+- **320px 7px 넘침 실제 원인:** 성난태양 전문화 활성화 상태에서 Chromium DOM 측정 결과 최초 예상했던 빠른 참조/주문 조건이 아니라 **09장 기술명·출처의 기술명 설명 grid**가 문제. 기존 `@media(max-width:500px)`의 `.glossary-row{grid-template-columns:1fr}`가 뒤쪽의 원본 `.glossary-row{grid-template-columns:minmax(175px,205px) minmax(0,1fr)}`에 덮어써져 320px에서도 설명 열이 **67px**만 확보됨. 그 열의 실제 **‘몰아치는 열기’ 아이콘+이름은 약 89.5px**, 행 오른쪽이 327.5px으로 넘침. `.table-scroll` 내부 넓은 비교표와 코드 예시는 자체 스크롤 경계 안이므로 문서 넘침 직접 원인이 아니었음.
+- **V27→V28 실제 변경:** 문서 `</head>` 바로 앞에 작은 CSS 1블록만 추가: `@media(max-width:500px){#guide-fire .glossary-row{grid-template-columns:minmax(0,1fr);gap:0}}`. 320px에서 기술명과 설명을 한 열로 배치해 아이콘·이름이 쪼개지지 않도록 함. **기존 HTML의 8개 `.manual-view` 하위 트리 모두 바이트/DOM 동일**, 전체 JS 동일, 원래 CSS 8개 블록 수정 없음. 신규 스타일 블록만 추가. Fire V27의 성난태양 28개/서리불꽃 38개 상세 우선순위, 첫 화면, 오프너 변경 없음.
+- **실측 Chromium JavaScript 활성 Q4:** 320/360/390/800/1365px의 성난태양·서리불꽃에서 `document.documentElement.scrollWidth-clientWidth=0` 전부 확인. 320·390px 전문화/영웅 선택 버튼 **12개 상태 각각 전환 PASS**, 현재 활성 서브뷰 1개, 두 영웅 선택, 기술 툴팁 클릭/ESC 정상, JS 예외 **0**. 외부 이미지·폰트 네트워크 요청 차단하여 실제 CDN 응답 성공은 검사하지 않음. 320px 기존 잔여 7px 해결.
+- **원문 검토 경계:** 12.1.5 와우헤드 Fire Rotation의 최신 검색 색인에는 다수 선택형 원문 행이 나타나나, 동일 URL 일반 열람은 **12.0.7 / 2026-03-18** 과거 캐시를 반환함. 선택형 옵션·특성 스위치가 평탄화된 검색 텍스트만으로는 어떤 조건의 분기가 실제로 선택되는지 특정할 수 없어 **이번에는 새 게임 행동 규칙을 추가하지 않았음**. 12.1.5 선택형 Q0/Q1 원문 완전성, 공식 주문/아이콘 전수 확인 및 사용자의 V28 최종 승인은 REVIEW. 미확정 한 행을 위해 새 엔진·검사기 개발하지 않음.
+- **다음 우선순위:** V28은 화면 기능과 사용자가 긍정 평가한 표현 기준을 안정화. 원문 선택형 문구는 *정확한 빌드/옵션 근거가 확인되는 것*만 게임 행동으로 승격하고, 그렇지 않으면 REVIEW로 종료해 다른 전문화 전체 제작 품질과 반복성 점검으로 복귀. PR #24 Draft, main 미병합. HEAD/CI 최신 조회 필요.
+
 ## 0.39 화염 V27 — 성난태양 단일 유성의 독립 쿨 조건 및 비불태우기 연속 시전 복원 (2026-11-15)
 
 - **최신 개인 통합 HTML REVIEW:** wow_rotation_v11_balance_fire_sunfury_priority_v27_REVIEW.html, **1,262,656바이트**, SHA-256 **0857b52d4aed5b44204fbb4d4a02efd2d1b33c479fcacc0b3393985a2598e305**. 개인 Library /ROTATION TEXTBOOK/ 의 library_file_id=**libfile_9e168e56f3408191bee53a09dd4c66e0**. V26은 이전 파일로 보존. 공개 GitHub에 HTML 원본 업로드 금지.
