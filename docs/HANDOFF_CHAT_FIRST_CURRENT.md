@@ -12,6 +12,15 @@
 - **현재 기준:** PR #24 Draft / `work/chat-first-talent-visibility-spell-media-20261114`, 생성 시 HEAD `ef0a863a8ffa2bff2ca53a9aab7cfaf19f0499a6`, 조화 드루이드 **V7 REVIEW**. [CI 459 테스트·2 건너뜀 성공](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43550973311). 새 HEAD는 다음 채팅에서 재조회할 것.
 - **주의:** 2026-11-14 인계 작성 환경에서는 V7 HTML 파일이 실제 `/mnt/data`에 없음. 크기·SHA는 인계에 **기록된 사실**이며 새 채팅에서 바이트를 직접 검증했다고 주장하면 안 됨. 개인 교본은 첨부/Project/Library에서 실물 접근을 확인하고 공개 GitHub에 업로드하지 않는다.
 - **사용자 명시:** GitHub 파일과 교본 HTML을 일반 ChatGPT에서 수정할 수 있는데 **Work 전환을 필수로 안내하거나 반복 제안하지 말 것**. 다음 새 채팅 첫 응답은 **읽기 전용 상태 독립 복원**으로 끝내고 `진행`을 기다린다.
+## 0.41 조화 V28 교차 검증 — 영웅·삭망월 동적 상태와 40개 우선순위·6개 오프너 보존 (2026-11-15)
+
+- **현재 최신 개인 교본은 V28 그대로:** `wow_rotation_v11_balance_fire_mobile_glossary_v28_REVIEW.html` · **1,262,998B**, SHA-256 `76d3297ccaf97def2a6f831187522226410b7c70e7d77efe7b0f79b4005de16a`, Library `/ROTATION TEXTBOOK/`의 `libfile_59a16a81d0d081919bd12ec577f263d4`. 이번에는 새 게임판단 오류가 확정되지 않아 V29 파일을 인위적으로 만들지 않음; 공개 GitHub에 비공개 HTML 업로드 금지.
+- **사용자 이전 요청/검토 방향:** 화염 V22·V23은 간결성과 가독성 면에서 긍정 평가, V28 화면 안정화 뒤 **다른 전문화에서도 완전성/조건/UX 재현** 확인. 독립 신규 전문화인 조화 드루이드를 원본 V16과 최신 V28에서 교차 검증.
+- **실물 검증:** 조화 상세 `data-rule-id` 40개 = 첫 화면 `data-from-rule` 40개 **1:1 일치**. 오프너 숲의 수호자 14/9/7단계, 엘룬의 대행자 11/10/7단계, **총 6개 분기/58단계** 원형 보존. 첫 화면은 각 오프너 **앞 6단계 + 상세 링크**로 구성되므로 58개 전부 첫 화면에 나타난다고 오인하지 말 것. 실제 Chromium 390px에서 여섯 오프너 버튼 모두 분기 하나만 노출, 나머지 숨김.
+- **중요한 검증 교훈:** 초기에 삭망월 선택형 `엘룬의 분노`의 두 설명이 텍스트 추출에서 이어 붙여져 조건 충돌로 의심됐으나, 실제 `data-requires-talent="new_moon"/"!new_moon"`가 서로 다른 표시 분기임을 확인. 삭망월 OFF에서는 미선택 설명만, ON에서는 쿨마다 사용 설명만 표시. **이 오류는 교본에 실제로 존재하지 않았으므로 수정하지 않음.** 이후 다른 전문화도 숨김 DOM 텍스트를 그대로 연결해 게임 판단 버그로 간주 금지. 원문 Wowhead 12.1.5 검색 색인에서 삭망월 선택 시 Fury of Elune on cooldown/미선택 시 강화 창 정렬 관련 문장을 확인했으나 `open` 캐시가 12.0.7이라 선택형 원문 전체 Q0/Q1는 REVIEW.
+- **회귀 방지:** 원본 개인 V16 `#guide-balance` 본문과 V28 같은 영역은 V20의 의미 없는 ①·② 표식 네 개만 제거하면 **177,693글자 정확히 동일**. 그동안 화염 V17~V28 제작으로 조화 본문의 규칙/오프너가 우발 변경된 적 없음. JavaScript 활성 Chromium **320/360/390/800/1365px**의 두 영웅(10상태), 삭망월 선택·미선택, 기술 툴팁/ESC, 가로 넘침·JS 오류 **0**. 외부 CDN 아이콘 실시간 응답·12.1.5 원문 모든 오프너 하위 옵션 및 게임 Q0/Q1 승인·사용자 최종 Q3는 REVIEW.
+- **프로젝트 판단:** 기존 기술로 충분히 정상 검증되어 새 검사기·엔진/패치/교본 버전 불필요. [2026-11-15 사례집](QUALITY_GENERALIZATION_CASEBOOK.md)에 실제 근거 기록. 다음은 원문이 확실한 다른 전문화의 완성형 CREATE/UPDATE 또는 가시적 사용성 결함을 우선하고, 근거 없는 조건 추가를 금지. PR #24 Draft·main 미병합, HEAD·CI는 직접 재조회.
+
 ## 0.40 화염 V28 — 320px 가로 넘침 근본 원인 확인 및 기술명 표 모바일 CSS 수정 (2026-11-15)
 
 - **최신 개인 통합 HTML REVIEW:** `wow_rotation_v11_balance_fire_mobile_glossary_v28_REVIEW.html`, **1,262,998바이트**, SHA-256 `76d3297ccaf97def2a6f831187522226410b7c70e7d77efe7b0f79b4005de16a`. 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_balance_fire_mobile_glossary_v28_REVIEW.html`, `library_file_id=libfile_59a16a81d0d081919bd12ec577f263d4`. 이전 V27 파일 별도 유지. 개인 HTML은 공개 GitHub 업로드 금지.
