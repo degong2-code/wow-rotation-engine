@@ -6,12 +6,21 @@
 > **이 문서는 새 채팅 복원 진입점**이다. **최상위 운영 정책은 [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md)**, 구체적 품질 게이트는 [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), 집필 절차는 [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)을 정본으로 삼으며 중복 복제하지 않는다. **과거 사례로 범용화 가치/오탐을 검증하는 후향적 사례집은 [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md) 참조.**
 
 
-## 일반 채팅 새 출발 진입점 — 2026-11-14 최신 확인
+## 일반 채팅 새 출발 진입점 — 2026-11-16 최신 확인
 
-- **새 일반 ChatGPT 채팅 독립 복원 전용:** [HANDOFF_GENERAL_CHAT_20261114.md](HANDOFF_GENERAL_CHAT_20261114.md). 이전 2026-11-13 인계문/PR #20 HEAD를 현재 상태로 사용하지 말 것. 우선 저장소 최신 HEAD/PR/Actions와 실제 개인 교본 접근을 확인한다.
+- **새 일반 ChatGPT 채팅 독립 복원 정본(2026-11-16):** [HANDOFF_GENERAL_CHAT_20261116.md](HANDOFF_GENERAL_CHAT_20261116.md). **이 문서를 가장 먼저 읽고** 최신 브랜치 HEAD/PR #24/Actions/개인 V32 파일을 실제 조회한다. 이전 [2026-11-14 인계](HANDOFF_GENERAL_CHAT_20261114.md) 및 PR #20/V7/생존 V3는 역사 자료로만 사용.
 - **현재 기준:** PR #24 Draft / `work/chat-first-talent-visibility-spell-media-20261114`, 생성 시 HEAD `ef0a863a8ffa2bff2ca53a9aab7cfaf19f0499a6`, 조화 드루이드 **V7 REVIEW**. [CI 459 테스트·2 건너뜀 성공](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43550973311). 새 HEAD는 다음 채팅에서 재조회할 것.
 - **주의:** 2026-11-14 인계 작성 환경에서는 V7 HTML 파일이 실제 `/mnt/data`에 없음. 크기·SHA는 인계에 **기록된 사실**이며 새 채팅에서 바이트를 직접 검증했다고 주장하면 안 됨. 개인 교본은 첨부/Project/Library에서 실물 접근을 확인하고 공개 GitHub에 업로드하지 않는다.
 - **사용자 명시:** GitHub 파일과 교본 HTML을 일반 ChatGPT에서 수정할 수 있는데 **Work 전환을 필수로 안내하거나 반복 제안하지 말 것**. 다음 새 채팅 첫 응답은 **읽기 전용 상태 독립 복원**으로 끝내고 `진행`을 기다린다.
+
+## 0.46 새 일반 채팅 인계: 최신 V32 실제 파일·HEAD·PR/CI 재확인 (2026-11-16)
+
+- **신규 단일 인계 진입점:** [HANDOFF_GENERAL_CHAT_20261116.md](HANDOFF_GENERAL_CHAT_20261116.md). 사용자 요청에 따라 **제품 V32 현재 상태와 중요한 반례·가독성·출처/승인 경계를 중심으로 요약**. 그 문서는 다음 채팅 첫 응답에서 읽기 전용 복원하고 `진행` 지시를 기다리게 설계됨.
+- **이번 인계 작성 당시 실제 조회:** PR #24 `open`·`Draft`·미병합, `head=work/chat-first-talent-visibility-spell-media-20261114` / 인계 전 SHA `08822de1530271da4b50129ec52f97404a9b3b87`; **base는 `work/chat-first-generic-html-assembly-20261113` (main 직접 대상 아님)**. 해당 SHA의 PR Actions 실행 1건 **completed/success**. 이 인계 문서 커밋 이후 SHA·CI는 재조회할 것.
+- **Library 원시 V32 직접 재검증:** `wow_rotation_v11_arcane_opener_timing_v32_REVIEW.html`, **1,377,777B** / SHA-256 **55597b2eb4464c582bbcc4eb5bd2168acc4921462e729ddd34a13098649c7361**. 실제 private Library materialize에 성공했고 HTML 파싱으로 **9개 전문화, 비전 우선순위 36↔첫 화면 36, 비전 가정형 사례 장 미존재, 01~06장, 오프너 조건부 >15/≤15초 및 비전의 여파 ≤13초** 확인. V11 원본 자체의 바이트는 이번 인계에서 별도 재검증하지 않음.
+- **정확성 상태:** V32 Q4 기능 검증·기존 내용 보존 기록과 이번 실물 크기/구조 확인은 **게임 판단 전체 Q0/Q1·영웅 특성별 동적 선택형 오프너/도움말·Blizzard 공식 아이콘 검증이나 사용자 최종 승인을 대체하지 않음**. 이 미확인 항목은 REVIEW. 다른 패치 12.0.7/12.1.0 캐시를 기준 원문 12.1.5와 섞지 않음.
+- **사용자 최신 확정 정책 우선:** V29의 짧은 한국어 조건식/아이콘/부등호 UX 긍정 유지; **가정형 「실전 상황별 판단 예시」 사용자 장 전면 금지, 내부 반례 QA만 보존**; 영웅 특성별/공식 한국어 이름/모든 트래킹 명칭 아이콘; 조건부 물약 슬롯을 중복 사용으로 오해시키지 않음. 본 최신 내용은 V30의 '5개만 선별' 정책보다 우선. 새 도구·검사기·독립 엔진 개발보다 제품 완성과 다른 전문화 재현성이 우선.
+- **다음 작업은 사용자 `진행` 이후에만:** 최신 V32 원문에서 행동이 바뀌는 동적 오프너 분기를 직접 확보할 수 있는 범위에서 확인, 근거가 없으면 REVIEW 종료 후 실물 신규 CREATE/UPDATE 과정으로 복귀. **첫 응답에서는 GitHub·HTML·코드·CI 수정 없이 상태 보고만.** Work 필수 전환을 강요하지 말고 일반 채팅 연결 도구 활용. 비공개 HTML을 공개 GitHub에 올리지 않음.
 
 ## 0.45 비전 V32 — 오프너 소비재 지속시간 조건·비전의 여파 첫 화면 판단 복원 (2026-11-16)
 
