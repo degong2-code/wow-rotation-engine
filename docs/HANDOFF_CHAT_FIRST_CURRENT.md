@@ -12,6 +12,14 @@
 - **현재 기준:** PR #24 Draft / `work/chat-first-talent-visibility-spell-media-20261114`, 생성 시 HEAD `ef0a863a8ffa2bff2ca53a9aab7cfaf19f0499a6`, 조화 드루이드 **V7 REVIEW**. [CI 459 테스트·2 건너뜀 성공](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43550973311). 새 HEAD는 다음 채팅에서 재조회할 것.
 - **주의:** 2026-11-14 인계 작성 환경에서는 V7 HTML 파일이 실제 `/mnt/data`에 없음. 크기·SHA는 인계에 **기록된 사실**이며 새 채팅에서 바이트를 직접 검증했다고 주장하면 안 됨. 개인 교본은 첨부/Project/Library에서 실물 접근을 확인하고 공개 GitHub에 업로드하지 않는다.
 - **사용자 명시:** GitHub 파일과 교본 HTML을 일반 ChatGPT에서 수정할 수 있는데 **Work 전환을 필수로 안내하거나 반복 제안하지 말 것**. 다음 새 채팅 첫 응답은 **읽기 전용 상태 독립 복원**으로 끝내고 `진행`을 기다린다.
+## 0.44 비전 V31 — 사용자 결정: 가상의 「실전 상황별 판단 예시」 장 삭제, 내부 검증만 유지 (2026-11-16)
+
+- **최신 개인 통합 HTML REVIEW:** `wow_rotation_v11_arcane_no_scenario_chapter_v31_REVIEW.html`, **1,377,344바이트**, SHA-256 **22687827197ec0c3800f821c033daf3f7a9e94d9ac3d6a452f8dd701893aa283**. 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_arcane_no_scenario_chapter_v31_REVIEW.html`, **library_file_id=libfile_97511081a2e881919c22e09cc324e5e7**. V30 원본은 별도 보관. 공개 GitHub에 비공개 통합 HTML 업로드 금지.
+- **이번 사용자 지시는 V30 이전 합의보다 우선:** 비전 06 「실전 상황별 판단 예시」는 **전면 삭제**. 사용자가 실제 어떤 상태를 혼동하는지 객관적 근거가 없고, 가상 전투 상황이 갖는 다양한 전제 때문에 그 행동을 실전 조언처럼 내놓는 것은 교본이 책임질 정확성 범위를 벗어남. 상태·조건·행동 반례 검증은 제작 **내부에서 계속**, 단 이를 플레이어용 독립 장으로 노출하지 않는 것이 범용 원칙. 과거 V30에서 10→5개로 선별한 정책은 본 최신 사용자 지시로 **철회·대체**. 새 기준을 [CHAT_FIRST_PLAYBOOK §0.1](CHAT_FIRST_PLAYBOOK.md)에 명시.
+- **V30→V31 실제 변경:** 비전 `#arcane-decisions` **섹션 전체 및 목차 항목 1개 삭제**, 마지막 `#arcane-glossary` 장의 목차/헤더 **07→06**으로 번호 수정. 기존 8개 다른 전문화 `.manual-view` 하위 트리 동일, 비전 36개 상세↔첫 화면 36개 연결, 두 영웅 특성/오프너, 첫 화면 간결 조건식·아이콘·기술 툴팁 및 공용 JS/CSS 원형 보존. 10개 내부 검증 벡터는 [기존 V30 사례집](QUALITY_GENERALIZATION_CASEBOOK.md)·개인 V29/V30 원본에만 보존(현 V31 교본의 본문에는 0개).
+- **Q4 실제 브라우저:** JS 활성 Chromium(`page.set_content`/외부 아이콘 요청 차단) 320/360/390/800/1365px 성난태양↔주문술사 전환, `#arcane-decisions` 미존재, 목차 **00~06 7개**, 끝 06 기술명·출처 정상, 툴팁 열기+ESC, 페이지 가로 넘침 **0**, JS 오류 **0**. 390px 총 14개 전문화·영웅 메뉴 상태 순회에서 활성 뷰 1개 유지. 실제 CDN 아이콘 응답, 원문 동적 선택형 오프너 완전성, WoW 게임 Q0/Q1·최종 사용자 승인은 REVIEW.
+- **다음 작업:** V29에서 사용자 호평을 받은 비전 첫 화면의 **짧은 한국어 약어·숫자·부등호·아이콘·구조적 가독성**은 유지. 앞으로 내부 QA 사례를 교본 사용자에게 보여줄 필요 없음. **원문 직접 근거를 확보한** 상태·조건·행동 및 예외/오프너만 실제 본문에 적고, 추측한 실전 경험·독립 가상 사례 장을 추가하지 않음. 생성기/검사기 신규 개발 없음. 브랜치 `work/chat-first-talent-visibility-spell-media-20261114`, PR #24 Draft·main 미병합, HEAD/CI는 후속 재조회.
+
 ## 0.43 비전 V30 — 내부 검증과 플레이어용 사례 분리; 가독성 긍정 기준 보존 (2026-11-16)
 
 - **최신 개인 통합 REVIEW HTML:** `wow_rotation_v11_arcane_curated_examples_v30_REVIEW.html`, **1,381,720B**, SHA-256 **5b663853b6659989a1eec6387074b7e54acbeae773ecdd97af8af1b62ec5144e**. 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_arcane_curated_examples_v30_REVIEW.html`, `library_file_id=libfile_6cb2ad0c4ed081919331f18c9eb277fa`에 V29와 별도 보관. **공개 GitHub에 개인 V11/V29/V30 HTML을 업로드하지 않는다.** 새 채팅에서 개인 Library 실물 SHA 확인.
