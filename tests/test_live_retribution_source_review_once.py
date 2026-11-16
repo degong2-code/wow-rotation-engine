@@ -14,7 +14,10 @@ class Review(unittest.TestCase):
                 body=p["original_whml"]
                 print("RET_SOURCE",json.dumps({"sha":p["sha256"],"chars":len(body),"patch":audit.get("visible_patch_candidates"),"date":audit.get("observed_guide_update_date"),"options":[x.get("id") for x in p["option_definitions"]],"tooltip_count":audit.get("named_tooltip_definition_count")}),flush=True)
                 h1=body.lower().find("best retribution paladin single target rotation")
-                h2=body.lower().find("best retribution paladin aoe rotation",h1+1)
+                h2=body.lower().find("aoe rotation",h1+1)
+                if h2<0: h2=body.lower().find("multitarget rotation",h1+1)
+                if h2<0: h2=min(len(body),h1+8500)
+                print("RET_SECTION_MARKERS",json.dumps([{"i":m.start(),"text":body[max(0,m.start()-35):m.start()+45].replace("\\n"," ")} for m in list(re.finditer(r"(?i)(?:single.target|aoe|priority)",body)) if h1<=m.start()<h1+5500][:22]),flush=True)
                 print("RET_BOUNDS",json.dumps({"st":h1,"aoe":h2,"prefix":re.sub(r"\s+"," ",body[h1:h1+420])[:260]}),flush=True)
                 region=body[h1:h2] if 0<=h1<h2 else ""
                 print("RET_ST_TAGS",json.dumps({k:len(re.findall(r"\["+k+r"\b",region,re.I)) for k in ["ol","li","display-option","toggler","rt-step","spell","tooltip","tab"]}),flush=True)
