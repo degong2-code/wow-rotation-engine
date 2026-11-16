@@ -2,6 +2,15 @@
 
 > **최신 상태를 갱신하는 유일한 GitHub 파일.** 2026-11-16 KST 기준 체크포인트. 이 문서에 적힌 GitHub SHA/Actions 상태는 기록 시점의 사실일 뿐, 새 채팅에서는 **실제 원격 조회가 우선**한다. 오래된 HANDOFF_*.md 및 과거 버전 파일의 "최신" 표시는 역사 기록이다.
 
+## 2026-11-16 원문 확보 3경로 실측 — 신규 제품 변경 없음
+
+- **실행 결과 정본:** [SOURCE_ACQUISITION_REPRO_20261116](SOURCE_ACQUISITION_REPRO_20261116.md). **고양 주술사** Wowhead 12.1.5/wordup/2026-10-13을 기준으로 실제 ChatGPT 웹 열람, 직접 HTTP, 사용자 저장 HTML의 증거를 구분해 점검. **개인 통합 제품은 V57 그대로**, 새 단일 HTML/버전 생성 없음.
+- **경로 A (이번 채팅):** 직접 Wowhead Rotation URL 열람 성공, 웹 텍스트 446줄에 영웅 2종×단일/광역 4표(9+10+12+12=43행) 및 기본 오프너 4종·주요 설명 확인. 하지만 3종 물약×4개 오프너의 **실제 행동·시간 차이 12상태**와 관련 tooltip 정의↔참조를 정확한 조건과 함께 완전 확보했다고 주장할 수 없어 **Gate A REVIEW**.
+- **경로 B (이번 채팅):** 실행 컨테이너 Python requests는 Wowhead **DNS 조회 실패**. 403 HTTP 거부를 받은 것이 아님. **2026-11-12 원격 GitHub Actions 두 실증은 재조회 결과 completed/success**. 같은 저장 사용자 원문과 WHML SHA 일치, 68,350자/툴팁 44개/선택 16개까지 실측 기록. 다만 당시 로그의 **enhancement_current_patch_verified=false**를 별도로 보존해 완전 최신/원문/게임 PASS와 구분.
+- **경로 C (이번 채팅):** 사용자가 11월 12일 제공한 원본 HTML/ZIP 바이트는 이번 채팅 첨부/Library에서 재확인되지 않음. GitHub의 [사용자 저장본 증거](ENHANCEMENT_SAVED_HTML_EVIDENCE_20261112.md)는 본문 68,350자, 정의 44/참조 45/선택 16/조건부 82/접힘 7, **물약별 실제 12개 시전 차이**를 기록했지만 이번 세션의 실물 파싱 결과로 둔갑시키지 않는다.
+- **제품 공통 교훈:** '기본 표·오프너 텍스트가 보임'과 '의미 있는 선택 상태별 조건·툴팁까지 확보'는 다르다. 다음 CREATE/UPDATE에서 직접 웹 A를 먼저 사용하고 부족하면 기존 정상 수집 환경 B, 사용자 원본 C로 보완. 셋 모두 불가하면 자료 범위를 명시해 REVIEW. **새 크롤러·AI API 개발 및 무근거 원문 합성 보류**.
+- **다음 실제 제작 과제:** 다음 신규/UPDATE 전문화에서 같은 3단계 취득 절차를 실제 적용하고, 원문 미확보 행동 분기를 최종 HTML에서 미확인으로 유지. 이어 이미 V11·신규 CREATE·기존 국소 UPDATE·동일 패치 핫픽스 갱신에서 얻은 **반복 제작의 제품 품질·게임 Q0/Q1 보류 항목**을 정리. 사용자가 제기하는 내용/UX 문제를 우선 반영한다.
+
 ## 2026-11-16 V57 사격 사냥꾼 10월 27일 공식 핫픽스 UPDATE — 날짜 차이 실증
 
 - **최신 개인 통합 REVIEW (11개 전문화):** `wow_rotation_v11_marksmanship_20261027_hotfix_v57_REVIEW.html`, 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_marksmanship_20261027_hotfix_v57_REVIEW.html`, ID **`libfile_c3da0b37c0608191bd9b2d26086e2cc3`**, **2,192,274바이트**, SHA-256 **`eed5b01f6f82c7fc18581ac02da4ab8edde676f91b80a524b197579fc7637f1d`**. 이전 통합 V56과 원본 V11은 별도 보존.
