@@ -2,6 +2,15 @@
 
 > **최신 상태를 갱신하는 유일한 GitHub 파일.** 2026-11-16 KST 기준 체크포인트. 이 문서에 적힌 GitHub SHA/Actions 상태는 기록 시점의 사실일 뿐, 새 채팅에서는 **실제 원격 조회가 우선**한다. 오래된 HANDOFF_*.md 및 과거 버전 파일의 "최신" 표시는 역사 기록이다.
 
+## 2026-11-16 V58 신규 분노 전사 CREATE — 12개 전문화 통합, 오프너 Gate A REVIEW
+
+- **현재 최신 통합 결과물:** `wow_rotation_v11_fury_create_v58_REVIEW.html` (12개 전문화), 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_fury_create_v58_REVIEW.html`, ID **`libfile_a26311064c148191935570d8328b4815`**, **2,316,462B**, SHA-256 **`50d6fecd4932575d9cade0e02a7cbe8426d44305154ebe5af01044d597a55f4a`**. 기존 V57(11개) 별도 보존, **기존 11개 `.manual-view` HTML DOM 완전히 동일**.
+- **신규 독립 결과물:** `wow_rotation_fury_independent_1215_v1_REVIEW.html`; 개인 Library `/ROTATION TEXTBOOK/wow_rotation_fury_independent_1215_v1_REVIEW.html`, ID **`libfile_186b95bde32c8191b1fdaf99b49f521e`**, **125,049B**, SHA-256 **`351c43cc1ee19307ce513259e6c0f158d86465269a8d3e54296568efa3c55c2b`**.
+- **상세 출처·검증 한계 정본:** [FURY_CREATE_20261116.md](FURY_CREATE_20261116.md). Wowhead [분노 전사 12.1.5 Rotation](https://www.wowhead.com/ko/guide/classes/warrior/fury/rotation-cooldowns-pve-dps), **Archimtiros · 2026-10-13** 기준. 블리자드 한국어 영웅 특성 **학살자/산왕** 두 분기. 단일/광역×쿨다운 중·밖 8표, **학살자 34행/산왕 41행, 총 75행**. 사용자 승인된 조건 괄호 디자인·전문화별 2/3열 CSS·아이콘/기술명 단위 보존·모바일 목차 접기 적용.
+- **원문 확보 3경로 재적용:** 직접 ChatGPT 웹 열람은 **75행 우선순위와 오프너 4종의 유형/Notes**를 확인했으나, **4종의 정확한 시간순 시전 단계가 동적 원문에서 반환되지 않음**. 컨테이너 일반 HTTP는 Wowhead DNS 오류, 사용자 저장본은 해당 분노 전사 파일 미제공. **오프너를 임의 고정 순서로 합성하지 않고 '시작 판단 REVIEW'**로 수록. 기술명·이미지는 Wowhead 한국어 주문/아이콘 Quick Facts에서 확인된 범위만 연결, 실 CDN 응답 미검증. Gate A/Q0/Q1/Q2·Q3 사용자 최종 승인 **REVIEW**.
+- **Q4 확인:** 독립/통합 × 6개 너비(320·390·900·1100·1365·1480px) × 학살자/산왕 = **24개 상태**, 영웅 전환·75개 첫 화면↔상세 규칙 ID 대응·표 내부 침범 0·페이지 넘침 0·JS 오류 0. 통합 **12개 전문화 × 6너비 = 72개 화면** 라우팅/넘침/JS 오류 0, 모바일 분노 목차 자동 접힘. 1px 이미지 모의 응답으로 레이아웃 검증했으므로 CDN 이미지 실제 성공의 증명 아님.
+- **다음 우선순위:** 1) 기존 도구의 실제 정상 원문 접근 또는 사용자가 보유한 저장 HTML을 이용해 **와우헤드 학살자/산왕 × 단일/광역 오프너 4종을 직접 확인**, 2) 중요한 선택형/툴팁 누락이 실제 다음 기술 판단에 미치는 영향 검토, 3) 확인된 시전 단계만 보완해 V59 여부 결정. 원문 부족을 덮기 위해 별도 AI API·신규 수집기를 개발하거나 무근거로 게임 시퀀스를 채우지 않음.
+
 ## 2026-11-16 원문 확보 3경로 실측 — 신규 제품 변경 없음
 
 - **실행 결과 정본:** [SOURCE_ACQUISITION_REPRO_20261116](SOURCE_ACQUISITION_REPRO_20261116.md). **고양 주술사** Wowhead 12.1.5/wordup/2026-10-13을 기준으로 실제 ChatGPT 웹 열람, 직접 HTTP, 사용자 저장 HTML의 증거를 구분해 점검. **개인 통합 제품은 V57 그대로**, 새 단일 HTML/버전 생성 없음.
