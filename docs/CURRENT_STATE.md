@@ -2,6 +2,15 @@
 
 > **최신 상태를 갱신하는 유일한 GitHub 파일.** 2026-11-16 KST 기준 체크포인트. 이 문서에 적힌 GitHub SHA/Actions 상태는 기록 시점의 사실일 뿐, 새 채팅에서는 **실제 원격 조회가 우선**한다. 오래된 HANDOFF_*.md 및 과거 버전 파일의 "최신" 표시는 역사 기록이다.
 
+## 2026-11-16 V48 냉기 마법사 내용 보완 — 단기 로드맵 1단계 진행
+
+- **최신 개인 통합 결과물:** `wow_rotation_v11_frost_zero_base_v48_REVIEW.html`; 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_frost_zero_base_v48_REVIEW.html`, ID **`libfile_08a82437e8088191a3282c027d6855ae`**; **1,590,892바이트**, SHA-256 **`8803cbbf1592b695a815acbe113297d93e91ee1d60989dd59f1ea92867c3d23d`**. 원본 V46은 별도 보존, V48이 최신 **REVIEW**. 사용자 확정 '괄호 안 작은/옅은 조건' UI 보존.
+- **독립 냉기 마법사 v4:** `wow_rotation_frost_independent_1215_v4_content_REVIEW.html`; 개인 Library `/ROTATION TEXTBOOK/wow_rotation_frost_independent_1215_v4_content_REVIEW.html`, ID **`libfile_f4e3517f0d58819186dd3223d49b72e2`**; **186,532바이트**, SHA-256 **`d63e170fdb5ee0124f82a92e9534011a61ccd48a9338544f8021c037b3c04ca5`**.
+- **원문 근거:** 동일 저자 Dorovon의 [와우헤드 냉기 12.1.5 2026-10-13 딜사이클](https://www.wowhead.com/guide/classes/mage/frost/rotation-cooldowns-pve-dps) + [냉기 UI·매크로](https://www.wowhead.com/guide/classes/mage/frost/addons-macro-ui-imports)(매크로에만 사용). V11 원본(사후 비교)에는 주시/마우스오버, 오라 취소, 커서 시전 4종 매크로가 있었으나 독립 v2에서는 빠졌음. 현재 매크로 공략을 별도로 확인한 다음 선택형 4종을 **접어서 기본 화면을 길게 만들지 않고** 복원. 원문 및 V11의 고드름 5개→혹한의 쐐기, 두뇌 빙결→열기 동공, 서리의 손가락 1/2중첩, 서리 광선 전투 종료/집중 공격 타이밍 해설을 보강. 실게임에서 한국어 매크로 구문 실행 결과는 **REVIEW**.
+- **우선순위 조건 정리:** 서리불꽃 광역 `눈보라`의 `빗발치는 냉기 특성 선택 / 효과 발동`은 이미 발동 효과로 선택 여부를 증명하므로 `빗발치는 냉기 발동`으로 첫 화면/상세 동시에 단순화. **42개 행동 이름/순서와 16개 오프너 단계 원형 유지**. 현재 와우헤드 4표 9+11+10+12 총 42행. V46 대비 상세 조건 변화는 **서리불꽃 광역 7번 1행뿐**. 원래의 검증 중인 게임 사실을 신규 확정으로 둔갑시키지 않음.
+- **Q4 실물:** 정적 비교에서 **다른 9개 전문화 `.manual-view` HTML DOM 완전 동일**, 공통 JS 12개 원형 동일. 독립·통합 HTML **320/390/900/1365px × 주문술사/서리불꽃** 실제 Chromium: 영웅 전환, 20/22행 표시, 첫 화면↔상세 42쌍 조건 동일, 16 오프너, 매크로 접기 펼치기, JavaScript 오류·가로 넘침 **0** PASS. **Gate A 동적 영웅/접힘/도움말 전수·Q0/Q1 전체 게임 판단 및 사용자 최종 콘텐츠 승인은 여전히 REVIEW**.
+- **다음 작업:** 냉기 12.1.5 원문 선택형 콘텐츠 중 실제 행동을 바꾸는 미확정 사항이 추가 확보되지 않으면 리뷰 상태를 명확히 두고 종료. [ROADMAP_CHAT_FIRST](ROADMAP_CHAT_FIRST.md)의 **사격 사냥꾼 제로베이스 CREATE → V11 사후 비교**로 이동. 미시 검사기 신규 개발로 후퇴하지 않는다.
+
 ## 2026-11-16 문서 구조 정비 결과
 
 - **신규 단일 진입/정본:** [PROJECT_CANON](PROJECT_CANON.md)(정체성/역할/문서 우선순위), **이 CURRENT_STATE**(유일한 최신 상태), [ROADMAP_CHAT_FIRST](ROADMAP_CHAT_FIRST.md)(개발 순서·원문 확보·AI/비AI), [HANDOFF_PROTOCOL](HANDOFF_PROTOCOL.md)(채팅 복원/인계).
