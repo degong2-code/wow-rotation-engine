@@ -2,6 +2,19 @@
 
 > **최신 상태를 갱신하는 유일한 GitHub 파일.** 2026-11-16 KST 기준 체크포인트. 이 문서에 적힌 GitHub SHA/Actions 상태는 기록 시점의 사실일 뿐, 새 채팅에서는 **실제 원격 조회가 우선**한다. 오래된 HANDOFF_*.md 및 과거 버전 파일의 "최신" 표시는 역사 기록이다.
 
+## 2026-11-16 V50 잠행 도적 제로베이스 재집필 — 단기·중기 로드맵 교차 실증
+
+- **최신 개인 통합 교본:** `wow_rotation_v11_subtlety_zero_base_v50_REVIEW.html`; Library `/ROTATION TEXTBOOK/wow_rotation_v11_subtlety_zero_base_v50_REVIEW.html`, ID **`libfile_e4602f1269708191874bca7d3d6b2363`**; **1,886,315바이트**, SHA-256 **`f389460c990f91a8e51757f3ca897935e97615804f586924abc3bd89c5a11cb5`**. V49에서 **잠행 도적 본문만 제로베이스 재집필본으로 교체**했으며 다른 9개 `.manual-view` DOM 완전 동일, 비대상 공통 JS 원형 그대로. V49는 별도 보존. 통합 10개 전문화 구성 유지.
+- **독립 잠행 교본 v3:** `wow_rotation_subtlety_independent_1215_v3_REVIEW.html`, Library `/ROTATION TEXTBOOK/wow_rotation_subtlety_independent_1215_v3_REVIEW.html`, ID **`libfile_0082c716b5348191956731d7a3a5e4ac`**, **265,682바이트**, SHA-256 **`e06d33264bbe99d78325725615d7ffec4e6e56c0d3b6e10723d291b96567cdf7`**.
+- **무오염 검증용 최초 독립 초안 보존:** `wow_rotation_subtlety_independent_1215_first_draft_REVIEW.html`, Library `/ROTATION TEXTBOOK/wow_rotation_subtlety_independent_1215_first_draft_REVIEW.html`, ID **`libfile_06537b8a76c08191919b550f15c50945`**, **184,682바이트**, SHA-256 **`15fd8fd5cf3b721fb5e33bd88c5be6e522fb1520624bf57f9dd0d0faa039818e`**. 이 최초 41행+오프너 4종(52단계) 가이드 **작성 완료 이후에만** 기존 V11 잠행 본문을 최초로 비교·읽었다.
+- **기준 원문:** `https://www.wowhead.com/ko/guide/classes/rogue/subtlety/rotation-cooldowns-pve-dps`, Wowhead **12.1.5**, fuu1, **2026-10-16 업데이트**. 동일 패치의 영웅 **기만자(Trickster)** / **죽음추적자(Deathstalker)** × 단일 1명/광역 2명 이상. **어둠의 춤 중·춤 밖·쿨다운** 별개 분기를 유지. 독립 초안 이후 같은 원문 Advanced의 **정확히 두 대상 / 강력한 가루 미선택이면 검은 화약보다 절개** 조건이 실전 행동을 바꾸므로 광역 4개 행을 추가해 최종 **45개 실행 규칙**; 첫 화면↔상세 45쌍 대응. 쿨다운 나열을 고정 시전 순서로 오해하지 않도록 '시점 체크리스트'로 구분했다.
+- **오프너:** 영웅 2×단일/광역 2 = **4종 / 총 52단계**. 소비재는 이름별 오프너 분기가 아니라 실제 원문 단계의 **물약 사용·사용형 장신구** 슬롯 유지. 죽음추적자 단일에서 소멸→그림자 일격으로 징표 순환, 광역에서 어둡고 어두운 밤 절개 예외, 기만자 최후의 일격 절개 예외. 원문 선택형 각종 hover·동적 시퀀스 전수는 REVIEW.
+- **V11 독립 사후 비교:** 원본 V11 잠행은 **기만자 중심의 단일/광역 4개 표와 공동 쿨다운**, 죽음추적자 전체 우선순위 부재. 새로운 제로베이스 초안은 V11 기만자의 핵심 행동 및 순서를 재현하고 **죽음추적자 2개 전투 유형·쿨다운 분기**를 독립 추가. V11의 매크로 10개 중 최신 원문이 직접 설명하는 두 개의 어둠의 춤 진입 매크로 + 주시 대상 발차기를 **선택형 3개**로 보존, 나머지는 과도한 본문 확장을 피함. 최신 게임 내 매크로 실행 확인은 REVIEW.
+- **아이콘:** 사용자 승인 V46의 괄호·작은/옅은 조건을 유지. 최초 초안에서는 원본 잠행 아이콘을 사용하지 않았고, 사후에 V11 기술/효과의 **정확한 한국어 명칭 일치 21개 아이콘 자산**만 재사용. 죽음추적자의 징표·죽음의 표시·어둡고 어두운 밤·최후의 일격 아닌 기타 8개 항목은 역사적 대응 아이콘 없거나 소비재 텍스트이므로 중립 표기/REVIEW, 아이콘 ID 임의 생성 금지. 본문 툴팁은 설명 제공하나 전체 아이콘 실시간 응답/공식 최신 신원 확인과 별개.
+- **Q4 실제 브라우저 검사:** 독립/통합 × 320/390/900/1365px × 기만자/죽음추적자. 표시되는 우선순위 **기만자 22행, 죽음추적자 23행**, 각 첫 화면↔상세 조건 ID/행동 연결, 각 영웅 오프너 **24/28단계**, 본문과 좌측 메뉴 영웅 선택 동기화, 첫 화면 툴팁, ESC(독립), 가로 넘침 0/JS 오류 0. **다른 9개 전문화 DOM 동일**. 로컬 차단 네트워크 QA이므로 아이콘 CDN 응답·게임 사실 완전성 증명은 아님.
+- **REVIEW·후속:** Gate A 동적 도움말·원문 개별 선택 요소 완전성, Q0/Q1 게임 최적 판단 및 수치, 신규 죽음추적자 아이콘 신원, Macros 실제 실행, 사용자 Q2/Q3 최종 승인. **같은 패치의 Wowhead 잠행 overview 2026-10-19 업데이트는 Deathstalker 추천으로 표현되고 rotation 2026-10-16 본문은 Trickster 추천으로 표시되어 추천 우열 근거가 서로 다름**; 사용자 교본에는 어느 영웅이 무조건 우세하다는 주장을 넣지 않음. 현재 Q4 PASS ≠ 게임 내용 PASS.
+- **다음 실행:** [ROADMAP_CHAT_FIRST](ROADMAP_CHAT_FIRST.md)의 원문 확보 **정상 ChatGPT 직접 접근 / 기존 HTTP·HTML·DOM 추출 / 사용자 저장본** 재현 경로 중 실제 확보 가능한 범위를 교본 1종에 시험하고, **새로운 비V11 전문화 CREATE 1종 + 기존 전문화 UPDATE 1종**에서 품질 재현을 확인. 또는 사용자 피드백이 있으면 해당 제품 변경 우선. 새 독립 검사기·구조 개발로 전환하지 말 것.
+
 ## 2026-11-16 V49 사격 사냥꾼 원문 독립 재생성 — 단기 로드맵 2·3단계 실행
 
 - **최신 개인 통합 결과물:** `wow_rotation_v11_marksmanship_zero_base_v49_REVIEW.html`, Library `/ROTATION TEXTBOOK/wow_rotation_v11_marksmanship_zero_base_v49_REVIEW.html`, ID **`libfile_66805ba341b88191b5e57986a9e8de29`**, **1,743,212바이트**, SHA-256 **`0aa069c9b6838c6ea533a5274a42e7c0ab6e72de852399c0cf95e417eb8ff4bf`**. 기존 V48는 별도 보존. 사격만 교체한 **10개 전문화 통합 REVIEW**. 다른 9개 전문화 `.manual-view` HTML 및 공통 12개 JS 원형 동일.
