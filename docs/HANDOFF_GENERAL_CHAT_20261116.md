@@ -4,6 +4,14 @@
 >
 > **최상위 정책:** [QUALITY_FIRST_POLICY.md §0·§0.1·§5.1](QUALITY_FIRST_POLICY.md) 및 최신 사용자 지시 > 이 문서 > 과거 작업 기록. 1차 목표는 사용자에게 정확하고 읽기 쉬운 **V11 이상 한국어 단일 HTML 교본 CREATE/UPDATE**이며 별도 AI 자동화 엔진/웹앱/거대 JSON/검사기 개발이 아니다.
 
+## 0. 최신 교본 실증 — V41 아이콘 미세 조정 및 신규 고양 주술사 V42 CREATE (2026-11-16)
+
+- **개인 HTML V41:** `wow_rotation_v11_sidebar_notch_15pct_more_v41_REVIEW.html`, Library `/ROTATION TEXTBOOK/wow_rotation_v11_sidebar_notch_15pct_more_v41_REVIEW.html`, library_file_id `libfile_358595a2838c819187b3d7a953a0d769`; 1,382,595 bytes, SHA-256 `6bcc8bacc3989cd38bac4d1a6d37addb2cc3eb45afc4c8de5aee5aee1fb0e5cf`. V40 노치 크기 7.65px→6.5025px(15% 추가 축소). 한국어·영문명 동일 행/중앙의 짧은 직업 간 구분선 유지. 9개 전문화 본문 미수정.
+- **개인 신규 통합 HTML V42:** `wow_rotation_v11_enhancement_sourcefirst_v42_REVIEW.html`, Library `/ROTATION TEXTBOOK/wow_rotation_v11_enhancement_sourcefirst_v42_REVIEW.html`, library_file_id `libfile_e55f758a794481919d37d7495036d868`; 1,571,762 bytes, SHA-256 `345cc6d95a3f7ad0d9b57a3be3b1e8e6f95bc72227c62ab7e3b78ea1a6c8e439`. **기존 9개 전문화 본문 DOM 및 12개 JS script 원형 동일**, 전문화 10개. 공개 GitHub에 개인 HTML 원문/외부 공략 전문 업로드 금지.
+- **CREATE 시험 범위:** 기존 통합에 없는 **고양 주술사(Enhancement Shaman)**를 이전 고양 HTML/실패 JSON 없이 와우헤드 12.1.5/wordup/2026-10-13 기준 원문으로 새로 집필. 폭풍인도자·토템술사 × 단일·광역 4개 우선순위(원문 43순위 → 폭풍/번개 화살 대체 행동 분리로 UI 44행), 4개 기본 오프너(행동 28단계), 한눈에 보는 딜사이클/원리/오프너/상세 우선순위/강화 창/출처·검토 범위. 기본 한국어 기술명 및 근거가 확인된 아이콘/팁만 적용, 신원 미확인 15개 명칭은 아이콘을 추측하지 않고 REVIEW.
+- **Q4 검증:** 로컬 Chromium(외부 HTTP 차단) 320·390·900·1365px에서 왼쪽 접기→고양 두 영웅 선택 전환, 전체 활성 교본 1개, 영웅별 요소 교차 숨김(4/8), 가로 넘침/JS 오류 0. 새 기술 팁 클릭 시 본문 표시 정상. 기존 9개 HTML DOM 원형·기존 JS 동일 확인. 초기 테스트에서 신규 주술사 직업 항목을 `.bal-tree` 바깥에 두는 오류를 발견했고 **재배치해 수정한 뒤** 브라우저 시험 통과.
+- **Q0/Q1 미완 및 다음 내용 작업:** Wowhead 원본의 동적 물약 3종 선택에 따른 정확한 슬롯, 접힌 부가 설명·전체 도움말과 개별 특성 선택/오프너, 공식 주문명·아이콘 최종 신원 검증 미완. 4개 기본 오프너는 소비 아이템별 완전 시퀀스라고 주장하지 않는다. 따라서 **신규 CREATE 초안/REVIEW이지 품질 승인·V1 완료 사례로 집계하지 않는다**. 확보 가능한 원문에서 실제 행동을 바꾸는 누락만 먼저 검증·수정하고 Q0/Q1을 별도 승인한다. 신규 실증에서 보인 가시적 품질 결함을 해결한 뒤 V11 원본 전문화 제로베이스 재집필 비교로 진행한다.
+
 ## 0. 최신 제품 추가 — 왼쪽 목차 1행화 V34 / CREATE·V11 독립 비교 실증 결정 (2026-11-16)
 
 - **최신 개인 HTML V34:** `wow_rotation_v11_sidebar_single_line_v34_REVIEW.html` / Library `/ROTATION TEXTBOOK/wow_rotation_v11_sidebar_single_line_v34_REVIEW.html` / library_file_id `libfile_54808b63919c8191b3a1e8862f9ba3dc`. 실제 1,380,068바이트, SHA256 `302ec2e4013d83e93b3df1ad2a37146d003431c13c18545627b36c2c742cc2bd`. V33은 변경 전 비교본으로 보존. 개인 HTML 원문 공개 GitHub 업로드 금지.
