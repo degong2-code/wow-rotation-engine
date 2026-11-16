@@ -1,5 +1,7 @@
 # ROTATION TEXTBOOK — 일반 ChatGPT 채팅 인계 (2026-11-14 KST)
 
+> **역사 인계(2026-11-14):** 새 채팅의 현재 인계 정본은 [HANDOFF_GENERAL_CHAT_20261116.md](HANDOFF_GENERAL_CHAT_20261116.md)이다. 여기 적힌 V7 또는 V32 등의 상태는 당시 기록으로 보고, 실제 최신 개인 파일·HEAD·PR·CI를 2026-11-16 인계에서 다시 확인한다.
+
 > 이 문서는 2026-11-13 이전 인계 프롬프트를 **대체하는 최신 진입점**이다. 이전의 브랜치 `work/chat-first-v11-20261111`, PR #20, 생존 제로베이스가 '현재 최신'이라는 기재를 그대로 믿지 말라. 본문 수치도 새 채팅에서 GitHub 최신값과 대조할 것.
 
 > **최신 제품 업데이트(2026-11-16) — 비전 V32 원문 오프너 타이밍 복원:** 개인 통합 9전문화 HTML `wow_rotation_v11_arcane_opener_timing_v32_REVIEW.html`, **1,377,777B**, SHA256 **55597b2eb4464c582bbcc4eb5bd2168acc4921462e729ddd34a13098649c7361**, Library /ROTATION TEXTBOOK/ **libfile_ba0b7d8fff988191b120ac65ede06470**에 V31과 별도 보관. 12.1.5 Porom Wowhead Arcane 2026-10-16 오프너에서 강화 지속시간 **>15초** 및 **≤15초**는 물약·아이템·장신구의 **조건부 사용 시점**이지 같은 물약을 연속 두 번 누르라는 의미가 아님. V31의 오프너 각 영웅 특성 7단계에서 '물약 사용' 두 행을 '긴/짧은 강화 효과 사용' 및 해당 초 임계값으로 교정하고, 동일 물약 한 시점 적용 설명. 첫 화면 비전의 여파는 **비전 탄막·오색 화살 투사체 비행 중 또는 비전 쇄도 잔여 ≤13초** 조건을 직접 보이게 수정. 삭제된 가상 실전 사례 장을 소개하던 잔여 문구도 정리. 다른 8개 전문화 DOM/전체 JS·CSS 동일, 비전 상세 36↔첫 화면 36, 각 영웅 7단계 동일. 실제 Chromium JS 활성 **320/360/390/800/1365px** 영웅 전환·팁/ESC·가로 넘침 0·JS 오류 0. 원문 동적 전체 오프너·Blizzard 아이콘 실제 로딩·게임 Q0/Q1 및 사용자 최종 승인은 REVIEW. 플레이어용 가상 실전 사례 장은 여전히 금지하며 QA 내부 반례만 유지. [최신 인계 §0.45](HANDOFF_CHAT_FIRST_CURRENT.md), [재발 방지 사례](QUALITY_GENERALIZATION_CASEBOOK.md), [Playbook](CHAT_FIRST_PLAYBOOK.md) 참조. PR #24 Draft·main 미병합; 최신 HEAD/CI는 새 채팅에서 확인. 비공개 HTML을 공개 저장소에 업로드하지 말 것.
