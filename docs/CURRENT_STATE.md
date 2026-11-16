@@ -2,6 +2,14 @@
 
 > **최신 상태를 갱신하는 유일한 GitHub 파일.** 2026-11-16 KST 기준 체크포인트. 이 문서에 적힌 GitHub SHA/Actions 상태는 기록 시점의 사실일 뿐, 새 채팅에서는 **실제 원격 조회가 우선**한다. 오래된 HANDOFF_*.md 및 과거 버전 파일의 "최신" 표시는 역사 기록이다.
 
+## 2026-11-16 문서 구조 정비 결과
+
+- **신규 단일 진입/정본:** [PROJECT_CANON](PROJECT_CANON.md)(정체성/역할/문서 우선순위), **이 CURRENT_STATE**(유일한 최신 상태), [ROADMAP_CHAT_FIRST](ROADMAP_CHAT_FIRST.md)(개발 순서·원문 확보·AI/비AI), [HANDOFF_PROTOCOL](HANDOFF_PROTOCOL.md)(채팅 복원/인계).
+- **기존 문서 정비:** README/AGENTS를 새 진입 링크로 교체, [CHAT_FIRST_PROJECT_INSTRUCTIONS](CHAT_FIRST_PROJECT_INSTRUCTIONS.md)를 실제 ChatGPT 프로젝트 지침에 복사하기 쉬운 내용으로 갱신, QUALITY_FIRST_POLICY/CHAT_FIRST_PLAYBOOK의 오래된 시작 경로·7→8개 고정 판정 수정.
+- **실질적 충돌 해결:** SOURCE_ACQUISITION의 '물약은 분기 안 한다'와 실제 선택에 따른 오프너 변화 보존 원칙을 **행동·시점 변화 기준**으로 통일. 이전 인계 문서 3개는 내용 삭제 없이 **역사 기록 표지** 추가.
+- **검증 범위:** GitHub 문서 경로가 존재하는지 및 상대 링크 검사, CI(문서 변경). **실제 비공개 교본 V46 자체는 이번 문서 구조 정비 과정에서 수정하지 않음.** GitHub 정리는 게임 Q0/Q1 검증이 아니다.
+- **사용자 수동 설정 필요:** GitHub 커밋은 ChatGPT 프로젝트의 지침을 자동 갱신하지 않는다. 프로젝트 → ••• → 프로젝트 설정의 지침 내용을 [CHAT_FIRST_PROJECT_INSTRUCTIONS](CHAT_FIRST_PROJECT_INSTRUCTIONS.md)의 **복사할 내용**으로 등록/병합해야 새 일반 채팅에 처음부터 유효하다.
+
 ## 0. 무엇을 만들고 있는가
 
 **GitHub 제작 지식 + 해당 시즌 Wowhead/사용자 원문 → ChatGPT의 게임 판단 해석·한국어 집필 → V11 이상 단일 HTML CREATE/UPDATE.** 독립 AI API 앱이나 자동 CI 뷰어는 최종 제품이 아니다. [PROJECT_CANON](PROJECT_CANON.md) 참조.
