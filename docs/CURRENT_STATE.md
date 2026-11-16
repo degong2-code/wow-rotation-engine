@@ -2,6 +2,17 @@
 
 > **최신 상태를 갱신하는 유일한 GitHub 파일.** 2026-11-16 KST 기준 체크포인트. 이 문서에 적힌 GitHub SHA/Actions 상태는 기록 시점의 사실일 뿐, 새 채팅에서는 **실제 원격 조회가 우선**한다. 오래된 HANDOFF_*.md 및 과거 버전 파일의 "최신" 표시는 역사 기록이다.
 
+## 2026-11-16 V59 분노 전사 원문 오프너 4종 회복 — 기존 수집 경로로 누락 해결
+
+- **최신 개인 통합 검토본:** `wow_rotation_v11_fury_openers_v59_REVIEW.html` (12개 전문화), 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_fury_openers_v59_REVIEW.html`, ID **`libfile_37f59fabf20481919dc9925477155b29`**, **2,359,850바이트**, SHA-256 **`aaa19f87ae5b181432d127f7e21d847b5243efb309c5cfb22cc7728ca165aaf8`**. 기존 V58 파일은 별도 보존.
+- **독립 분노 v2:** `wow_rotation_fury_independent_1215_v2_openers_REVIEW.html`; Library `/ROTATION TEXTBOOK/wow_rotation_fury_independent_1215_v2_openers_REVIEW.html`, ID **`libfile_9e7e9c2cbbec8191a30a90acfccd6e4d`**, **168,435바이트**, SHA-256 **`6c5b2937d11a457c50487b19bf75e19c13076384905abe43aa34de629764765c`**.
+- **실제 원문 확보·행동 ID 정본:** [FURY_OPENER_SOURCE_20261116.md](FURY_OPENER_SOURCE_20261116.md). Wowhead **12.1.5/Archimtiros/2026-10-13** 페이지의 원래 내장 WHML 본문 **23,588자**, SHA-256 **`6708a9d1834a9a71ea10c75c15b13c9cd3dfe83568c18d4729b25a35c373e0cf`**를 기존 GitHub 정상 HTTPS 수집 도구 `run_specialization('분노 전사')`로 **실제 재조회**. 일반 웹 텍스트 반환에서 보이지 않던 **[rotation-timeline]·rt-step 40개/rt-half-step 6개**, 학살자/산왕×단일/광역 4시나리오의 **각 10개 순서와 원문 주문 ID**를 확인. [실제 CI 원문 수집 로그](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43868839385) 기록, 일회성 진단 테스트 파일은 완료 후 **삭제**, 원문 장문은 공개 저장소에 넣지 않음.
+- **실제 제품 수정:** V58 오프너 4종의 단순 '시작 판단 REVIEW' 대신 원문 4×10 단계 시전 예시를 상세 `#fury-opener`에 연결하고, 첫 화면 `#fury-overview`에는 각각 최초 **5단계**만 빠르게 표시. **40개 상세 원문 단계+20개 요약 단계**의 spell ID/화면 표시 일치. `rt-step=100 Pull`은 돌진, 폭풍망치는 선택적, 마무리 일격은 급살 발동에 따라 시점 변화. 일반 `→`는 오프너에서는 원문 시전 예시 순서, 지속 딜에서는 우선순위라는 구별 유지.
+- **중요 REVIEW:** 원문 산왕 단일 Notes는 오딘의 격노를 초기 쿨다운 전 사용 권하지만 해당 `rt-step` 타임라인에는 ID 385059가 **없음**. 누락 단계를 상상해 추가하지 않음. `rt-half-step` 6개의 정확한 동시/반 GCD 관계, 반복 광란의 실제 발동/자원, ID 335096와 113344 피범벅 기술/효과 차이, 전체 최신 아이콘/툴팁 및 Q0/Q1 실전 최적성, 사용자 최종 승인 **REVIEW**. 타임라인 단계 숫자가 곧 확정적인 GCD 수는 아님.
+- **보존 및 Q4:** 기존 **다른 11개 `.manual-view` DOM 모두 동일**, 공통 JS 동일, Fury의 원래 **75개 우선순위 규칙/상세 대응 그대로**. 분노 독립/통합 **320·390·900·1100·1365·1480px×학살자/산왕 = 24개 조합**, 표시 오프너 20 상세+10 요약(영웅별), 기존 34/41개 우선순위, 오프너 셀 내부 텍스트 침범·화면 가로 넘침·JS 오류 **0**. 통합 **12개 전문화×6너비 = 72개 화면** 전환/페이지 넘침 검증 PASS. 출처 설명의 긴 SHA가 모바일에 침범한 문제는 Fury `#fury-sources .fy-review`에만 scoped 줄바꿈 CSS를 적용해 해결. 실제 이미지 CDN 성공은 별도 미검증.
+- **공통 제작 절차에 반영:** [SOURCE_ACQUISITION.md](SOURCE_ACQUISITION.md)에 웹 텍스트가 오프너를 누락해도 내장 WHML `rt-step`/`rt-half-step`를 먼저 확인하고, 옵션별 순서/시점/근거 Notes를 나눠 검토하도록 추가. **새 크롤러·AI API를 만들지 않고 기존 정상 도구로 완성 교본 품질을 향상**시킨 사례.
+- **다음 작업:** 분노 오프너의 원문 Notes↔타임라인 차이와 피범벅 효과/기술 등 실제 다음 행동을 바꾸는 불확실성만 선별해 Q0/Q1 검토. 장황한 부록이나 신규 검사기 없이, 기존 V59 독자 리뷰/우선순위 실제 판단과 남은 Gate A 중요 선택 확인으로 이어갈 것. 사용자 요청 있으면 해당 요청 우선.
+
 ## 2026-11-16 V58 신규 분노 전사 CREATE — 12개 전문화 통합, 오프너 Gate A REVIEW
 
 - **현재 최신 통합 결과물:** `wow_rotation_v11_fury_create_v58_REVIEW.html` (12개 전문화), 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_fury_create_v58_REVIEW.html`, ID **`libfile_a26311064c148191935570d8328b4815`**, **2,316,462B**, SHA-256 **`50d6fecd4932575d9cade0e02a7cbe8426d44305154ebe5af01044d597a55f4a`**. 기존 V57(11개) 별도 보존, **기존 11개 `.manual-view` HTML DOM 완전히 동일**.
