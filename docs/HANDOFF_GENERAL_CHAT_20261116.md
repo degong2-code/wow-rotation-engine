@@ -4,6 +4,14 @@
 >
 > **최상위 정책:** [QUALITY_FIRST_POLICY.md §0·§0.1·§5.1](QUALITY_FIRST_POLICY.md) 및 최신 사용자 지시 > 이 문서 > 과거 작업 기록. 1차 목표는 사용자에게 정확하고 읽기 쉬운 **V11 이상 한국어 단일 HTML 교본 CREATE/UPDATE**이며 별도 AI 자동화 엔진/웹앱/거대 JSON/검사기 개발이 아니다.
 
+## 0. 최신 개인 제품 — 신규 고양 주술사 V43 우선순위 서식 정리 (2026-11-16)
+
+- 최신 개인 단일 HTML: `wow_rotation_v11_enhancement_priority_clarity_v43_REVIEW.html`; 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_enhancement_priority_clarity_v43_REVIEW.html`, library_file_id `libfile_1a7bfb32cdd88191909d87879f91e282`. 1,563,627바이트 SHA-256 `ca0ebb460cd80621fdb1a0897c5bd4fc5c4274201e74d8b62878ed8d555581fa`. V42 원본은 별도 보존. 공개 저장소에 개인 전체 HTML 업로드 금지.
+- **사용자 확정 표현 원칙:** 이미 위에서 아래로 기술 사용 가능 여부를 검사하는 우선순위에서는 `사용 가능할 때`, `쿨이 돌아왔을 때`, `상위 조건 없음`은 기본 전제이므로 각 행에서 제거. 진짜 결정을 바꾸는 `특성 선택`, `발동 유무`, `자원 중첩`, `강화 창`, `쿨 정렬/보류`는 보존. `∧`(AND) 등 수학 논리기호 대신 `/`·'그리고'·'또는'을 쓰되 AND/OR를 혼동하지 않음. `소무` 같은 한국어 축약은 첫 화면에서 뜻을 정의하고 확인된 효과 아이콘·툴팁 연결을 유지. [QUALITY_FIRST_POLICY §0.1](QUALITY_FIRST_POLICY.md), [CHAT_FIRST_PLAYBOOK §E.2](CHAT_FIRST_PLAYBOOK.md)에 공통 규칙으로 기록.
+- **실물 V43 수정:** 고양 주술사 4개 모드 첫 화면 44개 우선순위 조건 + 상세 44개 조건을 동시에 단순화. 중복 가용성 조건 없는 첫 화면 항목은 하위 설명 줄 제거, 상세 조건 칸은 '—'로 표시. 기존 고양 44개 행동·44개 상세 판단 이유는 동일, 4개 오프너 변화 없음. 기존 9개 전문화의 원본 바이트 구간, 공용 12개 JS/CSS 원형 동일.
+- **Q4 검사:** Chromium `page.set_content`/외부 HTTP 차단 아래 320·390·900·1365px 폭, 주술사 직업/전문화 메뉴와 폭풍인도자·토템술사 전환, 영웅 선택별 첫 화면 20/24행과 상세 20/24행 표시, 활성 전문화 1개, 수평 넘침/JS 예외 0 PASS. 첫 화면과 상세의 규칙 매핑 44↔44 PASS. 외부 주문 아이콘 CDN 실제 응답, Wowhead 동적 물약별 오프너·전체 선택 UI 원문/Q0·Q1 및 사용자 최종 승인은 아직 REVIEW.
+- **다음 최우선 작업:** V43을 사용자에게 읽기 쉬운 교본으로 검토받고, 원문 부족으로 생긴 중요한 게임 판단 결함만 실제 근거로 보완. 이후 합의한 V11 전문화 제로베이스 재집필 비교로 이동. 검사기 추가나 한 조건 무한 추적을 우선하지 않는다.
+
 ## 0. 최신 교본 실증 — V41 아이콘 미세 조정 및 신규 고양 주술사 V42 CREATE (2026-11-16)
 
 - **개인 HTML V41:** `wow_rotation_v11_sidebar_notch_15pct_more_v41_REVIEW.html`, Library `/ROTATION TEXTBOOK/wow_rotation_v11_sidebar_notch_15pct_more_v41_REVIEW.html`, library_file_id `libfile_358595a2838c819187b3d7a953a0d769`; 1,382,595 bytes, SHA-256 `6bcc8bacc3989cd38bac4d1a6d37addb2cc3eb45afc4c8de5aee5aee1fb0e5cf`. V40 노치 크기 7.65px→6.5025px(15% 추가 축소). 한국어·영문명 동일 행/중앙의 짧은 직업 간 구분선 유지. 9개 전문화 본문 미수정.
