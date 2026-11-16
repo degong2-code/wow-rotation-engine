@@ -1,5 +1,8 @@
 # ROTATION TEXTBOOK — Chat-first 교본 제작 인계 정본
 
+> **역사 인계 및 검증 사례 — 최신 상태 정본 아님 (2026-11-16 정리).** 이 문서의 날짜별 "현재/최신", V7·V32·V45 같은 버전, 당시 GitHub HEAD/CI, 이전 작업 순서는 모두 **그 시점의 기록**이다. 새 채팅은 [PROJECT_CANON](PROJECT_CANON.md) → [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md) → **[CURRENT_STATE](CURRENT_STATE.md)** → [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md) 순으로 읽고, PR/브랜치/CI를 실제 조회하라. 이 문서에서 발견한 중요한 반례·이유·근거는 삭제하지 말고 역사 증거로 재사용한다. 새 인계 절차는 [HANDOFF_PROTOCOL](HANDOFF_PROTOCOL.md) 하나를 따른다.
+
+
 > **인계 기준일:** 2026-11-11 (KST)  
 > **상태:** 인계 준비 완료를 위한 증거 정본. 사용자 승인 없이 `main`·원본 교본·공개 Pages를 변경하지 않음.  
 > **우선순위:** **교본의 게임 상태·조건·행동 정확성 > 원리·예외 설명 > 사용성 > HTML 검증 > 독립 엔진 구현**.  
