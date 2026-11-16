@@ -52,6 +52,8 @@
 - 새 채팅 시작 프롬프트는 **깃허브 문서의 실제 내용을 읽게 하는 링크**만 담고, 긴 과거 세부 수치·단일 버전의 로직을 복제하지 않는다.
 - git commit/CI까지 끝난 뒤 최종 보고에서는 **제품 Q0~Q4와 CI를 따로 표기**, CI 실행이 끝나지 않았으면 진행 중이라고 기록.
 
+> **2026-11-16 V63 실제 인계 스냅샷:** [HANDOFF_GENERAL_CHAT_V63_20261116.md](HANDOFF_GENERAL_CHAT_V63_20261116.md). 새 채팅의 첫 응답은 이 스냅샷을 **CURRENT_STATE의 최신 지위보다 높게 두지 않고** 읽기 전용 복원한다. 이전 [HANDOFF_GENERAL_CHAT_20261116.md](HANDOFF_GENERAL_CHAT_20261116.md)의 V32 관련 '최신' 표현은 역사적 기록이다. **인계 이후 새 커밋이 발생하면 이 스냅샷의 SHA/CI가 최신이라고 주장하지 않는다.**
+
 ## 5. 새 일반 채팅 인계 프롬프트 (복사)
 
 > **ROTATION TEXTBOOK / WoW Rotation Engine — 독립 상태 복원**
