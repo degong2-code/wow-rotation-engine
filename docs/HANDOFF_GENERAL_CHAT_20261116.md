@@ -1,5 +1,7 @@
 # ROTATION TEXTBOOK — 2026-11-16 일반 채팅 인계 정본
 
+> **V63 인계로 대체됨:** 이 파일은 V32 등 과거의 판단·문서 디자인을 보존하는 **역사 기록**이다. 새 일반 채팅은 [PROJECT_CANON](PROJECT_CANON.md) → [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md) → [CURRENT_STATE](CURRENT_STATE.md) → [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)을 먼저 읽고, **[V63 일반 채팅 인계(2026-11-16)](HANDOFF_GENERAL_CHAT_V63_20261116.md)**에서 실제 제품/검증 항목을 복원하라. 아래에 '최신 V32'처럼 적힌 표현은 작성 당시의 사실이며, 2026-11-16 현재 제품을 뜻하지 않는다. GitHub SHA·CI와 개인 파일은 항상 새 채팅에서 직접 재검증한다.
+
 > **역사 인계 및 검증 사례 — 최신 상태 정본 아님 (2026-11-16 정리).** 이 문서의 날짜별 "현재/최신", V7·V32·V45 같은 버전, 당시 GitHub HEAD/CI, 이전 작업 순서는 모두 **그 시점의 기록**이다. 새 채팅은 [PROJECT_CANON](PROJECT_CANON.md) → [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md) → **[CURRENT_STATE](CURRENT_STATE.md)** → [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md) 순으로 읽고, PR/브랜치/CI를 실제 조회하라. 이 문서에서 발견한 중요한 반례·이유·근거는 삭제하지 말고 역사 증거로 재사용한다. 새 인계 절차는 [HANDOFF_PROTOCOL](HANDOFF_PROTOCOL.md) 하나를 따른다.
 
 
