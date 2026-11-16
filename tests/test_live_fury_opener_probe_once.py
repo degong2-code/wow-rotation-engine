@@ -48,6 +48,12 @@ class Probe(unittest.TestCase):
                                    "attrs":{k:v[:80] for k,v in a.items() if k in ("spell","id","display-options","name","type","offset","time","prepull")},
                                    "ids":ids[:8],"tags":inside_tags,"short":snippet})
                 print("FURY_PROBE STAGES2",json.dumps(stages[:65],ensure_ascii=False),flush=True)
+                for bi,(label,offset) in enumerate(boundaries):
+                    end=boundaries[bi+1][1] if bi+1<len(boundaries) else len(seg)
+                    piece=seg[offset:end]
+                    ids=[{"tag":k,"id":int(n),"opts":rest.strip()[:100]} for k,n,rest in
+                         re.findall(r"\[(rt-step|rt-half-step)\s*=\s*(\d+)([^\]]*)\]",piece,re.I)]
+                    print("FURY_PROBE STEP_IDS",json.dumps({"group":label,"steps":ids},ensure_ascii=False),flush=True)
                 cond=[]
                 for m in TAG.finditer(seg):
                     a=_attrs(m.group(2))
