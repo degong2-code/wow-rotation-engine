@@ -25,16 +25,29 @@ class Probe(unittest.TestCase):
                 for name in ("Single Target (Slayer)","Multitarget (Slayer)","Single Target (Thane)","Multitarget (Thane)","Slayer","Mountain Thane"):
                     pos=[m.start() for m in re.finditer(re.escape(name),seg,re.I)]
                     print("FURY_PROBE LABEL",json.dumps({"name":name,"offsets":pos[:8]}),flush=True)
+                boundaries=[("Slayer ST",869),("Slayer AOE",1477),("Thane ST",2163),("Thane AOE",3085)]
                 stages=[]
                 for m in TAG.finditer(seg):
                     tag=m.group(1).lower()
-                    if tag not in ("rt-step","rt-step-group","opener-step","rotation-step","step","rt-opener","rt-steps"):
+                    if tag not in ("rt-step","rt-step-group","opener-step","rotation-step","step","rt-opener","rt-steps","rt-half-step"):
                         continue
                     a=_attrs(m.group(2))
-                    sample=seg[m.end():m.end()+550]
-                    ids=re.findall(r"(?:spell|item|icon|id)[\\s=:]+[\\\"']?(\\d{3,8})",sample,re.I)
-                    stages.append({"pos":m.start(),"tag":tag,"attrs":{k:v[:80] for k,v in a.items() if k in ("spell","id","display-options","name","type","offset","time","prepull")},"ids":ids[:8]})
-                print("FURY_PROBE STAGES",json.dumps(stages[:80]),flush=True)
+                    end=seg.find("[/"+tag+"]",m.end())
+                    if end<0: end=min(len(seg),m.end()+110)
+                    sample=seg[m.end():end]
+                    ids=re.findall(r"\b\d{3,8}\b",sample)
+                    # Tag names and numeric identifiers, not full copyrighted source passages.
+                    inside_tags=[q.group(1).lower() for q in TAG.finditer(sample)][:8]
+                    plain=re.sub(r"\[[^\]]*\]"," ",sample)
+                    plain=re.sub(r"<[^>]*>"," ",plain)
+                    plain=re.sub(r"\s+"," ",plain).strip()
+                    # Ability name or short directive only, not tooltip prose or entire WHML.
+                    snippet=plain[:85] if len(plain)<140 else plain[:40]
+                    group=max((name for name,offset in boundaries if m.start()>=offset),key=lambda x:next(p for n,p in boundaries if n==x),default="unknown")
+                    stages.append({"group":group,"pos":m.start(),"tag":tag,
+                                   "attrs":{k:v[:80] for k,v in a.items() if k in ("spell","id","display-options","name","type","offset","time","prepull")},
+                                   "ids":ids[:8],"tags":inside_tags,"short":snippet})
+                print("FURY_PROBE STAGES2",json.dumps(stages[:65],ensure_ascii=False),flush=True)
                 cond=[]
                 for m in TAG.finditer(seg):
                     a=_attrs(m.group(2))
