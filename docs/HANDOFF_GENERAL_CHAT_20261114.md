@@ -1,5 +1,8 @@
 # ROTATION TEXTBOOK — 일반 ChatGPT 채팅 인계 (2026-11-14 KST)
 
+> **역사 인계 및 검증 사례 — 최신 상태 정본 아님 (2026-11-16 정리).** 이 문서의 날짜별 "현재/최신", V7·V32·V45 같은 버전, 당시 GitHub HEAD/CI, 이전 작업 순서는 모두 **그 시점의 기록**이다. 새 채팅은 [PROJECT_CANON](PROJECT_CANON.md) → [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md) → **[CURRENT_STATE](CURRENT_STATE.md)** → [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md) 순으로 읽고, PR/브랜치/CI를 실제 조회하라. 이 문서에서 발견한 중요한 반례·이유·근거는 삭제하지 말고 역사 증거로 재사용한다. 새 인계 절차는 [HANDOFF_PROTOCOL](HANDOFF_PROTOCOL.md) 하나를 따른다.
+
+
 > **역사 인계(2026-11-14):** 새 채팅의 현재 인계 정본은 [HANDOFF_GENERAL_CHAT_20261116.md](HANDOFF_GENERAL_CHAT_20261116.md)이다. 여기 적힌 V7 또는 V32 등의 상태는 당시 기록으로 보고, 실제 최신 개인 파일·HEAD·PR·CI를 2026-11-16 인계에서 다시 확인한다.
 
 > 이 문서는 2026-11-13 이전 인계 프롬프트를 **대체하는 최신 진입점**이다. 이전의 브랜치 `work/chat-first-v11-20261111`, PR #20, 생존 제로베이스가 '현재 최신'이라는 기재를 그대로 믿지 말라. 본문 수치도 새 채팅에서 GitHub 최신값과 대조할 것.
