@@ -2,6 +2,15 @@
 
 > **최신 상태를 갱신하는 유일한 GitHub 파일.** 2026-11-16 KST 기준 체크포인트. 이 문서에 적힌 GitHub SHA/Actions 상태는 기록 시점의 사실일 뿐, 새 채팅에서는 **실제 원격 조회가 우선**한다. 오래된 HANDOFF_*.md 및 과거 버전 파일의 "최신" 표시는 역사 기록이다.
 
+## 2026-11-16 V60 분노 전사 원문 단계의 효과 ID와 실제 시전 기술 구별 — 실제 게임 판단 검토
+
+- **최신 통합 REVIEW:** `wow_rotation_v11_fury_cast_id_v60_REVIEW.html` (**12개 전문화**), 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_fury_cast_id_v60_REVIEW.html`, ID **`libfile_8946a57d3db08191a9a0665844f2433d`**, **2,360,267B**, SHA-256 **`f94fa6b2c38e9dec607329d389896408e621239f9404875dd9ba32564fad4a22`**. V59는 별도 보존.
+- **최신 독립 분노:** `wow_rotation_fury_independent_1215_v3_cast_id_REVIEW.html`, 개인 Library `/ROTATION TEXTBOOK/wow_rotation_fury_independent_1215_v3_cast_id_REVIEW.html`, ID **`libfile_c06b5a0ea2b88191b31fe543981fc3b5`**, **168,852B**, SHA-256 **`e8809f00619c8e2a401fe3475560ab381a9c0bc775d727ac67d3061876445175`**.
+- **근거·판정:** [FURY_OPENER_SOURCE_20261116 §5](FURY_OPENER_SOURCE_20261116.md). 원문 WHML **12.1.5/Archimtiros/2026-10-13**, 동일 SHA256 `6708a9d1834a9a71ea10c75c15b13c9cd3dfe83568c18d4729b25a35c373e0cf`. 산왕 단일 9번째·광역 6번째 `rt-step` 원문 참조 ID `113344`는 **피범벅 출혈 효과/주문책 없음/GCD 0**, 직접 시전 피범벅은 `335096`. 원문 Notes의 피범벅 우선 사용과 해당 rt-step 문맥상 **단계를 아예 삭제하면 행동이 손실될 수 있음**. 최종 V60에는 **40개 타임라인 표시는 보존**하고 원문 ID와 실제 시전 ID를 구별하는 데이터 속성·툴팁·REVIEW 안내를 추가. **효과 ID 113344를 직접 누르도록 지시하지 않음**.
+- **폐기된 초안/교훈:** 조사 중 113344가 효과 ID라는 이유만으로 원문 2개 단계를 제거한 임시 V60 후보는 **채택하지 않음**. 실제 공략 편집 의도와 기술 효과·버튼은 다른 층위이므로 **원문 ID만을 근거로 단계 삭제/추가하지 않는 정책**을 [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)에 반영. 산왕 단일 Notes↔타임라인 오딘의 격노 불일치와 `rt-half-step`의 실제 타이밍은 계속 Q0/Q1 REVIEW.
+- **Q4 실물:** V59의 다른 11개 `.manual-view` 본문 전부 동일, 공통 `script` 동일, 분노 우선순위 **75↔75**, 오프너 실제 원문 40개와 첫 화면 20단계 순서 유지. 독립·통합 320/390/900/1100/1365/1480px×2 영웅 **24개 상태** 및 통합 12개 전문화×6폭 **72개 화면**에서 실제 Chromium 영웅 전환·셀 텍스트 침범·가로 넘침·JS 오류 **0건 PASS**. 실제 외부 아이콘/CDN 응답은 미검증.
+- **다음 우선 작업:** 관련 사용자가 직접 게임에서 눌러야 하는 기술이 달라지는 **산왕 오딘의 격노 원문 Notes↔오프너 타임라인** 및 `rt-half-step` 시간 관계만 추가 검토, 근거 없이 원문 행동을 섞거나 삭제하지 말 것. 원문 Gate A 전체/게임 Q0/Q1/사용자 승인은 여전히 REVIEW. V1 이상의 교본 제작 반복성·최종 사용자 가독성 검증에 집중, 새 검사기/특정 ID 연구의 목적화 금지.
+
 ## 2026-11-16 V59 분노 전사 원문 오프너 4종 회복 — 기존 수집 경로로 누락 해결
 
 - **최신 개인 통합 검토본:** `wow_rotation_v11_fury_openers_v59_REVIEW.html` (12개 전문화), 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_fury_openers_v59_REVIEW.html`, ID **`libfile_37f59fabf20481919dc9925477155b29`**, **2,359,850바이트**, SHA-256 **`aaa19f87ae5b181432d127f7e21d847b5243efb309c5cfb22cc7728ca165aaf8`**. 기존 V58 파일은 별도 보존.
