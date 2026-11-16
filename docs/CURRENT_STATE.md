@@ -2,6 +2,17 @@
 
 > **최신 상태를 갱신하는 유일한 GitHub 파일.** 2026-11-16 KST 기준 체크포인트. 이 문서에 적힌 GitHub SHA/Actions 상태는 기록 시점의 사실일 뿐, 새 채팅에서는 **실제 원격 조회가 우선**한다. 오래된 HANDOFF_*.md 및 과거 버전 파일의 "최신" 표시는 역사 기록이다.
 
+## 2026-11-16 V54 징벌 성기사 신규 CREATE — 비V11 전문화 반복 제작 검증
+
+- **현재 통합 개인 HTML (11개 전문화, REVIEW):** `wow_rotation_v11_retribution_create_v54_REVIEW.html`; Library `/ROTATION TEXTBOOK/wow_rotation_v11_retribution_create_v54_REVIEW.html`, ID **`libfile_dc4ae154e0b88191baad5a594b36fea8`**, **2,114,496바이트**, SHA-256 **`30fa69012706e1d7d3f9591abfbbc328e1e38999c28db52ca7cbe7eb2a571310`**. V53 원형은 별도 보존, **기존 10개 `.manual-view` 본문 DOM 10/10 완전 동일**, 기존 기능 JS는 그대로 유지하며 신규 징벌 섹션·스타일·좌측 메뉴와 영웅 전환 초기화만 추가. V53이 가진 표 내부 침범 교정·V46 조건 괄호 디자인 보존.
+- **신규 징벌 독립 HTML:** `wow_rotation_retribution_independent_1215_v1_REVIEW.html`; Library `/ROTATION TEXTBOOK/wow_rotation_retribution_independent_1215_v1_REVIEW.html`, ID **`libfile_7f5e4b0e652c8191b4202a334009d2ae`**, **244,505바이트**, SHA-256 **`5f4d15bfc23c8475e3a53e0a5c502612fe8c0d9476be0df6600c1f574fa5b9c2`**. 기존 7개 V11에 징벌 내용이 없으므로 제로베이스 CREATE; 다른 전문화 게임 내용을 초안 소스로 복사하지 않음. V53의 UI CSS와 공통 아이콘·라우팅 자산만 재사용.
+- **패치·원문:** [Wowhead Retribution Rotation](https://www.wowhead.com/ko/guide/classes/paladin/retribution/rotation-cooldowns-pve-dps), **12.1.5 / Bolas / 2026-10-13**. 동일 작성자·동일 패치의 [Icy Veins Retribution Rotation](https://www.icy-veins.com/wow/retribution-paladin-pve-dps-rotation-cooldowns-abilities), **2026-10-12**는 *오직* 직접 웹 텍스트에 끊긴 **기사단 단일 우선순위 5행 이후**를 비교·보완하는 2차 REVIEW로 사용. 같은 저자라는 사실만으로 동일 원문이라고 보장하거나 완전한 Wowhead Gate A 확보라고 단정하지 않는다. 기준 원문을 둘로 임의 혼합하여 PASS 선언한 적 없음.
+- **실제 제작 범위:** 영웅 **기사단(Templar)** / **태양의 사자(Herald of the Sun)** × 단일 1명 / 광역 2명 이상 **4개 상세 우선순위**. 원문/보조 대조 항목 **기사단 단일 17, 기사단 광역 14, 태양의 사자 단일 13, 광역 14 = 58행**, 첫 화면과 상세 58쌍 연결. 보조 원문이 동일 행동을 중복·하위집합 조건으로 반복한 2행을 사용자 교본에서 중복 제거하고 해당 불확실성은 REVIEW로 유지. **기본 4종 오프너(기사단 7·태양의 사자 8 단계, 각 단일/광역) + 대체 4종**(동일 단계수), 실제 물약 사용 위치를 이름 독립적으로 보존. 기사단 `파멸의 재 → 빛의 망치`, `구세의 빛` 무료 발동, 태양의 사자의 `천상의 심판관`과 `최고천의 유산`, `찬란한 영광` 선택 시 수동 응징의 격노 대신 자동 발동 조건을 구별. 원문에 없는 재사용 대기시간 수치 `≥5초`를 임의 추가하지 않고 실제 '곧 사용 가능하지 않음'으로 보존.
+- **가독성:** V46 승인 '기술명 강조·조건 괄호·작은 글씨·낮은 명도', V53 2열/다열 표·셀 범위/줄바꿈 규칙 준수. 한국어 기술 이름 우선, 식별 근거가 없는 일부 아이콘은 **중립 표기**, 가상 ID/이미지 강제 생성 금지.
+- **Q4 실물 브라우저 검증:** 독립/통합 각각 **320/390/900/1100/1365/1480px × 2 영웅 상태 = 24개 상태**에서 영웅 전환·11개 통합 기본 선택/좌측 메뉴·우선순위 31/27개 보임·오프너·툴팁/ESC·각 `td` 텍스트 셀 침범 0·페이지 넘침 0·JS 예외 0. 통합 **11개 전문화 × 6 너비 = 66개 상태**에서 별도 표 내부 침범·페이지 넘침·JS 예외 **0**. **다른 10개 본문 DOM 구조 동일**. 실 CDN 아이콘 응답까지 인증하는 검사는 아님.
+- **Gate A·Q0/Q1·Q2/Q3 REVIEW:** 기사단 단일 우선순위 웹 원문 5행 이후는 직접 읽지 못한 자료이며, 동일 저자의 보조 출처가 완전한 대체 증거는 아니다. 동적 선택/모든 관련 hover·? 설명·특성 빌드·`찬란한 영광` 별도 타임라인을 전수 확보하지 못함. 게임 행동 사실 검증, 공식 한국어 스킬/아이콘 신원, 사용자 완성도 승인은 **REVIEW**. Q4 PASS를 게임 정답 또는 사용자 승인으로 과장하지 않는다.
+- **다음 단계 우선순위:** V54 본문/UX 사용자 검토 → **기존 전문화 1개 UPDATE 실증**(실제 기준 패치/변경점 확인 후 필요 범위만 수정, 비대상 보호) → 추가 신규 전문화 CREATE 및 원문 확보 세 경로 재현성 비교. 동적 원문이 부족한 항목의 보완은 실제 다음 행동에 중요한 경우만 집중; Q0 REVIEW를 추측으로 메우거나 도구 개발을 무한 증식하지 않는다.
+
 ## 2026-11-16 V53 표 열 침범·모바일 기술 사전 레이아웃 보정 — 사용자 캡처 기반 Q4 개선
 
 - **최신 개인 통합 REVIEW:** `wow_rotation_v11_table_layout_v53_REVIEW.html`, Library `/ROTATION TEXTBOOK/wow_rotation_v11_table_layout_v53_REVIEW.html`, **`libfile_d3567e62d8dc8191a33c9d09b83bdef6`**, **1,895,402바이트**, SHA-256 **`fc8cf680ec8bef2fe1b3557dce3cadd4e0dd84e5fa33b665ea89c59e4e730121`**. 기준 V50 파일은 별도 보존. **기존 10개 `.manual-view` 전문화 본문 DOM 10/10 완전 동일**, 신규 CSS만 삽입. 사용자 승인된 조건 괄호/작은 글씨/옅은 색 유지, 게임 우선순위·오프너·팁·영웅 선택 코드 변경 없음.
