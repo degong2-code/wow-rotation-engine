@@ -55,7 +55,7 @@
 
 1. 활성 HEAD의 `docs/QUALITY_FIRST_POLICY.md` **§0, §0.1, §5.1**.
 2. **이 문서** `docs/HANDOFF_GENERAL_CHAT_20261116.md` (최신 새 채팅 인계 정본).
-3. `docs/HANDOFF_CHAT_FIRST_CURRENT.md` **최신 §0.45(비전 V32), §0.44(가상 사례 삭제), §0.43~§0.39(원인 경과)**. 더 옛 기록은 필요할 때만.
+3. `docs/HANDOFF_CHAT_FIRST_CURRENT.md` **최신 §0.46(현재 인계 검증), §0.45(비전 V32), §0.44(가상 사례 삭제), §0.43~§0.39(원인 경과)**. 더 옛 기록은 필요할 때만.
 4. `docs/CHAT_FIRST_PLAYBOOK.md` **§0.1·§0.2·§0**: 첫 화면 표현, 내부 반례 vs 사용자 콘텐츠, 조건부 물약 타이밍.
 5. `docs/EDITORIAL_QUALITY_PROTOCOL.md`, `docs/SOURCE_ACQUISITION.md`, `docs/SPELL_NAMES.md`, `docs/V11_FIDELITY.md`.
 6. 원인 분석이 필요할 때만 `docs/QUALITY_GENERALIZATION_CASEBOOK.md`, `docs/BALANCE_ZERO_BASE_CREATE_REVIEW_20261113.md`, 기존 화염/생존/고양 실패·개선 기록 및 `docs/CHAT_FIRST_PROJECT_INSTRUCTIONS.md`.
