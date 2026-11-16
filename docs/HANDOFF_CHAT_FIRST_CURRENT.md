@@ -12,6 +12,16 @@
 - **현재 기준:** PR #24 Draft / `work/chat-first-talent-visibility-spell-media-20261114`, 생성 시 HEAD `ef0a863a8ffa2bff2ca53a9aab7cfaf19f0499a6`, 조화 드루이드 **V7 REVIEW**. [CI 459 테스트·2 건너뜀 성공](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43550973311). 새 HEAD는 다음 채팅에서 재조회할 것.
 - **주의:** 2026-11-14 인계 작성 환경에서는 V7 HTML 파일이 실제 `/mnt/data`에 없음. 크기·SHA는 인계에 **기록된 사실**이며 새 채팅에서 바이트를 직접 검증했다고 주장하면 안 됨. 개인 교본은 첨부/Project/Library에서 실물 접근을 확인하고 공개 GitHub에 업로드하지 않는다.
 - **사용자 명시:** GitHub 파일과 교본 HTML을 일반 ChatGPT에서 수정할 수 있는데 **Work 전환을 필수로 안내하거나 반복 제안하지 말 것**. 다음 새 채팅 첫 응답은 **읽기 전용 상태 독립 복원**으로 끝내고 `진행`을 기다린다.
+
+## 0.45 비전 V32 — 오프너 소비재 지속시간 조건·비전의 여파 첫 화면 판단 복원 (2026-11-16)
+
+- **현재 최신 개인 통합 HTML REVIEW:** wow_rotation_v11_arcane_opener_timing_v32_REVIEW.html, **1,377,777B**, SHA256 **55597b2eb4464c582bbcc4eb5bd2168acc4921462e729ddd34a13098649c7361**. 개인 Library /ROTATION TEXTBOOK/wow_rotation_v11_arcane_opener_timing_v32_REVIEW.html, library_file_id=**libfile_ba0b7d8fff988191b120ac65ede06470**. V31 별도 보존. 개인 통합 HTML은 공개 GitHub에 업로드 금지.
+- **실제 원문 대조:** [Wowhead Arcane Rotation](https://www.wowhead.com/guide/classes/mage/arcane/rotation-cooldowns-pve-dps), **Porom 12.1.5 / 2026-10-16**의 오프너에서 효과 지속 **>15초** 물약·사용 아이템·장신구와 **≤15초** 물약·아이템·장신구는 서로 다른 조건부 시점이다. V31의 동일 '물약 사용' 두 번 표시는 동일 물약을 2회 누르라는 명령으로 오해될 수 있었음. 기준 원문의 비전의 여파 오프너는 비전 탄막/오색 화살 투사체 비행 중 또는 비전 쇄도 강화 남은 시간 **≤13초**일 때 사용; 상세에는 있지만 V31 첫 화면에는 조건 대신 링크만 존재.
+- **V31→V32 실제 수정:** 비전 성난태양·주문술사 오프너 두 곳의 1·4단계 명칭을 '긴 강화 효과 사용' / '짧은 강화 효과 사용', 조건을 >15초 / ≤15초로 표시하고 동일 물약은 **한 단계만 해당**한다는 짧은 설명. 첫 화면 공통 오프너에서 비전의 여파 조건을 직접 표시하고 상세 링크 라벨 정리. 비전 소개 범위에서 V31에 삭제된 실전 사례 장의 잔여 안내를 제거. **기술 실제 시전 순서·두 영웅 각 7단계·상세 36/빠른 36·아이콘/오프너 기술은 그대로 유지**.
+- **Q4 실제 파일:** V31→V32 다른 **8개 비전 외 전문화 원시 DOM 동일**, 공용 CSS/JS 원시 문자열 동일. Chromium JavaScript 활성 320/360/390/800/1365px × 양 영웅 전환, 첫 화면 ≤13초, 오프너 장시간/단시간 두 단계 표시, 7단계, 활성 manual-view 1개, 툴팁/ESC, 가로 넘침 0/JS 오류 0. 외부 아이콘 HTTP·동적 선택형 전체 오프너·게임 Q0/Q1 전수·사용자 최종 승인 REVIEW.
+- **일반화:** 원문의 조건부 소비재 사용 슬롯을 같은 물약의 중복 사용 지시로 평탄화하지 않는다. 조건별 시점과 실제 기술 타이밍을 한눈/상세 일치시키는 기존 편집 절차로 해결, [CHAT_FIRST_PLAYBOOK §0.1](CHAT_FIRST_PLAYBOOK.md) 및 [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md)에 반영. 새 엔진·검사기 없음. **사용자 최신 지시: 가정형 실전 사례 장 금지, 내부 반례 QA만 유지**는 계속 우선.
+- **저장소:** work/chat-first-talent-visibility-spell-media-20261114, PR #24 Draft·main 미병합. 최신 HEAD·CI는 조회 후 판단.
+
 ## 0.44 비전 V31 — 사용자 결정: 가상의 「실전 상황별 판단 예시」 장 삭제, 내부 검증만 유지 (2026-11-16)
 
 - **최신 개인 통합 HTML REVIEW:** `wow_rotation_v11_arcane_no_scenario_chapter_v31_REVIEW.html`, **1,377,344바이트**, SHA-256 **22687827197ec0c3800f821c033daf3f7a9e94d9ac3d6a452f8dd701893aa283**. 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_arcane_no_scenario_chapter_v31_REVIEW.html`, **library_file_id=libfile_97511081a2e881919c22e09cc324e5e7**. V30 원본은 별도 보관. 공개 GitHub에 비공개 통합 HTML 업로드 금지.
