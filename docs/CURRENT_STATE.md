@@ -2,6 +2,15 @@
 
 > **최신 상태를 갱신하는 유일한 GitHub 파일.** 2026-11-16 KST 기준 체크포인트. 이 문서에 적힌 GitHub SHA/Actions 상태는 기록 시점의 사실일 뿐, 새 채팅에서는 **실제 원격 조회가 우선**한다. 오래된 HANDOFF_*.md 및 과거 버전 파일의 "최신" 표시는 역사 기록이다.
 
+## 2026-11-16 V61 분노 전사 오프너 시점 표현 — 국소 Q0 검토 종료/REVIEW 유지
+
+- **최신 12개 전문화 통합 HTML:** `wow_rotation_v11_fury_timing_v61_REVIEW.html`, 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_fury_timing_v61_REVIEW.html`, ID **`libfile_7e32e1f39a84819181fead31abccd486`**, **2,360,113B**, SHA-256 **`ecf427bb945d09526869a5e8438dd1b7a081e1329417e3d0d8e47ef2a71db91a`**. 직전 V60은 그대로 별도 보존.
+- **독립 분노 v4:** `wow_rotation_fury_independent_1215_v4_timing_REVIEW.html`, Library ID **`libfile_30f7203255e881919298d417e0101f62`**, **168,698B**, SHA-256 **`8472a9bd91ce225d12e55be706d8241c2ccb57f9ab7851e354e8b5459778702e`**.
+- **근거와 수정 범위:** [FURY_OPENER_SOURCE_20261116 §6](FURY_OPENER_SOURCE_20261116.md). Wowhead 12.1.5 Archimtiros 원문 산왕 단일 Notes는 오딘의 격노를 주요 쿨기 전에 사용하라고 하지만 **원문 산왕 타임라인뿐 아니라 산왕 우선순위 41행에도 해당 기술이 없음**. 추측해서 필수 오프너 단계를 추가하지 않음. 원문 `rt-half-step` 6개 및 주문 상세 비교에서 **무모한 희생 GCD 0초 / 폭풍망치 GCD 1.5초**를 구별하고, 시전 예시 `→`가 각각 독립 GCD를 뜻한다는 오해를 막도록 독자 설명만 정제. 내부 `rt-step` 같은 원문 키는 첫 문단에서 삭제; 기술/행동 순서는 보존.
+- **Q4:** 기존 V60 대비 **다른 11개 `.manual-view` DOM 완전 동일**, 분노 4×10 오프너 주문 ID/순서, 75개 우선순위, 공통 JS 보존. 독립/통합 320·390·900·1100·1365·1480px×학살자/산왕 24상태와 통합 12개 전문화×6폭 72화면에서 JS 오류·표 셀 침범·가로 넘침 0. CDN 실제 응답·전체 게임 Q0/Q1/사용자 최종 승인은 **REVIEW**.
+- **공통 정책:** [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)에 원문 타임라인 표시와 실제 GCD·시전 행동을 분리하고, Notes↔시퀀스가 상충하면 근거 없는 수정 없이 REVIEW하는 규칙을 반영. **원문 자체의 산왕 오딘의 격노 모순은 현재 근거로 해소 불가 → 국소 REVIEW로 종료**. 같은 쟁점만 계속 미세 조사하지 말고 V11 이상 사용자 교본의 내용/UX 품질과 다른 전문화 반복 제작으로 복귀.
+- **다음 실질 과제:** 전체 12개 전문화 중 더 큰 **원문 완전성·실제 기술 판단/Q0 오류**가 있는지 위험도가 높은 것부터 점검하거나, 새 시즌의 정상 원문 CREATE/UPDATE 반복 가능성을 검증한다. 사용자의 새 피드백이 있다면 그것을 우선한다.
+
 ## 2026-11-16 V60 분노 전사 원문 단계의 효과 ID와 실제 시전 기술 구별 — 실제 게임 판단 검토
 
 - **최신 통합 REVIEW:** `wow_rotation_v11_fury_cast_id_v60_REVIEW.html` (**12개 전문화**), 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_fury_cast_id_v60_REVIEW.html`, ID **`libfile_8946a57d3db08191a9a0665844f2433d`**, **2,360,267B**, SHA-256 **`f94fa6b2c38e9dec607329d389896408e621239f9404875dd9ba32564fad4a22`**. V59는 별도 보존.
