@@ -5,7 +5,7 @@
 ## 1. 출처·방법
 
 - [Wowhead Fury Warrior Rotation](https://www.wowhead.com/guide/classes/warrior/fury/rotation-cooldowns-pve-dps) — **Archimtiros / 12.1.5 / 2026-10-13**. 일반 ChatGPT 웹 본문에는 4개 오프너의 Notes/제목만 표시되어 정확한 단계가 누락되었음.
-- 기존 `engine/source_acquisition_pipeline.py`의 `run_specialization("분노 전사", ...)`를 **실제 정상 GitHub Actions HTTPS 환경**에서 재사용해 원본 페이지의 `WH.markup.printHtml(..., "guide-body")`를 파싱. **2026-11-16 실제 실행** [Actions 43868839385](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43868839385), [Actions 43868859946](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43868859946)에서 비공개 원문을 로컬 임시 디렉터리에서 처리, 로그에는 선택별 **짧은 정형 ID/상태 정보**만 기록.
+- 기존 `engine/source_acquisition_pipeline.py`의 `run_specialization("분노 전사", ...)`를 **실제 정상 GitHub Actions HTTPS 환경**에서 재사용해 원본 페이지의 `WH.markup.printHtml(..., "guide-body")`를 파싱. **2026-11-16 실제 실행** [Actions 43868839385](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43868839385), [Actions 43868845921](https://github.com/degong2-code/wow-rotation-engine/actions/runs/43868845921)에서 비공개 원문을 로컬 임시 디렉터리에서 처리, 로그에는 선택별 **짧은 정형 ID/상태 정보**만 기록.
 - 원문 WHML **23,588자**, SHA-256 **`6708a9d1834a9a71ea10c75c15b13c9cd3dfe83568c18d4729b25a35c373e0cf`**. **rt-step 40개(4×10), rt-half-step 6개**, tooltip 정의 10개, 선택지 정의 4개. 이 원문/선택 단계의 **현재 동일 패치 정체성**은 확인했지만 모든 특성·툴팁 동적 UI 실제 결과의 Gate A/Q0/Q1 전수 PASS와 별개.
 - **사용한 일회성 시험 파일은 결과 확인 후 공개 GitHub에서 삭제**, 최종 commit 기록은 git history에 보존. 개인 원본 WHML·저장 HTML·완성 제품 HTML 전체는 공개 저장소에 올리지 않음.
 
