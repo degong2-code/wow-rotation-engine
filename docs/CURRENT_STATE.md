@@ -2,6 +2,17 @@
 
 > **최신 상태를 갱신하는 유일한 GitHub 파일.** 2026-11-16 KST 기준 체크포인트. 이 문서에 적힌 GitHub SHA/Actions 상태는 기록 시점의 사실일 뿐, 새 채팅에서는 **실제 원격 조회가 우선**한다. 오래된 HANDOFF_*.md 및 과거 버전 파일의 "최신" 표시는 역사 기록이다.
 
+## 2026-11-16 V57 사격 사냥꾼 10월 27일 공식 핫픽스 UPDATE — 날짜 차이 실증
+
+- **최신 개인 통합 REVIEW (11개 전문화):** `wow_rotation_v11_marksmanship_20261027_hotfix_v57_REVIEW.html`, 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_marksmanship_20261027_hotfix_v57_REVIEW.html`, ID **`libfile_c3da0b37c0608191bd9b2d26086e2cc3`**, **2,192,274바이트**, SHA-256 **`eed5b01f6f82c7fc18581ac02da4ab8edde676f91b80a524b197579fc7637f1d`**. 이전 통합 V56과 원본 V11은 별도 보존.
+- **라이브 패치 확정:** 2026-11-16 기준 본서버는 **12.1.5**, **12.1.7은 PTR**. 블리자드 [최신 업데이트 문서](https://worldofwarcraft.blizzard.com/en-us/content-update-notes)와 [11월 6일 기준 누적 핫픽스](https://news.blizzard.com/en-us/article/24307310/hotfixes-november-6-2026)의 **10월 27일 항목** 참조. 실제 12.1.5→12.1.7 라이브 버전 이행은 아직 발생하지 않았으며 절대 PTR 게임 내용을 반영하지 않았다.
+- **변경 시점 구분:** 기존 사격 가이드 기준 Wowhead [TheAzortharion 2026-10-14 / 12.1.5](https://www.wowhead.com/ko/guide/classes/hunter/marksmanship/rotation-cooldowns-pve-dps) 이후, **2026-10-27 블리자드가 실제 적용한 공식 조정**으로 `교묘한 사격`이 조준 사격·속사의 튕김 피해를 증가시키는 효과 **75%→85%**, `폭발 사격` 및 `연발 공격` 피해 각각 **10% 증가**. 수치 조정이 실제 행동 순서를 바꿨다는 근거는 확보되지 않아 추정하여 우선순위를 변경하지 않음.
+- **실제 제품 변경:** `guide-hunter`의 심화 운용(교묘한 사격·폭발 사격 관련) **짧은 수치/시점 설명 2문단**, `mm-sources`의 **공식 블리자드 적용 기록·시점·REVIEW 근거 1문단**만 추가. 교본은 **같은 12.1.5 내 날짜 차이 UPDATE**이며 **새 메이저/마이너 버전 패치 UPDATE 합격이라고 주장하지 않는다**. 추가 출처는 공식 직업 조정 기록이고 기존 Wowhead 단일 기준 딜사이클을 다른 공략으로 대체하지 않음.
+- **콘텐츠 보존:** 기존 11개 `.manual-view` 중 **비대상 10개 DOM 완전 동일**. 대상 사격도 `mm-overview`, `mm-rotation`, `mm-opener`, `mm-pre` HTML 동일. 공통 `script`/`style` 전체 문자열 동일. 기존 영웅(파수꾼/어둠 순찰자), 교묘한 사격/히드라의 상 선택, 우선순위·오프너·스킬 아이콘·툴팁 변경 없음.
+- **Q4 실물:** Chromium 오프라인 레이아웃 모의(기존 이미지 슬롯만 보존) **11개 전문화×6개 화면 너비(320/390/900/1100/1365/1480)=66화면 + 사격 영웅·특성 3조합×6=18화면, 총 84상태**: 표 내부 글자 셀 침범 **0**, 전체 페이지 가로 넘침 **0**, JS 오류 **0**, 영웅/특성 전환 정상. **Q0/Q1 게임 최적 우선순위 및 실제 외부 CDN 아이콘 로드·원문 Gate A 동적 전수·사용자 Q2/Q3 최종 승인 = REVIEW**.
+- **제작 정책 일반화:** [CHAT_FIRST_PLAYBOOK §E.5](CHAT_FIRST_PLAYBOOK.md)에 **라이브 패치 번호/기준 공략 수정일/그 후 적용된 공식 핫픽스** 3단계 날짜 비교, 직접 확인된 기술 수치만 갱신, 판단 변화 추론 금지, NO-OP도 정상 결과, 진짜 버전 전환과 같은 패치 내 핫픽스 구분을 추가했다. 새로운 상설 검사기·크롤러·AI API는 추가하지 않았다.
+- **다음 우선 과제:** (1) 개인 V57 사용자 검토; (2) 정식 **다음 라이브 패치 이후** 12.1.5→12.1.7 등 **진짜 패치 이행 UPDATE** 실증은 출시 확인 전에는 보류; (3) 그전에는 기존 와우헤드 직접 접근 / 정상 HTTP·WHML 추출 / 사용자 저장 원문 3경로 재현성 및 새로운 전문화 추가 제작 품질 검증으로 복귀한다. 게임 판단이 검증되지 않은 V57은 V1 최종 승인으로 집계하지 않는다.
+
 ## 2026-11-16 V56 야수 사냥꾼 어둠 순찰자 분기 — 기존 전문화 국소 UPDATE 실증
 
 - **최신 통합 HTML (11개 전문화, REVIEW):** `wow_rotation_v11_bm_darkranger_update_v56_REVIEW.html`, 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_bm_darkranger_update_v56_REVIEW.html`, ID **`libfile_493152053038819190e9d4afcc20f80b`**, **2,190,881바이트**, SHA-256 **`4b89136b1a2d6e1c1b630235f3985ef6b02b2cf01ac05d64998884f483ba3360`**. V55는 별도 보존. 11개 전문화 수는 그대로, **야수 사냥꾼만 내용·UI 국소 변경**.
