@@ -1,5 +1,8 @@
 # ROTATION TEXTBOOK — 2026-11-16 일반 채팅 인계 정본
 
+> **역사 인계 및 검증 사례 — 최신 상태 정본 아님 (2026-11-16 정리).** 이 문서의 날짜별 "현재/최신", V7·V32·V45 같은 버전, 당시 GitHub HEAD/CI, 이전 작업 순서는 모두 **그 시점의 기록**이다. 새 채팅은 [PROJECT_CANON](PROJECT_CANON.md) → [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md) → **[CURRENT_STATE](CURRENT_STATE.md)** → [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md) 순으로 읽고, PR/브랜치/CI를 실제 조회하라. 이 문서에서 발견한 중요한 반례·이유·근거는 삭제하지 말고 역사 증거로 재사용한다. 새 인계 절차는 [HANDOFF_PROTOCOL](HANDOFF_PROTOCOL.md) 하나를 따른다.
+
+
 > **이 문서가 2026-11-16 기준 새 일반 ChatGPT 채팅의 우선 복원 진입점이다.** 2026-11-14 인계와 이전 V7·생존 V3·PR #20 기록은 역사 자료다. 이 문서 역시 고정된 당시 기록이므로 **실제 활성 브랜치/HEAD/PR/Actions/개인 HTML은 새 채팅에서 읽기 전용으로 재조회**해야 한다.
 >
 > **최상위 정책:** [QUALITY_FIRST_POLICY.md §0·§0.1·§5.1](QUALITY_FIRST_POLICY.md) 및 최신 사용자 지시 > 이 문서 > 과거 작업 기록. 1차 목표는 사용자에게 정확하고 읽기 쉬운 **V11 이상 한국어 단일 HTML 교본 CREATE/UPDATE**이며 별도 AI 자동화 엔진/웹앱/거대 JSON/검사기 개발이 아니다.
