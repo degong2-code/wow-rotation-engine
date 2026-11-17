@@ -1,12 +1,22 @@
 # ROTATION TEXTBOOK — 현재 상태 (rolling state)
 
-> **V71 갱신(2026-11-17):** 최신 개인 통합 제품은 아래 V71 REVIEW HTML이다. V70 이하는 별도 보존. 새 채팅은 Library 실물과 GitHub HEAD/CI를 다시 확인한다.
+> **V72 갱신(2026-11-17):** 최신 개인 통합 교본은 이 문서 첫 V72 항목의 REVIEW HTML이다. V71 이전 버전은 별도 보존한다. 새 채팅은 GitHub HEAD/CI 및 Library 실물을 재조회한다.
 >
 > **새 일반 채팅 V63 인계(2026-11-16):** [HANDOFF_GENERAL_CHAT_V63_20261116.md](HANDOFF_GENERAL_CHAT_V63_20261116.md)에서 최신 검증 파일의 실제 바이트·SHA, V63 게임 판단 교정, 과거 사례와 구분한 사용자 확정 UI/편집 기준, Q0~Q4 미승인 범위, 다음 작업·새 채팅 첫 응답 제한을 요약했다. **이 CURRENT_STATE가 유일한 rolling 최신 상태**이며 인계문은 해당 시점의 스냅샷이다. 새 채팅은 GitHub PR/HEAD/CI와 개인 파일을 다시 실조회한다. V32·V46 등 이전 날짜별 HANDOFF는 역사 자료다.
 
 > **최신 상태를 갱신하는 유일한 GitHub 파일.** 2026-11-16 KST 기준 체크포인트. 이 문서에 적힌 GitHub SHA/Actions 상태는 기록 시점의 사실일 뿐, 새 채팅에서는 **실제 원격 조회가 우선**한다. 오래된 HANDOFF_*.md 및 과거 버전 파일의 "최신" 표시는 역사 기록이다.
 
 > **사용자 문체 확정(2026-11-17):** V71의 잠행 한 문장에 적용한 **중간 수준의 압축**을 사용자가 긍정 평가하여, [CHAT_FIRST_PLAYBOOK §E.2.2](CHAT_FIRST_PLAYBOOK.md)의 **새 교본·관련 UPDATE의 첫 화면/핵심·심화 요약 기본 문체**로 승격. 설명에 필요한 상세 장은 완전한 문장 허용. V71 기존 HTML 전체 문장을 새 문체로 바꾸거나 신규 제품 버전을 만든 것이 아님. 다른 전문화에는 실제 다음 UPDATE부터 조건·수치·아이콘을 보존하며 적용; 전면 일괄 축약은 하지 않음.
+
+## 2026-11-17 V72 심화 운용의 실제 행동 판단 첫 화면 승격 — 비전·징벌·냉기 마법사
+
+- **최신 비공개 통합 REVIEW:** `wow_rotation_v11_advanced_decisions_v72_REVIEW.html`; 개인 Library `/ROTATION TEXTBOOK/wow_rotation_v11_advanced_decisions_v72_REVIEW.html`, ID **`libfile_ec9e02c0aee88191a0aeb2dc98f2f213`**, **2,383,019바이트**, SHA-256 **`5c5252da2180dec53ff9b88395b85d71df87836c0a4f9fb28acb9c65be2b1c30`**. 기존 V71(2,378,902B) 보존; 12개 전문화 유지, 사용자 최종 승인·게임 Q0/Q1 전체 **REVIEW**.
+- **기준 원문(동일 라이브 패치 12.1.5):** [Wowhead 비전 마법사](https://www.wowhead.com/guide/classes/mage/arcane/rotation-cooldowns-pve-dps) Porom 2026-10-16: `Touch of the Magi`가 **12초** 피해 누적 뒤 대부분을 폭발시키므로 그 시간 동안 살아남을 주요 대상 사용, 쿨 **45초**를 오래 묶지 않는다. [Wowhead 징벌 성기사](https://www.wowhead.com/guide/classes/paladin/retribution/rotation-cooldowns-pve-dps) Bolas 2026-10-13 및 [기술 설명](https://www.wowhead.com/guide/classes/paladin/retribution/abilities-talents-pve-dps): 기사단 `Light's Deliverance` **50중첩** 시 `Hammer of Light` 무료, `Avenging Wrath/Execution Sentence` 종료 임박, `Undisputed Ruling` 가속 없음·`Avenging Wrath` 재사용까지 **5초 이상**, 또는 발동/대상 소멸 임박일 때 소비. [Wowhead 냉기 마법사](https://www.wowhead.com/guide/classes/mage/frost/rotation-cooldowns-pve-dps) Dorovon 2026-10-13: `Blizzard`를 지금 쓰면 다음 `Frozen Orb` 재사용 시점에 준비되지 않아 `Freezing Rain` 강화 눈보라를 놓치면 필요시 사용을 보류한다. **PTR 아닌 라이브 원문**만 사용; 보조 사이트의 우선순위와 혼합하지 않음.
+- **실물 변경(과잉 복제 금지):** (1) 비전 `#arcane-overview` 마지막 핵심 원칙 1행을 **비전의 여파 대상 12초 생존 가능성·45초 쿨 보류 위험**으로 재작성(핵심 원칙 개수 증가 없음). (2) 징벌 `#ret-overview` 기사단 핵심 원칙 1행에 **50중첩 무료 빛의 망치·조건에 따른 소비**를 구체화. 기사단 전용·태양의 사자 전용 두 원칙은 실제 영웅 버튼 선택에 따라 각자만 노출(기존 영웅 상태 사용, **해당 요약 두 `li`만 지정하는 새 CSS 1블록**; 순서 목록의 숫자 마커 보존). (3) 냉기 `#frost-overview` 광역 공통 원칙 1행을 **빗발치는 냉기 선택 시 눈보라 보류 ↔ 얼어붙은 구슬 재사용**의 행동 판단으로 치환. `신속한 재동결` 혜성 폭풍 지연은 첫 화면 광역 우선순위에 이미 있어 중복 생성하지 않음. 기존 공식 한국어 기술 아이콘·툴팁 DOM을 재사용, **신규 게임 수치/동적 선택지 추정 없음**.
+- **보존 QA:** 실제 HTML V71과 비교해 **비대상 9개 `.manual-view` DOM 완전 동일**, 대상 3개에서도 각각 **첫 화면 `.overview` 외 DOM 완전 동일**. 모든 12개 본문의 상세 우선순위·오프너·장/표·원문 정보 보존. `script` **17/17 바이트 의미상 문자열 동일**, 기존 `style` **26/26 동일**, 징벌 두 핵심 팁 표시만 제어하는 CSS `style` **1개 추가**. 다른 전용 검사기/엔진 코드 변경 없음.
+- **Q4 실제 브라우저:** 로컬 Chromium, `page.set_content`과 외부 리소스 차단 기준 **320/390/640/900/1365/1480px × 실제 12개 전문화/영웅 특성 전환 총 138상태**. 문서·표 가로 넘침 0, JS 오류 0. 집중 검사 **320/390/900/1365px × 기사단·태양의 사자**에서 핵심 팁 6개 중 **각각 해당 5개만 표시**, 기사단 50중첩/5초 조건 노출·태양의 사자에서 숨김; 비전 새 툴팁 클릭 시 `#floating-tip` 열림, 냉기 눈보라/빗발치는 냉기/얼어붙은 구슬 아이콘 표시 확인. 웹 CDN 아이콘의 **실제 응답을 검증한 것은 아님**. 전체 게임 메커니즘 Q0/Q1·원문 선택/툴팁 전수 Gate A·사용자 최종 Q2/Q3 승인 **REVIEW**.
+- **원칙 적용:** 사용자 확정 [CHAT_FIRST_PLAYBOOK §E.2.1~E.2.2](CHAT_FIRST_PLAYBOOK.md)의 `행동을 바꾸는 심화 팁만 빠른 참조로 승격`, `원문 기술·시간 명시`, `중간 수준의 압축 문체`, `영웅 특성 전용 정보 분기`를 실제 콘텐츠로 재실증. 기존 12개 전문화에 일괄 문체 변경·박스/장 증식 없이 작게 완료.
+- **다음 우선:** (1) V72 사용자 독해/영웅별 전환 리뷰, (2) 다른 전문화의 심화 장에서 첫 화면에 **실제 다음 기술·보류 시점**을 바꾸는 규칙 누락만 선별 감사, (3) V1 CREATE/UPDATE 반복 재현 및 Q0/Q1 검증 경계를 유지. 새 검사기 개발/미시 이슈 무한 확장 금지.
 
 ## 2026-11-17 V71 게임 기술 우선순위에서 소비재 분리 · window 직역 제거 · 잠행 간결 문체 시험
 
