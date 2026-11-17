@@ -1,10 +1,21 @@
 # ROTATION TEXTBOOK — 현재 상태 (rolling state)
 
-> **V70 갱신(2026-11-17):** 최신 개인 통합 HTML은 아래 V70 REVIEW 파일이다. V69 이하는 보존한 비교본. 매 채팅 Library 실물과 GitHub HEAD/CI를 재확인한다.
+> **V71 갱신(2026-11-17):** 최신 개인 통합 제품은 아래 V71 REVIEW HTML이다. V70 이하는 별도 보존. 새 채팅은 Library 실물과 GitHub HEAD/CI를 다시 확인한다.
 >
 > **새 일반 채팅 V63 인계(2026-11-16):** [HANDOFF_GENERAL_CHAT_V63_20261116.md](HANDOFF_GENERAL_CHAT_V63_20261116.md)에서 최신 검증 파일의 실제 바이트·SHA, V63 게임 판단 교정, 과거 사례와 구분한 사용자 확정 UI/편집 기준, Q0~Q4 미승인 범위, 다음 작업·새 채팅 첫 응답 제한을 요약했다. **이 CURRENT_STATE가 유일한 rolling 최신 상태**이며 인계문은 해당 시점의 스냅샷이다. 새 채팅은 GitHub PR/HEAD/CI와 개인 파일을 다시 실조회한다. V32·V46 등 이전 날짜별 HANDOFF는 역사 자료다.
 
 > **최신 상태를 갱신하는 유일한 GitHub 파일.** 2026-11-16 KST 기준 체크포인트. 이 문서에 적힌 GitHub SHA/Actions 상태는 기록 시점의 사실일 뿐, 새 채팅에서는 **실제 원격 조회가 우선**한다. 오래된 HANDOFF_*.md 및 과거 버전 파일의 "최신" 표시는 역사 기록이다.
+
+## 2026-11-17 V71 게임 기술 우선순위에서 소비재 분리 · window 직역 제거 · 잠행 간결 문체 시험
+
+- **최신 비공개 통합 HTML:** `wow_rotation_v11_priority_window_v71_REVIEW.html`; Library `/ROTATION TEXTBOOK/wow_rotation_v11_priority_window_v71_REVIEW.html`, ID **`libfile_193309e5b8588191974ec57e22978061`**, 크기 **2,378,902B**, SHA-256 **`d7a20ce2746a5ffbfe1d34667b92dcda570609f7903dfea52c6256b779d3cffe`**. 기존 V70 원형 별도 보존. 12개 전문화 유지. 콘텐츠 Q0/Q1, 사용자 승인 **REVIEW**.
+- **사용자 요청:** (1) 지속 딜/쿨다운 **기술 우선순위에 물약·소모품 금지**, (2) `큰 강화 창/이번 창/다음 창` 등 영문 `window` 직역을 원문의 실제 기술·버프와 지속시간으로 교체, (3) 반복되는 `~합니다`보다 **간결한 조건/행동/이유 문체**가 나은지 실물로 비교. 세 번째는 사용자가 아직 선택/최종 승인하지 않은 **문체 시범**.
+- **실제 원문 대조:** [사격 와우헤드 12.1.5](https://www.wowhead.com/guide/classes/hunter/marksmanship/rotation-cooldowns-pve-dps)는 스킬 우선순위 첫 행에 `Trinket Usage`를 배치하지만, 이는 게임 기술이 아닌 **장신구 사용 시점 정보**임. V70 사격 첫 화면 및 상세 **5개 분기** 모두 1행이 사용형 장신구인 문제 발견. V71은 첫 화면·상세 **각 5개에서 장신구 행 삭제하고 기술만 1위부터 재번호**; `정조준 지속 중 능력치 장신구` 원칙은 **05 심화 운용의 소모품·장신구 안내**로 보존. 원문 기준 기술끼리의 상대 순서/조건은 바꾸지 않음. 첫 화면 ↔ 상세 행동 ID/순서 **54/54 일치**. 물약은 다른 전문화의 기존 **오프너(시간순)·선택형 물약 사용 시점**에 남겨 두어 원문 타이밍 조건을 잃지 않게 함. **상세 기술 우선순위 테이블의 물약/장신구 행동 0건**.
+- **`window` 원문 의미:** [조화](https://www.wowhead.com/guide/classes/druid/balance/rotation-cooldowns-pve-dps)의 `Eclipse window / Celestial Alignment window / Force of Nature window`, [고양](https://www.wowhead.com/guide/classes/shaman/enhancement/rotation-cooldowns-pve-dps)의 `Doom Winds / Hot Hand window`, [암살](https://www.wowhead.com/guide/classes/rogue/assassination/rotation-cooldowns-pve-dps)의 `Improved Garrote 6-second window` 등은 독립 게임 효과명 `창`이 아니라 각각 **기술/버프 활성 시간**을 뜻함. V71은 **조화·고양·사격·야수·암살·비전·징벌·분노·잠행**의 확인된 `강화 창/이번 창/다음 창/사용 창` 등을 구체적인 기술명·활성 중·지속시간·사용 직전/직후로 치환하고, **얼음창/표창 폭풍 같은 실제 기술명은 보존**. 본문 조건/수치/자원 로직 추가 창작 없음. 일부 과거 문구는 원문 표현을 독립적으로 완전 추적하지 못한 **검토 대상**이며 문장 명확화 전체를 게임 Q0/Q1 PASS로 승격하지 않음.
+- **문체 시범:** 잠행 `#sb-overview` 첫 핵심 원칙을 `마무리 기술: 연계 점수 6점 이상에서 사용. 어둠의 춤 밖: 근접 자동 공격 유지(기력 수급).` 형태(기술 아이콘 유지)로 압축. **12개 전체 기계적 요약/문장 종결 변환은 수행하지 않음**. 영웅 특성별 요약/심화 표시, 01 전투 전 준비 4단계, 기존 상세 우선순위·오프너/소비재 시간순 유지.
+- **보존/검증:** 변경은 대상 전문화의 **표시 문구** 및 사격 비기술 소비재 행 분리. 통합 `.manual-view` 12개, 기존 HTML `script` **17/17 동일**, CSS `style` **26/26 동일**. 비대상 화염·냉기 마법사·냉기 죽음의 기사 3개 `.manual-view` DOM 문자열 동일. 모든 전문화의 `data-rule-id` 행 목록 동일. 잠행 `#sb-prio`·`#sb-opener` 구조 완전 동일. 사격 장신구 제외 후 빠른 참조/상세 54행의 `data-mm-rule` ID 일치. **Chromium `page.set_content` / 외부 CDN 차단**에서 320/390/640/900/1365/1480px × 12개 전문화의 선택 영웅(총 **138상태**) 실제 메뉴/영웅 버튼 전환, 표 가로 초과 0, 문서 가로 초과 0, JS 오류 0. `file://` 직접 실행·실기기·CDN 실제 이미지·전 원문 12개 상세 게임로직 검증과 사용자 Q2/Q3 최종 승인 **REVIEW**.
+- **범용 정책:** [CHAT_FIRST_PLAYBOOK §E.2.2](CHAT_FIRST_PLAYBOOK.md)에 **우선순위는 기술만, 소비재 시간은 오프너·아이템 원칙에 별도 보존; 'window'를 원문 기술·버프 및 상태로 실명화; 문체는 구체적인 실행 규칙을 우선하는 자연스러운 압축을 시범 적용** 기록. 상징 기호 과압축, 상호 다른 영웅을 뭉개는 표현, 전체 일괄 변환 금지.
+- **다음 작업:** (1) 사용자에게 V71 잠행 첫 화면 **압축 문체 선호도**와 사격 소모품 분리 확인, (2) 나머지 전문화들에서 계속 핵심 운용 심화가 첫 화면에 누락되지 않았는지 감사, (3) 영웅/원문 최신 패치 증거 및 Q0/Q1 승인 경계 유지. 새 엔진·검사기 추가 없이 교본 제품 중심.
 
 ## 2026-11-17 V70 잠행 도적 전투 전 준비 4단계·영웅 특성별 핵심/심화 팁 표시
 
