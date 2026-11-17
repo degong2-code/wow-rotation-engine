@@ -2,15 +2,14 @@
 
 > **제품의 정체성:** GitHub에 축적한 **제작 방법·품질 기준·검증 도구**와 최신 시즌의 **실제 Wowhead/사용자 제공 공략 원문**을 사용해, **ChatGPT가 게임 판단을 분석·집필하고 V11 이상 한국어 단일 HTML 교본을 CREATE/UPDATE**한다. 이 저장소 자체가 WoW 로테이션의 실시간 정답 데이터베이스이거나 독립 AI 제품인 것은 아니다.
 
-## 가장 먼저 읽을 문서 (이 순서)
+## 새 채팅 기본 진입 — 4개 문서만
 
-1. **[PROJECT_CANON — 제품 정의와 문서 정본](docs/PROJECT_CANON.md)**
-2. **[QUALITY_FIRST_POLICY — 최상위 품질·우선순위](docs/QUALITY_FIRST_POLICY.md)**
-3. **[CURRENT_STATE — 최신 활성 브랜치/개인 제품/다음 작업](docs/CURRENT_STATE.md)** (브랜치 SHA/CI는 실제 조회)
-4. **[CHAT_FIRST_PLAYBOOK — 실제 CREATE/UPDATE 제작 방법](docs/CHAT_FIRST_PLAYBOOK.md)**
-5. **[ROADMAP_CHAT_FIRST — 단기·중기·장기 / AI·비AI / 새 시즌 원문 확보](docs/ROADMAP_CHAT_FIRST.md)**
-6. **[HANDOFF_PROTOCOL — 일반 채팅 간 무손실 인계](docs/HANDOFF_PROTOCOL.md)**
-7. **[CHAT_FIRST_PROJECT_INSTRUCTIONS — ChatGPT 프로젝트 설정에 넣는 짧은 지침](docs/CHAT_FIRST_PROJECT_INSTRUCTIONS.md)**
+1. **[PROJECT_CANON](docs/PROJECT_CANON.md)** — 제품 정의
+2. **[QUALITY_FIRST_POLICY](docs/QUALITY_FIRST_POLICY.md)** §0/§0.1/§5.1 — 최상위 규칙
+3. **[CURRENT_STATE](docs/CURRENT_STATE.md)** — 실제 최신 통합/개인 제품, REVIEW, 다음 작업
+4. **[CHAT_FIRST_PLAYBOOK](docs/CHAT_FIRST_PLAYBOOK.md)** — 제작·UI 재사용·검수 실행 계약
+
+**필요할 때만:** [로드맵](docs/ROADMAP_CHAT_FIRST.md), [인계 복원](docs/HANDOFF_PROTOCOL.md), [원문 수집법](docs/SOURCE_ACQUISITION.md), [실험 사례집](docs/QUALITY_GENERALIZATION_CASEBOOK.md), [프로젝트 설정용 최소 지침](docs/CHAT_FIRST_PROJECT_INSTRUCTIONS.md). **과거 버전별 인계·장문 로그를 기본 정독하지 않는다.**
 
 **사용자는 전문화 이름 한 줄로 요청을 시작**한다. ChatGPT는 패치/원문 확인 → 상태·실제 판단 조건 분석 → 한국어 교본 집필 → 단일 HTML 제작 → 내용 Q0/Q1·UX Q2/Q3·기능 Q4를 별개 검증한다. 승인된 비대상 교본을 보존하고 **검증되지 않은 원문·아이콘·게임 규칙은 REVIEW**로 남긴다.
 
