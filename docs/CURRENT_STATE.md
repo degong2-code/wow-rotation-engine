@@ -6,6 +6,8 @@
 
 > **최신 상태를 갱신하는 유일한 GitHub 파일.** 2026-11-16 KST 기준 체크포인트. 이 문서에 적힌 GitHub SHA/Actions 상태는 기록 시점의 사실일 뿐, 새 채팅에서는 **실제 원격 조회가 우선**한다. 오래된 HANDOFF_*.md 및 과거 버전 파일의 "최신" 표시는 역사 기록이다.
 
+> **사용자 문체 확정(2026-11-17):** V71의 잠행 한 문장에 적용한 **중간 수준의 압축**을 사용자가 긍정 평가하여, [CHAT_FIRST_PLAYBOOK §E.2.2](CHAT_FIRST_PLAYBOOK.md)의 **새 교본·관련 UPDATE의 첫 화면/핵심·심화 요약 기본 문체**로 승격. 설명에 필요한 상세 장은 완전한 문장 허용. V71 기존 HTML 전체 문장을 새 문체로 바꾸거나 신규 제품 버전을 만든 것이 아님. 다른 전문화에는 실제 다음 UPDATE부터 조건·수치·아이콘을 보존하며 적용; 전면 일괄 축약은 하지 않음.
+
 ## 2026-11-17 V71 게임 기술 우선순위에서 소비재 분리 · window 직역 제거 · 잠행 간결 문체 시험
 
 - **최신 비공개 통합 HTML:** `wow_rotation_v11_priority_window_v71_REVIEW.html`; Library `/ROTATION TEXTBOOK/wow_rotation_v11_priority_window_v71_REVIEW.html`, ID **`libfile_193309e5b8588191974ec57e22978061`**, 크기 **2,378,902B**, SHA-256 **`d7a20ce2746a5ffbfe1d34667b92dcda570609f7903dfea52c6256b779d3cffe`**. 기존 V70 원형 별도 보존. 12개 전문화 유지. 콘텐츠 Q0/Q1, 사용자 승인 **REVIEW**.
