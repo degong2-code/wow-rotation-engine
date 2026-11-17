@@ -1,5 +1,7 @@
 # ROTATION TEXTBOOK — Chat-first 교본 제작 인계 정본
 
+> **2026-11-17 최신 인계 링크 (V83):** 새 일반 채팅은 [PROJECT_CANON](PROJECT_CANON.md) → [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md) → [CURRENT_STATE](CURRENT_STATE.md) → [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md) → [HANDOFF_PROTOCOL](HANDOFF_PROTOCOL.md) → **[HANDOFF_GENERAL_CHAT_V83_20261117](HANDOFF_GENERAL_CHAT_V83_20261117.md)**를 읽는다. 아래 오래된 V7/V32/2026-11-16의 "최신"은 역사 기록이므로 **현재 V83/14전문화/실제 GitHub PR·CI 확인 결과보다 우선하지 않는다**. 이 문서 전체의 과거 사례는 보존한다.
+
 > **역사 인계 및 검증 사례 — 최신 상태 정본 아님 (2026-11-16 정리).** 이 문서의 날짜별 "현재/최신", V7·V32·V45 같은 버전, 당시 GitHub HEAD/CI, 이전 작업 순서는 모두 **그 시점의 기록**이다. 새 채팅은 [PROJECT_CANON](PROJECT_CANON.md) → [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md) → **[CURRENT_STATE](CURRENT_STATE.md)** → [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md) 순으로 읽고, PR/브랜치/CI를 실제 조회하라. 이 문서에서 발견한 중요한 반례·이유·근거는 삭제하지 말고 역사 증거로 재사용한다. 새 인계 절차는 [HANDOFF_PROTOCOL](HANDOFF_PROTOCOL.md) 하나를 따른다.
 
 
