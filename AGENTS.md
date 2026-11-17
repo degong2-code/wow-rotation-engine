@@ -2,14 +2,14 @@
 
 **제품:** GitHub의 제작 지식·품질 기준 + 해당 시즌의 공략 원문을 바탕으로 **ChatGPT가 V11 이상 한국어 단일 HTML 교본을 CREATE/UPDATE**한다. WoW 정보의 정답 데이터베이스나 별도 AI API/웹앱 개발 프로젝트가 아니다.
 
-## 문서 로딩 — 첫 5분
+## 새 채팅 기본 로딩 — 4개만
 
-1. **[PROJECT_CANON](docs/PROJECT_CANON.md)**: 제품 정체성·역할·문서 우선순위
-2. **[QUALITY_FIRST_POLICY §0/§0.1](docs/QUALITY_FIRST_POLICY.md)**: 교본 중심, Q0/Q1, 오류 재발 방지
-3. **[CURRENT_STATE](docs/CURRENT_STATE.md)**: 시점별 최신 개인 HTML/승인/REVIEW/다음 작업. **실제 GitHub PR HEAD·CI 재조회 필수**
-4. **[CHAT_FIRST_PLAYBOOK](docs/CHAT_FIRST_PLAYBOOK.md)**: 원문 확보→조건/판단→집필→HTML→QA
-5. **[ROADMAP_CHAT_FIRST](docs/ROADMAP_CHAT_FIRST.md)**: 단기·중기·장기/새 시즌 대응/AI·비AI
-6. 인계가 필요하면 **[HANDOFF_PROTOCOL](docs/HANDOFF_PROTOCOL.md)**, 원문 수집이면 **[SOURCE_ACQUISITION](docs/SOURCE_ACQUISITION.md)**
+1. [PROJECT_CANON](docs/PROJECT_CANON.md) — 제품 정의
+2. [QUALITY_FIRST_POLICY](docs/QUALITY_FIRST_POLICY.md) §0/§0.1/§5.1 — 최상위 정책
+3. [CURRENT_STATE](docs/CURRENT_STATE.md) — **최신 개인 파일·REVIEW·다음 작업** (PR/HEAD/CI 실조회)
+4. [CHAT_FIRST_PLAYBOOK](docs/CHAT_FIRST_PLAYBOOK.md) — **실행 가능한 제작/통합 UI 계약**
+
+인계·새 시즌 원문 확보 등 **직접 관련된 작업일 때만** [HANDOFF_PROTOCOL](docs/HANDOFF_PROTOCOL.md), [SOURCE_ACQUISITION](docs/SOURCE_ACQUISITION.md), [ROADMAP](docs/ROADMAP_CHAT_FIRST.md) 등을 조회한다. 과거 장문 HANDOFF/CASEBOOK은 역사 증거로만 참조한다.
 
 ## 작업의 절대 기준
 
