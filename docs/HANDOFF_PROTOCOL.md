@@ -24,7 +24,7 @@
 >
 > 해당 HEAD에서 **`docs/PROJECT_CANON.md` → `docs/QUALITY_FIRST_POLICY.md` §0·§0.1·§5.1 → `docs/CURRENT_STATE.md` → `docs/CHAT_FIRST_PLAYBOOK.md`**를 읽어라. `CURRENT_STATE`가 유일한 현재 제품·REVIEW·다음 작업 정본이다. `HANDOFF_PROTOCOL`은 복원 절차, 날짜별 V83/이전 인계는 HISTORY다. 첫 복원에서 불필요한 과거 이력을 전부 정독하지 마라.
 >
-> **Library 실물로 검증:** `CURRENT_STATE`의 최신 **14개 통합 REVIEW HTML**, 미통합 **독립 전문화 REVIEW HTML**, UX 비교용 **V11 원본**, 필요시 호평 독립본/개인 원문을 실제 열어 **파일명·Library ID·바이트·SHA-256·전문화 수·승인/REVIEW**를 확인하라. 기록된 해시를 지금 열었다는 증거로 둔갑시키지 마라. 독립본을 통합본의 전문화 수에 합산하지 마라.
+> **Library 실물로 검증:** `CURRENT_STATE`의 최신 **통합 REVIEW HTML(전문화 수는 CURRENT_STATE에 따름)**, 미통합 **독립 전문화 REVIEW HTML**, UX 비교용 **V11 원본**, 필요시 호평 독립본/개인 원문을 실제 열어 **파일명·Library ID·바이트·SHA-256·전문화 수·승인/REVIEW**를 확인하라. 기록된 해시를 지금 열었다는 증거로 둔갑시키지 마라. 독립본을 통합본의 전문화 수에 합산하지 마라.
 >
 > **확정 방향:** ChatGPT 일반 채팅에서 최신 패치 원문을 독립 분석해 V11 이상 한국어 단일 HTML을 CREATE/UPDATE한다. 독립 AI API 엔진·거대 JSON·공개 웹앱·검사기 증식이 목표가 아니다. 새로운 UI를 매번 재설계하지 않고 호평받은 실제 공통 구성요소를 재사용하되, 과거 교본의 게임 로직은 정답으로 가져오지 않는다.
 >
