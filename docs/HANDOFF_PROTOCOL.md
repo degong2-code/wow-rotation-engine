@@ -5,7 +5,7 @@
 ## 새 채팅 시작 (평소 4개 문서만)
 
 1. GitHub `degong2-code/wow-rotation-engine`의 **현재 활성 PR/HEAD/base/CI를 실조회**한다. `main`과 Draft 작업 브랜치 혼동 금지.
-2. **[PROJECT_CANON](PROJECT_CANON.md) → [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md) §0/§0.1/§5.1 → [CURRENT_STATE](CURRENT_STATE.md) → [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)**만 기본 로드. 추가 문서는 작업에 직접 관련된 구간만 읽는다. 과거 HANDOFF 전체 정독을 기본값으로 만들지 않는다.
+2. **[PROJECT_CANON](PROJECT_CANON.md) → [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md) §0/§0.1/§5.1 → [CURRENT_STATE](CURRENT_STATE.md) → [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md)**를 기본 로드. 제작·분석을 시작할 때는 PLAYBOOK **§0.1 작업별 필수 참조**를 추가로 수행한다(원문 의존 작업이라면 기존 SOURCE_ACQUISITION/HTTP/WHML 연구·코드 필수). 과거 HANDOFF 전부는 기본 정독하지 않는다.
 3. 실제 사용할 개인 HTML(V11 비교 기준/최신 통합/독립본)을 개인 Library에서 열어 **파일 실물 크기·SHA-256·해당 전문화·승인 상태**를 검증한다. 문서의 파일명/해시는 실물 확보 증거가 아니다.
 4. 요청이 명시적 **읽기 전용 독립 복원**이면 GitHub 상태·실제 파일·품질 REVIEW·다음 작업을 보고하고 변경하지 않는다. 전문화명·진행/UPDATE를 받은 경우는 제작 계약에 따라 작업한다.
 
