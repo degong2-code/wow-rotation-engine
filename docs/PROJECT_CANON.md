@@ -41,11 +41,14 @@
 | 최상위 품질 원칙 | [QUALITY_FIRST_POLICY](QUALITY_FIRST_POLICY.md) §0/§0.1 | 교본 완성, 판단 정확성, 불필요한 기능 개발 억제 |
 | **프로젝트 정의·길찾기** | **이 파일 PROJECT_CANON** | 제품, 역할, 정상 흐름, 문서 체계 |
 | 제작 규칙 | [CHAT_FIRST_PLAYBOOK](CHAT_FIRST_PLAYBOOK.md) | CREATE/UPDATE, 조건 표현, 오프너, UI |
+| 원문 의존 작업의 필수 하위 실행 경로 | [SOURCE_ACQUISITION](SOURCE_ACQUISITION.md) | 원문 누락 시 기존 HTTP/WHML 수집 코드·과거 실증 우선 확인, 사용자 수동 요청은 최후 수단 |
 | 최신 상태 **하나만** | [CURRENT_STATE](CURRENT_STATE.md) | 활성 PR, 개인 제품 REVIEW/승인, 다음 작업, 장애 |
 | 검증 상세 | [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md), [V11_FIDELITY](V11_FIDELITY.md) | 근거와 품질/기능 수용 |
 | 개발 로드맵 | [ROADMAP_CHAT_FIRST](ROADMAP_CHAT_FIRST.md) | 단계별 목표·AI/비AI·원문 확보 |
 | 새 채팅 복원 | [HANDOFF_PROTOCOL](HANDOFF_PROTOCOL.md) | 입장·완료·인계 체크리스트와 프롬프트 |
 | 사례/과거 인계 | 날짜별 HANDOFF, QUALITY_GENERALIZATION_CASEBOOK 등 | 역사 증거. 최신 상태를 덮어쓰지 않음 |
+
+**읽기 경로:** 기본 4개 문서는 진입점이며, 실제 작업 전에 PLAYBOOK §0.1의 **해당 작업별 필수 참조**를 확인한다. 과거 연구/구현은 기본 로딩에서 제외하되 원문 수집·오프너·툴팁·UI처럼 관련 과제가 발생하면 **반드시 찾아 실행·대조**한다. 기록은 역사에 보존하지만 적용하지 않으면 품질 자산이 아니다.
 
 상충 시 **최신 사용자 지시 > 최상위 품질 정책 > 프로젝트 정의/제작 절차 > 실조회한 최신 GitHub 상태·개인 파일 증거 > 과거 날짜의 작업 기록**. CURRENT_STATE는 시점 표시가 있는 요약이며 GitHub HEAD/PR/CI는 매 채팅에서 다시 조회한다.
 
