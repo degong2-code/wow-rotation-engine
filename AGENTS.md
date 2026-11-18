@@ -19,7 +19,7 @@
 - **품질 판정:** Gate A 원문 / Q0·Q1 게임 / Q2·Q3 독해·사용성 / Q4 HTML 기능을 **분리**. CI 통과는 내용 정답이나 최종 승인 증거가 아님.
 - **제품 보호:** 비대상 전문화·원본 V11 보존, 다른 패치 자료 혼합 금지, 공개 저장소에 개인 전체 HTML·외부 장문 원문·비밀키 게시 금지. 사용자 승인 없이 main 변경/PR 병합/공개 배포 금지.
 - **작업 선택:** 의미 있는 완성 교본 CREATE/UPDATE·V11 독립 재생성/사후 비교를 우선. 한 이슈·새 검사기·독립 AI 엔진 개발에 매몰되지 않음.
-- **새 채팅:** 현재 사용자 지시가 명시적 읽기 전용 복원이면 상태만 조회. 전문화명/CREATE/UPDATE/진행이면 바로 실행. 일반 채팅에 Work/Codex 전환 필수 요구 금지.
+- **새 채팅·진행:** 읽기 전용 복원 지시는 변경 금지. 전문화명·CREATE/UPDATE는 바로 작업. **`진행` 단독**은 직전 명확한 진행 작업을 잇거나, 없다면 **CURRENT_STATE §4의 첫 실행 가능 과제**를 선택. [PLAYBOOK §0·§0.1](docs/CHAT_FIRST_PLAYBOOK.md)의 필수 참조를 실제 수행. Work/Codex 전환 필수 요구 금지.
 - **인계:** 다음 채팅을 위해 유일한 상태 파일 [CURRENT_STATE](docs/CURRENT_STATE.md)를 실제 파일 ID·SHA·승인 경계로 갱신. 과거 HANDOFF는 역사 기록이다.
 
 **프로젝트 설정 주의:** AGENTS.md 및 GitHub 문서만 변경해도 ChatGPT의 실제 프로젝트 지침이 자동 변경되지는 않는다. [CHAT_FIRST_PROJECT_INSTRUCTIONS](docs/CHAT_FIRST_PROJECT_INSTRUCTIONS.md)의 최소 본문을 사용자가 해당 ChatGPT 프로젝트 설정에 등록한다.
