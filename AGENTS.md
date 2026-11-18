@@ -9,7 +9,7 @@
 3. [CURRENT_STATE](docs/CURRENT_STATE.md) — **최신 개인 파일·REVIEW·다음 작업** (PR/HEAD/CI 실조회)
 4. [CHAT_FIRST_PLAYBOOK](docs/CHAT_FIRST_PLAYBOOK.md) — **실행 가능한 제작/통합 UI 계약**
 
-인계·새 시즌 원문 확보 등 **직접 관련된 작업일 때만** [HANDOFF_PROTOCOL](docs/HANDOFF_PROTOCOL.md), [SOURCE_ACQUISITION](docs/SOURCE_ACQUISITION.md), [ROADMAP](docs/ROADMAP_CHAT_FIRST.md) 등을 조회한다. 과거 장문 HANDOFF/CASEBOOK은 역사 증거로만 참조한다.
+**기본 4개는 시작점이다.** [PLAYBOOK §0.1](docs/CHAT_FIRST_PLAYBOOK.md)의 **작업별 필수 참조 표**를 적용한다. 특히 **신규 CREATE·원문 UPDATE·선택형/오프너/툴팁 미확보**라면 [SOURCE_ACQUISITION](docs/SOURCE_ACQUISITION.md)과 **기존 HTTP/WHML 수집 코드·과거 실증**을 먼저 실제 확인한다. 웹 텍스트에 없다고 원문이 없다고 단정하거나, 기존 도구 확인 전에 사용자 Ctrl+S를 기본 요구하지 않는다. 인계는 [HANDOFF_PROTOCOL](docs/HANDOFF_PROTOCOL.md), 장기 방향은 [ROADMAP](docs/ROADMAP_CHAT_FIRST.md)을 필요할 때만 참조한다. 과거 장문 자료는 해당 작업에 필요한 증거 부분만 조회한다.
 
 ## 작업의 절대 기준
 
