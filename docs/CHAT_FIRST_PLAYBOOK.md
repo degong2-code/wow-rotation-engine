@@ -10,6 +10,22 @@
 3. 요청이 **CREATE**, 기존 전문화 **UPDATE**, 기존 V11 내용과 독립 비교하는 **제로베이스 실험**, 또는 **읽기 전용 복원**인지 구분. 읽기 전용이면 변경하지 않고 보고. 전문화명만 주어지면 제작을 진행한다.
 4. 이번 작업으로 개선할 **실제 독자의 다음 기술 선택 또는 사용성**을 한 문장으로 명시. 도구·문서·검사기 자체를 성과로 삼지 않는다.
 
+## 0.1 작업별 필수 참조 — 기본 4개 + 해당 작업에 꼭 필요한 증거만
+
+**기본 4개만 읽고 바로 제작하는 것은 잘못이다.** 기본 문서는 진입점이며, 아래 **작업 유형이 발생하면 해당 경로까지 실제 파일/코드를 조회**해야 한다. 반대로 모든 날짜별 기록을 매번 전부 읽지 않는다. 각 작업의 참조 경로는 여기 한 곳에서 유지한다.
+
+| 실제 작업·증상 | 작업 전에 추가로 반드시 확인할 자료·기존 구현 |
+|---|---|
+| **신규 전문화 CREATE·원문이 필요한 UPDATE·선택형 원문 불확실** | [SOURCE_ACQUISITION](SOURCE_ACQUISITION.md)의 **현행 취득 순서**와 [AUTO_PAGE_ACQUISITION](AUTO_PAGE_ACQUISITION.md); 실제 `engine/source_acquisition_pipeline.py`, `engine/http_source_fetch.py`, `engine/embedded_markup.py`, `engine/source_editorial_packet.py` 존재/사용 가능 여부. **웹 텍스트가 불완전하다는 이유만으로 바로 사용자에게 Ctrl+S를 요청하지 않음.** |
+| 영웅·전투·재능·물약 **선택/접힘/툴팁**을 웹 텍스트에서 잃음 | [ENHANCEMENT_SAVED_HTML_EVIDENCE_20261112](ENHANCEMENT_SAVED_HTML_EVIDENCE_20261112.md)에서 `WH.markup.printHtml`의 `guide-body`, `display-option(s)`, named tooltip/참조를 확인한 방법 재사용. 필요할 때만 [SOURCE_COVERAGE_AUDIT](SOURCE_COVERAGE_AUDIT.md), [LIVE_DOM_CAPTURE](LIVE_DOM_CAPTURE.md). |
+| 오프너 **제목/Notes는 보이는데 실제 시전 순서가 없음** | [FURY_OPENER_SOURCE_20261116](FURY_OPENER_SOURCE_20261116.md)의 `[rotation-timeline]`/`[rt-step]`/`[rt-half-step]` 사례 확인 후 **원본 WHML부터 검사**. 단계 ID가 실제 시전인지 버프/효과인지 별도 판단. |
+| HTTP 실패·브라우저 403·날짜/패치 불일치 | [SOURCE_ACQUISITION_REPRO_20261116](SOURCE_ACQUISITION_REPRO_20261116.md)에서 **과거 Actions 정상 HTTP 성공과 다른 채팅 환경 DNS 실패를 분리**한 경계 확인. 가능한 환경의 기존 정상 취득 경로부터 확인하며 차단 우회·버전 혼합 금지. |
+| 게임 판단의 조건·예외·수치가 모호함 | [EDITORIAL_QUALITY_PROTOCOL](EDITORIAL_QUALITY_PROTOCOL.md)의 양방향 원문↔교본 검사; 확인이 필요한 특정 쟁점에만 [QUALITY_GENERALIZATION_CASEBOOK](QUALITY_GENERALIZATION_CASEBOOK.md) 관련 절을 검색. 과거 교본은 현 패치 게임 정답 아님. |
+| 첫 화면·메뉴·표·디자인 UPDATE | [CURRENT_STATE](CURRENT_STATE.md)의 실제 최신 개인 Library UI와 V11 비교 파일을 **실물로 확인**한 뒤 동폭 Q3. 원본 구조 이식보다 게임 본문 보존 우선; 필요 시 [V11_FIDELITY](V11_FIDELITY.md) 참고. |
+| 명시적 읽기 전용 복원/인계 | [HANDOFF_PROTOCOL](HANDOFF_PROTOCOL.md); HISTORY 문서를 최신 정본으로 취급하지 않음. |
+
+**실행 증거 게이트:** 원문 부족을 선언하거나 사용자에게 자료를 요청하기 전, (1) 기존 추출 코드/정상 접근 경로를 찾아 실제 적용했는지, (2) 패치/날짜와 `guide-body`/선택/툴팁/타임라인 확보 범위, (3) 실패가 DNS·403·429·페이지 개정 차이·실행 환경 도구 부재 중 무엇인지, (4) 과거 정상 성공이 **이번 환경의 성공을 보장하지 않는다는 점**을 구별한다. 도구가 없어 실행하지 못했으면 **미실행/접근 불가**로 보고하고, 가장 작은 사용자 자료만 마지막에 요청한다. 이는 새 엔진·검사기를 만드는 지시가 아니다.
+
 ## 1. 콘텐츠: 원문 확보 → 게임 판단 → 집필
 
 **Gate A — 기준 공략 확보**
