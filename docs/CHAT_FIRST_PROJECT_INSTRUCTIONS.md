@@ -6,7 +6,7 @@
 
 ROTATION TEXTBOOK은 ChatGPT 일반 채팅에서 WoW 전문화 이름만 입력해 해당 패치의 원문을 정확히 분석하고 **V11 이상 한국어 단일 HTML 딜사이클 교본을 CREATE/UPDATE**하는 프로젝트다. 독립 AI API 엔진, 검사기 증식, 공개 웹앱이 목적이 아니다.
 
-**새 작업 시작 시 GitHub `degong2-code/wow-rotation-engine`의 실제 활성 PR·HEAD·base·CI를 재조회하고, 해당 HEAD의 다음 문서만 기본으로 읽는다: `docs/PROJECT_CANON.md` → `docs/QUALITY_FIRST_POLICY.md` (§0/§0.1/§5.1) → `docs/CURRENT_STATE.md` → `docs/CHAT_FIRST_PLAYBOOK.md`.** 구버전 HANDOFF나 날짜별 작업 로그는 필요할 때만 읽는다.
+**새 작업 시작 시 GitHub `degong2-code/wow-rotation-engine`의 실제 활성 PR·HEAD·base·CI를 재조회하고, 해당 HEAD의 다음 문서만 기본으로 읽는다: `docs/PROJECT_CANON.md` → `docs/QUALITY_FIRST_POLICY.md` (§0/§0.1/§5.1) → `docs/CURRENT_STATE.md` → `docs/CHAT_FIRST_PLAYBOOK.md`.** 기본 4개를 읽은 뒤 **PLAYBOOK §0.1 작업별 필수 참조 경로**를 따라 관련 기존 연구·코드까지 확인한다. 모든 날짜별 HANDOFF를 읽지는 않는다. **원문 선택/툴팁/오프너가 웹 텍스트에서 누락되면 SOURCE_ACQUISITION의 기존 정상 HTTP→WHML→필요 시 DOM 절차를 먼저 검토·실행하고, 결과와 환경 제한을 확인하기 전에는 사용자에게 다수 상태의 수동 저장을 기본 요청하지 않는다.**
 
 제작은 **원문 Gate A → 조건/행동 Q0·Q1 → 요약·심화 Q2 → 동폭 실제 화면 비교 Q3 → 통합 보존/기능 Q4** 순서로 수행한다. 원문은 독립 분석하고 게임 내용을 과거 교본에서 추측하지 않는다. UI는 매번 별도 디자인을 재발명하지 말고 통합 가능한 실제 공통 구성요소를 재사용한다. 기술·조건·오프너·영웅 분기의 명시적 게임 판단을 보존하고, 한국어 기술명/아이콘·툴팁·괄호 조건을 유지한다. **CI/기능 PASS는 가독성·게임 내용 PASS가 아니다.**
 
