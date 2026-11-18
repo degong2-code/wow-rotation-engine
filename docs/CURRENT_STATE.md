@@ -13,7 +13,7 @@
 | 역할 / 상태 | Library 위치 및 ID | 기록된 실제 바이트·SHA-256 |
 |---|---|---|
 | **통합 V88** · 14개 전문화, **디자인 일부 선호 확인·전체 REVIEW** | `/ROTATION TEXTBOOK/wow_rotation_v83_fury_editorial_v88_no_cell_shading_REVIEW.html` · `libfile_1c87d86e0b048191a7ee46bc6b093fc1` | **2,629,547B** · `1c817f1f8896b111f18be367fe879aa09214e6ecd4e450afa399a6443efbd236` |
-| **악마 흑마법사 v3** · 15번째 후보, 통합 미연결, **Gate A·Q0/Q1·Q3 REVIEW** | `/ROTATION TEXTBOOK/wow_rotation_demonology_1215_independent_q0verified_v3_REVIEW.html` · `libfile_4f0b0b886858819193d8ab5b9a5dfce2` | **106,510B** · `c6d191fd237781835f82e8ccbd38a6e1fc38d98ac00cf161efe2a2356a914e6a` |
+| **악마 흑마법사 독립 v4** · 15번째 후보, 통합 미연결, **Q0/Q1·Q3 REVIEW** | `/ROTATION TEXTBOOK/wow_rotation_demonology_1215_independent_whml_v4_REVIEW.html` · `libfile_16639d2711248191b7766469d632878c` | **121,413B** · `eeee44e34c9e1d90a04bd3547a05ee90285c7c1361571c462ab21b7da08b3318` |
 | **기존 통합 V83** · 14개, 변경 전 비교 기준 | `/ROTATION TEXTBOOK/wow_rotation_v11_partial_design_v83_REVIEW.html` · `libfile_098b2ad2528081919d0608ba39b185d4` | **2,611,792B** · `14be1b44db12cea04ca56a1655a97a3dcc921dab697070e97f5935901c2419ed` |
 | **기존 V11** · UX·설명 비교 기준, 현재 패치 게임 정답 아님 | `wow_rotation_manual_engine_v2.html` · `libfile_047243e589bc8191b348398ec923c910` | **898,297B** · `5d70279c4dd073eccef1f3b13565a8f555cd81c9f0a5b7eda7e3485e410742be` |
 | **고통 흑마법사 V82** · 사용자 가독성 호평(전체 승인 아님) | `/ROTATION TEXTBOOK/wow_rotation_affliction_decision_sync_v82_REVIEW.html` · `libfile_cf7ca2a7c1ac819192442028ac1b3c87` | **148,608B** · `a46a18a6209545fb4da9f4be9a94df1de002e9301be6e4cf146a2472d8b123c8` |
@@ -28,17 +28,17 @@
 
 | 게이트 | 현재 판정 |
 |---|---|
-| **Gate A** | **악마 기준 원문 WHML 확보:** 위 개인 저장본에서 영웅 2종·우선순위 4개·영웅별 오프너 2개/타임라인·실제 tooltip 내용 확인. 기존 DNS 실패는 이번 컨테이너 네트워크 경로의 실패로 **원문 부재가 아님**. 원문 내 `Trick-Op` 미정의 표시 조건·`NotesHighlight` 미정의 참조, 타임라인 기술 ID↔산문 차이는 REVIEW. 단일/광역 **별도 4오프너라는 증거 없음**. 메인 HTML 추가 제출 불필요 |
-| **Q0/Q1** | 악마 v3는 원문 타임라인의 종족기/장신구/소모품 분기·영혼수확자 전투 전 2초 선시전 표식이 누락됨. 확보한 선택/조건/Notes를 우선순위↔오프너에 귀속 후 교정 필요. 일부 출처 내 참조 불일치는 표시만 REVIEW. 파괴 광역·비전 심화도 별도 REVIEW |
-| **Q2/Q3** | V88 선호 일부 확인. **악마 v3↔고통 V82 동폭 850px:** 첫 빠른 우선순위 표 **340px(악마) vs 219px(고통)**; 악마 단일 164px/광역 135px vs 고통 105px/75px. 내용·설명 밀도 개선 필요. Chromium `set_content`, 외부 이미지 차단 기준. 사용자/전체 Q3 REVIEW |
-| **Q4** | V88↔V87 14개 본문·기존 JS 보존, 8상태 UI 기능 검사 범위 PASS. 악마 v3 12상태 검사 범위 PASS. **CDN 이미지 실응답·실제 `file://`·완전한 실기기 검증은 별도 REVIEW** |
+| **Gate A** | 악마 12.1.5 저장본 WHML **19,383자 확보**, 영웅 선택 2·ST/AoE 우선순위 4×8행·오프너 타임라인 2개/35 표식/4개 `rt-branch`·실제 툴팁 본문 2개 귀속 완료. **원문 자체의** 미정의 `Trick-Op`·`NotesHighlight`와 타임라인↔산문 상충은 검토 범위에 남김. 4개 독립 전투 유형별 오프너 없음; 메인 HTML 추가 요청 불필요 |
+| **Q0/Q1** | 악마 **v4**는 원문 분기(종족 기술·물약·장신구)·영혼수확자 전투 시작 5초/2초 전 선시전·전투 전 준비 5항목·툴팁 위치를 복원. 기존 32 우선순위 행 순위/행동·오프너 본문 23단계 보존. **악마학자 4초 전 주문 ID 264187 vs 본문 264178**, 영혼수확자 시각 타임라인 vs 산문 시전 횟수, 옛 아이템 ID의 현재 적합성은 REVIEW. 파괴 광역·비전 심화 별도 REVIEW |
+| **Q2/Q3** | v4 첫 화면에 영웅별 오프너 요약 추가, 타임라인 35개는 펼침 상세로 분리. V88 디자인 일부 선호 확인. v3↔고통 V82 850px 첫 우선순위 340px vs 219px 밀도 차이 재편집·**사용자 v4 가독성 평가 REVIEW** |
+| **Q4** | v4 Chromium 320/390/650/850/1180/1365px × 2영웅 = **12상태 PASS**(넘침·JS 오류·영웅 전환·목차·툴팁·타임라인 펼침). v3의 32개 우선순위 행동/순서·23개 오프너 문장, JS 원문 보존. V88 통합 14개는 변경 없음. 외부 CDN 이미지·실기기 Q4는 REVIEW |
 
 **현재 기준 문서:** [PLAYBOOK](CHAT_FIRST_PLAYBOOK.md) §0의 작업 선택·§0.1의 **필수 참조 라우팅**. 신규 CREATE·원문 UPDATE는 웹 텍스트만 읽고 사용자에게 저장본 여러 개를 바로 요청하지 않는다. 기존 HTTP→WHML→필요 시 정상 브라우저 경로를 먼저 확인·가능하면 실행한다. **코드 존재/실행/원문 취득/게임 판단 승인**은 서로 다르다.
 
 ## 4. 다음 1~3개 제품 작업 — `진행` 단독 요청의 기준
 
-1. **악마 원문→v3 Q0/Q1 교정:** 이번에 Library에 확보한 실제 12.1.5 WHML의 `display-options`, `[rotation-timeline]` 및 tooltip 정의를 기존 `embedded_markup` 방법으로 연결. 누락된 전투 전 2초·종족기/장신구/소모품 조건과 설명 원래 귀속을 복원. `Trick-Op`/`NotesHighlight` 미정의는 원문 이상으로 별도 REVIEW하고, **없는 단일·광역 오프너 분기 생성 금지**.
-2. **악마 v3 원고·첫 화면 재검토:** 확보한 추가 조건만 Q0/Q1에 보충. 고통 V82·통합 V88과 동폭 Q2/Q3 비교, 중요한 행동 조건의 요약↔상세 귀속 검수. 게임 판단 모호함은 좁게 REVIEW.
+1. **악마 v4 잔여 Q0/Q1 판정:** 저장 WHML 오프너 본문↔타임라인 충돌(`264187` vs `264178`, 영혼수확자 후반 횟수), `Trick-Op`/`NotesHighlight` 미정의 및 원문 옛 시즌 소비재 ID를 **실제 게임 선택에 영향을 주는 범위로 좁혀 검증**. 확인되지 않으면 해당 판단만 REVIEW. 이전 v1~v4 같은 원고 계보를 독립 CREATE 4종으로 집계 금지.
+2. **악마 v4 Q2/Q3 실물 평가:** 새 첫 화면 오프너 요약·조건부 묶음·타임라인 접힘을 고통 V82·통합 V88과 동폭/PC·모바일로 비교. 필요할 때 사용자 가독성 의견 반영. 게임 조건·우선순위 보존 최우선.
 3. **반복 제작 품질 실증:** 다른 전문화의 신규 독립 CREATE 또는 V11 제로베이스 재집필과 UPDATE로 동일 절차가 실제 반복되는지 확인. 같은 원고의 v1~v3 수정본을 독립 성공 사례로 중복 계산하지 않음.
 
 ## 5. 갱신 규칙
