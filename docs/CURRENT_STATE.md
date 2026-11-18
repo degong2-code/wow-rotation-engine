@@ -10,6 +10,8 @@
 
 ## 2. 개인 Library 제품 — 마지막 실측 기록
 
+> **2026-11-18 인계 독립 실물 검증:** 통합 V88·악마 독립 v10·V11 원본·고통 V82·악마 와우헤드 개인 저장본을 실제 Library에서 열어 아래 바이트/SHA-256과 모두 일치함을 확인했다. 이는 **이번 인계 시점의 증거**이며, 새 채팅은 스스로 실물 접근과 SHA를 다시 확인해야 한다.
+
 | 역할 / 상태 | Library 위치 및 ID | 기록된 실제 바이트·SHA-256 |
 |---|---|---|
 | **통합 V88** · 14개 전문화, **디자인 일부 선호 확인·전체 REVIEW** | `/ROTATION TEXTBOOK/wow_rotation_v83_fury_editorial_v88_no_cell_shading_REVIEW.html` · `libfile_1c87d86e0b048191a7ee46bc6b093fc1` | **2,629,547B** · `1c817f1f8896b111f18be367fe879aa09214e6ecd4e450afa399a6443efbd236` |
