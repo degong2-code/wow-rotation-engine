@@ -47,6 +47,6 @@
 
 ## 5. 복원/유지 원칙
 
-- 새 채팅: **PROJECT_CANON → QUALITY_FIRST_POLICY §0/§0.1/§5.1 → CURRENT_STATE → CHAT_FIRST_PLAYBOOK** (필요할 때만 나머지).
+- 새 채팅: **PROJECT_CANON → QUALITY_FIRST_POLICY §0/§0.1/§5.1 → CURRENT_STATE → CHAT_FIRST_PLAYBOOK** 후, **PLAYBOOK §0.1의 작업별 필수 연구/기존 코드**를 실제 조회·필요 시 실행. 특히 원문 선택형·오프너 누락 시 SOURCE_ACQUISITION의 HTTP→WHML 우선 경로 확인 없이는 사용자 저장본을 기본 요청하지 않는다. 2026-11-18 문서 경량화는 Git 이력에 남고 **통합 V88/악마 v3 제품 상태는 불변**.
 - 완료: 변경 대상·결과물 Library 실물·SHA, 게이트별 PASS/REVIEW, 다음 1~3개로 **이 문서의 해당 칸을 교체**한다. 과거 날짜별 장문 로그를 덧붙이지 않는다.
 - **기존 이력 삭제 아님:** [정비 직전 CURRENT_STATE 전체](https://github.com/degong2-code/wow-rotation-engine/blob/e3416fc9643f2108187648c356d776115e5cda82/docs/CURRENT_STATE.md) 및 [버전별 Git History](https://github.com/degong2-code/wow-rotation-engine/commits/work/chat-first-talent-visibility-spell-media-20261114/docs/CURRENT_STATE.md) 사용.
