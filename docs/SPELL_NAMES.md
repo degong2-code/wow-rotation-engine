@@ -34,3 +34,29 @@ Blizzard Developer Portal에서 본인이 등록한 OAuth 클라이언트 자격
 - 원문 공략 수집, 자동 번역·딜사이클 변경, Pages 실전 게시 기능과 혼동하면 안 됩니다.
 
 공식 문서: https://develop.battle.net/documentation/world-of-warcraft/game-data-apis
+
+
+## 2026-11-14: 신규 전문화 주문 ID와 공식 Blizzard 아이콘 미디어
+
+기존 Blizzard ko_KR 이름 증거 경로에 공식 아이콘 조회 기능을 **선택적으로 확장**했다. 별도의 번역기나 아이콘 추정기는 만들지 않았다. 신규 전문화에서는 기존 V11 176개 주문 ID에 없는 **1~100개의 양의 정수 주문 ID**도 직접 지정할 수 있다.
+
+**GitHub Actions 사용 절차**
+
+1. Actions → Collect Blizzard ko_KR spell names and icons → Run workflow.
+2. 기존 GitHub Secrets인 BLIZZARD_CLIENT_ID / BLIZZARD_CLIENT_SECRET가 등록되어 있어야 한다. 비밀 키를 채팅에 입력하거나 로그에 쓰지 않는다.
+3. spell_ids: 예를 들어 5176,93402,205636처럼 새 전문화의 주문 ID를 쉼표로 입력한다. 비워두면 기존 V11의 176개 중 max_ids 범위를 조회한다.
+4. include_media: true를 선택하면 공식 한국어 주문명 조회가 성공한 ID에만 미디어 조회를 추가한다. 기본값은 false다.
+
+**실행 명령 예시**
+
+    python -m engine.spell_names fetch --spell-ids "5176,93402,205636" --include-media --output dist/spell-name-snapshot.json --report dist/spell-name-audit.json
+
+**공식 조회 경로**
+
+- 이름: https://kr.api.blizzard.com/data/wow/spell/5176?namespace=static-kr&locale=ko_KR
+- 아이콘: https://kr.api.blizzard.com/data/wow/media/spell/5176?namespace=static-kr&locale=ko_KR
+- 별도 게임 클라이언트 대조: C_Spell.GetSpellInfo(ID)의 name / iconID / originalIconID. 덮어쓰기 기술이라면 현재/원본 아이콘을 구분한다.
+
+응답 주문 ID 일치·Blizzard CDN HTTPS 미디어 URL·공식 이름·404/인증 실패를 확인한다. 잘못된 URL이나 미확인 아이콘 파일명을 공식 사실로 승격하지 않는다. 신규 ID는 new_spell_requires_editorial_review, 모든 아이콘은 icon_review=pending, 보고서 publish_ready=false를 유지한다. 공식 데이터가 있어도 원문 패치·게임 판단의 정확성은 별도로 검토해야 한다.
+
+**조화 드루이드 V4 경계:** 개인 HTML에서는 14개 기술 ID와 한국어 Wowhead 페이지·아이콘 파일명 참조를 반영했으나, 아직 **Blizzard API의 실제 14개 응답을 받아 확정하지 않았다**. 공식 명칭/아이콘 교차검증은 REVIEW다. V11의 기존 7개 내용은 자동 교정·변경하지 않는다.

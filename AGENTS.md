@@ -1,21 +1,25 @@
-# ROTATION TEXTBOOK — 작업자 및 AI 에이전트 진입 지침
+# ROTATION TEXTBOOK — 모든 작업자/AI의 진입 지침
 
-이 저장소의 최종 제품은 **사용자가 WoW 전문화 이름만 입력하면 정확한 최신 원문을 분석해 V11 이상 한국어 단일 HTML 교본을 CREATE/UPDATE하는 ChatGPT 중심 제작 경험**이다. 독립 API 엔진, 복잡한 원문 수집기, 전문화별 미세 검증 도구가 제품이 아니다.
+**제품:** GitHub의 제작 지식·품질 기준 + 해당 시즌의 공략 원문을 바탕으로 **ChatGPT가 V11 이상 한국어 단일 HTML 교본을 CREATE/UPDATE**한다. WoW 정보의 정답 데이터베이스나 별도 AI API/웹앱 개발 프로젝트가 아니다.
 
-## 모든 개발·분석·인계 전 필독 (우선순위 순)
+## 새 채팅 기본 로딩 — 4개만
 
-1. [docs/QUALITY_FIRST_POLICY.md §0](docs/QUALITY_FIRST_POLICY.md) — **사용자 확정 최상위 교본 중심·범위 통제 정책**. 이 문서가 최상위 정본이며 여기에 동일 정책을 복제하지 않는다.
-2. [docs/CHAT_FIRST_PROJECT_INSTRUCTIONS.md](docs/CHAT_FIRST_PROJECT_INSTRUCTIONS.md) — ChatGPT 프로젝트/새 채팅 지침 및 실행 계약.
-3. [docs/HANDOFF_CHAT_FIRST_CURRENT.md](docs/HANDOFF_CHAT_FIRST_CURRENT.md) — 활성 브랜치·최신 상태·검증 한계; HEAD/PR은 실제 GitHub에서 재확인.
-4. [docs/CHAT_FIRST_PLAYBOOK.md](docs/CHAT_FIRST_PLAYBOOK.md) — 완전한 원문 이해 → 결정 조건 추출 → 교본 집필 → 내용·기능 검증.
-5. [docs/EDITORIAL_QUALITY_PROTOCOL.md](docs/EDITORIAL_QUALITY_PROTOCOL.md), [docs/QUALITY_GENERALIZATION_CASEBOOK.md](docs/QUALITY_GENERALIZATION_CASEBOOK.md) — 내용 정확성과 정상/실패 대조.
+1. [PROJECT_CANON](docs/PROJECT_CANON.md) — 제품 정의
+2. [QUALITY_FIRST_POLICY](docs/QUALITY_FIRST_POLICY.md) §0/§0.1/§5.1 — 최상위 정책
+3. [CURRENT_STATE](docs/CURRENT_STATE.md) — **최신 개인 파일·REVIEW·다음 작업** (PR/HEAD/CI 실조회)
+4. [CHAT_FIRST_PLAYBOOK](docs/CHAT_FIRST_PLAYBOOK.md) — **실행 가능한 제작/통합 UI 계약**
 
-## 작업을 시작할 때
+**기본 4개는 시작점이다.** [PLAYBOOK §0.1](docs/CHAT_FIRST_PLAYBOOK.md)의 **작업별 필수 참조 표**를 적용한다. 특히 **신규 CREATE·원문 UPDATE·선택형/오프너/툴팁 미확보**라면 [SOURCE_ACQUISITION](docs/SOURCE_ACQUISITION.md)과 **기존 HTTP/WHML 수집 코드·과거 실증**을 먼저 실제 확인한다. 웹 텍스트에 없다고 원문이 없다고 단정하거나, 기존 도구 확인 전에 사용자 Ctrl+S를 기본 요구하지 않는다. 인계는 [HANDOFF_PROTOCOL](docs/HANDOFF_PROTOCOL.md), 장기 방향은 [ROADMAP](docs/ROADMAP_CHAT_FIRST.md)을 필요할 때만 참조한다. 과거 장문 자료는 해당 작업에 필요한 증거 부분만 조회한다.
 
-- 수행할 변경이 **최종 한국어 교본의 정확성, 누락 방지, 이해도, 실전 사용성 또는 다른 전문화 반복 제작성 중 무엇을 개선하는지** 설명한다.
-- 선택 ID·물약·특정 기술 한 건의 문제는 **실제 다음 행동에 영향을 주는 핵심 문제인 경우만** 조사 범위를 확장한다. 기존 절차로 해결하거나 REVIEW로 보류할 수 있으면 새 검사기를 만들지 않는다.
-- **완성 교본/종단 간 CREATE·UPDATE 경로를 우선**한다. 자동 테스트 수·커밋 수·서류량·도구량을 품질 지표로 삼지 않는다. 반복적인 특수 사례 QA가 최종 교본 제작을 지연하면 작업을 중단하고 전체 제작 흐름으로 복귀한다.
-- 원문 Gate A, 게임 의미 Q0/Q1, 이해/실전 Q2/Q3, HTML 보존 Q4를 구분한다. CI 성공을 실전 로테이션의 정확성으로 주장하지 않는다.
-- main, 사용자 승인 정본 및 비공개 HTML·외부 장문 원문은 승인 없이 변경·공개하지 않는다. 현재 활성 개발 브랜치/PR은 인계 문서가 아니라 **실제 GitHub 상태**로 판단한다.
+## 작업의 절대 기준
 
-**중요:** 저장소의 AGENTS.md·Markdown은 ChatGPT의 모든 새 채팅에 자동 주입되는 계정/프로젝트 설정이 아니다. 프로젝트 설정에는 [CHAT_FIRST_PROJECT_INSTRUCTIONS](docs/CHAT_FIRST_PROJECT_INSTRUCTIONS.md)의 짧은 시작 지침을 등록해야 하며, 새 채팅은 이를 통해 최신 GitHub 문서를 읽는다.
+- **실제 원문 및 버전부터:** 사용자 지정 원문 우선, 없으면 동일 패치의 Wowhead 하나를 편집 기준. 영웅/전투/선택/숨은 관련 본문·오프너를 검토하며 없는 자료를 채우지 않음.
+- **진짜 게임 판단만:** 기술 사용 자체가 증명하는 전제·상위 조건 불충족을 우선순위마다 반복하지 않음. 선택이 달라지는 숫자·발동·예외는 반드시 보존. 사용자 교본은 공식 한국어 기술명/아이콘/툴팁 사용.
+- **채택한 UI:** 빠른 참조의 기술명은 주정보, 조건은 괄호·작은 글씨·옅은 색. 사용자용 가정형 실전 사례 장 금지, 내부 반례 검증 유지. 구조/표/행 수 고정 금지.
+- **품질 판정:** Gate A 원문 / Q0·Q1 게임 / Q2·Q3 독해·사용성 / Q4 HTML 기능을 **분리**. CI 통과는 내용 정답이나 최종 승인 증거가 아님.
+- **제품 보호:** 비대상 전문화·원본 V11 보존, 다른 패치 자료 혼합 금지, 공개 저장소에 개인 전체 HTML·외부 장문 원문·비밀키 게시 금지. 사용자 승인 없이 main 변경/PR 병합/공개 배포 금지.
+- **작업 선택:** 의미 있는 완성 교본 CREATE/UPDATE·V11 독립 재생성/사후 비교를 우선. 한 이슈·새 검사기·독립 AI 엔진 개발에 매몰되지 않음.
+- **새 채팅·진행:** 읽기 전용 복원 지시는 변경 금지. 전문화명·CREATE/UPDATE는 바로 작업. **`진행` 단독**은 직전 명확한 진행 작업을 잇거나, 없다면 **CURRENT_STATE §4의 첫 실행 가능 과제**를 선택. [PLAYBOOK §0·§0.1](docs/CHAT_FIRST_PLAYBOOK.md)의 필수 참조를 실제 수행. Work/Codex 전환 필수 요구 금지.
+- **인계:** 다음 채팅을 위해 유일한 상태 파일 [CURRENT_STATE](docs/CURRENT_STATE.md)를 실제 파일 ID·SHA·승인 경계로 갱신. 과거 HANDOFF는 역사 기록이다.
+
+**프로젝트 설정 주의:** AGENTS.md 및 GitHub 문서만 변경해도 ChatGPT의 실제 프로젝트 지침이 자동 변경되지는 않는다. [CHAT_FIRST_PROJECT_INSTRUCTIONS](docs/CHAT_FIRST_PROJECT_INSTRUCTIONS.md)의 최소 본문을 사용자가 해당 ChatGPT 프로젝트 설정에 등록한다.

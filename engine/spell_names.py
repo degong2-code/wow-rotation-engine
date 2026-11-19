@@ -14,13 +14,15 @@ import os
 from pathlib import Path
 import time
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
 from urllib.request import Request, urlopen
 
 from .public_data import BASE, validate as validate_public
 
 TOKEN_URL = "https://oauth.battle.net/token"
 SPELL_ENDPOINT = "https://kr.api.blizzard.com/data/wow/spell/{spell_id}?namespace=static-kr&locale=ko_KR"
+MEDIA_ENDPOINT = "https://kr.api.blizzard.com/data/wow/media/spell/{spell_id}?namespace=static-kr&locale=ko_KR"
+OFFICIAL_MEDIA_HOSTS = frozenset({"render.worldofwarcraft.com"})
 SOURCE = "blizzard-game-data-api"
 LOCALE = "ko_KR"
 REGION = "kr"
@@ -104,15 +106,69 @@ def fetch_spell(spell_id: int, token: str, opener=urlopen, sleeper=time.sleep) -
     raise AssertionError("unreachable")
 
 
+def fetch_spell_media(spell_id: int, token: str, opener=urlopen,
+                      sleeper=time.sleep) -> dict:
+    """Retrieve official Blizzard icon asset as review evidence, not UI approval.
+
+    The URL must be a Blizzard rendering CDN link; no third-party redirect,
+    made-up filename, or guessed icon is admitted as official evidence.
+    """
+    if type(spell_id) is not int or spell_id <= 0:
+        raise ValueError("Invalid spell id")
+    req = Request(
+        MEDIA_ENDPOINT.format(spell_id=spell_id),
+        headers={"Authorization": "Bearer " + token, "Accept": "application/json"},
+    )
+    for attempt in range(3):
+        try:
+            result = _json_response(req, opener=opener)
+            if result.get("id") != spell_id:
+                return {"status": "invalid_response"}
+            assets = result.get("assets")
+            if not isinstance(assets, list):
+                return {"status": "missing_assets"}
+            icons = [a.get("value") for a in assets
+                     if isinstance(a, dict) and a.get("key") == "icon"]
+            if len(icons) != 1 or not isinstance(icons[0], str):
+                return {"status": "missing_icon"}
+            u = urlsplit(icons[0])
+            if (u.scheme != "https" or u.hostname not in OFFICIAL_MEDIA_HOSTS
+                or u.username or u.password or u.query or u.fragment
+                or not u.path.lower().endswith((".jpg", ".png", ".webp"))):
+                return {"status": "untrusted_icon_url"}
+            return {"status": "found", "icon_url": icons[0]}
+        except HTTPError as exc:
+            if exc.code in (401, 403):
+                raise RuntimeError("Blizzard media API authorization failed") from None
+            if exc.code == 404:
+                return {"status": "not_found"}
+            if exc.code in (429, 500, 502, 503, 504) and attempt < 2:
+                sleeper(min(2**attempt, 4))
+                continue
+            return {"status": "request_error"}
+        except (URLError, ValueError, UnicodeError, json.JSONDecodeError):
+            if attempt < 2:
+                sleeper(min(2**attempt, 4))
+                continue
+            return {"status": "request_error"}
+    raise AssertionError("unreachable")
+
+
 def fetch_snapshot(ids: list[int], token: str, opener=urlopen,
-                   sleeper=time.sleep, delay_seconds: float = 0.15) -> dict:
+                   sleeper=time.sleep, delay_seconds: float = 0.15,
+                   include_media: bool = False) -> dict:
     if len(ids) != len(set(ids)) or any(type(x) is not int or x <= 0 for x in ids):
         raise ValueError("Expected unique positive spell IDs")
     observations = []
     for i, sid in enumerate(sorted(ids)):
         if i and delay_seconds:
             sleeper(delay_seconds)
-        observations.append(fetch_spell(sid, token, opener=opener, sleeper=sleeper))
+        observation = fetch_spell(sid, token, opener=opener, sleeper=sleeper)
+        if include_media and observation["status"] == "found":
+            observation["media"] = fetch_spell_media(
+                sid, token, opener=opener, sleeper=sleeper,
+            )
+        observations.append(observation)
     return {
         "schema_version": SNAPSHOT_VERSION,
         "source": SOURCE,
@@ -153,13 +209,34 @@ def _validate_snapshot(snapshot: dict, known_ids: set[int]) -> dict[int, dict]:
             raise ValueError("Found observation must include name_ko")
         if r["status"] != "found" and "name_ko" in r:
             raise ValueError("Non-found observation cannot include a name")
+        media = r.get("media")
+        if media is not None:
+            if not isinstance(media, dict) or media.get("status") not in {
+                "found", "not_found", "request_error", "invalid_response",
+                "missing_assets", "missing_icon", "untrusted_icon_url",
+            }:
+                raise ValueError("Invalid media observation")
+            if media["status"] == "found":
+                u = urlsplit(media.get("icon_url", ""))
+                if (u.scheme != "https" or u.hostname not in OFFICIAL_MEDIA_HOSTS
+                    or u.username or u.password or u.query or u.fragment
+                    or not u.path.lower().endswith((".jpg", ".png", ".webp"))):
+                    raise ValueError("Invalid media URL")
+            elif "icon_url" in media:
+                raise ValueError("Unverified media cannot supply icon URL")
         seen[sid] = r
     return seen
 
 
-def audit(base: Path = BASE, snapshot: dict | None = None) -> dict:
+def audit(base: Path = BASE, snapshot: dict | None = None,
+          additional_spell_ids: set[int] | None = None) -> dict:
+    """Audit inherited and opt-in new specialization IDs, all review-only."""
     labels = inventory(base)
-    observed = _validate_snapshot(snapshot, set(labels)) if snapshot is not None else {}
+    additional = additional_spell_ids or set()
+    if len(additional) > 100 or any(type(sid) is not int or sid <= 0 for sid in additional):
+        raise ValueError("Invalid additional spell IDs")
+    allowed = set(labels) | additional
+    observed = _validate_snapshot(snapshot, allowed) if snapshot is not None else {}
     counts = {
         "distinct_spell_ids": len(labels),
         "inherited_name_records": len(json.loads((base / "spells.json").read_text(encoding="utf-8"))["spells"]),
@@ -170,9 +247,12 @@ def audit(base: Path = BASE, snapshot: dict | None = None) -> dict:
         "not_checked": 0,
         "conflicting_inherited_names": 0,
         "official_names_auto_approved": 0,
+        "new_spell_ids_without_inherited_label": len(additional - set(labels)),
+        "new_spell_observations": 0,
     }
     records = []
-    for sid, inherited in labels.items():
+    for sid in sorted(allowed):
+        inherited = labels.get(sid, [])
         observation = observed.get(sid)
         if len(inherited) > 1:
             counts["conflicting_inherited_names"] += 1
@@ -180,10 +260,14 @@ def audit(base: Path = BASE, snapshot: dict | None = None) -> dict:
             status = "not_checked"
             counts["not_checked"] += 1
         elif observation["status"] == "found":
-            status = ("name_matches_inherited" if observation["name_ko"] in inherited
-                      else "name_disagrees_with_inherited")
-            counts["observations_found_matching" if status == "name_matches_inherited"
-                   else "observations_found_mismatching"] += 1
+            if not inherited:
+                status = "new_spell_requires_editorial_review"
+                counts["new_spell_observations"] += 1
+            else:
+                status = ("name_matches_inherited" if observation["name_ko"] in inherited
+                          else "name_disagrees_with_inherited")
+                counts["observations_found_matching" if status == "name_matches_inherited"
+                       else "observations_found_mismatching"] += 1
         elif observation["status"] == "not_found":
             status = "not_found_in_api"
             counts["observations_not_found"] += 1
@@ -194,10 +278,13 @@ def audit(base: Path = BASE, snapshot: dict | None = None) -> dict:
                "comparison": status, "review": "pending"}
         if observation and observation["status"] == "found":
             rec["observed_name_ko"] = observation["name_ko"]
+            if isinstance(observation.get("media"), dict):
+                rec["official_icon_evidence"] = observation["media"]
+                rec["icon_review"] = "pending"
         records.append(rec)
     return {
         "schema_version": "spell-name-audit-v1",
-        "source_scope": "V11 inherited labels vs optional Blizzard ko_KR observations",
+        "source_scope": "V11 inherited and opt-in new spell IDs vs optional Blizzard ko_KR observations",
         "snapshot_supplied": snapshot is not None,
         "counts": counts,
         "publish_ready": False,
@@ -218,11 +305,26 @@ def _write(path: str, doc: dict):
                               sort_keys=True) + "\n", encoding="utf-8")
 
 
+def parse_spell_ids(value: str) -> list[int]:
+    """Explicit, bounded numeric IDs for a newly authored specialization."""
+    parts = value.split(",")
+    if not 1 <= len(parts) <= 100 or any(
+        not part.strip().isascii() or not part.strip().isdigit()
+        for part in parts
+    ):
+        raise ValueError("Expected 1..100 comma-separated numeric spell IDs")
+    ids = [int(part.strip()) for part in parts]
+    if any(sid <= 0 or sid > 2147483647 for sid in ids) or len(set(ids)) != len(ids):
+        raise ValueError("Spell IDs must be unique and within positive 32-bit range")
+    return ids
+
+
 def main() -> int:
     p = argparse.ArgumentParser(description="Korean WoW spell-name comparison evidence")
     sub = p.add_subparsers(dest="command", required=True)
     verify = sub.add_parser("audit")
     verify.add_argument("--snapshot")
+    verify.add_argument("--spell-ids", help="Additional opt-in numeric IDs, comma-separated")
     verify.add_argument("--output", default="dist/spell-name-audit.json")
     verify.add_argument("--require-all-matched", action="store_true")
     fetch = sub.add_parser("fetch")
@@ -230,13 +332,18 @@ def main() -> int:
     fetch.add_argument("--report", default="dist/spell-name-audit.json")
     fetch.add_argument("--max-ids", type=int, default=176)
     fetch.add_argument("--delay-ms", type=int, default=150)
+    fetch.add_argument("--spell-ids", help="Query only these 1..100 numeric IDs for a new spec")
+    fetch.add_argument("--include-media", action="store_true",
+                       help="Also query authenticated Blizzard spell icon media; review-only")
     args = p.parse_args()
 
     try:
         if args.command == "audit":
             snapshot = (json.loads(Path(args.snapshot).read_text(encoding="utf-8"))
                         if args.snapshot else None)
-            result = audit(snapshot=snapshot)
+            result = audit(snapshot=snapshot,
+                           additional_spell_ids=set(parse_spell_ids(args.spell_ids))
+                           if args.spell_ids else None)
             _write(args.output, result)
             print("Spell audit:", result["counts"])
             if args.require_all_matched:
@@ -246,15 +353,18 @@ def main() -> int:
                              and not c["conflicting_inherited_names"]) else 1
             return 0
 
-        ids = list(inventory())
-        if not (1 <= args.max_ids <= len(ids)) or not (0 <= args.delay_ms <= 5000):
+        ids = parse_spell_ids(args.spell_ids) if args.spell_ids else list(inventory())
+        if not (1 <= args.max_ids <= 176) or not (0 <= args.delay_ms <= 5000):
             raise ValueError("Invalid max-ids or delay-ms")
+        if not args.spell_ids:
+            ids = ids[:args.max_ids]
         token = oauth_token(os.environ.get("BLIZZARD_CLIENT_ID", ""),
                             os.environ.get("BLIZZARD_CLIENT_SECRET", ""))
-        snapshot = fetch_snapshot(ids[:args.max_ids], token,
-                                  delay_seconds=args.delay_ms / 1000)
+        snapshot = fetch_snapshot(ids, token,
+                                  delay_seconds=args.delay_ms / 1000,
+                                  include_media=args.include_media)
         _write(args.output, snapshot)
-        result = audit(snapshot=snapshot)
+        result = audit(snapshot=snapshot, additional_spell_ids=set(ids))
         _write(args.report, result)
         print("Spell fetch results:", result["counts"])
         return 0
